@@ -113,6 +113,21 @@ function fm-base_software_list
 	return 0
 }
 
+function fm-vim_config_install
+{
+	local vim_comfig_pack=${fengming_dir}/vim_cfg_dir.tar.gz
+	local vim_cfg_file=/etc/vim/vimrc
+
+	tar -zxf ${vim_comfig_pack} -C ${HOME}/
+	if [ ! -d ${HOME}/.vim ];then echo "tar fail...";return 1;fi
+
+	cat >> ${vim_cfg_file} << EOF
+if filereadable("${HOME}/.vim/myvimrc")
+	source ${HOME}/.vim/myvimrc
+endif
+EOF
+	return 0
+}
 
 function fm-add_fjk_device_qr_code
 {
