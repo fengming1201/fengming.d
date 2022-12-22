@@ -30,6 +30,11 @@
             "install_methor":"apt install indent",
             "describe":"changes the appearance of a C program by inserting or deleting whitespace."
         },
+        {
+            "app_name":"manpages-zh",
+            "install_methor":"apt install manpages-zh",
+            "describe":"Chinese manual pages."
+        },        
     ]
 
 }
