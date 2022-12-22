@@ -1,0 +1,36 @@
+{
+    "app_array":[
+        {
+            "app_name":"vim",
+            "install_methor":"app install vim",
+            "describe":"Vi IMproved, a programmer's text editor."
+        },
+        {
+            "app_name":"tree",
+            "install_methor":"app install tree",
+            "describe":"list contents of directories in a tree-like format."
+        },
+        {
+            "app_name":"bd",
+            "install_methor":"apt install bd",
+            "describe":"quickly go back to a specific parent directory in bash."
+        },
+        {
+            "app_name":"qrencode",
+            "install_methor":"apt install qrencode",
+            "describe":"Encode input data in a QR Code and save as a PNG or EPS image."
+        }, 
+        {
+            "app_name":"jq",
+            "install_methor":"apt install jq",
+            "describe":"Command-line JSON processor."
+        },
+        {
+            "app_name":"indent",
+            "install_methor":"apt install indent",
+            "describe":"changes the appearance of a C program by inserting or deleting whitespace."
+        },
+    ]
+
+}
+
