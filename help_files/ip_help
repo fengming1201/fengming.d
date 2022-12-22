@@ -98,4 +98,4 @@ ip neigh
 ip neigh add 192.168.2.6 lladdr 00:0d:38:cb:d6:a2 dev eth0
 
 删除一个mac和ip的对应项
-ip neigh del 192.168.2.6 lladdr 00:0d:38:cb:d6:a2 dev ens3
+ip neigh del 192.168.2.6 lladdr 00:0d:38:cb:d6:a2 dev eth0
