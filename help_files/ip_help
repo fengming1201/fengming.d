@@ -1,0 +1,101 @@
+列出所有的网络设备
+ip link
+
+只看指定的网络设备
+ip link show eth0
+
+查看指定网络设备的收发包统计信息
+ip -s link show eth0
+
+只显示当前激活的网络设备
+ip link show up
+
+停用一个网络设备
+ip link set eth0 down
+
+启用一个网络设备
+ip link set eth0 up
+
+关闭网络设备的多播(multicast)功能
+ip link set eth0 multicast off
+
+开启网络设备的多播(multicast)功能
+ip link set eth0 multicast on
+
+配置mtu的大小
+ip link set eth0 mtu 1500
+
+修改网卡的名字，网卡运行时不能改名，先停用网卡，改名完成后再启用
+ip link set eth0 down
+
+ip link set eth0 name ens4
+
+ip link set eth0 up
+
+修改网卡的mac地址，先停用网卡，改完后再启用
+ip link set eth0 down
+
+ip link set eth0 address 00:0d:38:cb:d6:a2
+
+ip link set eth0 up
+
+3、ip地址管理
+查看所有的ip地址，参数 a,address,addr 都可以
+ip a
+
+查看指定设备的ip
+ip a show eth0
+
+查看设备的ipv4地址和ipv6地址
+-4 :显示ipv4地址
+ip -4 a show eth0
+-6 :显示ipv6地址
+ip -6 a show eth0
+
+添加ip
+ip a add 192.168.5.15/24 dev eth0
+
+删除ip
+ip a del 192.168.5.8/24 dev eth0
+
+清除指定设备ip，清除ens3上边的所有ip
+ip a flush dev eth0
+
+4、路由route管理
+
+查看路由表，参数 r,route都可以
+ip r
+
+添加默认路由
+ip route add default via 192.168.2.2 dev eth0
+
+删除默认路由
+ip route del default via 192.168.2.2 dev eth0
+
+修改默认路由
+ip route replace default via 192.168.2.3 dev eth0
+
+设置到网络192.168.1.2/24的路由经过网关192.168.2.4
+ip route add 192.168.1.2/24 via 192.168.2.4
+
+从路由表中删除一条记录
+ip route del 192.168.1.2/24 via 192.168.2.4 dev eth0
+
+5、ip统计信息
+
+统计信息
+ip -s link ls eth0
+
+统计信息,增加了 tx rx的错误信息
+ip -s -s link ls eth0
+
+6、arp操作
+
+查看mac地址的arp表
+ip neigh
+
+添加一个mac和ip的对应项
+ip neigh add 192.168.2.6 lladdr 00:0d:38:cb:d6:a2 dev eth0
+
+删除一个mac和ip的对应项
+ip neigh del 192.168.2.6 lladdr 00:0d:38:cb:d6:a2 dev ens3

@@ -1,0 +1,43 @@
+{
+    查看路由
+    route -n
+    
+}
+
+{
+    添加默认网关
+    route add default gw 10.0.0.1
+
+    删除默认网关
+    route del default gw 10.0.0.1
+}
+{
+    添加到主机的路由
+    route add -host 192.168.10.2 dev eth3
+
+    删除到主机的路由
+    route del -host 192.168.10.2 dev eth3
+}
+{
+    添加到网络的路由
+    route add -net 192.168.55.0 netmask 255.255.255.0 eth3
+
+    删除到网络的路由
+    route del -net 192.168.55.0 netmask 255.255.255.0 eth3
+}
+{
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
