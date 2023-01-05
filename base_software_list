@@ -34,7 +34,22 @@
             "app_name":"manpages-zh",
             "install_methor":"apt install manpages-zh",
             "describe":"Chinese manual pages."
-        },        
+        }, 
+        {
+            "app_name":"vimdiff",
+            "install_methor":"apt install vimdiff",
+            "describe":"edit two, three or four versions of a file with Vim and show differences."
+        }, 
+        {
+            "app_name":"strings",
+            "install_methor":"apt install strings",
+            "describe":"print the strings of printable characters in files."
+        }, 
+        {
+            "app_name":"reptyr",
+            "install_methor":"apt install reptyr",
+            "describe":"Tool for moving running programs between ptys."
+        }, 
     ]
 
 }
