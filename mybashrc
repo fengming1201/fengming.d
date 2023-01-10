@@ -776,18 +776,19 @@ function fm-time_zone_update
 		echo "sudo apt install ntpdate"
 		return 1
 	fi
-
+	local time_server_list="ntp.api.bz"
+	
 	ntpdate -u  ntp.api.bz
 	local zonefile=/usr/share/zoneinfo/Asia/Shanghai
-	if [ ! -f $zoneinfo ]
+	if [ ! -f ${zoneinfo} ]
 	then
-		echo "ERROR:$zoneinfo not exist!"
+		echo "ERROR:${zoneinfo} not exist!"
 		return 2
 	fi
 
-	cp -v $zoneinfo /etc/localtime
+	cp -v ${zoneinfo} /etc/localtime 
 
-	return 0;
+	return 0
 }
 
 function fm-pdf_viewer
