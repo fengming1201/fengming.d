@@ -1,0 +1,36 @@
+
+function fm-pdf_viewer
+{
+	local app=evince
+	local app_flag=
+	which $app > /dev/null
+	if [ $? -ne 0 ] ; then echo ¨$app not exist!¨;return 1;fi;
+	
+	$app $app_flag $*
+
+	return 0
+}
+
+function fm-picture_viewer
+{
+	local app=gpicview
+	local app_flag=
+	which $app
+	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
+
+	$app $app_flag $*
+	return 0
+}
+
+function fm-movie_viewer
+{
+	local app=mpv
+	#local app_flag=¨--player-operation-mode=pseudo-gui¨
+	local app_flag=
+	
+	which $app > /dev/null
+	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
+
+	$app $app_flag $*
+	return 0
+}

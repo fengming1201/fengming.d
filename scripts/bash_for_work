@@ -1,0 +1,180 @@
+
+function fm-add_fjk_device_qr_code
+{
+	local flag=NO
+	local default_passwd=admin
+	local id_head="ID:"
+	local user=
+	local passwd_head="password:"
+	local passwd=
+
+	if [ $# -eq 1  ]
+	then 
+		tmp=$(echo $1 | grep "^1jfieg" )
+		echo $tmp
+		if [  x${tmp} = x  ]
+		then
+			${HELP_FUNC}  add_device_qr_code
+			return 1
+		else
+			echo "tmp=$tmp"
+			user=$1
+			passwd=${default_passwd}
+			flag=OK
+		fi
+	elif [ $# -eq 2  ]
+	then
+		tmp=$(echo $1 | grep "^1jfieg" )
+		if [ x$tmp = x  ]
+		then
+			tmp=$(echo $2 | grep "^1jfieg" )
+			if [ x$tmp = x  ]
+			then
+				${HELP_FUNC}  add_device_qr_code
+				return 1
+			else
+				user=$2
+				passwd=$1
+				flag=OK
+			fi
+		else
+			user=$1
+			passwd=$2
+			flag=OK
+		fi
+
+	else
+		${HELP_FUNC}  add_device_qr_code
+		return 1
+	fi
+
+	if [ -z $(which qrencode) ]
+	then
+		echo "please install qrencode first"
+		echo "apt install qrencode"
+		return 1
+	fi		
+	if [ $flag == "OK"  ]
+	then
+		qrencode -o  - -t UTF8 ${id_head}${user}${passwd_head}${passwd}
+		echo "ID=${user}"
+		echo "pass=${passwd}"
+	fi
+	return 0
+}
+
+function fm-wifi_qr_code
+{
+	if [ $# -lt 2 ]
+	then
+		${HELP_FUNC} wifi_qr_code
+		return 1
+	fi
+	local mode=$1
+	local user=$2
+	local passwd="none"
+	if [ $# -eq 3 ]
+	then
+		passwd=$3
+	fi
+
+	if [ $mode = fjk ]
+	then
+		if [ "$passwd" = "none" ]
+		then
+			#fujikam open auto mode
+			qrcode_string="{\"s\":\"${user}\",\"p\":\"\",\"l\":\"zh\"}"
+			echo "==${qrcode_string}"
+		else	
+			qrcode_string="{\"s\":\"${user}\",\"p\":\"${passwd}\",\"l\":\"zh\"}"
+			echo "==${qrcode_string}"
+		fi
+	elif [ $mode = phone ]
+	then
+		if [ "$passwd" = "none" ]
+		then
+			#mobile phone open auto mode
+			qrcode_string="WIFI:T:nopass;S:$user;P:;;"
+			echo "==${qrcode_string}"
+		else
+			qrcode_string="WIFI:T:WPA;S:$user;P:$passwd;;"
+			echo "==${qrcode_string}"
+		fi
+	else
+		${HELP_FUNC} wifi_qr_code
+		return 2
+	fi
+	
+	qrencode -o  - -t UTF8 -m 2 ${qrcode_string}
+	if [ ! $? -eq 0 ]
+	then 
+		echo "exec qrencode wrong."
+	fi
+	echo "ID=${user}"
+	echo "pass=${passwd}"
+	return 0
+}
+
+
+function fm-fjk_sign_tool
+{
+	local sig_tool_path=/root/XBox/XBox
+	local curr_pwd=$PWD
+	local source_file=$curr_pwd/$1
+	local source_dir=$(dirname $curr_pwd/$1)
+	local source_name=$(basename $source_file)
+	local target_name=$(echo "pack.sig.$source_name")
+	echo "source_file=$source_file"
+	echo "soucre_dir=$source_dir"
+	echo "source_name=$source_name"
+	echo "target_name=$target_name"
+	if [ -e $1  ]
+	then
+		pushd $sig_tool_path
+		./bin/node  generate_sign.js $source_file
+
+		if [ -e $source_dir/$target_name  ]
+		then
+			echo "generate sign success"
+			echo "--->$source_name"
+			echo "--->$target_name"
+		fi
+		popd
+	else
+		echo "file is not exist:$source_file"
+	fi
+	echo "done ......."
+	return 0
+}
+
+function fm-svn_revert_all
+{
+
+	if ! which svn > /dev/null
+	then
+		return 1
+	fi
+
+	local change_file_list=$(svn st | grep ^[MCAD\!] | awk '{print $2}' | tac)
+	local no_record_file_list=$(svn st | grep ^? | awk '{print $2}')
+
+	for file in $change_file_list
+	do 
+		svn revert $file
+	done
+
+	for file in $no_record_file_list
+	do
+		if [ -d $file  ]
+		then
+			rm -rv $file
+		else
+			rm -v $file
+		fi
+	done
+
+	echo "svn revert all files done"
+
+	return 0
+}
+

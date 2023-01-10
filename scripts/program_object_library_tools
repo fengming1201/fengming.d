@@ -1,0 +1,381 @@
+
+function fm-grep_object_files
+{
+	local ARM_NM=arm-fullhanv2-eabi-nm
+	local NMFLAG="-a" #"--defined-only"
+
+	local current_dir=$PWD
+	#echo $current_dir
+
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
+		echo "$FUNCNAME  function_name  a.o b.o c.o"
+		echo "$FUNCNAME  --show"
+		return 1 
+	fi
+	if [ $1 = "--show" ]
+	then
+		help_example nm_symbol_type_help
+		return 0
+	fi	
+	which $ARM_NM > /dev/null
+	if [ $? -ne 0  ]
+	then
+		echo "NM=$ARM_NM not found"
+		return 2
+	fi
+
+	local func_name=$1
+	local obj_file_list=
+	if [ $# -ge 2  ]
+	then
+		shift
+		obj_file_list=$*
+	else
+		obj_file_list=$(find $current_dir -type f -name "*.o")
+	fi
+
+	#echo "function_name=$func_name"
+	#echo "obj_file_list=$obj_file_list"
+
+	if [ x"$obj_file_list" = "x"  ]
+	then
+		echo "no found object file"
+		return 3
+	fi
+
+	local total_file_counts=
+	local found_in_file_counts=
+	let total_file_counts=0
+	let found_in_file_counts=0
+	
+	local file_type=
+	local tmp=
+	for file in $obj_file_list
+	do
+		if [ ! -f $file  ]
+		then
+			echo "file:$file not exist"
+			continue
+		fi
+
+		total_file_counts=$(($total_file_counts + 1))
+
+		file_type=$(file $file | grep -i arm )
+		if [ x"$file_type" = "x"  ]
+		then
+			which nm > /dev/null
+			if [ $? -ne 0  ]
+			then
+				continue
+			fi
+			tmp=$(nm $NMFLAG  $file | grep -wi $func_name)
+		else
+			tmp=$($ARM_NM $NMFLAG  $file | grep -wi $func_name)
+		fi
+
+		if [ x"$tmp"  != "x"  ] 
+		then
+			echo "$file --->>>"
+			echo "$tmp"
+			found_in_file_counts=$(($found_in_file_counts + 1))
+		fi
+	done
+
+	echo "-------------------------------------------------------------"
+	echo "            total check $total_file_counts object files"
+	echo "     found function interface in  $found_in_file_counts files"
+	echo "--------------------- done ----------------------------------"
+
+	return 0
+}
+
+
+function fm-grep_asm_or_dis_files
+{
+	local current_dir=$PWD
+	#echo $current_dir
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
+		echo "$FUNCNAME [-w i n] function_name"
+		return 1 
+	fi
+
+	local opt=
+	local func_name=
+	if [ $# -eq 1 ]
+	then
+		func_name=$1
+	elif [ $# -eq 2 ]
+	then
+		opt=$1
+		func_name=$2
+	else
+		echo "ERROR:format wrong"
+		return 1
+	fi
+	
+	local obj_file_list=$(find $current_dir -type f -name "*.dis" -o -name "*.asm")
+	if [ x"$obj_file_list" = "x"  ]
+	then
+		echo "no found object file"
+		return 3
+	fi
+	
+	local total_file_counts=
+	local found_in_file_counts=
+	let total_file_counts=0
+	let found_in_file_counts=0
+	
+	local tmp=
+	for file in $obj_file_list
+	do
+		if [ ! -f $file  ]
+		then
+			echo "file:$file not exist"
+			continue
+		fi
+
+		total_file_counts=$(($total_file_counts + 1))
+
+		tmp=$(cat  $file | grep $opt $func_name)
+		if [ x"$tmp"  != "x"  ] 
+		then
+			echo "$file --->>>"
+			echo "$tmp"
+			found_in_file_counts=$(($found_in_file_counts + 1))
+		fi
+	done
+
+	echo "-------------------------------------------------------------"
+	echo "            total check $total_file_counts object files"
+	echo "     found function interface in  $found_in_file_counts files"
+	echo "--------------------- done ----------------------------------"
+
+	return 0
+}
+
+function fm-grep_static_library
+{
+	
+
+	return 0
+}
+
+function fm-ls_app_dependent_library
+{
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    exec_file"
+		return 1
+	fi
+		
+	local ldd_tools=ldd
+	which ${ldd_tools} > /dev/null
+	if [ $? -eq 0  ]
+	then 
+		echo "------------------------------------"
+		echo "${ldd_tools} $@"
+		${ldd_tools} $@
+		echo "------------------------------------"
+	else
+		echo "${ldd_tools} not found!"
+		return 1
+	fi
+
+	local objdump_tools=objdump
+	which ${objdump_tools} > /dev/null
+	if [ $? -eq 0  ]
+	then 
+		echo "------------------------------------"
+		echo "${objdump_tools} -p $@ | grep NEEDED"
+		${objdump_tools} -p $@ | grep NEEDED
+		echo "------------------------------------"
+	else
+		echo "${objdump_tools} not found!"
+		return 2
+	fi
+
+	local readelf_tools=readelf
+	which ${readelf_tools} > /dev/null
+	if [ $? -eq 0  ]
+	then 
+		echo "------------------------------------"
+		echo "${readelf_tools} -p $@ | grep NEEDED"
+		${readelf_tools} -a $@ | grep NEEDED
+		echo "------------------------------------"
+	else
+		echo "${readelf_tools} not found!"
+		return 3
+	fi
+
+	return 0
+}
+
+function fm-ls_library_obj_files
+{
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    xxx.a or *.a"
+		echo "$FUNCNAME    xxx.so or *.so"
+		return 1
+	fi
+	file_list="$@"
+	if [ $# -eq 1 ]
+	then
+		if [ ! -f $1 ]
+		then
+			local base_name=$(echo $1 | xargs -n1 basename)
+			file_list=$(find ./ -type f -name "${base_name}*")
+		fi
+	fi
+	
+	#check 
+	local ar_toos=ar
+	which ${ar_toos} > /dev/null
+	if [ $? -ne 0   ];then echo "${ar_toos} not found!";return 2;fi
+	
+	local nm_toos=nm
+	which ${nm_toos} > /dev/null
+	if [ $? -ne 0   ];then echo "${nm_toos} not found!";return 3;fi
+
+	for file in $file_list
+	do
+		if [ "${file##*.}" = "a"  ]
+		then
+			echo "------------------------------------"
+			echo "${ar_toos} -t ${file}"
+			${ar_toos} -t ${file}
+			echo "------------------------------------"
+		elif [ "${file##*.}" = "so"  ]
+		then
+			echo "------------------------------------"
+			echo "${nm_toos} -D ${file}"
+			${nm_toos} -D ${file}
+			echo "------------------------------------"
+		else
+			echo "ERROR:unknow library  type"
+			return 4
+		fi
+	done
+
+	return 0
+}
+
+function fm-ls_library_func_list
+{
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    xxx.a or *.a"
+		echo "$FUNCNAME    xxx.so or *.so"
+		return 1
+	fi
+	file_list="$@"
+	if [ $# -eq 1 ]
+	then
+		if [ ! -f $1 ]
+		then
+			local base_name=$(echo $1 | xargs -n1 basename)
+			file_list=$(find ./ -type f -name "${base_name}*")
+		fi
+	fi
+	
+	#check 
+	local readelf_tools=readelf
+	which ${readelf_tools} > /dev/null
+	if [ $? -ne 0   ];then echo "${readelf_tools} not found!";return 2;fi
+	
+	for file in $file_list
+	do
+		if [ "${file##*.}" = "a"  ]
+		then
+			echo "------------------------------------"
+			echo "${readelf_tools} -c ${file}"
+			${readelf_tools} -c ${file}
+			echo "------------------------------------"
+		elif [ "${file##*.}" = "so"  ]
+		then
+			echo "------------------------------------"
+			echo "${readelf_tools} -A ${file}"
+			${readelf_tools} -A ${file}
+			echo "------------------------------------"
+		else
+			echo "ERROR:unknow library  type"
+			return 4
+		fi
+	done
+
+	return 0
+}
+
+function fm-ls_library_func_list2
+{
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]  [--show]"
+		echo "$FUNCNAME    xxx.a or *.a"
+		echo "$FUNCNAME    xxx.so or *.so"
+		return 1
+	fi
+	if [ $1 = "--show" ]
+	then
+		help_example nm_symbol_type_help	
+		return 0
+	fi	
+	file_list="$@"
+	if [ $# -eq 1 ]
+	then
+		if [ ! -f $1 ]
+		then
+			local base_name=$(echo $1 | xargs -n1 basename)
+			file_list=$(find ./ -type f -name "${base_name}*")
+		fi
+	fi
+
+	#check 
+	local nm_tools=nm
+	which ${nm_tools} > /dev/null
+	if [ $? -ne 0   ];then echo "${nm_tools} not found!";return 2;fi
+	
+	for file in $file_list
+	do
+		if [ "${file##*.}" = "a"  ]
+		then
+			echo "------------------------------------"
+			echo "${nm_tools} -o ${file}"
+			${nm_tools} -o ${file}
+			echo "------------------------------------"
+		elif [ "${file##*.}" = "so"  ]
+		then
+			echo "------------------------------------"
+			echo "${nm_tools} -o ${file}"
+			${nm_tools} -o ${file}
+			echo "------------------------------------"
+		else
+			echo "ERROR:unknow library  type"
+			return 4
+		fi
+	done
+
+	return 0
+}
+
