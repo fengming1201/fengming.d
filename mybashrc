@@ -46,35 +46,6 @@ function clrall
 	return 0
 }
 
-function fm-mybashrc_update
-{
-	local file=${fengming_top_dir}/mybashrc
-	local tmp_file=/var/tmp/mybashrc
-	local new_date=$(date)
-
-	if [ ! -f $file    ]
-	then
-		echo "$file not exist"
-		return 1
-	fi
-	local user_type=$(whoami)
-	if [ "$user_type" != root  ]
-	then
-		echo "user:$user_type no permission to change file $file"
-		echo "please switch to root user"
-		return 2
-	fi
-
-	cp $file ${file}.bak
-
-	cat $file | sed  "/^#date:/c #date:${new_date}" > $tmp_file
-	if [ -f $tmp_file  ]
-	then
-		cp $tmp_file  $file
-	fi
-
-	return 0
-}
 
 function fm-help_example
 {

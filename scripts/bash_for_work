@@ -1,4 +1,8 @@
-
+#***************************************#
+#author:fengming
+#date:Tue 10 Jan 2023 04:56:27 PM CST
+#***************************************#
+HELP_FUNC=fm-help_example
 function fm-add_fjk_device_qr_code
 {
 	local flag=NO
