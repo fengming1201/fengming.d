@@ -7,7 +7,7 @@ fengming_tools_dir=/etc/fengming.d/linux_tools
 fengming_script_dir=/etc/fengming.d/scripts
 
 alias ll='ls -hl --color=auto'
-alias lll='ls -hla --color=auto'
+alias lll='ls -hl --color=auto'
 alias llll='ls -hla --color=auto'
 alias la='ls -aF --color=auto'
 alias lf='ls -AF --color=auto'
