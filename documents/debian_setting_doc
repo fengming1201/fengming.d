@@ -16,3 +16,51 @@
     step 4:重启
     init 6
 }
+{
+    linux mkfs.ntfs 格式化慢
+    原因是格式化过程除了写入分区表外，还要遍历每个卷，清零和坏扇区检查。
+    解决办法：
+    mkfs.ntfs -f  /dev/sdXX
+    -f、–-fast或 –q、–-quick 执行快速格式化。这将跳过卷清零和坏扇区检查。
+    –L、–-label	设置文件系统的卷标签。
+    –n、–-no-action	mkntfs不实际创建文件系统，但显示它创建文件系统时将执行的工作。
+    -c	以字节为单位指定簇的大小。
+    –p、–-partition	指定分区开始扇区
+    -f/--force	强制执行mkntfs
+}
+{
+    linux的XDG（X Desktop Group）基本目录规范
+
+}
+{
+    linux 常见的图形操作界面有哪些？
+    1，KDE
+    2，GNOME
+    3，MATE
+    4，Cinnamon
+    5，Unity
+    6，XFCE
+    7，LXDE
+    8，
+
+    如何查看当前使用哪种图形界面？
+    ？？
+
+    /etc/xdg/目录
+
+}
+{
+    取消Debian屏保及显示器休眠
+    详解请查看：xset_help 文件
+
+    dpms显示器休眠设置：
+
+    开启：$ sudo xset dpms 1 1 2
+    取消：$ sudo xset -dpms
+
+    xset设置屏保：
+
+    设置10秒后进入屏保：$ sudo xset s 10 600
+    恢复系统默认值：$ sudo xset s 0 600
+    取消屏保：$ sudo xset s off
+}

@@ -19,7 +19,7 @@ alias treeee='tree'
 alias cman='man -M  /usr/share/man/zh_CN'
 alias bipcgrep='grep --exclude=*.map  --exclude=*.o  --exclude=*.a  --exclude=*.bin  --exclude=*.bak  --exclude=*.out'
 alias svnls='svn st | grep -v ^?'
-alias mywifi='wifi_qr_code fjk myap 12345678'
+alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias clr='clear'
 
 #source other files

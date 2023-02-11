@@ -1,0 +1,30 @@
+
+ iostat命令：报告设备和分区的中央处理单元（CPU）统计信息和输入/输出统计信息。
+ 使用iostat命令可以报告CPU的统计数据，设备、分区和网络文件系统（NFS）的输入/输出统计信息。
+ 使用iostat命令将对系统的磁盘操作活动进行监视，它的特点是汇报磁盘活动统计情况，同时也会汇报出CPU使用情况。
+ iostat不能对某个进程进行深入分析，仅对系统的整体情况进行分析。
+
+ 安装：
+ apt install  sysstat
+
+选项：
+ 
+-c  显示CPU利用率报告
+-d  显示磁盘利用率报告
+-k  以KB/s为单位显示
+-m  以MB/s为单位显示
+-n  显示NFS使用情况
+-P<磁盘>  显示磁盘和分区统计信息
+-t  列出每一个报告显示的时间
+-X  显示扩展的统计信息
+
+# dpkg -S iostat 
+nfs-common: /usr/share/man/man8/nfsiostat.8.gz
+sysstat: /usr/share/man/man1/iostat.1.gz
+sysstat: /usr/share/doc/sysstat/images/iostat.png
+sysstat: /usr/bin/cifsiostat
+sysstat: /usr/bin/iostat
+sysstat: /usr/share/man/man1/cifsiostat.1.gz
+linux-headers-4.19.0-20-common: /usr/src/linux-headers-4.19.0-20-common/include/linux/nfs_iostat.h
+nfs-common: /usr/sbin/nfsiostat
+linux-headers-4.19.0-18-common: /usr/src/linux-headers-4.19.0-18-common/include/linux/nfs_iostat.h

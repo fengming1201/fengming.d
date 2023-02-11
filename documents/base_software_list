@@ -3,22 +3,22 @@
         {
             "app_name":"vim",
             "install_methor":"app install vim",
-            "describe":"Vi IMproved, a programmer's text editor."
+            "describe":"vim 编辑器"
         },
         {
             "app_name":"tree",
             "install_methor":"app install tree",
-            "describe":"list contents of directories in a tree-like format."
+            "describe":""
         },
         {
             "app_name":"bd",
             "install_methor":"apt install bd",
-            "describe":"quickly go back to a specific parent directory in bash."
+            "describe":"快捷返回上层目录"
         },
         {
             "app_name":"qrencode",
             "install_methor":"apt install qrencode",
-            "describe":"Encode input data in a QR Code and save as a PNG or EPS image."
+            "describe":"生成二维码工具，并且可以输出保存图片"
         }, 
         {
             "app_name":"jq",
@@ -50,6 +50,46 @@
             "install_methor":"apt install reptyr",
             "describe":"Tool for moving running programs between ptys."
         }, 
+        {
+            "app_name":"astyle",
+            "install_methor":"apt install astyle",
+            "describe":"Source code indenter for C, C++, Objective-C, C#, and Java."
+        },
+        {
+            "app_name":"mdadm",
+            "install_methor":"apt install  mdadm",
+            "describe":"mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)"
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        }
     ]
 
 }
