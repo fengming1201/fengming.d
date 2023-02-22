@@ -1,0 +1,43 @@
+Usage: readelf <option(s)> elf-file(s)
+ 显示有关 ELF 格式文件内容的信息
+ Options are:
+  -a --all               Equivalent to: -h -l -S -s -r -d -V -A -I
+  -h --file-header       显示 ELF 文件头
+  -l --program-headers   显示程序标题
+     --segments          --program-headers 的别名
+  -S --section-headers   显示部分的标题
+     --sections          --节标题的别名
+  -g --section-groups    显示分区组
+  -t --section-details   显示部分详细信息
+  -e --headers           等效于：-h -l -S
+  -s --syms              显示符号表
+     --symbols           --syms 的别名
+  --dyn-syms             显示动态符号表
+  -n --notes             显示核心注释（如果存在）
+  -r --relocs            显示重新定位（如果存在）
+  -u --unwind            显示展开信息（如果存在）
+  -d --dynamic           显示动态部分（如果存在）
+  -V --version-info      显示版本部分（如果存在）
+  -A --arch-specific     显示特定于体系结构的信息（如果有）
+  -c --archive-index     在存档中显示符号/文件索引
+  -D --use-dynamic       显示符号时使用动态部分信息
+  -x --hex-dump=<number|name>
+                         将第<数字|名称>节的内容转储为字节
+  -p --string-dump=<number|name>
+                         将第<数字|名称>节的内容转储为字符串
+  -R --relocated-dump=<number|name>
+                         将第 <数字|名称>节的内容转储为重新定位的字节
+  -z --decompress        在转储之前解压缩部分
+  -w[lLiaprmfFsoRtUuTgAckK] or
+  --debug-dump[=rawline,=decodedline,=info,=abbrev,=pubnames,=aranges,=macro,=frames,
+               =frames-interp,=str,=loc,=Ranges,=pubtypes,
+               =gdb_index,=trace_info,=trace_abbrev,=trace_aranges,
+               =addr,=cu_index,=links,=follow-links]
+                         显示 DWARF 调试部分的内容
+  --dwarf-depth=N        不要在深度 N 或更大处显示 DIE
+  --dwarf-start=N        以相同深度或更深显示以 N 开头的 DIE
+  -I --histogram         显示存储桶列表长度的直方图
+  -W --wide              允许输出宽度超过 80 个字符
+  @<file>                从以下位置读取<file>选项
+  -H --help              Display this information
+  -v --version           Display the version number of readelf

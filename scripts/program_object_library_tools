@@ -2,7 +2,7 @@
 #author:fengming
 #date:Tue 10 Jan 2023 04:56:27 PM CST
 #***************************************#
-function fm-grep_object_files
+function fm-grep_keyword_from_object_files
 {
 	local ARM_NM=arm-fullhanv2-eabi-nm
 	local NMFLAG="-a" #"--defined-only"
@@ -98,7 +98,7 @@ function fm-grep_object_files
 }
 
 
-function fm-grep_asm_or_dis_files
+function fm-grep_keyword_from_asm_or_dis_files
 {
 	local current_dir=$PWD
 	#echo $current_dir
@@ -166,14 +166,88 @@ function fm-grep_asm_or_dis_files
 	return 0
 }
 
-function fm-grep_static_library
+function fm-grep_keyword_from_static_librarys
 {
-	
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    exec_file"
+		return 1
+	fi
 
 	return 0
 }
 
-function fm-ls_app_dependent_library
+function fm-grep_obj_files_from_librarys
+{
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "ERROR:parameter missing"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    obj_files [library list]"
+		echo "$FUNCNAME    obj_files"
+		return 1
+	fi
+	local file_list=
+	local target_obj=$1
+	if [ $# -eq 1 ]
+	then
+		file_list=$(find ./ -name "*.a" -o -name "*.so")
+	elif [ $# -gt 1 ]
+	then
+		shift 1
+		file_list=$@
+	fi
+	
+	#check tools
+	local ar_toos=ar
+	which ${ar_toos} > /dev/null
+	if [ $? -ne 0   ];then echo "${ar_toos} not found!";return 2;fi
+	
+	local nm_toos=nm
+	which ${nm_toos} > /dev/null
+	if [ $? -ne 0   ];then echo "${nm_toos} not found!";return 3;fi
+
+	local tmp_file=/tmp/tmp_grep_obj_files_from_librarys
+	local result=
+	for file in $file_list
+	do
+		#check file exist
+		if [ ! -e ${e_file} ]
+		then
+			echo "file:${file} not exist"
+            continue
+		fi
+		
+		if [ "${file##*.}" = "a"  ]
+		then
+			${ar_toos} -t ${file} > ${tmp_file}
+
+		elif [ "${file##*.}" = "so"  ]
+		then
+			${nm_toos} -D ${file} > ${tmp_file}
+		else
+			echo "ERROR:unknow library  type"
+			continue
+		fi
+
+        result=$(grep -i ${target_obj} ${tmp_file})
+        if [ x${result} != x ]
+        then
+            echo "----  ${file}"
+            echo ${result}
+            echo "------------------------------------"
+
+        fi
+	done
+    if [ -e ${tmp_file} ];then rm ${tmp_file};fi
+	return 0
+}
+
+function fm-ls_app_dependent
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -226,7 +300,7 @@ function fm-ls_app_dependent_library
 	return 0
 }
 
-function fm-ls_library_obj_files
+function fm-ls_obj_from_library
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -279,7 +353,8 @@ function fm-ls_library_obj_files
 	return 0
 }
 
-function fm-ls_library_func_list
+
+function fm-ls_func_list_from_library
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -328,7 +403,7 @@ function fm-ls_library_func_list
 	return 0
 }
 
-function fm-ls_library_func_list2
+function fm-ls_func_list_from_library2
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -381,4 +456,3 @@ function fm-ls_library_func_list2
 
 	return 0
 }
-

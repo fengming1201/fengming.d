@@ -17,10 +17,12 @@ alias bd=". bd -si"
 alias treee='tree'
 alias treeee='tree'
 alias cman='man -M  /usr/share/man/zh_CN'
-alias bipcgrep='grep --exclude=*.map  --exclude=*.o  --exclude=*.a  --exclude=*.bin  --exclude=*.bak  --exclude=*.out'
+alias mygrep='grep --exclude=*.map  --exclude=*.o  --exclude=*.a  --exclude=*.bin  --exclude=*.bak  --exclude=*.out'
 alias svnls='svn st | grep -v ^?'
+alias svnst='svn st | grep -v ^?'
 alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias clr='clear'
+alias rm-shred='shred -n 1 -u --random-source=/dev/urandom -v'
 
 #source other files
 except_do_source_list="env_variable"
@@ -66,6 +68,8 @@ function fm-help_example
 		if [ "x${help_file}" = x ];then echo "no found ${file_list} help file";return 2;fi
 		for file_each in ${help_file}
 		do
+			echo "file:${file_each}"
+			echo ""
 			cat ${file_each}
 		done
 	done
@@ -92,6 +96,8 @@ function fm-document_list
 		if [ "x${doc_file}" = x ];then echo "no found ${file} help file";return 2;fi
 		for file_each in ${doc_file}
 		do
+			echo "file:${file_each}"
+			echo ""
 			cat ${file_each}
 		done
 	done

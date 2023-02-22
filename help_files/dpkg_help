@@ -1,0 +1,80 @@
+例子：
+重要项
+
+
+用法: dpkg [<option> ...] <command>
+
+Commands:
+  -i|--install       <.deb file name>... | -R|--recursive <directory>...
+  --unpack           <.deb file name>... | -R|--recursive <directory>...
+  -A|--record-avail  <.deb file name>... | -R|--recursive <directory>...
+  --configure        <package>... | -a|--pending
+  --triggers-only    <package>... | -a|--pending
+  -r|--remove        <package>... | -a|--pending
+  -P|--purge         <package>... | -a|--pending
+  -V|--verify [<package>...]       验证包的完整性。
+  --get-selections [<pattern>...]  获取要标准的选择列表。
+  --set-selections                 从标准输入设置包选择。
+  --clear-selections               取消选择每个非必要软件包。
+  --update-avail [<Packages-file>] 替换可用包信息。
+  --merge-avail [<Packages-file>]  与文件中的信息合并。
+  --clear-avail                    清除现有的可用信息。
+  --forget-old-unavail             忘记已卸载的不可用的 pkg。
+  -s|--status [<package>...]       显示包状态详细信息。
+  -p|--print-avail [<package>...]  显示可用的版本详细信息。
+  -L|--listfiles <package>...      列出包“拥有”的文件。
+  -l|--list [<pattern>...]         简明扼要地列出包。
+  -S|--search <pattern>...         查找拥有文件的包。
+  -C|--audit [<package>...]        检查包装是否破损。
+  --yet-to-unpack                  打印选择进行安装的软件包。
+  --predep-package                 打印要解压缩的预依赖项。
+  --add-architecture <arch>        添加到<arch>体系结构列表。
+  --remove-architecture <arch>     <arch>从体系结构列表中删除。
+  --print-architecture             打印 dpkg 体系结构。
+  --print-foreign-architectures    打印允许的外国体系结构。
+  --assert-<feature>               断言对指定功能的支持。
+  --validate-<thing> <string>      验证 <thing>的 <string>.
+  --compare-versions <a> <op> <b>  比较版本号 - 见下文。
+  --force-help                     显示有关强迫的帮助。
+  -Dh|--debug=help                 显示有关调试的帮助。
+
+  -?, --help                       Show this help message.
+      --version                    Show the version.
+
+可断言功能：支持预依赖、工作时代、长文件名、多架构、多架构、版本化提供。
+
+可验证的东西：pkgname，archname，trigname，version。
+
+Use dpkg with -b, --build, -c, --contents, -e, --control, -I, --info,
+  -f, --field, -x, --extract, -X, --vextract, --ctrl-tarfile, --fsys-tarfile
+on archives (type dpkg-deb --help).
+
+选项:
+  --admindir=<directory>     使用<目录>代替 /var/lib/dpkg。
+  --root=<directory>         安装在其他根目录上。
+  --instdir=<directory>      在不更改管理员目录的情况下更改安装目录。
+  --path-exclude=<pattern>   不要安装与外壳模式匹配的路径。
+  --path-include=<pattern>   在上一个排除之后重新包含模式。
+  -O|--selected-only         跳过未选择安装/升级的软件包。
+  -E|--skip-same-version     跳过已安装相同版本的软件包。
+  -G|--refuse-downgrade      跳过版本低于安装版本的包。
+  -B|--auto-deconfigure      即使它会破坏其他软件包，也要安装。
+  --[no-]triggers            跳过或强制后续触发器处理。
+  --verify-format=<format>   验证输出格式（支持：“rpm”）。
+  --no-debsig                不要尝试验证包签名。
+  --no-act|--dry-run|--simulate   只要说我们会做什么 - 不要这样做。
+  -D|--debug=<octal>         启用调试（请参阅 -Dhelp 或 --debug=help）。
+  --status-fd <n>            将状态更改更新发送到文件描述符 。
+  --status-logger=<command>  将状态更改更新发送到<command>的标准定。
+  --log=<filename>           将状态更改和操作记录到<filename>。
+  --ignore-depends=<package>,…    忽略涉及<包>的依赖项。
+  --force-...                覆盖问题（请参阅 --force-help）。
+  --no-force-...|--refuse-...      遇到问题时停止。
+  --abort-after <n>          遇到错误后中止<n>。
+
+--compare-versions 的比较运算符为：
+  lt le eq ne ge gt       (将空版本视为早于任何版本);
+  lt-nl le-nl ge-nl gt-nl (将空版本视为高于任何版本);
+  < << <= = >= >> >       (仅用于与控制文件语法兼容).
+
+使用“apt”或“aptitude”进行用户友好的包管理。

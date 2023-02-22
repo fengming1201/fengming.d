@@ -61,14 +61,14 @@
             "describe":"mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)"
         },
         {
-            "app_name":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"flashbench",
+            "install_methor":"apt install flashbench",
+            "describe":"identify flash storage properties,FlashBench能够全方位的测试U盘和SD卡等使用Flash作为介质的移动存储设备的读写速度。"
         },
         {
-            "app_name":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"shred",
+            "install_methor":"apt install  coreutils",
+            "describe":"shred可覆盖文件以隐藏内容，另外还可以彻底删除文件。"
         },
         {
             "app_name":"",
