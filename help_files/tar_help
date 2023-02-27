@@ -1,0 +1,478 @@
+TAR(1)                                                                             tar                                                                            TAR(1)
+
+名
+       tar - tar 档案文件管理程序的 GNU 版本。
+
+总
+       tar <操作参数> [选项]
+
+       操作参数:
+       [-]A --catenate --concatenate
+       [-]c --create
+       [-]d --diff --compare
+       [-]r --append
+       [-]t --list
+       [-]u --update
+       [-]x --extract --get
+       --delete
+
+       常用选项:
+       -C, --directory 目录
+       -f, --file 文件
+       -j, --bzip2
+       -J, --xz
+       -p, --preserve-permissions
+       -v, --verbose
+       -z, --gzip
+
+       所有选项:
+       [ -a, --auto-compress ] 
+       [ --add-file 文件 ] 
+       [ --anchored ] 
+       [ --atime-preserve ] 
+       [ -b, --blocking-factor N ] 
+       [ -B, --read-full-records ] 
+       [ --backup[=备份类型] ] 
+       [       --block-compress ] 
+       [ -C, --directory 目录 ] 
+       [ --checkpoint ] 
+       [ --delay-directory-restore ] 
+       [ --exclude 文件或目录 ] 
+       [ --exclude-caches ] 
+       [ --exclude-caches-all ]
+       [  --exclude-caches-under ] 
+       [ --exclude-tag 文件 ] [ --exclude-tag-all 文件 ] [ --exclude-tag-under 文件 ] [ -f, --file [主机名:]文件 ] [ -F, --info-script 文件,
+       --new-volume-script 文件 ] [ --force-local ] [ --format 格式 ] [ -g, --listed-incremental 快照 ] [ -G, --incremental ] [ --group 组 ] [  -h,  --dereference  ]  [
+       --help ] [ -i, --ignore-zeros ] [ -I, --use-compress-program 程序 ] [ --ignore-case ] [ --ignore-command-error ] [ --ignore-failed-read ] [ --index-file 文件 ] [
+       -j, --bzip2 ] [ -J, --xz ] [ -k, --keep-old-files ] [ -K, --starting-file 文件 ] [ --keep-newer-files ] [ -l, --check-links ] [ -L, --tape-length N ] [ --lzip  ]
+       [  --lzma  ]  [  --lzop  ] [ -m, --touch, --modification-time ] [ -M, --multi-volume ] [ --mode 权限 ] [ --mtime 日期 ] [ -N, --after-date 日期, --newer 日期 ] [
+       --newer-mtime 日期 ] [ --no-anchored ] [ --no-auto-compress ] [ --no-delay-directory-restore ]  [  --no-ignore-case  ]  [  --no-ignore-command-error  ]  [  --no-
+       overwrite-dir ] [ --no-quote-chars ] [ --no-recursion ] [ --no-same-permissions ] [ --no-unquote ] [ --no-wildcards ] [ --no-wildcards-match-slash ] [ --null ] [
+       --numeric-owner ] [ -o, --old-archive, --portability, --no-same-owner ] [ -O, --to-stdout ] [ --occurrence 次数  ]  [  --one-file-system  ]  [  --overwrite  ]  [
+       --overwrite-dir  ]  [  --owner  用户  ]  [  -p,  --same-permissions,  --preserve-permissions ] [ -P, --absolute-names ] [ --pax-option 关键字列表 ] [ --posix ] [
+       --preserve ] [ --quote-chars 字符串 ] [ --quote-style 风格 ] [ -R, --block-number ] [ --record-size 字节数 ] [ --recursion ] [ --recursive-unlink ]  [  --remove-
+       files ] [ --restrict ] [ --rmt-command 命令 ] [ --rsh-command 命令 ] [ -s, --same-order, --preserve-order ] [ -S, --sparse ] [ --same-owner ] [ --show-defaults ]
+       [ --show-omitted-dirs ] [ --show-transformed-names, --show-stored-names ] [ --strip-components 目录层数 ] [ --suffix 后缀 ] [ -T, --files-from 文件 ]  [  --test-
+       label  ]  [  --to-command  命令  ] [ --transform sed表达式 ] [ --totals ] [ -U, --unlink-first ] [ --unquote ] [ --utc ] [ -v, --verbose ] [ -V, --label 名称 ] [
+       --version ] [ --volno-file 文件 ] [ -w, --interactive, --confirmation ] [ -W, --verify ] [ --wildcards ] [ --wildcards-match-slash ] [ -X, --exclude-from 文件  ]
+       [ -z, --gzip, --gunzip, --ungzip ] [ -Z, --compress, --uncompress ] [ -[0-7][lmh] ]
+
+描
+       这是tar的GNU版本的手册页。 tar是一个用于储存或提取tar文件的程序。 tar文件可放在磁盘中， 也可以存为普通文件。 tar 的第一个参数必须是操作参数A、c、d、r、t、u、x 中
+       的一个， 参数后面可跟着任意可选选项。 tar的最后一个参数是你要处理的文件或目录的名字。 如果你指定了一个目录， 该目录的所有子目录都将被加入存档。
+
+应
+       tar -xvf foo.tar
+              提取 foo.tar 文件并显示提取过程
+
+       tar -xzf foo.tar.gz
+              提取用 gzip 压缩的文件 foo.tar.gz
+
+       tar -cjf foo.tar.bz2 bar/
+              用 bzip 为目录 bar 创建一个叫做 foo.tar.bz2存档
+
+       tar -xjf foo.tar.bz2 -C bar/
+              把用 bzip 压缩的文件 foo.tar.bz2 提取到 bar 目录
+
+       tar -xzf foo.tar.gz blah.txt
+              把文件 blah.txt 从 foo.tar.gz 中提取出来
+
+       注意: 当压缩或提取的时候， 压缩类型选项常常是不必需的， 因为tar会根据文件的后缀自动选择压缩类型。
+
+参
+       下
+
+       -A, --catenate, --concatenate
+              将一存档与已有的存档合并
+
+       -c, --create
+              创建一个新的存档
+
+       -d, --diff, --compare
+              比较存档与相应的未存档文件的不同之处
+
+       -r, --append
+              将文件附加到存档结尾
+
+       -t, --list
+              列出存档中文件的目录
+
+       -u, --update
+              仅将较新的文件附加到存档中
+
+       -x, --extract, --get
+              从存档提取文件
+
+       --delete
+              把指定文件从存档中删除（不要用于磁带！）
+
+常
+       -C, --directory 目录
+              提取存档到指定目录
+
+       -f, --file [主机名:]文件
+              指定存档或设备中的文件 (默认是 "-"， 表示 标准输入/输出)
+
+       -j, --bzip2
+              用 bzip2 处理存档; 用于 .bz2 文件
+
+       -J, --xz
+              用 xz 处理存档; 用于 .xz 文件
+
+       -p, --preserve-permissions
+              提取所有保护信息
+
+       -v, --verbose
+              显示文件处理过程
+
+       -z, --gzip, --ungzip
+              用 gzip 处理存档; 用于 .gz 文件
+
+所
+       -a, --auto-compress
+              根据存档后缀来选择压缩程序
+
+       --add-file 文件
+              添加指定文件到存档 (对以下标线开头的文件很有用)
+
+       --anchored
+              patterns will match the start of file names
+
+       --atime-preserve
+              不改变存档中文件的访问时间
+
+       -b, --blocking-factor N
+              指定块大小为 Nx512 字节（默认N=20)
+
+       -B, --read-full-blocks
+              读取时重组块 (用于读取4.2BSD pipes)
+
+       --backup[=备份类型]
+              备份文件而不是删除它们,  备份类型有simple、numbered等
+
+       --block-compress
+              让磁带的输出结果成块输出
+
+       -C, --directory 目录
+              提取文档到指定目录
+
+       --checkpoint
+              读取存档时显示目录名
+
+       --delay-directory-restore
+              延迟对已提取目录的修改时间和权限的设定， 直到提取结束
+
+       --exclude 文件或目录
+              排除指定文件或目录
+
+       --exclude-caches
+              排除带有 缓存目录 标记的目录
+
+       --exclude-tag 文件
+              排除包含指定文件的目录
+
+       -f, --file [主机名:]文件
+              指定存档或设备中的文件 (默认是 "-"， 表示 标准输入/输出)
+
+       -F, --info-script 文件, --new-volume-script 文件
+              在每卷磁带的结尾运行脚本 （会应用--multi-volume选项）
+
+       --force-local
+              存档文件是本地的， 即使它的名称中含有冒号
+
+       --format FORMAT
+              选择创建存档的格式
+              v7 - Unix V7
+              oldgnu - GNU tar <=1.12
+              gnu - GNU tar 1.13
+              ustar - POSIX.1-1988
+              posix - POSIX.1-2001
+
+       -g, --listed-incremental 快照
+              创建/列出/提取 新GNU格式的增量备份
+
+       --group 组
+              将添加到存档的文件的组标识设置为指定组， 而不是源文件所在的组; 这个选项对提取无效
+
+       -G, --incremental
+              创建/列出/提取 旧GNU格式的增量备份
+
+       -h, --dereference
+              不存入符号链接; 存入链接指向的文件
+
+       --help 显示像本手册这样的帮助信息， 但不像这么详细
+
+       -i, --ignore-zeros
+              忽略存档中的 0 字节块 （那通常意味着文件结束)
+
+       -I, --use-compress-program 程序
+              通过指定程序访问存档 (该程序通常是一个压缩程序; 它需能接受 -d 参数)
+
+       --ignore-case
+              排除文件时不区分大小写
+
+       --ignore-command-error
+              忽略子程序的退出代码
+
+       --ignore-failed-read
+              遇到不可读文件的非零状态不退出
+
+       --index-file 文件
+              将处理过程信息输出到指定文件， 而不是输出到标准输出
+
+       -j, --bzip2
+              用 bzip2 处理存档， 用于 .bz2 文件
+
+       -J, --xz
+              用 xz 处理存档， 用于 .xz 文件
+
+       -k, --keep-old-files
+              保留已存在的文件; 不用存档中的文件覆盖它们
+
+       -K, --starting-file FILE
+              从存档中的指定文件处开始
+
+       --keep-newer-files
+              不覆盖比存档新的文件
+
+       -l, --check-links
+              如果文件系统中文件的硬链接数和存档中记录的不同， 则发出警告
+
+       -L, --tape-length N
+              在写入了N*1024字节后， 更换磁带
+
+       -m, --touch, --modification-time
+              不提取文件的修改时间
+
+       -M, --multi-volume
+              创建/列出/提取 多卷存档
+
+       --mode 权限
+              添加文件时应用指定的权限 (参看 chmod(1))
+
+       --mtime 日期
+              当创建存档时， 使用指定日期作为存档成员的修改日期， 而不是使用文件的实际修改时间
+
+       -N, --after-date 日期, --newer 日期
+              只存储在指定日期后有修改或状态更新 (权限， ACLs， 扩展属性， ...)的文件
+
+       --newer-mtime 日期
+              和 --newer 类似， 但是只存储指定日期后有修改的文件
+
+       --no-anchored
+              匹配任意‘/’后字符项--exclude一起使用
+
+       --no-auto-compress
+              不根据存档后缀来决定使用哪个压缩程序
+
+       --no-delay-directory-restore
+              在目录中的所有文件都被提取完成时， 就设定该目录的修改时间和权限; 这是默认设置
+
+       --no-ignore-command-error
+              对以非零状态终止的子程序的显示警告
+
+       --no-ignore-case
+              用 --exclude 匹配时区分大小写
+
+       --no-overwrite-dir
+              从存档中提取文件时， 保留已存在目录的元数据。
+
+       --no-quote-chars 字符串
+              把指定字符串中的字符从--quote-chars选项指定的字符中去除
+
+       --no-recursion
+              不递归进入子目录
+
+       --no-same-permissions
+              提取时应用用户的umask， 而不是用已记录的权限
+
+       --no-unquote
+              将所有输入文件或成员的名字作为普通文字， 不解释转义序列
+
+       --no-wildcards
+              不对--exclude使用通配符
+
+       --no-wildcards-match-slash
+              --exclude的通配符不匹配斜杠(/)
+
+       --null --files-from读取以空值终止的名字， 禁用--directory
+
+       --numeric-owner
+              总是用数字作为 用户/组 的名字
+
+       -o, --old-archive, --portability
+              相当于--format=v7； 当创建存档时-o选项表示这个行为 （已弃用的行为）
+
+       -o, --no-same-owner
+              提取时不恢复所有权； 当提取时-o选项表示这个行为
+
+       -O, --to-stdout
+              将文件提取到标准输出
+
+       --occurrence 次数
+              只处理指定次数每个已被命名的文件的在操作中的出现； 用于--delete, --diff, --extract, 或 --list
+
+       --one-file-system
+              创建存档时停留在本地文件系统
+
+       --overwrite
+              提取时覆盖已存在的文件和目录中的元数据
+
+       --overwrite-dir
+              提取时覆盖目录中的元数据
+
+       --owner 用户
+              将文件所有者设为指定用户， 而不是原文件的所有者； 这个选项对提取无效
+
+       -p, --preserve-permissions, --same-permissions
+              提取所有保护信息
+
+       -P, --absolute-names
+              将文件名开头的“/”符号看作文件名的一部分
+
+       --pax-option 关键字列表
+              修改tar处理扩展头关键字的方式， 只用于POSIX.1-2001存档
+
+       --posix
+              相当于--format=posix
+
+       --preserve
+              相当于--preserve-permissions加上--same-order
+
+       --quote-chars 字符串
+              总是标出指定字符串中包含的的字符， 即使已选择的标识风格不标识它们
+
+       --quote-style 风格
+              设定显示成员和文件名称的标识风格
+
+       -R, --record-number
+              显示存档中每条信息的记录数字
+
+       --record-size 字节数
+              访问存档时每条记录使用指定的字节数
+
+       --recursion
+              递归进入目录
+
+       --recursive-unlink
+              提取目录之前先把存在的相同名称的目录删除
+
+       --remove-files
+              把文件加入到存档后删除这些文件
+
+       --restrict
+              禁用一些有潜在害处的选项； 目前这会禁用多卷菜单中对shell的调用
+
+       --rmt-command 命令
+              用指定的命令代替默认的/usr/sbin/rmt
+
+       --rsh-command 命令
+              用指定的远程命令代替rsh(1)
+
+       -s, --same-order, --preserve-order
+              名称列表会被排序以匹配存档
+
+       -S, --sparse
+              高效地处理稀疏文件
+
+       --same-owner
+              以相同的所有权创建提取出的文件
+
+       --show-defaults
+              显示tar使用的默认选项
+
+       --show-omitted-dirs
+              显示提取时tar跳过的目录
+
+       --show-transformed-names, --show-stored-names
+              应用了任何sed转换之后， 显示文件或成员名字
+
+       --strip-components 目录层数
+              在提取前， 把文件从前往后指定层数的目录都从提取路径中去掉， 如果文件包含在指定层数中， 则不被提取
+
+       --suffix 后缀
+              备份文件时， 使用指定的后缀， 而不是使用默认后缀‘～’
+
+       -T, --files-from 文件
+              从指定文件中获得要提取或创建的存档的名字
+
+       --test-label
+              读取卷标； 如果一个词被指定了， 则测试它是否匹配这个卷标
+
+       --to-command 命令
+              提取期间， 将提取的文件导入到指定命令的标准输入
+
+       --totals
+              显示用--create参数写入的总字节数
+
+       --transform sed表达式
+              用sed的转换表达式转换文件或成员的名字
+
+       -U, --unlink-first
+              提取文件之前，删除已存在的与之同名的文件
+
+       --unquote
+              不标识输入文件或成员的名字； 这是默认选项
+
+       --utc  以UTC时间显示文件的修改日期
+
+       -v, --verbose
+              列出文件的处理情况
+
+       -V, --label 名称
+              用指定卷名创建存档
+
+       --version
+              显示tar程序的版本信息
+
+       --volno-file 文件
+              保持追踪指定文件中多卷存档的卷编号； 和--multi-volume一起使用
+
+       -w, --interactive, --confirmation
+              每一个动作都要求确认
+
+       -W, --verify
+              写完存档后对其进行校验
+
+       --wildcards
+              对--exclude用通配符
+
+       --wildcards-match-slash
+              --exclude的通配符匹配斜杠(/)
+
+       -X, --exclude-from 文件
+
+              排除列在指定文件中的文件
+
+       -z, --gzip, --gunzip, --ungzip
+              用gzip对存档进行操作
+
+       -Z, --compress, --uncompress
+              用compress对存档进行操作
+
+       -[0-7][lmh]
+              指定驱动器[0-7]和压缩密度[低中高]
+
+BUGS
+       GNU世界的人， 通常不喜欢man手册， 而是写文档代替之。 tar的维护者也是如此。  所以， 这个man手册页可能会不完全，  或者不够新，  它被包含在Gentoo的portage树中，  因
+       为man是一个非常好的工具：）。 这个man手册页最初取自Debian Linux， 从那时起已在这里被很好地更新。
+
+报
+       请通过 http://bugs.gentoo.org/ 报告Bug。 翻译问题请联系译者或到 https://github.com/lidaobing/manpages-zh/ 提交问题
+
+作
+       Debian Linux http://www.debian.org/
+       Mike Frysinger <vapier@gentoo.org>
+
+译
+       CMPP 中文手册页计划 http://cmpp.linuxforum.net (2001/08/08)
+       Saigut <gosaigut@gmail.com> (2013/11/09)
+
+中
+       2014/10/04
+
+跋
+       本页面中文版由中文 man 手册页计划提供。
+       中文 man 手册页计划：https://github.com/man-pages-zh/manpages-zh
+
+GNU                                                                             Mar 2010                                                                          TAR(1)

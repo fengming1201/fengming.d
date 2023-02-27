@@ -1,0 +1,24 @@
+用法: pdfgrep [OPTION]... PATTERN FILE...
+
+在每个文件中按PATTERN搜索。
+默认情况下，PATTERN 是一个扩展的正则表达式。
+
+常用选项:
+ -i, --ignore-case              忽略大小写区别。
+ -P, --pcre                     使用 Perl 兼容正则表达式 （PCRE）。
+ -H, --with-filename            打印每个匹配项的文件名。
+ -h, --no-filename              禁止在输出时添加文件名前缀。
+ -n, --page-number              使用输出行打印页码。
+ -c, --count                    仅打印每个文件的匹配计数。
+     --color WHEN               使用颜色突出显示;WHEN可以是`always', `never' or `auto'。
+ -p, --page-count               每页仅打印匹配计数。
+ -m, --max-count NUM            NUM 匹配行后停止读取（每个文件）。
+ -q, --quiet                    抑制正常输出。
+ -r, --recursive                递归搜索目录。
+ -R, --dereference-recursive    同样，但遵循所有符号链接。
+     --cache                    使用缓存加快操作速度。
+     --help                     打印此帮助。
+ -V, --version                  显示版本信息。
+以上列表只是常用选项的选择。请参考到手册页以获取完整列表。
+
+例子：

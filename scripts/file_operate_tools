@@ -1,0 +1,19 @@
+#***************************************#
+#author:fengming
+#date:Sat 25 Feb 2023 07:37:43 PM CST
+#***************************************#
+function fm-pdf_grep
+{
+
+
+    return 0
+}
+
+function fm-pdf_crack_pwd
+{
+
+
+    return 0
+}
+
+

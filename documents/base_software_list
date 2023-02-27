@@ -71,6 +71,41 @@
             "describe":"shred可覆盖文件以隐藏内容，另外还可以彻底删除文件。"
         },
         {
+            "app_name":"dig",
+            "install_methor":"",
+            "describe":"dig命令它是一个功能强大且灵活的命令行工具，用于查询 DNS 名称服务器"
+        },
+        {
+            "app_name":"host",
+            "install_methor":"",
+            "describe":"它是用于执行 DNS 查询的简单程序。"
+        },
+        {
+            "app_name":"pdfcrack",
+            "install_methor":"apt install  pdfcrack",
+            "describe":"PDF files password cracker,pdfcrack是Linux下一个PDF暴力破解密工具。"
+        },
+        {
+            "app_name":"pdfgrep",
+            "install_methor":"apt install pdfgrep",
+            "describe":"search in pdf files for strings matching a regular expression,pdfgrep命令用于过滤对一个 PDF 或多个 PDF 中特定字符模式的搜索。"
+        },        
+        {
+            "app_name":"crunch",
+            "install_methor":"apt install crunch",
+            "describe":"tool for creating wordlist,crunch是密码字典生成器，可以根据指定的字符来生成组合密码字典。"
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
             "app_name":"",
             "install_methor":"",
             "describe":""
@@ -89,7 +124,72 @@
             "app_name":"",
             "install_methor":"",
             "describe":""
-        }
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"",
+            "install_methor":"",
+            "describe":""
+        },                                                        
     ]
 
 }
