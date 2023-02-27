@@ -1,19 +1,27 @@
 #***************************************#
 #author:fengming
-#date:Sat 25 Feb 2023 07:37:43 PM CST
+#date:Tue 10 Jan 2023 04:56:27 PM CST
 #***************************************#
 function fm-pdf_grep
 {
+	local app=pdfgrep
+	local app_flag=
+	which $app > /dev/null
+	if [ $? -ne 0 ] ; then echo ¨$app not exist!¨;return 1;fi;
+	
+	$app $app_flag $*
 
-
-    return 0
+	return 0
 }
 
-function fm-pdf_crack_pwd
+function fm-pdf_crack_passwd
 {
+	local app=pdfcrack
+	local app_flag=
+	which $app
+	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
 
-
-    return 0
+	$app $app_flag $*
+	return 0
 }
-
 
