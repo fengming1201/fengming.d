@@ -6,8 +6,8 @@ function fm-pdf_grep
 {
 	local app=pdfgrep
 	local default_opt=
-	which $app > /dev/null
-	if [ $? -ne 0 ] ; then echo ¨$app not exist!¨;return 1;fi;
+    which ${app} > /dev/null
+	if [ $? -ne 0 ] ; then echo ¨${app} not exist!¨;return 1;fi;
 	
 	$app ${default_opt} $*
 
@@ -18,8 +18,8 @@ function fm-pdf_crack_passwd
 {
 	local app=pdfcrack
 	local default_opt=
-	which $app
-	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
@@ -29,8 +29,8 @@ function fm-pdf_tk
 {
 	local app=pdftk
 	local default_opt=
-	which $app
-	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
@@ -40,8 +40,8 @@ function fm-grep_aviv
 {
 	local app=grep
 	local default_opt="-rin"
-	which $app
-	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
