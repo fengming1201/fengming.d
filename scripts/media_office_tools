@@ -5,11 +5,11 @@
 function fm-pdf_viewer
 {
 	local app=evince
-	local app_flag=
+	local default_opt=
 	which $app > /dev/null
 	if [ $? -ne 0 ] ; then echo ¨$app not exist!¨;return 1;fi;
 	
-	$app $app_flag $*
+	$app ${default_opt} $*
 
 	return 0
 }
@@ -17,23 +17,23 @@ function fm-pdf_viewer
 function fm-picture_viewer
 {
 	local app=gpicview
-	local app_flag=
+	local default_opt=
 	which $app
 	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
 
-	$app $app_flag $*
+	$app ${default_opt} $*
 	return 0
 }
 
 function fm-movie_viewer
 {
 	local app=mpv
-	#local app_flag=¨--player-operation-mode=pseudo-gui¨
-	local app_flag=
+	#local default_opt=¨--player-operation-mode=pseudo-gui¨
+	local default_opt=
 	
 	which $app > /dev/null
 	if [ $? -ne 0 ];then echo ¨$app not exist!¨;return 1;fi;
 
-	$app $app_flag $*
+	$app ${default_opt} $*
 	return 0
 }
