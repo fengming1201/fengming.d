@@ -263,7 +263,7 @@ function fm-ls_app_dependent
 	if [ $? -eq 0  ]
 	then 
 		echo "------------------------------------"
-		echo "${ldd_tools} $@"
+		echo "${ldd_tools} $*"
 		${ldd_tools} $@
 		echo "------------------------------------"
 	else

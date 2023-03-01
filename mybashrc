@@ -17,12 +17,10 @@ alias bd=". bd -si"
 alias treee='tree'
 alias treeee='tree'
 alias cman='man -M  /usr/share/man/zh_CN'
-alias mygrep='grep --exclude=*.map  --exclude=*.o  --exclude=*.a  --exclude=*.bin  --exclude=*.bak  --exclude=*.out'
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
 alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias clr='clear'
-alias rm-shred='shred -n 1 -u --random-source=/dev/urandom -v'
 
 #source other files
 except_do_source_list="env_variable"
@@ -115,22 +113,6 @@ function fm-base_software_list
 	return 0
 }
 
-function fm-install_mybashrc
-{
-	local home_bashrc=${HOME}/.bashrc
-	if [ ! -f ${home_bashrc} ]
-	then
-		echo "${home_bashrc} not exist"
-		return 1
-	fi
-	cat >> ${home_bashrc} << EOF
-if [ -f ${fengming_top_dir}/mybashrc ];then
-	. ${fengming_top_dir}/mybashrc
-fi
-EOF
-	tail -3 ${home_bashrc}
-	return 0
-}
 
 function fm-install_mytools
 {

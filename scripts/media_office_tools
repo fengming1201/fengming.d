@@ -7,7 +7,7 @@ function fm-pdf_viewer
 	local app=evince
 	local default_opt=
 	which ${app} > /dev/null
-	if [ $? -ne 0 ] ; then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ] ; then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 	
 	$app ${default_opt} $*
 
@@ -19,7 +19,7 @@ function fm-picture_viewer
 	local app=gpicview
 	local default_opt=
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
@@ -32,7 +32,7 @@ function fm-movie_viewer
 	local default_opt=
 	
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0

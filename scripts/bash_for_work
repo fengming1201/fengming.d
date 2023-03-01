@@ -182,3 +182,35 @@ function fm-svn_revert_all
 	return 0
 }
 
+function fm-svngrep
+{
+	local app=grep
+	local default_opt='--exclude=*.map  --exclude=*.o  --exclude=*.a  --exclude=*.bin  --exclude=*.bak  --exclude=*.out'
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+
+	$app ${default_opt} $*
+	return 0
+}
+
+function fm-svnls
+{
+	local app=svn
+	local default_opt='st | grep -v ^?'
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+
+	$app ${default_opt} $*
+	return 0
+}
+
+function fm-svnst
+{
+	local app=svn
+	local default_opt="st | grep -v ^?"
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+
+	$app ${default_opt} $*
+	return 0
+}

@@ -7,7 +7,7 @@ function fm-pdf_grep
 	local app=pdfgrep
 	local default_opt=
     which ${app} > /dev/null
-	if [ $? -ne 0 ] ; then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ] ; then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 	
 	$app ${default_opt} $*
 
@@ -19,7 +19,7 @@ function fm-pdf_crack_passwd
 	local app=pdfcrack
 	local default_opt=
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
@@ -30,7 +30,7 @@ function fm-pdf_tk
 	local app=pdftk
 	local default_opt=
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
@@ -41,13 +41,22 @@ function fm-grep_aviv
 	local app=grep
 	local default_opt="-rin"
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
 	return 0
 }
 
+function fm-rm_shred
+{
+	local app=shred
+	local default_opt="-n 1 -u --random-source=/dev/urandom -v"
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
+	$app ${default_opt} $*
+	return 0
+}
 
 
 

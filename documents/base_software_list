@@ -96,19 +96,19 @@
             "describe":"tool for creating wordlist,crunch是密码字典生成器，可以根据指定的字符来生成组合密码字典。"
         },
         {
-            "app_name":"",
-            "install_methor":"",
+            "app_name":"cmake",
+            "install_methor":"apt install cmake",
             "describe":""
         },
         {
-            "app_name":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"cryptsetup",
+            "install_methor":"apt install cryptsetup",
+            "describe":"transitional dummy package for cryptsetup-{run,initramfs},"
         },
         {
-            "app_name":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"lvm2",
+            "install_methor":"apt install lvm2",
+            "describe":"Linux Logical Volume Manager,"
         },
         {
             "app_name":"",
