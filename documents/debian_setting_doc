@@ -15,23 +15,11 @@
 
     step 4:重启
     init 6
-}
-{
-    linux mkfs.ntfs 格式化慢
-    原因是格式化过程除了写入分区表外，还要遍历每个卷，清零和坏扇区检查。
-    解决办法：
-    mkfs.ntfs -f  /dev/sdXX
-    -f、–-fast或 –q、–-quick 执行快速格式化。这将跳过卷清零和坏扇区检查。
-    –L、–-label	设置文件系统的卷标签。
-    –n、–-no-action	mkntfs不实际创建文件系统，但显示它创建文件系统时将执行的工作。
-    -c	以字节为单位指定簇的大小。
-    –p、–-partition	指定分区开始扇区
-    -f/--force	强制执行mkntfs
-}
+},
 {
     linux的XDG（X Desktop Group）基本目录规范
 
-}
+},
 {
     linux 常见的图形操作界面有哪些？
     1，KDE
@@ -48,7 +36,7 @@
 
     /etc/xdg/目录
 
-}
+},
 {
     取消Debian屏保及显示器休眠
     详解请查看：xset_help 文件
@@ -63,4 +51,23 @@
     设置10秒后进入屏保：$ sudo xset s 10 600
     恢复系统默认值：$ sudo xset s 0 600
     取消屏保：$ sudo xset s off
-}
+},
+{
+    debian LXDE 安装 fcitx5 中文输入法：
+
+    step1:
+    首先安装fcitx5和fcitx5-pinyin:
+    apt-get install fcitx5 fcitx5-pinyin zenity
+
+    step2:
+    接着在im-config图形面板中选择fcitx5作为输入方式。
+
+    im-config可以在run中打开或者在system工具中找到。
+
+    step3:
+    然后打开fcitx5-configure图形面板配置拼音输入法，在input method面板下右侧（Available Input Method:）输入框中输入pinyin,
+    找到后点击中间箭头按钮使之加入左侧。
+
+    step4：
+    重启。
+},

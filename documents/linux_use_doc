@@ -20,9 +20,9 @@
     #echo "hello world"  > /dev/pts/0
     向0号终端发送“hello world” 
     结合tee命令，即可以在本地显示，又可以发送到其他终端。
-}
+},
 {
-linux下神奇的script命令-录屏
+    linux下神奇的script命令-录屏
     script 是一个神奇命令，script 能够将终端的会话过程录制下来，然后使用 scriptreplay 就可以将其录制的结果播放给他人观看。
     script 的好处就在于你在终端中的所有操作、敲过的命令和打印出的结果它都可以原原本本地进行录制。可以应用于教学、演示、审计。 
     一般来说，script 和 scriptreplay 在 Linux 发行版中都有默认安装。 
@@ -42,7 +42,7 @@ linux下神奇的script命令-录屏
     -a 输出录制的文件，在现有内容上追加新的内容 
     -q  可以使script命令以静默模式运行  利用script记录某人行为 
 
-}
+},
 {
 使用reptyr在screen中接管执行中进程
     当你开启了一个占用很长时间的进程，比如wget一个大文件，但是没有在screen等这种环境里打开，
@@ -50,9 +50,22 @@ linux下神奇的script命令-录屏
     开启一个screen，在screen中执行
 
     reptyr 进程pid    //即可完成接管，原来所在的终端程序变成后台，还可以重新接管回去。
-}
+},
 {
-    
+    如何恢复nohup会话（session）
+        
 
 
-}
+},
+{
+    linux mkfs.ntfs 格式化慢
+    原因是格式化过程除了写入分区表外，还要遍历每个卷，清零和坏扇区检查。
+    解决办法：
+    mkfs.ntfs -f  /dev/sdXX
+    -f、–-fast或 –q、–-quick 执行快速格式化。这将跳过卷清零和坏扇区检查。
+    –L、–-label	设置文件系统的卷标签。
+    –n、–-no-action	mkntfs不实际创建文件系统，但显示它创建文件系统时将执行的工作。
+    -c	以字节为单位指定簇的大小。
+    –p、–-partition	指定分区开始扇区
+    -f/--force	强制执行mkntfs
+},

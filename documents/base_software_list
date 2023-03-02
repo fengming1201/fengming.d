@@ -51,6 +51,11 @@
             "describe":"Tool for moving running programs between ptys."
         }, 
         {
+            "app_name":"screen",
+            "install_methor":"apt install screen",
+            "describe":"screen manager with VT100/ANSI terminal emulation"
+        }, 
+        {
             "app_name":"astyle",
             "install_methor":"apt install astyle",
             "describe":"Source code indenter for C, C++, Objective-C, C#, and Java."
