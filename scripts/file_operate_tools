@@ -51,10 +51,43 @@ function fm-rm_shred
 {
 	local app=shred
 	local default_opt="-n 1 -u --random-source=/dev/urandom -v"
+	#check para
+	if [ $# -lt 1 ]
+	then 
+		echo "ERROR:${FUNCNAME},paramter wrong!!"
+		echo "format:"
+		echo "       ${FUNCNAME}  file or dir list"
+		return 1
+	fi
+
 	which ${app} > /dev/null
 	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
-	$app ${default_opt} $*
+	local total_file_num=
+	local num=
+	let total_file_num=0
+	let num=0
+	for param in "$@"
+	do
+		if [ -d ${param} ]
+		then
+			#first remove files under this dir
+			let num=0
+			for file in $(find ${param} -type f)
+			do
+				$app ${default_opt} ${file}
+				let num=${num}+1
+			done
+			let total_file_num=${total_file_num}+${num}
+			#final remove dir
+			rm -rf ${param}
+		else
+			$app ${default_opt} ${param}
+			let total_file_num=${total_file_num}+1
+		fi
+	done
+
+	echo "total erase file counts:${total_file_num}"
 	return 0
 }
 
