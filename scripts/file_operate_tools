@@ -5,7 +5,7 @@
 function fm-pdf_grep
 {
 	local app=pdfgrep
-	local default_opt=
+	local default_opt="--cache -iHnr "
     which ${app} > /dev/null
 	if [ $? -ne 0 ] ; then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 	
