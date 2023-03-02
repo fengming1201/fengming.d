@@ -47,7 +47,7 @@ function fm-grep_aviv
 	return 0
 }
 
-function fm-rm_shred
+function fm-rm_overwrite
 {
 	local app=shred
 	local default_opt="-n 1 -u --random-source=/dev/urandom -v"
