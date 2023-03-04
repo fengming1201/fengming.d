@@ -69,3 +69,49 @@
     –p、–-partition	指定分区开始扇区
     -f/--force	强制执行mkntfs
 },
+{
+    cp 命令添加进度条
+    如何使用 Github 上的开源项目 advcpmv 来实现 Linux 中的 「cp」 和 「mv」 命令的进度条。
+    由于 cp 和 mv 命令都是属于 coreutils 工具包下的，因此我们的主要操作就是在编译 coreutils的时候加入补丁从而实现进度条功能。
+    注意：尽量不要使用root 用户操作。
+
+    可以查看作者的安装脚本：curl -LO https://raw.githubusercontent.com/jarun/advcpmv/master/install.sh
+    用作者的脚本安装：install.sh  0.8 8.30
+    
+    我改造作者的安装脚本myinstall.sh在：fengming.d/linux_tools/advcpmv.tar.gz
+    自己手动下载安装步骤如下：
+    step1:下载coreutils，下载对应的版本
+        http://ftp.gnu.org/gnu/coreutils/coreutils-8.30.tar.xz
+        http://ftp.gnu.org/gnu/coreutils/coreutils-8.32.tar.xz
+        http://ftp.gnu.org/gnu/coreutils/coreutils-9.0.tar.xz
+        http://ftp.gnu.org/gnu/coreutils/coreutils-9.1.tar.xz
+        如：
+        curl -LO http://ftp.gnu.org/gnu/coreutils/coreutils-8.30.tar.xz
+        解压:
+        tar -xJf coreutils-8.30.tar.xz
+
+    step2:下载 github 上的补丁
+        https://raw.githubusercontent.com/jarun/advcpmv/master/advcpmv-0.8-8.30.patch
+        https://raw.githubusercontent.com/jarun/advcpmv/master/advcpmv-0.8-8.32.patch
+        https://raw.githubusercontent.com/jarun/advcpmv/master/advcpmv-0.8-9.0.patch
+        https://raw.githubusercontent.com/jarun/advcpmv/master/advcpmv-0.8-9.1.patch
+
+        如：
+        curl -LO https://raw.githubusercontent.com/jarun/advcpmv/master/advcpmv-0.8-8.30.patch
+    
+    step3:打补丁
+        cd coreutils-8.30
+        patch -p1 -i ../advcpmv-0.8-8.30.patch
+
+    stept4:配置和编译
+        ./configure
+        make
+    step5:安装 
+        将编译生成的src/cp 和 src/mv 放置在/usr/local/bin/目录中。
+        不要删除或复制系统原来的命令，只要PATH中/usr/local/bin在/bin/前面即可，在/usr/local/bin找到cp或mv后就不去/bin目录中寻找了。
+
+    附件：
+    当下载补丁时，https://raw.githubusercontent.com URL有可能访问不了，是因为域名解析的问题，可以用网页查看该域名对应的IP，（域名查看：https://www.ip138.com/）
+    然后直接修改/etc/hosts文件即可。
+}
+

@@ -75,27 +75,68 @@ function buildin_install_7zz_pkg
 	if [ $? -eq 0 ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
 
 	if [ -d ${target_path}/${target_dir} ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
-
+	#build dir
 	mkdir -p ${target_path}/${target_dir}
 	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},mkdir ${target_path}/${target_dir} fail";return 1;fi
+	#extra pack
 	if [ ! -f ${z7z_pkg} ];then echo "ERROR:${FUNCNAME},file:${z7z_pkg} no exist!";return 2;fi
 	tar -xJf ${z7z_pkg} -C ${target_path}/${target_dir}
-	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 2;fi
-
+	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 3;fi
+	
 	#build link
 	if [ -e ${target_path}/${target_dir}/7zz ]
 	then
+		rm ${link_bin_dir}/7zz
 		ln -s ${target_path}/${target_dir}/7zz  ${link_bin_dir}/7zz
 	else
-		echo "ERROR:${FUNCNAME},file:${target_path}/${target_dir}/7zz no exist!"
+		echo "ERROR:${FUNCNAME},build link fail,file:${target_path}/${target_dir}/7zz no exist!"
 	fi
 	if [ -e ${target_path}/${target_dir}/7zzs ]
 	then
+		rm ${link_bin_dir}/7zzs
 		ln -s ${target_path}/${target_dir}/7zzs  ${link_bin_dir}/7zzs
 	else
-		echo "ERROR:${FUNCNAME},file:${target_path}/${target_dir}/7zzs no exist!"		
+		echo "ERROR:${FUNCNAME},build link fail,file:${target_path}/${target_dir}/7zzs no exist!"		
 	fi
+	return 0
+}
 
+function build_install_advcpmv_pkg
+{
+	local advcpmv_pkg=${tools_dir}/advcpmv_pkg.tar.gz
+	local target_path=/opt
+	local target_dir=advcpmv
+	local binaries_dir=off-the-shelf-binaries
+	local link_bin_dir=/usr/local/bin
+	
+	if [ -d ${target_path}/${target_dir} ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
+	#build dir
+	mkdir -p ${target_path}/${target_dir}
+	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},mkdir ${target_path}/${target_dir} fail";return 1;fi
+	#extra pack
+	if [ ! -f ${advcpmv_pkg} ];then echo "ERROR:${FUNCNAME},file:${advcpmv_pkg} no exist!";return 2;fi
+	tar -xzf ${advcpmv_pkg} -C ${target_path}/${target_dir}
+	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 3;fi
+
+	#check version 
+	local current_version=$(cp --version  | grep -w cp  | awk '{print $4 }')
+	
+	#build link
+	if [ -e ${target_path}/${target_dir}/${binaries_dir}/cp.${current_version} ]
+	then
+		rm ${link_bin_dir}/cp
+		ln -s ${target_path}/${target_dir}/${binaries_dir}/cp.${current_version}  ${link_bin_dir}/cp
+	else
+		echo "ERROR:${FUNCNAME},build link fail,file:${target_path}/${target_dir}/${binaries_dir}/cp.${current_version} no exist!"
+	fi
+	if [ -e ${target_path}/${target_dir}/${binaries_dir}/mv.${current_version} ]
+	then
+		rm ${link_bin_dir}/mv
+		ln -s ${target_path}/${target_dir}/${binaries_dir}/mv.${current_version}  ${link_bin_dir}/mv
+	else
+		echo "ERROR:${FUNCNAME},build link fail,file:${target_path}/${target_dir}/${binaries_dir}/mv.${current_version} no exist!"		
+	fi
+	echo "maybe you need to menu change owner for dir ${target_path}/${target_dir}"
 	return 0
 }
 
@@ -124,6 +165,8 @@ function tool_scheduler_func
 	exe_func buildin_install_z_pkg
 
 	exe_func buildin_install_7zz_pkg
+
+	exe_func build_install_advcpmv_pkg
 
 	return 0
 }

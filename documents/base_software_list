@@ -56,16 +56,6 @@
             "describe":"screen manager with VT100/ANSI terminal emulation"
         }, 
         {
-            "app_name":"astyle",
-            "install_methor":"apt install astyle",
-            "describe":"Source code indenter for C, C++, Objective-C, C#, and Java."
-        },
-        {
-            "app_name":"mdadm",
-            "install_methor":"apt install  mdadm",
-            "describe":"mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)"
-        },
-        {
             "app_name":"flashbench",
             "install_methor":"apt install flashbench",
             "describe":"identify flash storage properties,FlashBench能够全方位的测试U盘和SD卡等使用Flash作为介质的移动存储设备的读写速度。"
@@ -116,14 +106,24 @@
             "describe":"Linux Logical Volume Manager,"
         },
         {
-            "app_name":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"mdadm",
+            "install_methor":"apt install  mdadm",
+            "describe":"mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)"
         },
         {
-            "app_name":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"shellcheck",
+            "install_methor":"apt install shellcheck",
+            "describe":"用于shell脚本的语法检查工具。"
+        },
+        {
+            "app_name":"cppcheck",
+            "install_methor":"apt install  cppcheck",
+            "describe":"tool for static C/C++ code analysis (CLI)，cppcheck工具是一个C/C++代码缺陷静态检查工具。它不仅可以检查代码中的语法错误，还可以检查出编译器检查不出来的缺陷，从而辅助提升代码质量。"
+        },
+        {
+            "app_name":"astyle",
+            "install_methor":"apt install astyle",
+            "describe":"Source code indenter for C, C++, Objective-C, C#, and Java."
         },
         {
             "app_name":"",
