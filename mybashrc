@@ -63,7 +63,18 @@ function fm-help_example
 	for file_list in ${parameter}
 	do
 		help_file=$(find ${help_file_path} -type f -iname "${file_list}*")
-		if [ "x${help_file}" = x ];then echo "no found ${file_list} help file";return 2;fi
+		if [ "x${help_file}" = x ]
+		then 
+			echo "no found help file with prefix ${file_list}"
+			
+			local maybe_file=$(find ${help_file_path} -type f -iname "*${file_list}*")
+			if [ "x${maybe_file}" != x ]
+			then
+				echo "maybe you looking for: "
+				echo "${maybe_file}"
+			fi
+			return 2
+		fi
 		for file_each in ${help_file}
 		do
 			echo "file:${file_each}"
