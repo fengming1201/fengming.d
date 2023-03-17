@@ -55,6 +55,17 @@ function fm-mybuild_image_version_show
 	fi
 	return 0
 }
+function fm-show_mygit_info
+{
+	local mygit_site="https://github.com/fengming1201/fengming.d.git"
+	local fengming_dir="-C ${fengming_top_dir}"
+
+	echo ${mygit_site} > /tmp/fengming.git
+	echo ${mygit_site}
+	git ${fengming_dir}  log  -1
+
+	return 0;
+}
 function fm-help_example
 {
 	local help_file_path=${fengming_top_dir}/help_files
