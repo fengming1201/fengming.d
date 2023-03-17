@@ -158,7 +158,7 @@ function fm-svn_revert_all
 	then
 		return 1
 	fi
-
+	# svn revert --recursive .
 	local change_file_list=$(svn st | grep ^[MCAD\!] | awk '{print $2}' | tac)
 	local no_record_file_list=$(svn st | grep ^? | awk '{print $2}')
 

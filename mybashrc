@@ -46,7 +46,15 @@ function clrall
 	return 0
 }
 
-
+function fm-mybuild_image_version_show
+{
+	local version_file=/boot/mybuild-image-version
+	if [ -f ${version_file} ]
+	then	
+		cat ${version_file}
+	fi
+	return 0
+}
 function fm-help_example
 {
 	local help_file_path=${fengming_top_dir}/help_files
