@@ -147,16 +147,16 @@
             "describe":"Source code indenter for C, C++, Objective-C, C#, and Java."
         },
         {
-            "app_name":"",
-            "tool_level":"",
-            "install_methor":"",
-            "describe":""
+            "app_name":"foremost",
+            "tool_level":"BASE",
+            "install_methor":"apt install foremost",
+            "describe":"Recover files using their headers, footers, and data structures：foremost是一款根据文件头，尾和内部结构来尝试从镜像文件（或者磁盘）中恢复文件的工具。"
         },
         {
-            "app_name":"",
+            "app_name":"sc",
             "tool_level":"",
             "install_methor":"",
-            "describe":""
+            "describe":"Text-based spreadsheet with VI-like keybindings：命令行里的电子表格。"
         },
         {
             "app_name":"",

@@ -124,9 +124,10 @@ function fm-document_list
 		if [ "x${doc_file}" = x ];then echo "no found ${file} help file";return 2;fi
 		for file_each in ${doc_file}
 		do
-			echo "file:${file_each}"
-			echo ""
+			echo "start >>>"
 			cat ${file_each}
+			echo "end <<<"
+			echo "file:${file_each}"
 		done
 	done
 	return 0
@@ -204,7 +205,10 @@ function fm-realpath
 		local linux_path=$(${tool} ${path})
 		if [ x"${linux_path}" != "x"  ]
 		then
-			echo "linux   --- ${linux_path}"
+			if [ -e ${linux_path} ]
+			then
+				echo "linux   --- ${linux_path}"
+			fi
 		fi
 	done
 	for path in $*
@@ -212,8 +216,11 @@ function fm-realpath
 		local linux_path=$(${tool} ${path})
 		if [ x"${linux_path}" != "x"  ]
 		then
-			local win_path=$(echo ${linux_path} | sed 's#/#\\#g')
-			echo "windows --- ${win_path}" 
+			if [ -e ${linux_path} ]
+			then
+				local win_path=$(echo ${linux_path} | sed 's#/#\\#g')
+				echo "windows --- ${win_path}" 
+			fi				
 		fi
 	done
 	return 0

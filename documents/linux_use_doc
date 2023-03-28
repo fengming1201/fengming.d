@@ -113,5 +113,48 @@
     附件：
     当下载补丁时，https://raw.githubusercontent.com URL有可能访问不了，是因为域名解析的问题，可以用网页查看该域名对应的IP，（域名查看：https://www.ip138.com/）
     然后直接修改/etc/hosts文件即可。
+},
+{
+    判断Linux是否运行在虚拟机中
+    方法一、dmidecode命令
+    用 dmidecode 来判断Linux是否运行在虚拟环境：
+    在物理机上：
+    sudo dmidecode -s system-product-name
+    在虚拟机上：
+    sudo dmidecode -s system-product-name
+    但是它有个缺陷，就是不支持容器的检查。在容器中运行 dmidecode 会提示错误信息 /dev/mem: No such file or directory 
+    若你把 /dev 挂载进容器，则又会被识别为物理急。
+    
+    方法二、systemd-detect-virt
+    原来 systemd 已经提供了一个命令来帮你完成这项任务了，那就是 systemd-detect-virt：
+
+    在物理机上：
+    systemd-detect-virt;exit 0
+
+    在虚拟机上：
+    systemd-detect-virt;exit 0
+
+    在容器上:
+    systemd-detect-virt;exit 0
+},
+{
+    使用foremost恢复已删除文件
+    foremost是一款根据文件头，尾和内部结构来尝试从镜像文件（或者磁盘）中恢复文件的工具。
+    foremost默认可以扫描出 jpg, gif, png, bmp, avi, exe, mpg, mp4, wav, riff, wmv, mov, pdf, ole, doc, zip, rar, html, cpp 文件。
+
+    但是通过配置它的配置文件(默认为 /etc/foremost.conf),你还可以为它增加新的支持类型。 
+
+    例子：
+    
+
+},
+{
+    linux释放内存--手动释放swap和buffer和cache
+    
+
+},
+{
+
+    
 }
 
