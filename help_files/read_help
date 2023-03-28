@@ -1,0 +1,101 @@
+read 命令的功能是从标准输入读取 行 数据然后把它分成字段。
+用法
+        read [-ers] [-a array] [-d delim] [-i text] [-n nchars] [-N nchars] [-p prompt] [-t timeout] [-u fd] [name ...]
+选项
+        -a array          将读到的所有字段依次存到 array 数组中，索引从 0 开始
+
+        -d delim          将 delim 指定为读取结束符号，取代换行符
+
+        -e                使用 readline 来获取数据
+
+        -i text           将 text 作为 readline 的起始数据
+
+        -n nchars         最多读取 nchars 个字符后就停止，如果中途遇到回车或换行则立即停止
+
+        -N nchars         最多读取 nchars 个字符后就停止，如果遇到回车或换行也不会停止
+
+        -p prompt         打印 prompt 且不使用换行符(输入提示)
+
+        -r                禁止反斜线转义
+
+        -s                不打印从终端读到的输入
+
+        -t timeout        设置超时时间，如果超过了这个时间还没有结束输入，read 不会存储任何数据
+
+        -u fd             从文件描述符 fd 中读取数据
+
+例子：
+1. read    
+    # a b c 三个变量读取123这个输入，会看做一个变量，所以只有a被赋值
+    [root@server ~]# read a b c
+    123
+    [root@server ~]# echo $a
+    123
+    [root@server ~]# echo $b
+     
+    [root@server ~]# echo $c
+     
+    # 下边的方法可以避免上边的错误
+    [root@server ~]# read a b c
+    1 2 3
+    [root@server ~]# echo $a
+    1
+    [root@server ~]# echo $b
+    2
+    [root@server ~]# echo $c
+    3
+
+2. read -a
+    # 将读取的数据存到 array 数组中
+    [root@server ~]# read -a array
+    Read a line from the standard input and split it into fields.
+    [root@server ~]# echo ${array[@]}
+    Read a line from the standard input and split it into fields.
+    [root@server ~]# echo ${array[0]}
+    Read
+    [root@server ~]# echo ${array[5]}
+    standard
+
+3. read -d
+    指定读取结束符为"/"
+    [root@server ~]# read -d /
+    12345/[root@server ~]# read -d / a
+    12345/[root@server ~]# echo $a
+    12345
+
+4. read -n/N
+    # 最多读取5个字符，不到5个字符时的换行符会终止读取
+    [root@server ~]# read -n5 a
+    12345[root@server ~]# echo $a
+    12345
+    [root@server ~]# read -n5 a
+    12
+    [root@server ~]# echo $a
+    12
+     
+    # 最多读取5个字符，不到5个字符时的换行符不会终止读取
+    [root@server ~]# read -N5 a
+    12
+    34[root@server ~]#
+    [root@server ~]# echo $a
+    12 34
+
+5. read -p
+    [root@server ~]# read -p 请输入用户名：
+    请输入用户名：123
+    [root@server ~]#
+
+6. read -sp：s选项必须在前边
+    # 密码不会被输出，更安全
+    [root@server ~]# read -sp 请输入密码：
+    请输入密码：[root@server ~]#
+
+7. read -r
+    [root@server ~]# read -r a
+    \123
+    [root@server ~]# echo $a
+    \123
+    [root@server ~]# read a
+    \123
+    [root@server ~]# echo $a
+    123
