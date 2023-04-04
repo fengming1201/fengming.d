@@ -1,0 +1,119 @@
+
+root@debianUSB128:~# lsblk 
+NAME                        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                           8:0    1 119.5G  0 disk 
+├─sda1                        8:1    1   487M  0 part /boot
+├─sda2                        8:2    1     1K  0 part 
+└─sda5                        8:5    1   119G  0 part 
+  ├─debianUSB128--vg-root   254:2    0 118.1G  0 lvm  /
+  └─debianUSB128--vg-swap_1 254:3    0   976M  0 lvm  [SWAP]
+nvme0n1                     259:0    0 476.9G  0 disk 
+├─nvme0n1p1                 259:1    0   487M  0 part 
+├─nvme0n1p2                 259:2    0     1K  0 part 
+└─nvme0n1p5                 259:3    0   9.5G  0 part 
+  ├─debian11x--vg-root      254:0    0   8.5G  0 lvm  
+  └─debian11x--vg-swap_1    254:1    0   976M  0 lvm
+
+sda硬盘是当前正在运行的系统所在盘。
+nvme0n1才是本次需要扩容的目标盘。
+nvme0n1盘总共有467.9G，但是所有分区nvme0n1p1，nvme0n1p1，nvme0n1p5的大小加起来才10G左右。
+现在将磁盘剩余空间加到逻辑组debian11x-vg（vgdisplay查看）中。
+step1:首先将剩余空间创建一个分区，然后加入目标逻辑组中。
+fdisk /dev/nvme0n1
+Command (m for help): p
+
+
+Disk /dev/nvme0n1: 476.94 GiB, 512110190592 bytes, 1000215216 sectors
+Disk model: NE-512 2242                             
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xbd166525
+
+Device         Boot   Start      End  Sectors  Size Id Type
+/dev/nvme0n1p1 *       2048   999423   997376  487M 83 Linux
+/dev/nvme0n1p2      1001470 20969471 19968002  9.5G  5 Extended
+/dev/nvme0n1p5      1001472 20969471 19968000  9.5G 8e Linux LVM
+
+Command (m for help): n
+Select (default p): 
+Using default response p.
+Partition number (3,4, default 3): 
+
+First sector (20969472-1000215215, default 20969472): Last sector, +/-sectors or +/-size{K,M,G,T,P} (20969472-1000215215, default 1000215215): 
+
+
+Created a new partition 3 of type 'Linux' and of size 466.9 GiB.
+Command (m for help): p
+Disk /dev/nvme0n1: 476.94 GiB, 512110190592 bytes, 1000215216 sectors
+Disk model: NE-512 2242                             
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0xbd166525
+
+Device         Boot    Start        End   Sectors   Size Id Type
+/dev/nvme0n1p1 *        2048     999423    997376   487M 83 Linux
+/dev/nvme0n1p2       1001470   20969471  19968002   9.5G  5 Extended
+/dev/nvme0n1p3      20969472 1000215215 979245744 466.9G 83 Linux
+/dev/nvme0n1p5       1001472   20969471  19968000   9.5G 8e Linux LVM
+
+Partition table entries are not in disk order.
+
+Command (m for help): w
+
+root@debianUSB128:~# lsblk 
+NAME                        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                           8:0    1 119.5G  0 disk 
+├─sda1                        8:1    1   487M  0 part /boot
+├─sda2                        8:2    1     1K  0 part 
+└─sda5                        8:5    1   119G  0 part 
+  ├─debianUSB128--vg-root   254:2    0 118.1G  0 lvm  /
+  └─debianUSB128--vg-swap_1 254:3    0   976M  0 lvm  [SWAP]
+nvme0n1                     259:0    0 476.9G  0 disk 
+├─nvme0n1p1                 259:1    0   487M  0 part 
+├─nvme0n1p2                 259:2    0     1K  0 part 
+├─nvme0n1p5                 259:3    0   9.5G  0 part 
+│ ├─debian11x--vg-root      254:0    0   8.5G  0 lvm  
+│ └─debian11x--vg-swap_1    254:1    0   976M  0 lvm  
+└─nvme0n1p3                 259:4    0 466.9G  0 part 
+root@debianUSB128:~# 
+将分区初始化成？？
+root@debianUSB128:~# pvcreate /dev/nvme0n1p3 
+  Physical volume "/dev/nvme0n1p3" successfully created.
+root@debianUSB128:~#
+扩展逻辑组
+root@debianUSB128:~# vgextend debian11x-vg /dev/nvme0n1p3
+  Volume group "debian11x-vg" successfully extended
+root@debianUSB128:~# 
+扩展逻辑卷
+root@debianUSB128:~# lvextend -l +100%FREE  /dev/debian11x-vg/root
+  Size of logical volume debian11x-vg/root changed from 8.54 GiB (2187 extents) to 475.50 GiB (121729 extents).
+  Logical volume debian11x-vg/root successfully resized.
+root@debianUSB128:~#
+
+root@debianUSB128:~# lsblk 
+NAME                        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda                           8:0    1 119.5G  0 disk 
+├─sda1                        8:1    1   487M  0 part /boot
+├─sda2                        8:2    1     1K  0 part 
+└─sda5                        8:5    1   119G  0 part 
+  ├─debianUSB128--vg-root   254:2    0 118.1G  0 lvm  /
+  └─debianUSB128--vg-swap_1 254:3    0   976M  0 lvm  [SWAP]
+nvme0n1                     259:0    0 476.9G  0 disk 
+├─nvme0n1p1                 259:1    0   487M  0 part 
+├─nvme0n1p2                 259:2    0     1K  0 part 
+├─nvme0n1p5                 259:3    0   9.5G  0 part 
+│ ├─debian11x--vg-root      254:0    0 475.5G  0 lvm  
+│ └─debian11x--vg-swap_1    254:1    0   976M  0 lvm  
+└─nvme0n1p3                 259:4    0 466.9G  0 part 
+  └─debian11x--vg-root      254:0    0 475.5G  0 lvm
+root@debianUSB128:~# 
+
+ext4分区扩容
+1，e2fsck -f /dev/mapper/debian11x--vg-root
+2，resize2fs /dev/mapper/debian11x--vg-root
+
+

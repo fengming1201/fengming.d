@@ -84,3 +84,9 @@ Show which processes use the named files, sockets, or filesystems.
   -                     reset options
 
   udp/tcp names: [local_port][,[rmt_host][,[rmt_port]]]
+
+
+提示“device is busy”，找到是什么进程占用。可执行：
+fuser -m /mnt/data 将会显示使用这个模块的pid
+fuser -mk /mnt/data 将会直接kill那个pid
+

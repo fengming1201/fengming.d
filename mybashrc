@@ -96,9 +96,11 @@ function fm-help_example
 		fi
 		for file_each in ${help_file}
 		do
-			echo "file:${file_each}"
 			echo ""
 			cat ${file_each}
+			echo ""
+			echo "file:${file_each}"
+			echo "====================================================="
 		done
 	done
 	return 0
