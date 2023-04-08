@@ -37,14 +37,23 @@ function fm-pdf_tk
 }
 
 function fm-grep_aviv
-{
-	local app=grep
-	local default_opt="-rin"
-	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
-
-	$app ${default_opt} $*
-	return 0
+{ 
+    local app=grep;
+    local default_opt="-rin --exclude=*.torrent";
+    local tmp_file=$(mktemp);
+    if [ $# -lt 1 ]; then
+        return 1;
+    fi;
+    which ${app} > /dev/null;
+    if [ $? -ne 0 ]; then
+        echo ¨ERROR:${FUNCNAME},${app} not exist!¨;
+        return 1;
+    fi;
+    find > ${tmp_file};
+    $app ${default_opt} $*;
+    $app -in $* ${tmp_file};
+    rm ${tmp_file};
+    return 0
 }
 
 function fm-rm_overwrite
