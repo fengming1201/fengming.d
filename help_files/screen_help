@@ -1,17 +1,30 @@
 快捷键：
 ctrl + a  ?     : 显示
 
+以下是一些用于管理 Linux Screen 窗口 的最常用命令：
 Ctrl + a  w     : 展示当前会话中的所有窗口
-Ctrl + a  c     : 创建新窗口
+Ctrl + a  "     :列出所有窗口
+Ctrl + a  c     : 创建一个新窗口（带shell）
 Ctrl + a  n     : 切换至下一个窗口
 Ctrl + a  p     : 切换至上一个窗口
 Ctrl + a  num   : 切换至编号为num的窗口
 Ctrl + a  k     : 杀死当前窗口
+Ctrl + a  A     :重命名当前窗口
+
+Ctrl + a  S     :将当前区域水平分割为两个区域
+Ctrl + a  |     :将当前区域垂直分成两个区域
+Ctrl + a tab    :将输入焦点切换到下一个区域
+Ctrl + a Ctrl+a :在当前和之前的区域之间切换
+Ctrl + a  Q     :关闭除当前区域之外其他所有区域
+Ctrl + a  X     :关闭当前区域
+Ctrl + a  \     :终止所有会话并终止 Screen
 
 screen -ls  : 查看当前已有的screen会话.
 
 screen -S your_screen_name -X quit  : 删除某个会话.
 
+====================================================
+screen --help
 Use: screen [-opts] [cmd [args]]
 or: screen -r [host.tty]
 

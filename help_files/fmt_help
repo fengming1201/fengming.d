@@ -1,0 +1,41 @@
+fmt命令用于对文本指定样式。
+
+Usage: fmt [-WIDTH] [OPTION]... [FILE]...
+Reformat each paragraph in the FILE(s), writing to standard output.
+The option -WIDTH is an abbreviated form of --width=DIGITS.
+
+With no FILE, or when FILE is -, read standard input.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -c, --crown-margin        preserve indentation of first two lines
+  -p, --prefix=STRING       reformat only lines beginning with STRING,
+                              reattaching the prefix to reformatted lines
+  -s, --split-only          split long lines, but do not refill
+  -t, --tagged-paragraph    indentation of first line different from second
+  -u, --uniform-spacing     one space between words, two after sentences
+  -w, --width=WIDTH         maximum line width (default of 75 columns)
+  -g, --goal=WIDTH          goal width (default of 93% of width)
+      --help     display this help and exit
+      --version  output version information and exit
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Full documentation at: <https://www.gnu.org/software/coreutils/fmt>
+or available locally via: info '(coreutils) fmt invocation'
+
+Linux fmt命令用于编排文本文件。
+fmt指令会从指定的文件里读取内容，将其依照指定格式重新编排后，输出到标准输出设备。
+若指定的文件名为"-"，则fmt指令会从标准输入设备读取数据。
+
+语法
+fmt [-cstu][-p<列起始字符串>][-w<每列字符数>][--help][--version][文件...]
+
+参数说明：
+
+    -c或--crown-margin 每段前两列缩排。
+    -p<列起始字符串>或-prefix=<列起始字符串> 仅合并含有指定字符串的列，通常运用在程序语言的注解方面。
+    -s或--split-only 只拆开字数超出每列字符数的列，但不合并字数不足每列字符数的列。
+    -t或--tagged-paragraph 每列前两列缩排，但第1列和第2列的缩排格式不同。
+    -u或--uniform-spacing 每个字符之间都以一个空格字符间隔，每个句子之间则两个空格字符分隔。
+    -w<每列字符数>或--width=<每列字符数>或-<每列字符数> 设置每列的最大字符数。
+    --help 在线帮助。
+    --version 显示版本信息。
