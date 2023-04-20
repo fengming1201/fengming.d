@@ -1,0 +1,48 @@
+#***************************************#
+#author:fengming
+#date:Wed 19 Apr 2023 05:05:56 PM CST
+#***************************************#
+
+function fm-parse_file_format
+{
+    #check paramter
+    if [ $# -ne 1 ]
+    then
+        echo "parameter wrong"
+        return 1
+    elif [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  filepath"
+        return 2
+    fi
+
+    #check file exist
+    if [ ! -f $1 ];then echo "file:$1 not exist";return 1;fi
+
+    local filename=$(basename $1)
+    #check support list
+    if [ ${filename} = "fstab" ]
+    then
+        echo "$1"
+    elif [ ${filename} = "passwd" ]
+    then
+        echo "$1"
+    elif [ ${filename} = "shadow" ]
+    then
+        echo "$1"
+    elif [ ${filename} = "group" ]
+    then
+        echo "$1"
+    elif [ ${filename} = "crontab" ]
+    then
+        echo "$1"
+    else
+        echo "no support parse this file format"
+    fi
+
+
+    return 0
+}
+

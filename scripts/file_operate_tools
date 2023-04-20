@@ -38,21 +38,33 @@ function fm-pdf_tk
 
 function fm-grep_aviv
 { 
-    local app=grep;
-    local default_opt="-rin --exclude=*.torrent";
-    local tmp_file=$(mktemp);
-    if [ $# -lt 1 ]; then
-        return 1;
-    fi;
-    which ${app} > /dev/null;
+    local app=grep
+    local default_opt="-rin --exclude=*.torrent"
+    
+	#check parameter
+    if [ $# -ne 1 ]
+    then
+        echo "parameter wrong"
+        return 1
+    elif [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  key-word"
+        return 2
+    fi	
+	$check exec file state
+    which ${app} > /dev/null
     if [ $? -ne 0 ]; then
-        echo ¨ERROR:${FUNCNAME},${app} not exist!¨;
-        return 1;
-    fi;
-    find > ${tmp_file};
-    $app ${default_opt} $*;
-    $app -in $* ${tmp_file};
-    rm ${tmp_file};
+        echo "ERROR:${FUNCNAME},${app} not exist!"
+        return 3
+    fi
+	local tmp_file=$(mktemp)
+    find > ${tmp_file}
+    $app ${default_opt} $*
+    $app -in $* ${tmp_file}
+    rm ${tmp_file}
+
     return 0
 }
 
@@ -60,14 +72,15 @@ function fm-rm_overwrite
 {
 	local app=shred
 	local default_opt="-n 1 -u --random-source=/dev/urandom -v"
-	#check para
-	if [ $# -lt 1 ]
-	then 
-		echo "ERROR:${FUNCNAME},paramter wrong!!"
-		echo "format:"
-		echo "       ${FUNCNAME}  file or dir list"
-		return 1
-	fi
+
+	#check parameter
+    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  [file or dir] list"	
+        return 1
+    fi
 
 	which ${app} > /dev/null
 	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;

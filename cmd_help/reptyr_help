@@ -1,0 +1,18 @@
+用法: reptyr [-s] PID
+       reptyr -l|-L [COMMAND [ARGS]]
+
+  -l    创建一个新的pty对并打印从属设备的名称。
+        如果-l后面有命令行参数
+        在REPTYR_ PTY设置为路径PTY的情况下执行它们。
+
+  -L    类似于“-l”，但也将孩子的stdio重定向到从属对象。
+
+  -s    在目标上附加fds 0-2，即使它未附加到tty。
+
+  -T    窃取目标的整个终端会话。
+        [实验性]可能更可靠，并将附加所有终端上运行的进程。
+
+  -h    Print this help message and exit.
+  -v    Print the version number and exit.
+  -V    Print verbose debug output.
+

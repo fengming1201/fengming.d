@@ -66,7 +66,7 @@ function fm-show_mygit_info
 
 	return 0;
 }
-function fm-help_example
+function fm-help_cmd
 {
 	local help_file_path=${fengming_top_dir}/help_files
 
@@ -103,6 +103,15 @@ function fm-help_example
 			echo "====================================================="
 		done
 	done
+	return 0
+}
+
+function fm-help_shell
+{
+	local doc_file_path=${fengming_top_dir}/documents
+	local sub_doc_path=${doc_file_path}/sub_docs
+	local shell_file=${doc_file_path}/shell_program_doc
+	
 	return 0
 }
 

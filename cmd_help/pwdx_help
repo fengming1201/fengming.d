@@ -1,0 +1,12 @@
+pwdx
+作用：
+
+显示指定进程ID的运行路径。
+用法：
+
+pwdx [options] pid
+
+选项：
+
+-h, –help display this help and exit
+-V, –version output version information and exit

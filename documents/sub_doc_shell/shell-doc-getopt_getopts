@@ -1,0 +1,36 @@
+
+getopts/getopt
+
+由于shell命令行的灵活性，自己编写代码判断时，复杂度会比较高。为此，
+C提供了getopt/getopt_long等函数，
+C++的boost提供了Options库，
+在shell中，处理此事的是getopts和getopt。getopts和getopt功能相似但又不完全相同，
+其中getopt是独立的可执行文件，而getopts是由Bash内置的。
+
+先来看看参数传递的典型用法: 
+#./test.sh -a -b -c  ： 短选项，各选项不需参数
+#./test.sh -abc   ： 短选项，和上一种方法的效果一样，只是将所有的选项写在一起。
+#./test.sh -a args -b -c ：短选项，其中-a需要参数，而-b -c不需参数。
+#./test.sh --a-long=args --b-long ：长选项
+
+
+首先介绍getopts命令,它不支持长选项.
+    getopts命令内建于bash shell中
+    getopts命令能够和已有的shell参数变量默契配合
+    getopts命令，每次调用它的时候，它一次只处理命令行上检测到的一个参数
+    getopts命令，有效的选项字母都会列在optstring中
+    如果选项字母要求有个参数值就加一个：
+    要去掉一个错误消息的话，可以再opstring之前加一个：
+    getopts命令会用到两个环境变量，
+    如果选项需要跟一个参数值，OPTARG环境变量就会保存这个值。
+    OPTIND环境变量保存了参数列表中getopts正在处理的参数位置。
+
+如果需要支持长选项以及可选参数，那么就需要使用getopt
+
+
+ 两者的比较
+    getopts 是 Shell 内建命令，            |  getopt 是一个独立外部工具
+    getopts 使用语法简单，                 | getopt 使用语法较复杂
+    getopts 不支持长参数（如：​​--option​​ ）， | getopt 支持
+    getopts 不会重排所有参数的顺序，        | getopt 会重排参数顺序
+    getopts 出现的目的是为了代替 getopt， 较快捷的执行参数分析工作

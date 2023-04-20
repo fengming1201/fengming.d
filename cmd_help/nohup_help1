@@ -1,0 +1,42 @@
+NOHUP(1)                                                                          用户命令                                                                         NOHUP(1)
+
+名
+       nohup - 使程序运行时不挂起，不向 tty 输出信息
+
+概
+       nohup 命令 [参数列表]...
+       nohup 选项
+
+描
+       运行命令，并忽略挂起信号。
+
+       --help 显示此帮助信息并退出
+
+       --version
+              显示版本信息并退出
+
+       如果标准输入来自终端，则将标准输入重定向为一个不可读文件；如果标准输出定向至终端，则在可能的情况下将输出附加在  'nohup.out' 文件后，否则附加到 '$HOME/nohup.out'。如
+       果标准错误定向至终端，则重定向至标准输出。使用“nohup 命令 > 文件”可将输出保存到指定文件。
+
+       注意：您的 shell 可能内置了自己的 nohup 程序版本，它通常会覆盖这里所提及的相应版本。请查阅您的 shell 文档获知它所支持的选项。
+
+作
+       由 Jim Meyering 编写。
+
+报
+       GNU coreutils 的在线帮助： <http://www.gnu.org/software/coreutils/>
+       请向 <http://translationproject.org/team/zh_CN.html> 报告 nohup 的翻译错误。
+
+版
+       Copyright © 2017 Free Software Foundation, Inc.  License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+       This is free software: you are free to change and redistribute it.  There is NO WARRANTY, to the extent permitted by law.
+
+参
+       完整文档请见： <http://www.gnu.org/software/coreutils/nohup>
+       或者在本地使用： info '(coreutils) nohup invocation'
+
+跋
+       本页面中文版由中文 man 手册页计划提供。
+       中文 man 手册页计划：https://github.com/man-pages-zh/manpages-zh
+
+GNU coreutils 8.28                                                               2017年10月                                                                        NOHUP(1)

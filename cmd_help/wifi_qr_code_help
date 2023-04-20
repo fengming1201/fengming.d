@@ -1,0 +1,4 @@
+example:
+        fjk_wifi_qr <fjk/phone> ssid key
+    or
+        fjk_wifi_qr <fjk/phone> ssid

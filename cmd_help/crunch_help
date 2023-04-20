@@ -1,0 +1,64 @@
+
+
+示例1：
+crunch 2 4
+#生成最小2位，最大4位，不选字符集默认是26个小写字母
+示例2：
+crunch 1 2 ab
+#生成最小为1,最大为2 由a b为元素的所有组合
+示例3：
+crunch 1 6 abc\
+#生成最小为1,最大为6.由abc和空格为元素的所有组合（\代表空格）
+示例4：
+crunch 3 3 –f /usr/share/crunch/charset.lst mixalpha-numeric-symbol14 >1.txt
+#调用密码库charset.lst，生成最小为3，最大为3,元素为密码库charset.lst中 mixalpha-numeric-symbol14 的项目，并保存为1.txt；
+        注：charset.ls 的目录为 /usr/share/crunch/charset.lst
+示例5：
+crunch 8 8 -f charset.lst mixalpha-numeric-symbol14  -t @@jerry@ -s abjerryc >2.txt
+#调用密码库charset.lst，生成8位密码；其中元素为密码库charset.lst中 mixalpha-numeric-symbol14 的项；格式为“两个小写字母+jerry+一个小写字母”。
+         注：-t 简单参数详解：%：数字 ^：特殊字符 @：小写字母 ,：大写字母 
+示例6：
+crunch 2 3 -f charset.lst ualpha -s BB
+#调用密码库charset.lst，生成2位和3位密码；其中元素为密码库charset.lst中ualpha的项；并且以BB开头
+示例7：
+crunch 1 1 -p abc
+#crunch将会生成abc, acb, bac, bca, cab, cba
+        注意：这里长度可以随便填写但是不能不填写
+示例8：
+crunch 1 1 -p aa bb cc
+#crunch将生成以“aa”“bb”“cc”为元素的所有密码组aabbcc,aaccbb,bbaacc,bbccaa,ccaabb,ccbbaa  
+        注意：这里长度可以随便填写但是不能不填写
+示例9：
+crunch 1 5 -o START -c 6000 -z bzip2
+#生成最小为1位，最大为5位元素为所有小写字母的密码字典，其中每一个字典文件包含6000个密码，并将密码文件保存为bz2文件，文件名将以  "第一个密码" + " - " + "最后一个密码" + " .txt.bz2 " 保存（比如000-999.txt.bz2）
+示例10：
+crunch 4 5 -b 20mib -o START
+#生成最小为4位，最大为5位元素为所有小写字母的密码字典，并以20M进行分割；这时会生成4个文件：aaaa-gvfed.txt,  gvfee-ombqy.txt,  ombqz-wcydt.txt, wcydu-zzzzz.txt：其中前三个大概每个20M，最后一个10M左右（因为总共70M）
+示例11：
+crunch 3 3 abc + 123 @#! -t @%^
+#生成3位密码，其中第一位由“a，b，c”中的一个；第二位为“1,2,3”中的一个；第三位为“！，@，#”中的一个。比如1a！   2a#     3b@   ......                    
+        注意： 如果使用需要限定字符 则直接加需要限定的字符，
+                   如果是要限定数字的话 那么必须在限定的 数字 前面加上 "+" 。
+示例12：
+crunch 7 7 –t ddd^,@% -p a b c
+#生成7个元素组成的密码，其中前三个为 a b c任意组合， 第四位为符号，第五位为大写字母，第六位为小写字母，第七位为数字 。比如abc!Aa1   bac!Aa1      ......
+        注意：-t 后面的 "d" 是从 -p 里面的字符串随机组合，1个d就代表1位。
+示例13：
+crunch 7 7 -t p@ss,%^ -l a@aaaaa
+#生成7位密码，格式为“字符p@ss”+大写字母+数字+符号     比如  p@ssZ9>  ......\\
+        注意：-l 是让 -t 里面的特殊字符不代表特殊含义
+示例14：
+crunch 5 5 -s @4#S2 -t @%^,% -e @8 Q2 -l @dddd -b 10KB -o START
+#生成5位密码，格式为小写字母+数字+符号+大写字母+数字，并以@4#S2开始，分割为10k大小。。。
+示例15：
+crunch 5 5 -d 2@ -t @@@%%
+#生成5位密码，格式为三个字母+两个数字，并限制每个密码最少出现2种字母
+示例16：
+crunch 10 10 -t @@@^%%%%^^ -d 2@ -d 3% -b 20mb -o START
+#生成10位密码，格式为三个小写字母+一个符号+四个数字+两个符号，限制每个密码至少2种字母和至少3种数字
+示例17：
+crunch 5 5 -d 2@
+#生成5位密码，每个密码至少出现两种字母
+示例18：
+crunch 4 4 -f unicode_test.lst the-greeks -t @@%% -l @xdd
+#调用密码库unicode_test.lst中的the-greeks项目字符，生成4位密码，其中格式为两小写字母+两数字
