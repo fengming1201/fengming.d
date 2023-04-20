@@ -42,22 +42,18 @@ function fm-grep_aviv
     local default_opt="-rin --exclude=*.torrent"
     
 	#check parameter
-    if [ $# -ne 1 ]
-    then
-        echo "parameter wrong"
-        return 1
-    elif [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -ne 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
         echo "         ${FUNCNAME}  key-word"
-        return 2
+        return 1
     fi	
 	$check exec file state
     which ${app} > /dev/null
     if [ $? -ne 0 ]; then
         echo "ERROR:${FUNCNAME},${app} not exist!"
-        return 3
+        return 2
     fi
 	local tmp_file=$(mktemp)
     find > ${tmp_file}

@@ -68,15 +68,19 @@ function fm-show_mygit_info
 }
 function fm-help_cmd
 {
-	local help_file_path=${fengming_top_dir}/help_files
+	local help_file_path=${fengming_top_dir}/cmd_help
 
-	if [ $# -lt 1 ];then ls -lh ${help_file_path};return 0;fi
-	if [ $1 = "-h" ] || [ $1 = "--help" ]
-	then
-		echo "${FUNCNAME}  cmd"
-		echo "example:"
-		echo "${FUNCNAME}  ip"
-	fi
+    #check paramter
+    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:命令的帮助文档和实例"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  prefix //命令或命令前缀"
+		echo "         ${FUNCNAME}  show   //显示所有帮助文件"
+        return 1
+    fi
+	if [ $1 = "show" ];then ls -lh ${help_file_path};return 0;fi
+
 	local parameter=$@
 	local help_file="none"
 	for file_list in ${parameter}
@@ -109,9 +113,45 @@ function fm-help_cmd
 function fm-help_shell
 {
 	local doc_file_path=${fengming_top_dir}/documents
-	local sub_doc_path=${doc_file_path}/sub_docs
-	local shell_file=${doc_file_path}/shell_program_doc
+	local sub_doc_path=${doc_file_path}/sub_doc_shell
 	
+	#check paramter
+    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:shell语法和功能模块用法帮助文档"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  suffix  //功能或模块后缀"
+		echo "         ${FUNCNAME}  show    //显示所有shell相关文件"
+        return 1
+    fi
+	if [ $1 = "show" ];then ls -lh ${sub_doc_path};return 0;fi
+
+	local parameter=$@
+	local doc_file="none"
+	for file_list in ${parameter}
+	do
+		doc_file=$(find ${sub_doc_path} -type f -iname "*${file_list}")
+		if [ "x${doc_file}" = x ]
+		then 
+			echo "no found help file with prefix ${file_list}"
+			
+			local maybe_file=$(find ${sub_doc_path} -type f -iname "*${file_list}*")
+			if [ "x${maybe_file}" != x ]
+			then
+				echo "maybe you looking for: "
+				echo "${maybe_file}"
+			fi
+			return 2
+		fi
+		for file_each in ${doc_file}
+		do
+			echo ""
+			cat ${file_each}
+			echo ""
+			echo "file:${file_each}"
+			echo "====================================================="
+		done
+	done	
 	return 0
 }
 
