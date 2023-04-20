@@ -72,7 +72,7 @@ function fm-rm_overwrite
 	#check parameter
     if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
     then
-        echo "DESCRIPTION:"
+        echo "DESCRIPTION:安全删除文件--先用随机数覆盖文件最后再删除该文件"
         echo "SYNOPSIS:"
         echo "         ${FUNCNAME}  [file or dir] list"	
         return 1

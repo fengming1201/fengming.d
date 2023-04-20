@@ -6,16 +6,13 @@
 function fm-parse_file_format
 {
     #check paramter
-    if [ $# -ne 1 ]
+    if [ $# -ne 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
     then
-        echo "parameter wrong"
-        return 1
-    elif [ $1 = "-h" ] || [ $1 = "--help" ]
-    then
-        echo "DESCRIPTION:"
+        echo "DESCRIPTION:解析常见的文件格式，即标记各个域的名称。"
         echo "SYNOPSIS:"
         echo "         ${FUNCNAME}  filepath"
-        return 2
+        echo "         ${FUNCNAME}  /etc/fstab"
+        return 1
     fi
 
     #check file exist
