@@ -1,0 +1,66 @@
+
+
+假如有多个人使用samba共享，要让不同的用户使用不同的samba账户看到不同的目录，因此需要为samba创建不同的账户。
+
+step1:
+创建专为samba的用户组,命令这里叫samba,(也可以让新创建的用户归属于现有的组)，置于同一个组，这样方便共享文件涉及的权限问题。
+$sudo addgroup samba
+
+查看：
+$tail /etc/group 
+....略......
+samba:x:1001:
+
+
+step2:
+创建linux用户，但不需要创建相关的home目录，也不需要给该新用户设置linux密码（注意：samba必须要的）
+$sudo useradd -g samba  media  //创建media新用户，同时加入samba组中，后期可用usermod命令更改。
+
+查看：
+$tail  /etc/passwd 
+....略......
+media:x:1002:1001::/home/media:/bin/sh
+//新用户归属samba组中
+
+$ sudo tail /etc/shadow
+....略......
+media:!:19467:0:99999:7:::
+//没有设密码，
+
+step3：
+修改samba的配置文件 /etc/samba/smb.conf 
+如：
+[media_dir]
+comment=debian media
+path = /media                 //指定共享根目录
+browseable = yes
+valid users = lshm media      //指定可以共享的用户列表
+writable = yes
+guest ok=yes
+
+step4：
+为media用户设置samba密码
+$sudo smbpasswd -a media
+
+step5:
+重启smbd服务器，
+$sudo systemctl  restart  smbd.service
+或者
+sudo /etc/init.d/smbd restart
+
+step6:
+客户端登陆
+
+linux端：
+$sudo mount -t cifs -o username=media,vers=2.0 //192.168.254.101/media_dir samba1/
+
+windows端：
+\\192.168.254.101\media_dir
+
+最后的问题：共享权限
+待完成……
+
+
+
+
+结束

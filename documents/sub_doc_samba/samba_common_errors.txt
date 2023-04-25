@@ -1,0 +1,15 @@
+遇到问题：
+mount: unknown filesystem type 'cifs'
+
+解决：
+Samba服务器 解决不允许一个用户使用一个以上用户名与一个服务器或共享资源的多重连接
+ctrl+r
+cmd
+net use * /del /y
+
+
+遇到问题：
+mount error: cifs filesystem not supported by the system
+mount error(19): No such device
+Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)
+

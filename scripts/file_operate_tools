@@ -63,6 +63,15 @@ function fm-grep_aviv
 
     return 0
 }
+function fm-tree_aviv
+{
+	local app=tree
+	local default_opt="-sfh"
+
+	${app}  ${default_opt} $*
+
+	return 0
+}
 
 function fm-rm_overwrite
 {
