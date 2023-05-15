@@ -1,0 +1,64 @@
+SPLIT(1)                                                                            FSF                                                                            SPLIT(1)
+
+NAME
+       split - 分割文件
+
+总
+       ../src/split [OPTION] [INPUT [PREFIX]]
+
+描
+       把 输入文件 INPUT 按 固定大小 的 文件片 PREFIXaa, PREFIXab, ... 输出; 缺省的 PREFIX 是 `x'. 如果 没有 指定 INPUT, 或 INPUT 是 -, 就从 标准输入 读取 数据.
+
+       -b, --bytes=SIZE
+              输出文件 大小 定为 SIZE 字节
+
+       -C, --line-bytes=SIZE
+              输出文件 大小 定为 最多 SIZE 字节 的 行
+
+       -l, --lines=NUMBER
+              输出文件 大小 定为 NUMBER 行
+
+       -NUMBER
+              同 -l NUMBER
+
+       --verbose
+              在 打开 每一个 输出文件 之前, 把 诊断信息 送往 标准错误
+
+       --help 显示 帮助信息, 然后 结束
+
+       --version
+              显示 版本信息, 然后 结束
+
+       指定 SIZE 时 可以 使用 倍乘后缀: b 是 512, k 是 1K, m 是 1 Meg.
+
+作
+       Torbjorn Granlund 和 Richard M. Stallman.
+
+报
+       发现的 bug 送往 <bug-textutils@gnu.org>.
+
+版
+       Copyright © 1999 Free Software Foundation, Inc.
+       This is free software; see the source for copying conditions.  There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+另
+       split 的 完整文档 以 Texinfo 手册 的 格式 维护. 如果 正确 安装了 info 和 split 程序, 使用 命令
+
+              info split
+
+       能够 访问到 完整 的 手册.
+
+[中
+       徐
+
+[中
+       2003/05/13
+
+《
+       http://cmpp.linuxforum.net
+
+跋
+       本页面中文版由中文 man 手册页计划提供。
+       中文 man 手册页计划：https://github.com/man-pages-zh/manpages-zh
+
+GNU textutils 2.0a                                                             December 1999                                                                       SPLIT(1)

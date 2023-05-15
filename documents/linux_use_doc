@@ -75,6 +75,16 @@
     -f/--force	强制执行mkntfs
 },
 {
+    linux分区_解决Linux下挂载的NTFS分区（Windows分区）只读问题
+    先卸载分区
+    #sudo umount /dev/sda1
+    然后利用ntfsfix命令修复对应的分区
+    #sudo ntfsfix /dev/sda1
+    重新挂载
+    #sudo ntfs-3g -o remove_hiberfile /dev/sda1 /mnt/
+
+},
+{
     cp 命令添加进度条
     如何使用 Github 上的开源项目 advcpmv 来实现 Linux 中的 「cp」 和 「mv」 命令的进度条。
     由于 cp 和 mv 命令都是属于 coreutils 工具包下的，因此我们的主要操作就是在编译 coreutils的时候加入补丁从而实现进度条功能。
