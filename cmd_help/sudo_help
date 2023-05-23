@@ -1,0 +1,77 @@
+它的特性主要有这样几点：
+1，sudo能够限制用户只在某台主机上运行某些命令。
+2，sudo提供了丰富的日志，详细地记录了每个用户干了什么。它能够将日志传到中心主机或者日志服务器。
+3，sudo使用时间戳文件——日志来执行类似的“检票”系统。当用户调用sudo并且输入他的密码时，用户获得了一张存活期为5分钟的票（这个值可以在/etc/sudoers设置）。
+4，sudo的配置文件是/etc/sudoers，属性必须为0440，它允许系统管理员集中地管理用户的使用权限和使用主机。
+
+
+sudo - execute a command as another user
+
+usage: sudo -h | -K | -k | -V
+usage: sudo -v [-AknS] [-g group] [-h host] [-p prompt] [-u user]
+usage: sudo -l [-AknS] [-g group] [-h host] [-p prompt] [-U user] [-u user] [command]
+usage: sudo [-AbEHknPS] [-r role] [-t type] [-C num] [-g group] [-h host] [-p prompt] [-T timeout] [-u user] [VAR=value] [-i|-s] [<command>]
+usage: sudo -e [-AknS] [-r role] [-t type] [-C num] [-g group] [-h host] [-p prompt] [-T timeout] [-u user] file ...
+
+Options:
+  -A, --askpass                 使用助手程序进行密码提示
+  -b, --background              在后台运行命令
+  -C, --close-from=num          关闭所有文件描述符>=num
+  -E, --preserve-env            运行命令时保留用户环境
+      --preserve-env=list       保留特定的环境变量
+  -e, --edit                    编辑文件而不是运行命令
+  -g, --group=group             以指定的组名或ID运行命令
+  -H, --set-home                将HOME变量设置为目标用户的主目录
+  -h, --help                    display help message and exit
+  -h, --host=host               在主机上运行命令（如果插件支持）
+  -i, --login                   以目标用户身份运行登录shell；还可以指定一个命令
+  -K, --remove-timestamp        完全删除时间戳文件
+  -k, --reset-timestamp         使时间戳文件无效
+  -l, --list                    列出用户的权限或检查特定命令；较长格式使用两次
+  -n, --non-interactive         非交互式模式，不使用提示
+  -P, --preserve-groups         保留组向量，而不是设置为目标向量
+  -p, --prompt=prompt           使用指定的密码提示
+  -r, --role=role               使用指定的角色创建SELinux安全上下文
+  -S, --stdin                   从标准输入读取密码
+  -s, --shell                   以目标用户身份运行shell；还可以指定一个命令
+  -t, --type=type               创建具有指定类型的SELinux安全上下文
+  -T, --command-timeout=timeout 在指定的时间限制后终止命令
+  -U, --other-user=user         在列表模式下，显示用户的权限
+  -u, --user=user               以指定的用户名或ID运行命令（或编辑文件）
+  -V, --version                 显示版本信息并退出
+  -v, --validate                在不运行命令的情况下更新用户的时间戳
+  --                            停止处理命令行参数
+
+问：如何在脚本中运行’sudo’命令？
+答：
+<最佳解决办法>
+在脚本中包含sudo并不是一个好主意。而是从脚本中删除sudo并使用sudo运行脚本本身：
+
+$sudo myscript.sh
+
+这样，脚本中的所有命令都将以root权限运行，您只需在启动脚本时提供一次密码。
+如果您需要在没有sudo权限的情况下运行脚本中的特定命令，则可以使用以普通用户身份运行它：
+
+sudo -u username command
+
+<次佳解决办法>
+您可以修改sudoers文件。
+
+运行sudo visudo。
+
+为您的用户名和要运行的脚本添加条目，而不要求输入密码。
+
+username ALL=(ALL) NOPASSWD: /path/to/script
+
+<第三种解决办法>
+你可以尝试类似的东西：
+
+echo “PASSWORD” | sudo -S ./playback_delete_data_patch.sh 09_delete_old_data_p.sql
+
+这是不安全的事情，因为你用纯文本写了一个sudoer密码。为了使它更安全，您可以创建一个变量并将sudo密码读入变量，然后您可以执行以下命令：
+
+echo $PASSWORD | sudo -S ./playback_delete_data_patch.sh 09_delete_old_data_p.sql
+
+此外，如果您不介意以root身份执行所有命令，则可以使用sudo简单地执行脚本，如前所述。
+
+sudo ./myscript
