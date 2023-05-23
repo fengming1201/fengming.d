@@ -1,4 +1,6 @@
 
+逻辑卷扩容
+
 root@debianUSB128:~# lsblk 
 NAME                        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 sda                           8:0    1 119.5G  0 disk 

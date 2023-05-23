@@ -76,6 +76,7 @@
 },
 {
     linux分区_解决Linux下挂载的NTFS分区（Windows分区）只读问题
+    关键字：ntfs只读，ntfs readonly
     先卸载分区
     #sudo umount /dev/sda1
     然后利用ntfsfix命令修复对应的分区

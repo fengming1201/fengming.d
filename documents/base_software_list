@@ -159,10 +159,10 @@
             "describe":"Text-based spreadsheet with VI-like keybindings：命令行里的电子表格。"
         },
         {
-            "app_name":"",
+            "app_name":"tesseract-ocr",
             "tool_level":"",
-            "install_methor":"",
-            "describe":""
+            "install_methor":"apt install tesseract-ocr",
+            "describe":"Tesseract command line OCR tool"
         },
         {
             "app_name":"",
