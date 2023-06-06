@@ -2,33 +2,11 @@
 
 #comm value
 fengming_root_dir=/etc/fengming.d
-tools_dir=${fengming_root_dir}/linux_tools
-
-function buildin_install_mybashrc
-{
-	local myvash_filename=mybashrc
-	local home_bashrc=${HOME}/.bashrc
-	#check file state
-	if [ ! -f ${home_bashrc} ];then echo "${home_bashrc} not exist";return 1;fi
-
-	if [ ! -f ${fengming_root_dir}/${myvash_filename} ];then echo "${fengming_root_dir}/${myvash_filename} not exist";return 2;fi
-
-	#check is already installed
-	grep -w "${fengming_root_dir}/${myvash_filename}" ${home_bashrc}  > /dev/NULL
-	if [ $? -eq 0 ];then echo "WARNNING:${FUNCNAME},allready configed.";return 0;fi
-
-	#else write config to ${home_bashrc}
-	cat >> ${home_bashrc} << EOF
-if [ -f ${fengming_top_dir}/${myvash_filename} ];then
-	. ${fengming_top_dir}/${myvash_filename}
-fi
-EOF
-	return 0
-}
+sorftware_pagke_path=${fengming_root_dir}/sorftware_toolket/sorftware_pagke
 
 function buildin_install_vim_config_pkg
 {
-	local vim_comfig_pack=${tools_dir}/vim_cfg_dir.tar.gz
+	local vim_comfig_pack=${sorftware_pagke_path}/vim_cfg_dir.tar.gz
 	local config_file=/etc/vim/vimrc
 	local target_dir=${HOME}
 
@@ -53,7 +31,7 @@ EOF
 
 function buildin_install_z_pkg
 {
-	local z_pkg=${tools_dir}/z.tar.gz
+	local z_pkg=${sorftware_pagke_path}/z.tar.gz
 	local target_path=/opt
 	local target_dir=z
 
@@ -66,7 +44,7 @@ function buildin_install_z_pkg
 
 function buildin_install_7zz_pkg
 {
-	local z7z_pkg=${tools_dir}/7z2201-linux-x64.tar.xz
+	local z7z_pkg=${sorftware_pagke_path}/7z2201-linux-x64.tar.xz
 	local target_path=/opt
 	local target_dir=7z
 	local link_bin_dir=/usr/local/bin
@@ -103,7 +81,7 @@ function buildin_install_7zz_pkg
 
 function build_install_advcpmv_pkg
 {
-	local advcpmv_pkg=${tools_dir}/advcpmv_pkg.tar.gz
+	local advcpmv_pkg=${sorftware_pagke_path}/advcpmv_pkg.tar.gz
 	local target_path=/opt
 	local target_dir=advcpmv
 	local binaries_dir=off-the-shelf-binaries
@@ -156,10 +134,8 @@ function exe_func
 	return 0
 }
 
-function tool_scheduler_func
+function install_scheduler_func
 {
-	exe_func buildin_install_mybashrc
-
 	exe_func buildin_install_vim_config_pkg
 
 	exe_func buildin_install_z_pkg
@@ -171,7 +147,7 @@ function tool_scheduler_func
 	return 0
 }
 
-tool_scheduler_func $*
+install_scheduler_func $*
 ret=$?
 if [ ${ret} -ne 0 ]
 then
