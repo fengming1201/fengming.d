@@ -123,7 +123,8 @@ function fm-grep_aviv
 { 
     local app=grep
     local default_opt="-rin --exclude=*.torrent"
-    
+    local filename=none
+
 	#check parameter
     if [ $# -ne 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
     then
@@ -138,10 +139,27 @@ function fm-grep_aviv
         echo "ERROR:${FUNCNAME},${app} not exist!"
         return 2
     fi
+	if [ $# -eq 1 ]
+	then 
+		
+		local tmp=$(echo $1 | sed -n 's/-/00/p')
+		if [ "$1" != "${tmp}" ]
+		then
+			filename=${tmp}
+		fi
+	fi
+
 	local tmp_file=$(mktemp)
     find > ${tmp_file}
     $app ${default_opt} $*
-    $app -in $* ${tmp_file}
+	$app -in $* ${tmp_file}
+	
+	if [ ${filename} != none ]
+	then
+		$app ${default_opt} ${filename}
+		$app -in ${filename} ${tmp_file}
+	fi
+	
     rm ${tmp_file}
 
     return 0

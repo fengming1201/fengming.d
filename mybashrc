@@ -127,6 +127,7 @@ function fm-shell_help
 	#check paramter
 	if [ $# -lt 1 ]
 	then 
+		echo "----------------------------------"
 		ls  ${sub_doc_path}
 		echo "path=${sub_doc_path}"
 		echo ""
@@ -196,7 +197,7 @@ function fm-document_show
 			continue
 		fi
 		doc_file=$(find ${doc_file_path} -type f -iname "${file}*")
-		if [ "x${doc_file}" = x ];then echo "no found ${file} help file";return 2;fi
+		if [ "x${doc_file}" = x ];then echo "ERROR:no found ${file} help file";return 2;fi
 		for file_each in ${doc_file}
 		do
 			echo "start >>>"
@@ -208,21 +209,106 @@ function fm-document_show
 	return 0
 }
 
-function fm-base_software_list
+function fm-software_list
 {
-	local app_list=${fengming_top_dir}/linux_tools/base_software_list
+	local sorftware_install_dir=${fengming_top_dir}/sorftware_install/
+	local target_file=base_software_list
+	if [ ! -f ${sorftware_install_dir}/${target_file} ];then echo "${target_file} not exist.";return 1;fi
 
-	if [ ! -f ${app_list} ];then echo "${app_list} not exist.";return 1;fi
-
-	cat ${app_list}
+	cat ${sorftware_install_dir}/${target_file}
 
 	return 0
 }
 
 
-function fm-install_mytools
+function fm-install_tool_method
 {
+	local sorftware_install_dir=${fengming_top_dir}/sorftware_install/
 	
+	#check paramter
+	if [ $# -lt 1 ]
+	then 
+		echo "----------------------------------"
+		tree  ${sorftware_install_dir}
+		echo "path=${sorftware_install_dir}"
+		echo ""
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  [name / keyword]  //关键字或软件名称"
+		return 1
+	fi
+    if [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:软件的安装教程"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  [name / keyword]  //关键字或软件名称"
+        return 1
+    fi
+
+	local parameter=$@
+	local tutor_file="none"
+	for file in ${parameter}
+	do
+		if [ -d ${sorftware_install_dir}/${file} ]
+		then
+			tree ${sorftware_install_dir}/${file}
+			continue
+		fi
+		tutor_file=$(find ${sorftware_install_dir} -type f -iname "*${file}*" -o  -type l -iname "*${file}*")
+		if [ "x${tutor_file}" = x ];then echo "ERROR:no found ${file} toturial file";return 2;fi
+		for file_each in ${tutor_file}
+		do
+			echo "start >>>"
+			cat ${file_each}
+			echo "end <<<"
+			echo "file:${file_each}"
+		done
+	done
+	return 0
+}
+
+function fm-install_script_exec
+{
+	local sorftware_install_dir=${fengming_top_dir}/sorftware_install
+	local install_script_dir=${sorftware_install_dir}/install_script
+
+	#check paramter
+	if [ $# -lt 1 ]
+	then 
+		echo "----------------------------------"
+		tree  ${install_script_dir}
+		echo "path=${install_script_dir}"
+		echo ""
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  [tool_name]  //软件名称"
+		return 1
+	fi
+    if [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:install tools by script"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  [tool_name]  //软件名称"
+        return 1
+    fi
+
+	local parameter=$@
+	local script_file="none"
+	for file in ${parameter}
+	do
+		script_file=$(find ${install_script_dir} -type f -iname "*${file}*.sh")
+		if [ "x${script_file}" = x ];then echo "ERROR:no found ${file} script file";return 2;fi
+		for file_each in ${script_file}
+		do
+			echo "exec:${file_each}"
+			if [ -x ${file_each} ] 
+			then
+				${file_each}
+			else
+				echo "ERROR:${file_each} can not exec"
+				ls -lh ${file_each}
+			fi
+			
+		done
+	done
 	return 0
 }
 
