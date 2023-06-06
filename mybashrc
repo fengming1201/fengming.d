@@ -4,7 +4,7 @@
 #***************************************#
 fengming_top_dir=/etc/fengming.d
 fengming_tools_dir=/etc/fengming.d/linux_tools
-fengming_script_dir=/etc/fengming.d/scripts
+fengming_func_lib_dir=/etc/fengming.d/bash_function_lib
 
 alias ll='ls -hl --color=auto'
 alias lll='ls -hl --color=auto'
@@ -24,13 +24,13 @@ alias clr='clear'
 
 #source other files
 except_do_source_list="env_variable"
-for file in $(ls ${fengming_script_dir})
+for file in $(ls ${fengming_func_lib_dir})
 do
 	for except in ${except_do_source_list}
 	do
 		if [ ${file} = ${except} ];then continue 1;fi
 	done
-	source ${fengming_script_dir}/${file}
+	source ${fengming_func_lib_dir}/${file}
 done
 
 if [ -f /opt/z/z.sh ];then
@@ -66,6 +66,27 @@ function fm-git_show_mygitinfo
 
 	return 0;
 }
+
+function  fm-search_by_keyword
+{
+	if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+        echo "DESCRIPTION:在目录:${fengming_top_dir}中搜索内容或文件"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  keyword"
+		echo ""
+		return 1
+	fi
+	local key_word=$*
+	#search key
+	grep -rn "${key_word}"  ${fengming_top_dir}
+
+	#search file
+	find ${fengming_top_dir} -type f -iname "*${key_word}*" -o  -type l -iname "*${key_word}*"
+
+	return 0
+}
+
 function fm-cmd_help
 {
 	local help_file_path=${fengming_top_dir}/cmd_help

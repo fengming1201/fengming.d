@@ -1,0 +1,27 @@
+#***************************************#
+#author:fengming
+#date:Tue 10 Jan 2023 04:56:27 PM CST
+#***************************************#
+function fm-picture_viewer
+{
+	local app=gpicview
+	local default_opt=
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+
+	$app ${default_opt} $*
+	return 0
+}
+
+function fm-movie_player
+{
+	local app=mpv
+	#local default_opt=¨--player-operation-mode=pseudo-gui¨
+	local default_opt=
+	
+	which ${app} > /dev/null
+	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+
+	$app ${default_opt} $*
+	return 0
+}

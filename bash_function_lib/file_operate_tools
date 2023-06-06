@@ -93,6 +93,48 @@ function fm-pdf_extract
 	return 0
 }
 
+function fm-pdf_viewer_terminal
+{
+	local app=evince
+	local default_opt=
+
+	#check parameter
+    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:终端"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  filename.pdf [file1.pdf file2.pdf ...]"
+        return 1
+    fi
+	which ${app} > /dev/null
+	if [ $? -ne 0 ] ; then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+	
+	$app ${default_opt} $*
+
+	return 0
+}
+
+function fm-pdf_viewer_gui
+{
+	local app=evince
+	# local app=xpdf
+	local default_opt=
+	#check parameter
+    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    then
+        echo "DESCRIPTION:pdf 阅读器"
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  filename.pdf"
+        return 1
+    fi	
+	which ${app} > /dev/null
+	if [ $? -ne 0 ] ; then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
+	
+	$app ${default_opt} $*
+
+	return 0
+}
+
 function fm-convert_image2text_by_ocr
 {
 	local app=tesseract
@@ -219,3 +261,20 @@ function fm-rm_overwrite
 	return 0
 }
 
+function fm-json_parse
+{
+
+
+	return 0
+}
+function fm-json_get_by_kay
+{
+
+	return 0
+}
+function fm-json_format
+{
+
+
+	return 0
+}
