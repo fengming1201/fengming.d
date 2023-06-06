@@ -5,7 +5,10 @@
     vi /etc/default/grub 
 
     修改
-    GRUB_CMDLINE_LINUX=”” 为GRUB_CMDLINE_LINUX=”text” 
+    GRUB_CMDLINE_LINUX="" 为GRUB_CMDLINE_LINUX="text" 
+
+    同时修改网口为eth0
+    GRUB_CMDLINE_LINUX="text net.ifnames=0 biosdevname=0"
 
     step 2:更新grub
     update-grub 
@@ -15,6 +18,31 @@
 
     step 4:重启
     init 6
+
+    补充：
+    查看模式：sudo systemctl  get-default
+    更改模式命令：systemctl set-default graphical.target  //由命令行模式更改为图形界面模式，恢复GUI。
+                systemctl set-default multi-user.target  //由图形界面模式更改为命令行模式
+
+},
+{
+    重新修改为图形界面启动 GUI
+    step 1:修改Grub配置文件
+    GRUB_CMDLINE_LINUX="text"     //去掉text
+
+    step 2:更新grub
+    update-grub
+
+    step 3:更新系统服务管理器配置
+    systemctl set-default graphical.target
+
+    step 4:重启
+    init 6 
+
+    补充：
+    查看模式：sudo systemctl  get-default
+    更改模式命令：systemctl set-default graphical.target  //由命令行模式更改为图形界面模式，恢复GUI。
+                systemctl set-default multi-user.target  //由图形界面模式更改为命令行模式
 },
 {
     linux的XDG（X Desktop Group）基本目录规范
@@ -57,7 +85,7 @@
 
     step1:
     首先安装fcitx5和fcitx5-pinyin:
-    apt-get install fcitx5 fcitx5-pinyin zenity
+    apt install fcitx5 fcitx5-pinyin zenity
 
     step2:
     接着在im-config图形面板中选择fcitx5作为输入方式。

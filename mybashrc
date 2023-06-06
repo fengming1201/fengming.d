@@ -55,7 +55,7 @@ function fm-mybuild_image_version_show
 	fi
 	return 0
 }
-function fm-show_mygit_info
+function fm-git_show_mygitinfo
 {
 	local mygit_site="https://github.com/fengming1201/fengming.d.git"
 	local fengming_dir="-C ${fengming_top_dir}"
@@ -66,21 +66,30 @@ function fm-show_mygit_info
 
 	return 0;
 }
-function fm-help_cmd
+function fm-cmd_help
 {
 	local help_file_path=${fengming_top_dir}/cmd_help
 
     #check paramter
-    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 1 ]
+	then 
+		ls  ${help_file_path}
+		echo "----------------------------------"
+		echo "path=${help_file_path}"
+		echo ""
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  prefix //命令或命令前缀"
+		return 1
+	fi
+    #check paramter
+	if [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:命令的帮助文档和实例"
         echo "SYNOPSIS:"
         echo "         ${FUNCNAME}  prefix //命令或命令前缀"
-		echo "         ${FUNCNAME}  show   //显示所有帮助文件"
         return 1
     fi
-	if [ $1 = "show" ];then ls -lh ${help_file_path};return 0;fi
-
+	
 	local parameter=$@
 	local help_file="none"
 	for file_list in ${parameter}
@@ -110,13 +119,22 @@ function fm-help_cmd
 	return 0
 }
 
-function fm-help_shell
+function fm-shell_help
 {
 	local doc_file_path=${fengming_top_dir}/documents
 	local sub_doc_path=${doc_file_path}/sub_doc_shell
 	
 	#check paramter
-    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 1 ]
+	then 
+		ls  ${sub_doc_path}
+		echo "path=${sub_doc_path}"
+		echo ""
+        echo "SYNOPSIS:"
+        echo "         ${FUNCNAME}  suffix  //功能或模块后缀"
+		return 1
+	fi
+    if [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:shell语法和功能模块用法帮助文档"
         echo "SYNOPSIS:"
@@ -124,8 +142,7 @@ function fm-help_shell
 		echo "         ${FUNCNAME}  show    //显示所有shell相关文件"
         return 1
     fi
-	if [ $1 = "show" ];then ls -lh ${sub_doc_path};return 0;fi
-
+	
 	local parameter=$@
 	local doc_file="none"
 	for file_list in ${parameter}
@@ -155,22 +172,29 @@ function fm-help_shell
 	return 0
 }
 
-function fm-document_list
+function fm-document_show
 {
 	local doc_file_path=${fengming_top_dir}/documents
 	
-	if [ $# -lt 1 ];then ls -lh ${doc_file_path};return 0;fi
-
+	if [ $# -lt 1 ];then tree ${doc_file_path};return 0;fi
+	
 	if [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
-		echo "${FUNCNAME}  file_prefix"
+		echo "SYNOPSIS:"
+		echo "         ${FUNCNAME}  file_prefix / sub_dir_name"
 		echo "example:"
-		echo "${FUNCNAME}  linux_use"
+		echo "        ${FUNCNAME}  debian"
+		return 1
 	fi
 	local parameter=$@
 	local doc_file="none"
 	for file in ${parameter}
 	do
+		if [ -d ${doc_file_path}/${file} ]
+		then
+			tree ${doc_file_path}/${file}
+			continue
+		fi
 		doc_file=$(find ${doc_file_path} -type f -iname "${file}*")
 		if [ "x${doc_file}" = x ];then echo "no found ${file} help file";return 2;fi
 		for file_each in ${doc_file}
@@ -198,7 +222,7 @@ function fm-base_software_list
 
 function fm-install_mytools
 {
-
+	
 	return 0
 }
 

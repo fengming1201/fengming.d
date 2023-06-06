@@ -1,0 +1,94 @@
+Getting started with Redis
+
+How to get up and running with Redis
+
+This is a guide to getting started with Redis. You'll learn how to install, run, and experiment with the Redis server process.
+Install Redis
+
+How you install Redis depends on your operating system and whether you'd like to install it bundled with Redis Stack and Redis UI. See the guide below that best fits your needs:
+
+    Install Redis from Source
+    Install Redis on Linux
+    Install Redis on macOS
+    Install Redis on Windows
+    Install Redis with Redis Stack and RedisInsight
+
+Once you have Redis up and running, and can connect using redis-cli, you can continue with the steps below.
+
+{
+    Install Redis from Source
+
+    Compile and install Redis from source
+
+    You can compile and install Redis from source on variety of platforms and operating systems including Linux and macOS. Redis has no dependencies other than a C compiler and libc.
+    Downloading the source files
+
+    The Redis source files are available from the Download page. You can verify the integrity of these downloads by checking them against the digests in the redis-hashes git repository.
+
+    To obtain the source files for the latest stable version of Redis from the Redis downloads site, run:
+
+    $wget https://download.redis.io/redis-stable.tar.gz
+
+    Compiling Redis
+
+    To compile Redis, first the tarball, change to the root directory, and then run make:
+
+    $tar -xzvf redis-stable.tar.gz
+    $cd redis-stable
+    $make
+
+    If the compile succeeds, you'll find several Redis binaries in the src directory, including:
+
+        redis-server: the Redis Server itself
+        redis-cli is the command line interface utility to talk with Redis.
+
+    To install these binaries in /usr/local/bin, run:
+
+    $make install
+
+    Starting and stopping Redis in the foreground
+
+    Once installed, you can start Redis by running
+
+    $redis-server
+
+    If successful, you'll see the startup logs for Redis, and Redis will be running in the foreground.
+
+    To stop Redis, enter Ctrl-C.
+}
+
+{
+    Install Redis on Linux
+
+    How to install Redis on Linux
+
+    Most major Linux distributions provide packages for Redis.
+    Install on Ubuntu/Debian
+
+    You can install recent stable versions of Redis from the official packages.redis.io APT repository.
+    Prerequisites
+
+    If you're running a very minimal distribution (such as a Docker container) you may need to install lsb-release first:
+
+    $sudo apt install lsb-release
+
+    Add the repository to the apt index, update it, and then install:
+
+    $curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+
+    $echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+    $sudo apt-get update
+    $sudo apt-get install redis
+
+    Install from Snapcraft
+
+    The Snapcraft store provides Redis packages that can be installed on platforms that support snap. Snap is supported and available on most major Linux distributions.
+
+    To install via snap, run:
+
+    $sudo snap install redis
+
+    If your Linux does not currently have snap installed, install it using the instructions described in Installing snapd.
+
+}
