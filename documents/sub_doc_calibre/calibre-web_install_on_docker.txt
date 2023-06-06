@@ -1,0 +1,31 @@
+step 1:下载镜像
+使用docker安装镜像 johngong/calibre-web
+$sudo docker pull johngong/calibre-web
+
+step 2:创建文件目录
+新建calibre-web根目录，用来存放配置，数据库与图书资源，可以放在/opt/目录下
+$mkdir /opt/calibre-web && mkdir /opt/calibre-web/config /opt/calibre-web/library
+
+ 提示：/opt/calibre-web/library用来装图书元数据的，可以从calibre软件版存放目录直接拷贝过来。
+ 如：I:\Calibre Portable\Calibre Library
+
+step 3:启动镜像
+$sudo docker run -d --privileged \
+--name=calibre-web \
+--restart=always \
+-p 8083:8083 \
+-v /opt/calibre-web/config:/config \
+-v /opt/calibre-web/library:/library \
+johngong/calibre-web
+
+step 4：设置开机自启动  --此步可忽略。
+服务器关机后需要重新启动Docker，才能访问，可以设置开机自启动
+$sudo systemctl enable docker
+
+step 5:访问
+在浏览器中输入http://主机ip:8083
+ 如果访问不成功查看安全组中入方向规则是否开通8083端口
+ 初始用户名密码为
+ 用户名：admin
+ 密码：admin123
+ 
