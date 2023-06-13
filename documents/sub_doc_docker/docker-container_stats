@@ -1,0 +1,40 @@
+$ sudo docker container stats --help
+
+Usage:  docker container stats [OPTIONS] [CONTAINER...]
+
+Display a live stream of container(s) resource usage statistics
+
+Aliases:
+  docker container stats, docker stats
+
+Options:
+  -a, --all             Show all containers (default shows just running)
+      --format string   Format output using a custom template:
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+      --no-stream       Disable streaming stats and only pull the first result
+      --no-trunc        Do not truncate output
+=================================================
+显示容器资源使用情况统计信息的实时流
+
+别名：
+  docker container stats, docker stats
+
+选项：
+  -a, --all             显示所有容器（默认显示刚刚运行）
+      --format string   使用自定义模板设置输出格式：
+                        'table':            以带有列标题的表格格式打印输出（默认）
+                        'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
+      --no-stream       禁用流统计信息并仅提取第一个结果
+      --no-trunc        不截断输出
+
+
+关键字：
+重要简述：
+实例：

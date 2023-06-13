@@ -1,0 +1,15 @@
+$ sudo docker login  --help     
+
+Usage:  docker login [OPTIONS] [SERVER]
+
+Log in to a registry.
+If no server is specified, the default is defined by the daemon.
+
+Options:
+  -p, --password string   Password
+      --password-stdin    Take the password from stdin
+  -u, --username string   Username
+==============================================
+
+
+

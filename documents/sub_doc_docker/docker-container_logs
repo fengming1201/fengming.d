@@ -1,0 +1,34 @@
+$ sudo docker container logs --help     
+
+Usage:  docker container logs [OPTIONS] CONTAINER
+
+Fetch the logs of a container
+
+Aliases:
+  docker container logs, docker logs
+
+Options:
+      --details        Show extra details provided to logs
+  -f, --follow         Follow log output
+      --since string   Show logs since timestamp (e.g. "2013-01-02T13:23:37Z") or relative (e.g. "42m" for 42 minutes)
+  -n, --tail string    Number of lines to show from the end of the logs (default "all")
+  -t, --timestamps     Show timestamps
+      --until string   Show logs before a timestamp (e.g. "2013-01-02T13:23:37Z") or relative (e.g. "42m" for 42 minutes)
+===================================================
+获取容器的日志
+
+别名：
+  docker container logs, docker logs
+
+选项：
+      --details        显示提供给日志的其他详细信息
+  -f, --follow         跟踪日志输出
+      --since string   显示自时间戳以来的日志（例如 "2013-01-02T13:23:37Z") 或相对（例如"42m" 42分钟）
+  -n, --tail string    从日志末尾显示的行数（默认） "all")
+  -t, --timestamps     显示时间戳
+      --until string   在时间戳之前显示日志（例如 "2013-01-02T13:23:37Z") 或相对（例如"42m" 42分钟）
+
+
+关键字：
+重要简述：
+实例：

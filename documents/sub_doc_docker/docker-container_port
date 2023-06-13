@@ -1,0 +1,18 @@
+$ sudo docker container port --help      
+
+Usage:  docker container port CONTAINER [PRIVATE_PORT[/PROTO]]
+
+List port mappings or a specific mapping for the container
+
+Aliases:
+  docker container port, docker port
+======================================
+列出容器的端口映射或特定映射
+
+别名：
+  docker container port, docker port
+
+
+关键字：
+重要简述：
+实例： 

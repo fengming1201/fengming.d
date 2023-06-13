@@ -1,0 +1,49 @@
+$ sudo docker image rm --help  
+
+Usage:  docker image rm [OPTIONS] IMAGE [IMAGE...]
+
+Remove one or more images
+
+Aliases:
+  docker image rm, docker image remove, docker rmi
+
+Options:
+  -f, --force      Force removal of the image
+      --no-prune   Do not delete untagged parents
+=========================================
+删除一个或多个图像
+
+别名:
+  docker image rm, docker image remove, docker rmi
+
+选项:
+  -f, --force      强制移除图像
+      --no-prune   不要删除未标记的父项
+=========================================
+关键字：删除 删除镜像
+重要简述：
+rmi ---remove image
+通过标签删除镜像：
+同一个ID不同标签，只是删除标签而已，只有最后一个标签删除才会真正删除镜像，这就有了下面通过ID删除镜像的操作了。
+通过ID删除镜像：
+当使用 docker rmi命令，并且后面跟上镜像的ID（也可以是能进行区分的部分ID串前缀）时，会先尝试删除所有指向该镜像的标签，然后删除该镜像文件本身。
+注意：当有该镜像创建的容器存在时，镜像文件默认是无法被删除的，做法是先删除依赖该镜像的所有容器，再来删除镜像文件。
+
+实例：
+一、通过标签删除镜像：
+# docker images 
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+myubuntu     latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago   63.1MB
+
+# docker rmi myubuntu:latest 
+Untagged: myubuntu:latest
+
+# docker images              
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+ubuntu       latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago   63.1MB
+
+二、通过ID删除镜像：
+# docker rmi  ba6acccedd29

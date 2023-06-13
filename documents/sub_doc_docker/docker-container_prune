@@ -1,0 +1,19 @@
+$ sudo docker container prune --help     
+
+Usage:  docker container prune [OPTIONS]
+
+Remove all stopped containers
+
+Options:
+      --filter filter   Provide filter values (e.g. "until=<timestamp>")
+  -f, --force           Do not prompt for confirmation
+=============================================
+删除所有停止的容器
+
+选项：
+      --filter filter   提供过滤器值（例如"until=<timestamp>")
+  -f, --force           不提示确认
+
+关键字：
+重要简述：
+实例：

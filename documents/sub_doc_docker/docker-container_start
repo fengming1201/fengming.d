@@ -1,0 +1,29 @@
+$ sudo docker container start --help
+
+Usage:  docker container start [OPTIONS] CONTAINER [CONTAINER...]
+
+Start one or more stopped containers
+
+Aliases:
+  docker container start, docker start
+
+Options:
+  -a, --attach               Attach STDOUT/STDERR and forward signals
+      --detach-keys string   Override the key sequence for detaching a container
+  -i, --interactive          Attach container's STDIN
+=========================================
+启动一个或多个已停止的容器
+
+别名：
+  docker container start, docker start
+
+选项：
+  -a, --attach               连接 STDOUT/STDERR 和转发信号
+      --detach-keys string   覆盖用于分离容器的键序列
+  -i, --interactive          附加容器的 STDIN
+
+
+
+关键字：
+重要简述：
+实例：

@@ -1,0 +1,26 @@
+$ sudo docker container restart --help        
+
+Usage:  docker container restart [OPTIONS] CONTAINER [CONTAINER...]
+
+Restart one or more containers
+
+Aliases:
+  docker container restart, docker restart
+
+Options:
+  -s, --signal string   Signal to send to the container
+  -t, --time int        Seconds to wait before killing the container
+======================================
+重新启动一个或多个容器
+
+别名：
+  docker container restart, docker restart
+
+选项：
+  -s, --signal string   发送到容器的信号
+  -t, --time int        在杀死容器之前等待几秒钟
+
+
+关键字：
+重要简述：
+实例：

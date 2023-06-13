@@ -1,0 +1,55 @@
+$ sudo docker image  ls --help
+
+Usage:  docker image ls [OPTIONS] [REPOSITORY[:TAG]]
+
+List images
+
+Aliases:
+  docker image ls, docker image list, docker images
+
+Options:
+  -a, --all             Show all images (default hides intermediate images)
+      --digests         Show digests
+  -f, --filter filter   Filter output based on conditions provided
+      --format string   Format output using a custom template:
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+      --no-trunc        Don't truncate output
+  -q, --quiet           Only show image IDs
+=============================================================================
+列表图像
+
+别名:
+  docker image ls, docker image list, docker images
+
+选项:
+  -a, --all             显示所有图像（默认隐藏中间图像）
+      --digests         显示摘要
+  -f, --filter filter   根据提供的条件过滤输出
+      --format string   使用自定义模板设置输出格式：
+                        'table':            以带有列标题的表格格式打印输出（默认）
+                        'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+      --no-trunc        不要截断输出
+  -q, --quiet           仅显示映像 ID
+
+=============================================================================
+关键字：查看镜像
+
+重要简述：
+列出本地主机上已有镜像的基本信息。
+IMAGE ID唯一标识镜像。
+
+实例：
+lshm@debian11xJ4125:workdir$ sudo docker images 
+REPOSITORY                TAG       IMAGE ID       CREATED        SIZE
+仓库                       标签        镜像ID        创建时间        大小
+photoprism/photoprism     latest    c3f16b4fa20e   5 days ago     1.81GB
+linuxserver/calibre-web   latest    bdcc2bb51bf1   4 weeks ago    660MB
+johngong/calibre-web      latest    588d4bb8930a   2 months ago   972MB
+

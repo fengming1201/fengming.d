@@ -1,0 +1,29 @@
+$ sudo docker container rm --help     
+
+Usage:  docker container rm [OPTIONS] CONTAINER [CONTAINER...]
+
+Remove one or more containers
+
+Aliases:
+  docker container rm, docker container remove, docker rm
+
+Options:
+  -f, --force     Force the removal of a running container (uses SIGKILL)
+  -l, --link      Remove the specified link
+  -v, --volumes   Remove anonymous volumes associated with the container
+=====================================
+删除一个或多个容器
+
+别名：
+  docker container rm, docker container remove, docker rm
+
+Options:
+  -f, --force     强制删除正在运行的容器（使用 SIGKILL）
+  -l, --link      删除指定的链接
+  -v, --volumes   删除与容器关联的匿名卷
+
+
+
+关键字：
+重要简述：
+实例：

@@ -1,0 +1,54 @@
+$ sudo docker search --help 
+
+Usage:  docker search [OPTIONS] TERM
+
+Search Docker Hub for images
+
+Options:
+  -f, --filter filter   Filter output based on conditions provided
+      --format string   Pretty-print search using a Go template
+      --limit int       Max number of search results
+      --no-trunc        Don't truncate output
+===============================================
+在 Docker Hub 中搜索映像
+
+选项:
+  -f, --filter filter   根据提供的条件过滤输出
+      --format string   使用 Go 模板进行漂亮的打印搜索
+      --limit int       最大搜索结果数
+      --no-trunc        不要截断输出
+===============================================
+关键字：
+重要简述：
+实例：
+$ sudo docker search debian
+NAME                                  DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+ubuntu                                Ubuntu is a Debian-based Linux operating sys…   16056     [OK]       
+debian                                Debian is a Linux distribution that's compos…   4695      [OK]       
+neurodebian                           NeuroDebian provides neuroscience research s…   100       [OK]       
+bitnami/debian-base-buildpack         Debian base compilation image                   2                    [OK]
+kasmweb/debian-bullseye-desktop       Debian Bullseye desktop for Kasm Workspaces     0                    
+mirantis/debian-build-ubuntu-xenial                                                   0                    
+rancher/debianconsole                                                                 1                    
+datadog/debian-i386                                                                   0                    
+mirantis/debian-build-ubuntu-trusty                                                   0                    
+osrf/debian_arm64                     Debian arm64 Base Images                        1                    
+dokken/debian-10                      Debian 10 image for use with kitchen-dokken     0                    
+dokken/debian-9                       EOL: Debian 9 image for kitchen-dokken          0                    
+pihole/debian-base                    Debian docker with a custom pam build           3                    
+dokken/debian-11                      Debian 11 image for use with kitchen-dokken     1                    
+ustclug/debian                        Official Debian Image with USTC Mirror          2                    
+dokken/debian-8                       EOL: Debian 8 image for kitchen-dokken          0                    
+dockette/debian                       My Debian Sid | Jessie | Wheezy Base Images     2                    [OK]
+jitesoft/debian                       Debian base image.                              0                    
+corpusops/debian-bare                 https://github.com/corpusops/docker-images/     0                    
+corpusops/debian                      debian corpusops baseimage                      0                    
+dokken/debian-12                      Debian 12 image for use with Test Kitchen's …   0                    
+pihole/debian-debootstrap             fork of multiarch/debian-debootstrap            0                    
+homebrew/debian7                      Homebrew maintainer image for building patch…   0                    
+osrf/debian_armhf                     Debian Armhf Base Images                        1                    
+treehouses/debian                                                                     2                    
+
+$ sudo docker search  johngong/calibre-web
+NAME                   DESCRIPTION                                    STARS     OFFICIAL   AUTOMATED
+johngong/calibre-web   calibre-web:0.6.20电子书管理带ebook-convert…   110                  [OK]

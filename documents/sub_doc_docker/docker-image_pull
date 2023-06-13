@@ -1,0 +1,39 @@
+$ sudo docker image pull --help 
+
+Usage:  docker image pull [OPTIONS] NAME[:TAG|@DIGEST]
+
+Download an image from a registry
+
+Aliases:
+  docker image pull, docker pull
+
+Options:
+  -a, --all-tags                Download all tagged images in the repository
+      --disable-content-trust   Skip image verification (default true)
+      --platform string         Set platform if server is multi-platform capable
+  -q, --quiet                   Suppress verbose output
+==========================================================
+从仓库下载映像
+
+别名:
+  docker image pull, docker pull
+
+选项:
+  -a, --all-tags                下载存储库中所有标记的映像
+      --disable-content-trust  跳过图像验证（默认为 true）
+      --platform string         如果服务器支持多平台，则设置平台
+  -q, --quiet                   抑制详细输出
+==========================================================
+关键字：
+重要简述：
+实例：
+$ sudo docker pull johngong/calibre-web      
+Using default tag: latest
+latest: Pulling from johngong/calibre-web
+a0d0a0d46f8b: Pull complete 
+a8cdb9beba71: Pull complete 
+8749a9e3c132: Pull complete 
+Digest: sha256:313f1200e70784de903656e58525e2de04b32a1b4640fbc51ec344d86e526025
+Status: Downloaded newer image for johngong/calibre-web:latest
+docker.io/johngong/calibre-web:latest
+

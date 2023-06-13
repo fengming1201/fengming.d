@@ -1,23 +1,77 @@
 
+root@FJKdebian64:~# mount --help 
+
+Usage:
+ mount [-lhV]
+ mount -a [options]
+ mount [options] [--source] <source> | [--target] <directory>
+ mount [options] <source> <directory>
+ mount <operation> <mountpoint> [<target>]
+
+挂载文件系统。
+
+Options:
+ -a, --all               挂载 FSTAB 中提到的所有文件系统
+ -c, --no-canonicalize   不要规范化路径
+ -f, --fake              试运行;跳过挂载（2） 系统调用
+ -F, --fork              每个设备的分叉（与 -a 一起使用）
+ -T, --fstab <path>      /etc/fstab 的替代文件
+ -i, --internal-only     do not call the mount.<type> helpers
+ -l, --show-labels       还显示文件系统标签
+ -n, --no-mtab           不要写入 /etc/mtab
+     --options-mode <mode>
+                         如何处理从 FSTAB 加载的选项
+     --options-source <source>
+                         装载选项源
+     --options-source-force
+                         强制使用 FSTAB/MTAB 中的选项
+ -o, --options <list>    以逗号分隔的装载选项列表
+ -O, --test-opts <list>  限制文件系统集（与 -a 一起使用）
+ -r, --read-only         以只读方式挂载文件系统（与 -o RO 相同）
+ -t, --types <list>      限制文件系统类型集
+     --source <src>      显式指定源（路径、标签、UUID）
+     --target <target>   显式指定挂载点
+ -v, --verbose           说出正在做什么
+ -w, --rw, --read-write  挂载文件系统读写（默认）
+ -N, --namespace <ns>    在另一个命名空间中执行装载
+
+ -h, --help              display this help
+ -V, --version           display version
+
+源：
+ -L, --label <label>     synonym for LABEL=<label>
+ -U, --uuid <uuid>       synonym for UUID=<uuid>
+ LABEL=<label>           按文件系统标签指定设备
+ UUID=<uuid>             按文件系统 UUID 指定设备
+ PARTLABEL=<label>       按分区标签指定设备
+ PARTUUID=<uuid>         按分区 UUID 指定设备
+ <device>                按路径指定设备
+ <directory>             绑定挂载的挂载点（请参见 --BIND/RBind）
+ <file>                  用于循环开发设置的常规文件
+
+操作：
+ -B, --bind              在其他地方挂载子树（与 -o 绑定相同）
+ -M, --move              将子树移动到其他位置
+ -R, --rbind             挂载子树和所有子挂载到其他地方
+ --make-shared           将子树标记为共享
+ --make-slave            将子树标记为从属树
+ --make-private          将子树标记为私有
+ --make-unbindable       将子树标记为不可绑定
+ --make-rshared          递归地将整个子树标记为共享
+ --make-rslave           递归地将整个子树标记为从属树
+ --make-rprivate         递归地将整个子树标记为私有
+ --make-runbindable      递归地将整个子树标记为不可绑定
+
+有关更多详细信息，请参阅 mount（8）。
 
 
 
+挂载iso文件或光盘
+mount -t iso9660  /dev/sr0 /media/cdrom
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-提示“device is busy”，找到是什么进程占用。可执行：
+问题1：提示“device is busy”，找到是什么进程占用。可执行：
 fuser -m /mnt/data 将会显示使用这个模块的pid
 fuser -mk /mnt/data 将会直接kill那个pid
 

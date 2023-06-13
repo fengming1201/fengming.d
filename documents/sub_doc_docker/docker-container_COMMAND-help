@@ -1,0 +1,65 @@
+$ sudo docker container --help 
+
+Usage:  docker container COMMAND
+
+Manage containers
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  exec        Execute a command in a running container
+  export      Export a container's filesystem as a tar archive
+  inspect     Display detailed information on one or more containers
+  kill        Kill one or more running containers
+  logs        Fetch the logs of a container
+  ls          List containers
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  prune       Remove all stopped containers
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  run         Create and run a new container from an image
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+
+Run 'docker container COMMAND --help' for more information on a command.
+=====================================================================
+管理容器
+
+命令:
+  attach      将本地标准输入、输出和错误流附加到正在运行的容器
+  commit      根据容器的更改创建新映像
+  cp          在容器和本地文件系统之间复制文件/文件夹
+  create      创建新容器
+  diff        检查对容器文件系统上的文件或目录的更改
+  exec        在正在运行的容器中执行命令
+  export      将容器的文件系统导出为 tar 归档
+  inspect     显示一个或多个容器的详细信息
+  kill        终止一个或多个正在运行的容器
+  logs        获取容器的日志
+  ls          列出容器
+  pause       暂停一个或多个容器中的所有进程
+  port        列出容器的端口映射或特定映射
+  prune       删除所有停止的容器
+  rename      重命名容器
+  restart     重新启动一个或多个容器
+  rm          删除一个或多个容器
+  run         从映像创建并运行新容器
+  start       启动一个或多个已停止的容器
+  stats       显示容器资源使用情况统计信息的实时流
+  stop        停止一个或多个正在运行的容器
+  top         显示容器正在运行的进程
+  unpause     取消暂停一个或多个容器中的所有进程
+  update      更新一个或多个容器的配置
+  wait        阻止，直到一个或多个容器停止，然后打印其退出代码
+
+运行“docker container COMMAND --help”以获取有关命令的更多信息。

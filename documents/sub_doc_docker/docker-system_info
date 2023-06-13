@@ -1,0 +1,32 @@
+$ sudo docker info --help     
+
+Usage:  docker info [OPTIONS]
+
+Display system-wide information
+
+Aliases:
+  docker system info, docker info
+
+Options:
+  -f, --format string   Format output using a custom template:
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+==========================================
+显示系统范围的信息
+
+别名：
+  docker system info, docker info
+
+选项：
+  -f, --format string   使用自定义模板设置输出格式：
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
+==========================================
+关键字：标签 别名
+重要简述：
+实例：
+
+
+

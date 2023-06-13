@@ -1,0 +1,122 @@
+$ sudo docker image inspect --help
+
+Usage:  docker image inspect [OPTIONS] IMAGE [IMAGE...]
+
+Display detailed information on one or more images
+
+Options:
+  -f, --format string   Format output using a custom template:
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+========================================================================
+显示一个或多个镜像的详细信息
+
+选项:
+  -f, --format string   使用自定义模板设置输出格式：
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
+========================================================================
+关键字：检查 信息 查看
+
+重要简述：
+查看一个或多个镜像的详细信息，
+
+实例： 
+# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+myubuntu     latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago   63.1MB
+
+
+# docker inspect myubuntu:latest 
+[
+    {
+        "Id": "sha256:ba6acccedd2923aee4c2acc6a23780b14ed4b8a5fa4e14e252a23b846df9b6c1",
+        "RepoTags": [
+            "myubuntu:latest",
+            "ubuntu:latest"
+        ],
+        "RepoDigests": [
+            "ubuntu@sha256:626ffe58f6e7566e00254b638eb7e0f3b11d4da9675088f4781a50ae288f3322"
+        ],
+        "Parent": "",
+        "Comment": "",
+        "Created": "2021-10-16T00:37:47.578710012Z",
+        "Container": "249e88be79ad9986a479c71c15a056946ae26b0c54c1f634f115be6d5f9ba1c8",
+        "ContainerConfig": {
+            "Hostname": "249e88be79ad",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "/bin/sh",
+                "-c",
+                "#(nop) ",
+                "CMD [\"bash\"]"
+            ],
+            "Image": "sha256:6c18a628d47eacf574eb93da2324293a0e6c845084cca2ea13efaa3cee4d0799",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "DockerVersion": "20.10.7",
+        "Author": "",
+        "Config": {
+            "Hostname": "",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            ],
+            "Cmd": [
+                "bash"
+            ],
+            "Image": "sha256:6c18a628d47eacf574eb93da2324293a0e6c845084cca2ea13efaa3cee4d0799",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": null,
+            "OnBuild": null,
+            "Labels": null
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 72776513,
+        "VirtualSize": 72776513,
+        "GraphDriver": {
+            "Data": {
+                "MergedDir": "/var/lib/docker/overlay2/3f17041871e613a2050888b5a8866074667ebc3d7217bb570f7c7d869c6114f7/merged",
+                "UpperDir": "/var/lib/docker/overlay2/3f17041871e613a2050888b5a8866074667ebc3d7217bb570f7c7d869c6114f7/diff",
+                "WorkDir": "/var/lib/docker/overlay2/3f17041871e613a2050888b5a8866074667ebc3d7217bb570f7c7d869c6114f7/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:9f54eef412758095c8079ac465d494a2872e02e90bf1fb5f12a1641c0d1bb78b"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2021-12-11T02:13:17.741863642-07:00"
+        }
+    }
+]

@@ -1,0 +1,40 @@
+$ sudo docker image COMMAND --help 
+[sudo] password for lshm: 
+
+Usage:  docker image COMMAND
+
+Manage images
+
+Commands:
+  build       Build an image from a Dockerfile
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Display detailed information on one or more images
+  load        Load an image from a tar archive or STDIN
+  ls          List images
+  prune       Remove unused images
+  pull        Download an image from a registry
+  push        Upload an image to a registry
+  rm          Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+Run 'docker image COMMAND --help' for more information on a command.
+======================================================================
+管理镜像
+
+命令:
+  build       从 Dockerfile 构建映像
+  history     显示图像的历史记录
+  import      从压缩包导入内容以创建文件系统映像
+  inspect     显示一个或多个图像的详细信息
+  load        从 tar 存档或 STDIN 加载图像
+  ls          列表图像
+  prune       删除未使用的映像
+  pull        从注册表下载映像
+  push        将映像上传到注册表
+  rm          删除一个或多个图像
+  save        将一张或多张图像保存到 tar 存档（默认情况式传输到 STDOUT）
+  tag         创建引用SOURCE_IMAGE的标记TARGET_IMAGE
+
+运行“docker image COMMAND --help”以获取有关命令的更多信息。

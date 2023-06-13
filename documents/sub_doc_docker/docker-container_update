@@ -1,0 +1,52 @@
+$ sudo docker container update --help 
+
+Usage:  docker container update [OPTIONS] CONTAINER [CONTAINER...]
+
+Update configuration of one or more containers
+
+Aliases:
+  docker container update, docker update
+
+Options:
+      --blkio-weight uint16        Block IO (relative weight), between 10 and 1000, or 0 to disable (default 0)
+      --cpu-period int             Limit CPU CFS (Completely Fair Scheduler) period
+      --cpu-quota int              Limit CPU CFS (Completely Fair Scheduler) quota
+      --cpu-rt-period int          Limit the CPU real-time period in microseconds
+      --cpu-rt-runtime int         Limit the CPU real-time runtime in microseconds
+  -c, --cpu-shares int             CPU shares (relative weight)
+      --cpus decimal               Number of CPUs
+      --cpuset-cpus string         CPUs in which to allow execution (0-3, 0,1)
+      --cpuset-mems string         MEMs in which to allow execution (0-3, 0,1)
+  -m, --memory bytes               Memory limit
+      --memory-reservation bytes   Memory soft limit
+      --memory-swap bytes          Swap limit equal to memory plus swap: -1 to enable unlimited swap
+      --pids-limit int             Tune container pids limit (set -1 for unlimited)
+      --restart string             Restart policy to apply when a container exits
+==============================================
+更新一个或多个容器的配置
+
+别名：
+  docker container update, docker update
+
+选项：
+      --blkio-weight uint16        块 IO（相对权重），介于 10 和 1000 之间，或 0 表示禁用（默认值为 0）
+      --cpu-period int             限制 CPU CFS（完全公平调度程序）周期
+      --cpu-quota int              限制 CPU CFS（完全公平调度程序）配额
+      --cpu-rt-period int          以微秒为单位限制 CPU 实时周期
+      --cpu-rt-runtime int         限制 CPU 实时运行时间（以微秒为单位）
+  -c, --cpu-shares int             CPU 份额（相对权重）
+      --cpus decimal               处理器数量
+      --cpuset-cpus string         允许执行的 CPU（0-3、0，1）
+      --cpuset-mems string         允许执行的 MEM（0-3、0，1）
+  -m, --memory bytes               内存限制
+      --memory-reservation bytes   内存软限制
+      --memory-swap bytes          交换限制等于内存加交换：-1 以启用无限交换
+      --pids-limit int             调整容器 pids 限制（设置为 -1 表示无限制）
+      --restart string             重新启动要在容器退出时应用的策略
+
+
+
+
+关键字：
+重要简述：
+实例：

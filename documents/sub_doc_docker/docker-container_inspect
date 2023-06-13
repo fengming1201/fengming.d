@@ -1,0 +1,26 @@
+$ sudo docker container inspect --help       
+
+Usage:  docker container inspect [OPTIONS] CONTAINER [CONTAINER...]
+
+Display detailed information on one or more containers
+
+Options:
+  -f, --format string   Format output using a custom template:
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+  -s, --size            Display total file sizes
+========================================
+显示一个或多个容器的详细信息
+
+选项：
+  -f, --format string   使用自定义模板设置输出格式：
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
+  -s, --size            显示总文件大小
+
+
+关键字：
+重要简述：
+实例：

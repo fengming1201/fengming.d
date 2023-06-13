@@ -1,0 +1,25 @@
+$ sudo docker container kill --help        
+
+Usage:  docker container kill [OPTIONS] CONTAINER [CONTAINER...]
+
+Kill one or more running containers
+
+Aliases:
+  docker container kill, docker kill
+
+Options:
+  -s, --signal string   Signal to send to the container
+=======================================
+终止一个或多个正在运行的容器
+
+别名：
+  docker container kill, docker kill
+
+选项：
+  -s, --signal string   发送到容器的信号
+
+
+
+关键字：
+重要简述：
+实例：

@@ -1,0 +1,19 @@
+$ sudo docker container diff --help       
+
+Usage:  docker container diff CONTAINER
+
+Inspect changes to files or directories on a container's filesystem
+
+Aliases:
+  docker container diff, docker diff
+=======================================
+检查对容器文件系统上的文件或目录的更改
+
+别名：
+  docker container diff, docker diff
+
+
+
+关键字：
+重要简述：
+实例：

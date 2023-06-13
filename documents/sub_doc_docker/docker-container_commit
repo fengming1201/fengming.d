@@ -1,0 +1,29 @@
+$ sudo docker container commit --help       
+
+Usage:  docker container commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+
+Create a new image from a container's changes
+
+Aliases:
+  docker container commit, docker commit
+
+Options:
+  -a, --author string    Author (e.g., "John Hannibal Smith <hannibal@a-team.com>")
+  -c, --change list      Apply Dockerfile instruction to the created image
+  -m, --message string   Commit message
+  -p, --pause            Pause container during commit (default true)
+==============================================================
+根据容器的更改创建新映像
+
+别名：
+  docker container commit, docker commit
+
+选项：
+  -a, --author string   作者（例如， "John Hannibal Smith <hannibal@a-team.com>")
+  -c, --change list      将 Dockerfile 指令应用于创建的映像
+  -m, --message string   提交消息
+  -p, --pause            提交期间暂停容器（默认 true）
+
+关键字：
+重要简述：
+实例：

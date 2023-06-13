@@ -1,0 +1,33 @@
+$ sudo docker image tag --help  
+
+Usage:  docker image tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+
+Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+
+Aliases:
+  docker image tag, docker tag
+===============================================
+创建引用SOURCE_IMAGE的标记TARGET_IMAGE
+
+别名:
+  docker image tag, docker tag
+
+===============================================
+关键字：标签 别名
+重要简述：
+为了方便再后续工作中使用特定镜像，可以用docker tag命令来为本地镜像任意添加新的标签，即别名。
+
+实例：
+# docker images 
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+ubuntu       latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago   63.1MB
+
+# docker tag ubuntu:latest myubuntu:latest 
+
+# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+myubuntu     latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       latest    ba6acccedd29   8 weeks ago    72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago   63.1MB
+ 

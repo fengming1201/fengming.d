@@ -1,0 +1,27 @@
+$ sudo docker image import --help 
+
+Usage:  docker image import [OPTIONS] file|URL|- [REPOSITORY[:TAG]]
+
+Import the contents from a tarball to create a filesystem image
+
+Aliases:
+  docker image import, docker import
+
+Options:
+  -c, --change list       Apply Dockerfile instruction to the created image
+  -m, --message string    Set commit message for imported image
+      --platform string   Set platform if server is multi-platform capable
+==============================================================================
+从压缩包导入内容以创建文件系统映像
+
+别名:
+  docker image import, docker import
+
+选项:
+  -c, --change list       将 Dockerfile 指令应用于创建的映像
+  -m, --message string    为导入的映像设置提交消息
+      --platform string   如果服务器支持多平台，则设置平台
+==============================================================================
+关键字：
+重要简述：
+实例：  

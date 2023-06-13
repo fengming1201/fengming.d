@@ -1,0 +1,27 @@
+$ sudo docker image load --help   
+
+Usage:  docker image load [OPTIONS]
+
+Load an image from a tar archive or STDIN
+
+Aliases:
+  docker image load, docker load
+
+Options:
+  -i, --input string   Read from tar archive file, instead of STDIN
+  -q, --quiet          Suppress the load output
+===========================================================
+从 tar 存档或 STDIN 加载图像
+
+别名:
+  docker image load, docker load
+
+选项:
+  -i, --input string   从 tar 存档文件中读取，而不是从 STDIN 中读取
+  -q, --quiet          抑制负载输出
+===========================================================
+关键字：导入 加载
+重要简述：
+加载本地镜像。
+
+实例：

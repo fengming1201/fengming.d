@@ -1,0 +1,10 @@
+$ sudo docker logout  --help 
+
+Usage:  docker logout [SERVER]
+
+Log out from a registry.
+If no server is specified, the default is defined by the daemon.
+==============================================
+
+
+

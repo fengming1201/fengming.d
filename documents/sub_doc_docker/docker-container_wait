@@ -1,0 +1,19 @@
+$ sudo docker container wait --help  
+
+Usage:  docker container wait CONTAINER [CONTAINER...]
+
+Block until one or more containers stop, then print their exit codes
+
+Aliases:
+  docker container wait, docker wait
+=====================================
+阻止，直到一个或多个容器停止，然后打印其退出代码
+
+别名：
+  docker container wait, docker wait
+
+
+
+关键字：
+重要简述：
+实例：

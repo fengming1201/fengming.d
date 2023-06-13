@@ -1,0 +1,27 @@
+$ sudo docker container stop --help 
+
+Usage:  docker container stop [OPTIONS] CONTAINER [CONTAINER...]
+
+Stop one or more running containers
+
+Aliases:
+  docker container stop, docker stop
+
+Options:
+  -s, --signal string   Signal to send to the container
+  -t, --time int        Seconds to wait before killing the container
+======================================
+停止一个或多个正在运行的容器
+
+别名：
+  docker container stop, docker stop
+
+选项：
+  -s, --signal string   发送到容器的信号
+  -t, --time int        在杀死容器之前等待几秒钟
+
+
+
+关键字：
+重要简述：
+实例：

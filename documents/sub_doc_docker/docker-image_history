@@ -1,0 +1,48 @@
+$ sudo docker image history --help
+
+Usage:  docker image history [OPTIONS] IMAGE
+
+Show the history of an image
+
+Aliases:
+  docker image history, docker history
+
+Options:
+      --format string   Format output using a custom template:
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+  -H, --human           Print sizes and dates in human readable format (default true)
+      --no-trunc        Don't truncate output
+  -q, --quiet           Only show image IDs
+======================================================================================
+显示图像的历史记录
+
+别名:
+  docker image history, docker history
+
+选项:
+      --format string   使用自定义模板设置输出格式：
+                        'table':            以带有列标题的表格格式打印输出（默认）
+                        'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+  -H, --human           以人类可读格式打印大小和日期（默认值为 true）
+      --no-trunc        不要截断输出
+  -q, --quiet           仅显示映像 ID
+======================================================================================
+关键字：
+重要简述：
+实例：  
+# docker history myubuntu:latest 
+IMAGE          CREATED       CREATED BY                                      SIZE      COMMENT
+ba6acccedd29   8 weeks ago   /bin/sh -c #(nop)  CMD ["bash"]                 0B        
+<missing>      8 weeks ago   /bin/sh -c #(nop) ADD file:5d68d27cc15a80653…   72.8MB    
+ 
+# docker history ubuntu:18.04 
+IMAGE          CREATED        CREATED BY                                      SIZE      COMMENT
+5a214d77f5d7   2 months ago   /bin/sh -c #(nop)  CMD ["bash"]                 0B        
+<missing>      2 months ago   /bin/sh -c #(nop) ADD file:0d82cd095966e8ee7…   63.1MB  

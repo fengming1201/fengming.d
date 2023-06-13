@@ -1,0 +1,55 @@
+$ sudo docker container ls --help     
+
+Usage:  docker container ls [OPTIONS]
+
+List containers
+
+Aliases:
+  docker container ls, docker container list, docker container ps, docker ps
+
+Options:
+  -a, --all             Show all containers (default shows just running)
+  -f, --filter filter   Filter output based on conditions provided
+      --format string   Format output using a custom template:
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+  -n, --last int        Show n last created containers (includes all states) (default -1)
+  -l, --latest          Show the latest created container (includes all states)
+      --no-trunc        Don't truncate output
+  -q, --quiet           Only display container IDs
+  -s, --size            Display total file sizes
+=============================================
+列出容器
+
+别名：
+  docker container ls, docker container list, docker container ps, docker ps
+
+选项：
+  -a, --all             显示所有容器（默认显示刚刚运行）
+  -f, --filter filter   根据提供的条件过滤输出
+      --format string   使用自定义模板设置输出格式：
+                        'table':            以带有列标题的表格格式打印输出（默认）
+                        'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
+  -n, --last int        显示 n 个上次创建的容器（包括所有状态）（默认 -1）
+  -l, --latest          显示最新创建的容器（包括所有状态）
+      --no-trunc        不要截断输出
+  -q, --quiet           仅显示容器 ID
+  -s, --size            显示总文件大小
+
+
+关键字：
+重要简述：
+CONTAINER ID是唯一标识容器，类似于进程ID一样。
+
+实例：
+$ sudo docker ps -a 
+CONTAINER ID   IMAGE                   COMMAND                  CREATED        STATUS        PORTS                                                      NAMES
+59dd81c83001   photoprism/photoprism   "/scripts/entrypoint…"   25 hours ago   Up 25 hours   0.0.0.0:2342->2342/tcp, :::2342->2342/tcp, 2442-2443/tcp   photoprism
+b96cce513b97   johngong/calibre-web    "/init"                  2 weeks ago    Up 6 days     8080/tcp, 0.0.0.0:8083->8083/tcp, :::8083->8083/tcp        calibre-web
+

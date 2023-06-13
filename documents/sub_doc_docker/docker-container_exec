@@ -1,0 +1,40 @@
+$ sudo docker container exec --help     
+
+Usage:  docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+Execute a command in a running container
+
+Aliases:
+  docker container exec, docker exec
+
+Options:
+  -d, --detach               Detached mode: run command in the background
+      --detach-keys string   Override the key sequence for detaching a container
+  -e, --env list             Set environment variables
+      --env-file list        Read in a file of environment variables
+  -i, --interactive          Keep STDIN open even if not attached
+      --privileged           Give extended privileges to the command
+  -t, --tty                  Allocate a pseudo-TTY
+  -u, --user string          Username or UID (format: "<name|uid>[:<group|gid>]")
+  -w, --workdir string       Working directory inside the container
+=====================================================
+在正在运行的容器中执行命令
+
+别名：
+  docker container exec, docker exec
+
+选项：
+  -d, --detach               分离模式：在后台运行命令
+      --detach-keys string   覆盖用于分离容器的键序列
+  -e, --env list             设置环境变量
+      --env-file list        读入环境变量文件
+  -i, --interactive         即使未连接，也保持 STDIN 打开
+      --privileged           为命令授予扩展权限
+  -t, --tty                  分配伪 TTY
+  -u, --user string          用户名或 UID（格式： "<name|uid>[:<group|gid>]")
+  -w, --workdir string       容器内的工作目录
+
+
+关键字：
+重要简述：
+实例：

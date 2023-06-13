@@ -1,0 +1,163 @@
+$ sudo docker --help 
+
+Usage:  docker [OPTIONS] COMMAND
+
+A self-sufficient runtime for containers
+
+Common Commands:
+  run         Create and run a new container from an image
+  exec        Execute a command in a running container
+  ps          List containers
+  build       Build an image from a Dockerfile
+  pull        Download an image from a registry
+  push        Upload an image to a registry
+  images      List images
+  login       Log in to a registry
+  logout      Log out from a registry
+  search      Search Docker Hub for images
+  version     Show the Docker version information
+  info        Display system-wide information
+
+Management Commands:
+  builder     Manage builds
+  buildx*     Docker Buildx (Docker Inc., v0.10.4)
+  compose*    Docker Compose (Docker Inc., v2.17.3)
+  container   Manage containers
+  context     Manage contexts
+  image       Manage images
+  manifest    Manage Docker image manifests and manifest lists
+  network     Manage networks
+  plugin      Manage plugins
+  system      Manage Docker
+  trust       Manage trust on Docker images
+  volume      Manage volumes
+
+Swarm Commands:
+  swarm       Manage Swarm
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  events      Get real time events from the server
+  export      Export a container's filesystem as a tar archive
+  history     Show the history of an image
+  import      Import the contents from a tarball to create a filesystem image
+  inspect     Return low-level information on Docker objects
+  kill        Kill one or more running containers
+  load        Load an image from a tar archive or STDIN
+  logs        Fetch the logs of a container
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  rmi         Remove one or more images
+  save        Save one or more images to a tar archive (streamed to STDOUT by default)
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+
+Global Options:
+      --config string      Location of client config files (default "/root/.docker")
+  -c, --context string     Name of the context to use to connect to the daemon (overrides DOCKER_HOST env var and default context set with "docker context use")
+  -D, --debug              Enable debug mode
+  -H, --host list          Daemon socket(s) to connect to
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   Trust certs signed only by this CA (default "/root/.docker/ca.pem")
+      --tlscert string     Path to TLS certificate file (default "/root/.docker/cert.pem")
+      --tlskey string      Path to TLS key file (default "/root/.docker/key.pem")
+      --tlsverify          Use TLS and verify the remote
+  -v, --version            Print version information and quit
+
+Run 'docker COMMAND --help' for more information on a command.
+
+For more help on how to use Docker, head to https://docs.docker.com/go/guides/
+==============================================================================
+容器的自给自足运行时
+
+常用命令：
+  run         从映像创建并运行新容器
+  exec        在正在运行的容器中执行命令
+  ps          列出容器
+  build       从 Docker 文件构建映像
+  pull        从仓库下载映像
+  push        将映像上传到仓库
+  images      列表图像
+  login       登录到仓库
+  logout      从仓库注销
+  search      在 Docker Hub 中搜索映像
+  version     显示 Docker 版本信息
+  info        显示系统范围的信息
+
+管理命令：
+  builder     Manage builds
+  buildx*     Docker Buildx (Docker Inc., v0.10.4)
+  compose*    Docker Compose (Docker Inc., v2.17.3)
+  container   管理容器
+  context     管理上下文
+  image       管理图像
+  manifest    管理 Docker 映像清单和清单列表
+  network     管理网络
+  plugin      管理插件
+  system      管理Docker
+  trust       管理 Docker 映像上的信任
+  volume      管理卷
+
+群命令：
+  swarm       管理群
+
+命令：
+  attach      将本地标准输入、输出和错误流附加到正在运行的容器
+  commit      根据容器的更改创建新映像
+  cp          在容器和本地文件系统之间复制文件/文件夹
+  create      创建新容器
+  diff        检查对容器文件系统上的文件或目录的更改
+  events      从服务器获取实时事件
+  export      将容器的文件系统导出为 tar 归档
+  history     显示图像的历史记录
+  import      从压缩包导入内容以创建文件系统映像
+  inspect     返回有关 Docker 对象的低级信息
+  kill        终止一个或多个正在运行的容器
+  load        从 tar 存档或 STDIN 加载图像
+  logs        获取容器的日志
+  pause       暂停一个或多个容器中的所有进程
+  port        列出容器的端口映射或特定映射
+  rename      重命名容器
+  restart     重新启动一个或多个容器
+  rm          删除一个或多个容器
+  rmi         删除一个或多个图像
+  save        将一张或多张图像保存到 tar 存档（默认情况式传输到 STDOUT）
+  start       启动一个或多个已停止的容器
+  stats       显示容器资源使用情况统计信息的实时流
+  stop        停止一个或多个正在运行的容器
+  tag         创建引用SOURCE_IMAGE的标记TARGET_IMAGE
+  top         显示容器正在运行的进程
+  unpause     取消暂停一个或多个容器中的所有进程
+  update      更新一个或多个容器的配置
+  wait        阻止，直到一个或多个容器停止，然后打印其退出代码
+
+全局选项：
+      --config string      客户端配置文件的位置（默认"/root/.docker")
+  -c, --context string     用于连接到守护程序的上下文的名称（覆盖 env var DOCKER_HOST默认上下文，并使用“docker 上下文使用”设置）
+  -D, --debug              启用调试模式
+  -H, --host list          Daemon socket(s) to connect to
+  -l, --log-level string   Set the logging level ("debug", "info", "warn", "error", "fatal") (default "info")
+      --tls                Use TLS; implied by --tlsverify
+      --tlscacert string   仅由此 CA 签名的信任证书（默认 "/root/.docker/ca.pem")
+      --tlscert string     TLS 证书文件的路径（默认） "/root/.docker/cert.pem")
+      --tlskey string      TLS 密钥文件的路径（默认） "/root/.docker/key.pem")
+      --tlsverify          使用 TLS 并验证远程
+  -v, --version            打印版本信息并退出
+
+运行“docker COMMAND --help”以获取有关命令的更多信息。
+
+有关如何使用 Docker 的更多帮助，请转到 https://docs.docker.com/go/guides/

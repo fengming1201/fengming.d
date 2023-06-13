@@ -1,0 +1,27 @@
+$ sudo docker container attach --help 
+
+Usage:  docker container attach [OPTIONS] CONTAINER
+
+Attach local standard input, output, and error streams to a running container
+
+Aliases:
+  docker container attach, docker attach
+
+Options:
+      --detach-keys string   Override the key sequence for detaching a container
+      --no-stdin             Do not attach STDIN
+      --sig-proxy            Proxy all received signals to the process (default true)
+====================================================
+将本地标准输入、输出和错误流附加到正在运行的容器
+
+别名:
+  docker container attach, docker attach
+
+选项：
+      --detach-keys string   覆盖用于分离容器的键序列
+      --no-stdin             不要附加 STDIN
+      --sig-proxy            将所有接收到的信号代理给进程（默认 true）
+
+关键字：
+重要简述：
+实例：

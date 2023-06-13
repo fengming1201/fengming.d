@@ -1,0 +1,27 @@
+$ sudo docker image push --help
+
+Usage:  docker image push [OPTIONS] NAME[:TAG]
+
+Upload an image to a registry
+
+Aliases:
+  docker image push, docker push
+
+Options:
+  -a, --all-tags                Push all tags of an image to the repository
+      --disable-content-trust   Skip image signing (default true)
+  -q, --quiet                   Suppress verbose output
+==============================================================
+将映像上传到仓库
+
+别名:
+  docker image push, docker push
+
+选项:
+  -a, --all-tags                将映像的所有标签推送到存储库
+      --disable-content-trust   跳过映像签名（默认为 true）
+  -q, --quiet                   抑制详细输出
+==============================================================
+关键字：
+重要简述：
+实例：

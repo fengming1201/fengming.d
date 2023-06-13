@@ -1,0 +1,37 @@
+$ sudo docker container cp --help       
+
+Usage:  docker container cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
+        docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
+
+Copy files/folders between a container and the local filesystem
+
+Use '-' as the source to read a tar archive from stdin
+and extract it to a directory destination in a container.
+Use '-' as the destination to stream a tar archive of a
+container source to stdout.
+
+Aliases:
+  docker container cp, docker cp
+
+Options:
+  -a, --archive       Archive mode (copy all uid/gid information)
+  -L, --follow-link   Always follow symbol link in SRC_PATH
+  -q, --quiet         Suppress progress output during copy. Progress output is automatically suppressed if no terminal is attached
+===========================================
+在容器和本地文件系统之间复制文件/文件夹
+
+使用“-”作为源从 stdin 读取 tar 存档并将其解压缩到容器中的目录目标。
+使用“-”作为目标，将容器源的 tar 存档流式传输到 stdout。
+
+别名：
+  docker container cp, docker cp
+
+选项：
+  -a, --archive       存档模式（复制所有 uid/gid 信息）
+  -L, --follow-link   始终遵循SRC_PATH中的符号链接
+  -q, --quiet         禁止复制期间的进度输出。如果未连接端子，则自动抑制进度输出
+
+
+关键字：
+重要简述：
+实例：

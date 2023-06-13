@@ -1,0 +1,26 @@
+$ sudo docker image prune --help
+
+Usage:  docker image prune [OPTIONS]
+
+Remove unused images
+
+Options:
+  -a, --all             Remove all unused images, not just dangling ones
+      --filter filter   Provide filter values (e.g. "until=<timestamp>")
+  -f, --force           Do not prompt for confirmation
+========================================================
+删除未使用的映像
+
+Options:
+  -a, --all             删除所有未使用的图像，而不仅仅是悬挂的图像
+      --filter filter   提供过滤器值（例如 "until=<timestamp>")
+  -f, --force           不提示确认
+========================================================
+关键字：删除 删除镜像
+重要简述：
+使用Docker 一段时间后，系统中可能会遗留一些临时的镜像文件，以及一些没有被使用的镜像，可以通过该命令来镜像清理。
+
+实例：
+
+
+
