@@ -198,9 +198,12 @@ function fm-document_show
 {
 	local doc_file_path=${fengming_top_dir}/documents
 	
-	if [ $# -lt 1 ];then tree ${doc_file_path};return 0;fi
-	
-	if [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 1 ];then tree -L 1 ${doc_file_path};return 0;fi
+	if [ $1 = "-a" ] || [ $1 = "--all" ]
+	then
+		tree ${doc_file_path}
+		return 0
+	elif [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "SYNOPSIS:"
 		echo "         ${FUNCNAME}  file_prefix / sub_dir_name_suffix"
@@ -209,6 +212,7 @@ function fm-document_show
 		echo "        ${FUNCNAME}  image_build"
 		return 1
 	fi
+	
 	local parameter=$@
 	local txt_file="none"
 	local dir_file="none"
@@ -242,49 +246,40 @@ function fm-document_show
 
 function fm-software_list
 {
-	local sorftware_install_dir=${fengming_top_dir}/sorftware_install/
-	local target_file=base_software_list
-	if [ ! -f ${sorftware_install_dir}/${target_file} ];then echo "${target_file} not exist.";return 1;fi
+	local sorftware_tutorial_dir=${fengming_top_dir}/sorftware_toolket
+	local target_file=base_software_list.json
+	if [ ! -f ${sorftware_tutorial_dir}/${target_file} ];then echo "${target_file} not exist.";return 1;fi
 
-	cat ${sorftware_install_dir}/${target_file}
+	cat ${sorftware_tutorial_dir}/${target_file}
 
 	return 0
 }
 
 
-function fm-install_tool_method
+function fm-software_install_tutorial
 {
-	local sorftware_install_dir=${fengming_top_dir}/sorftware_install/
+	local sorftware_tutorial_dir=${fengming_top_dir}/sorftware_toolket
 	
 	#check paramter
-	if [ $# -lt 1 ]
-	then 
-		echo "----------------------------------"
-		tree  ${sorftware_install_dir}
-		echo "path=${sorftware_install_dir}"
-		echo ""
-        echo "SYNOPSIS:"
-        echo "         ${FUNCNAME}  [name / keyword]  //关键字或软件名称"
-		return 1
-	fi
+	if [ $# -lt 1 ];then tree  ${sorftware_tutorial_dir};return 1;fi
     if [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:软件的安装教程"
         echo "SYNOPSIS:"
         echo "         ${FUNCNAME}  [name / keyword]  //关键字或软件名称"
-        return 1
+        return 0
     fi
 
 	local parameter=$@
 	local tutor_file="none"
 	for file in ${parameter}
 	do
-		if [ -d ${sorftware_install_dir}/${file} ]
+		if [ -d ${sorftware_tutorial_dir}/${file} ]
 		then
-			tree ${sorftware_install_dir}/${file}
+			tree ${sorftware_tutorial_dir}/${file}
 			continue
 		fi
-		tutor_file=$(find ${sorftware_install_dir} -type f -iname "*${file}*" -o  -type l -iname "*${file}*")
+		tutor_file=$(find ${sorftware_tutorial_dir} -type f -iname "*${file}*" -o  -type l -iname "*${file}*")
 		if [ "x${tutor_file}" = x ];then echo "ERROR:no found ${file} toturial file";return 2;fi
 		for file_each in ${tutor_file}
 		do

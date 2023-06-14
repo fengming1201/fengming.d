@@ -2,10 +2,10 @@
 官方文档：https://docs.photoprism.app/
 
 Step 1: Start the server
-
+步骤 1：启动服务器
 
 Open a terminal and run this command to start the app after replacing ~/Pictures with the folder containing your pictures:
-
+打开终端并运行以下命令以在将~/Pictures替换为包含图片的文件夹后启动应用程序：
 docker run -d \
   --name photoprism \
   --security-opt seccomp=unconfined \
@@ -18,33 +18,29 @@ docker run -d \
   photoprism/photoprism
 
 The server port and other config options can be changed as needed. 
+可以根据需要更改服务器端口和其他配置选项。
 If you provide no database server credentials, SQLite database files will be created in the storage folder.
+如果未提供数据库服务器凭据，则将在存储文件夹中创建 SQLite 数据库文件。
 
 note:Always change PHOTOPRISM_ADMIN_PASSWORD so that the app starts with a secure initial password. 
+注意：始终更改PHOTOPRISM_ADMIN_PASSWORD，以便应用程序以安全的初始密码启动。
 Never use easy-to-guess passwords or default values like insecure on publicly accessible servers. 
+切勿在可公开访问的服务器上使用易于猜测的密码或默认值，例如不安全。
 There is no default in case no password was provided. A minimum length of 8 characters is required.
-
+如果未提供密码，则没有默认值。最小长度为 8 个字符。
 
 When the app has been started, open the Web UI by navigating to http://localhost:2342/. 
+应用启动后，通过导航到 Web UI http://localhost:2342/。
 You should see a login screen. Sign in with the user admin and the password configured via PHOTOPRISM_ADMIN_PASSWORD. 
+您应该会看到一个登录屏幕。使用用户管理员和通过PHOTOPRISM_ADMIN_PASSWORD配置的密码登录。
 You may change it on the account settings page. Enabling public mode will disable authentication.
+您可以在帐户设置页面上更改它。启用公共模式将禁用身份验证。
 
 It is not possible to change the password via PHOTOPRISM_ADMIN_PASSWORD after the app has been started for the first time. 
+首次启动应用程序后，无法通过PHOTOPRISM_ADMIN_PASSWORD更改密码。
 You may run docker exec -ti photoprism photoprism passwd [username] in a terminal to change an existing password. 
+您可以在终端中运行 docker exec -ti photoprism photoprism passwd [用户名] 来更改现有密码。
 You can also reset your database for a clean start. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+您还可以重置数据库以实现干净启动。
 
 
