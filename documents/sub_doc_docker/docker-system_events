@@ -1,0 +1,18 @@
+$ sudo docker  system  events --help
+
+Usage:  docker system events [OPTIONS]
+
+Get real time events from the server
+
+Aliases:
+  docker system events, docker events
+
+Options:
+  -f, --filter filter   Filter output based on conditions provided
+      --format string   Format the output using the given Go template
+      --since string    Show all events created since timestamp
+      --until string    Stream events until this timestamp
+=========================================
+
+
+

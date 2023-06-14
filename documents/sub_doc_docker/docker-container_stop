@@ -20,8 +20,19 @@ Options:
   -s, --signal string   发送到容器的信号
   -t, --time int        在杀死容器之前等待几秒钟
 
-
-
+======================================
+关联：docker container prune
 关键字：
 重要简述：
 实例：
+root@FJKdebian64:~# docker ps -a 
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
+8044d4dee1d9        ubuntu:latest       "bash"               16 minutes ago      Up 16 minutes                              busy_moser
+86b57e0453c7        httpd               "httpd-foreground"   4 months ago        Up 2 hours          0.0.0.0:8080->80/tcp   httpd
+root@FJKdebian64:~# docker stop 8044d4dee1d9
+8044d4dee1d9
+root@FJKdebian64:~# docker ps -a            
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS                     PORTS                  NAMES
+8044d4dee1d9        ubuntu:latest       "bash"               16 minutes ago      Exited (0) 3 seconds ago                          busy_moser
+86b57e0453c7        httpd               "httpd-foreground"   4 months ago        Up 2 hours                 0.0.0.0:8080->80/tcp   httpd
+root@FJKdebian64:~# 

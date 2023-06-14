@@ -1,0 +1,19 @@
+Dockerfile 中每一条指令都创建镜像的一层。例如：
+FROM ubuntu:18.04 
+MAINTAINER Docker Newbee <newbee@docker.com> 
+RUN apt-get -qq update 
+RUN apt-get -qqy install ruby ruby-dev 
+RUN gem install sinatra 
+
+Dockerfile 基本的语法是 
+使用 # 来注释 
+FROM 指令告诉 Docker 使用哪个镜像作为基础 
+接着是维护者的信息 
+RUN 开头的指令会在创建中运行，比如安装一个软件包，在这里使用 apt-get 来安装了一些软件
+编写完成 Dockerfile 后可以使用 docker build 来生成镜像。
+例如：
+# docker build -t "mytest3:1.1.0" .
+
+文件名必须是Dockerfile,
+“.”	是	Dockerfile	所在的路径（当前目录），也可以
+替换为一个具体的	Dockerfile	的路径。

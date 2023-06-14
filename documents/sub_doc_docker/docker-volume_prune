@@ -1,0 +1,18 @@
+$ sudo docker  volume  prune --help   
+
+Usage:  docker volume prune [OPTIONS]
+
+Remove all unused local volumes
+
+Options:
+  -a, --all             Remove all unused volumes, not just anonymous ones
+      --filter filter   Provide filter values (e.g. "label=<label>")
+  -f, --force           Do not prompt for confirmation
+====================================
+删除所有未使用的本地卷
+
+选项：
+  -a, --all             删除所有未使用的卷，而不仅仅是匿名卷
+      --filter filter   提供过滤器值（例如"label=<label>")
+  -f, --force           不提示确认
+====================================

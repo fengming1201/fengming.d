@@ -203,9 +203,10 @@ function fm-document_show
 	if [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "         ${FUNCNAME}  file_prefix / sub_dir_name"
+		echo "         ${FUNCNAME}  file_prefix / sub_dir_name_suffix"
 		echo "example:"
-		echo "        ${FUNCNAME}  debian"
+		echo "        ${FUNCNAME}  docker"
+		echo "        ${FUNCNAME}  image_build"
 		return 1
 	fi
 	local parameter=$@
@@ -213,11 +214,7 @@ function fm-document_show
 	local dir_file="none"
 	for file in ${parameter}
 	do
-		if [ -d ${doc_file_path}/${file} ]
-		then
-			tree ${doc_file_path}/${file}
-			continue
-		fi
+		#check dir first
 		dir_file=$(find ${doc_file_path} -type d -iname "*${file}*")
 		if [ "x${dir_file}" != x ]
 		then
@@ -225,17 +222,20 @@ function fm-document_show
 			do
 				tree ${dir}
 			done
-			break
+			continue
 		fi
-		txt_file=$(find ${doc_file_path} -type f -iname "${file}*" -o -type l -iname "*${file}*")
-		if [ "x${txt_file}" = x ];then echo "ERROR:no found ${file} help file";return 2;fi
-		for file_each in ${txt_file}
-		do
-			echo "start >>>"
-			cat ${file_each}
-			echo "end <<<"
-			echo "file:${file_each}"
-		done
+		#check text file
+		txt_file=$(find ${doc_file_path} -type f -iname "*${file}*" -o -type l -iname "*${file}*")
+		if [ "x${txt_file}" != x ]
+		then
+			for file_each in ${txt_file}
+			do
+				echo "start >>>"
+				cat ${file_each}
+				echo "end <<<"
+				echo "file:${file_each}"
+			done
+		fi
 	done
 	return 0
 }

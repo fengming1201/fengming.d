@@ -13,7 +13,8 @@ Options:
 选项：
       --filter filter   提供过滤器值（例如"until=<timestamp>")
   -f, --force           不提示确认
-
+=============================================
+关联：docker stop
 关键字：
 重要简述：
 实例：

@@ -1,0 +1,19 @@
+$ sudo docker  volume  create --help 
+
+Usage:  docker volume create [OPTIONS] [VOLUME]
+
+Create a volume
+
+Options:
+  -d, --driver string   Specify volume driver name (default "local")
+      --label list      Set metadata for a volume
+  -o, --opt map         Set driver specific options (default map[])
+=========================================
+创建卷
+
+选项：
+  -d, --driver string   指定卷驱动程序名称（默认 "local")
+      --label list      设置卷的元数据
+  -o, --opt map         设置特定于驱动程序的选项（默认 map[])
+
+=========================================

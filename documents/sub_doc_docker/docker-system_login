@@ -10,6 +10,48 @@ Options:
       --password-stdin    Take the password from stdin
   -u, --username string   Username
 ==============================================
+登录到注册表。
+如果未指定服务器，则缺省值由守护程序定义。
+
+选项：
+  -p, --password string   密码
+      --password-stdin    从标准输入中获取密码
+  -u, --username string   用户名
+==============================================
+关联：docker logout
+关键字：
+重要简述：
+该命令用来登录，需要输入用户名和密码。登录成功后，本地用户目录下会自动创建.docker/config.json文件，保护用户的认证信息。
+登录成功的用户就可以上传个人制作的镜像到Docker Hub。
+
+实例：
+root@FJKdebian64:~# docker login 
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+Username: fengming1201
+Password: fengming1201
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+root@FJKdebian64:~#
+root@FJKdebian64:~# tree .docker/
+.docker/
+└── config.json
+
+0 directories, 1 file
+root@FJKdebian64:~# cat .docker/config.json 
+{
+        "auths": {
+                "https://index.docker.io/v1/": {
+                        "auth": "ZmVuZ21pbmcxMjAxOmZlbmdtaW5nMTIwMQ=="
+                }
+        },
+        "HttpHeaders": {
+                "User-Agent": "Docker-Client/19.03.6 (linux)"
+        }
+}root@FJKdebian64:~# 
+
 
 
 

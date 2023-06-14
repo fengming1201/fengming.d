@@ -12,7 +12,16 @@ Aliases:
 别名：
   docker container port, docker port
 
-
-关键字：
+======================================
+关键字：查看端口映射
 重要简述：
 实例： 
+$ sudo docker ps -a 
+CONTAINER ID   IMAGE                   COMMAND                  CREATED        STATUS        PORTS                                                      NAMES
+59dd81c83001   photoprism/photoprism   "/scripts/entrypoint…"   42 hours ago   Up 42 hours   0.0.0.0:2342->2342/tcp, :::2342->2342/tcp, 2442-2443/tcp   photoprism
+b96cce513b97   johngong/calibre-web    "/init"                  2 weeks ago    Up 7 days     8080/tcp, 0.0.0.0:8083->8083/tcp, :::8083->8083/tcp        calibre-web
+
+$ sudo docker port b96cce513b97
+8083/tcp -> 0.0.0.0:8083
+8083/tcp -> [::]:8083
+lshm@debian11xJ4125:workdir$ 

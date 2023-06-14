@@ -1,0 +1,27 @@
+lshm@debian11xJ4125:workdir$ sudo docker  volume --help 
+
+Usage:  docker volume COMMAND
+
+Manage volumes
+
+Commands:
+  create      Create a volume
+  inspect     Display detailed information on one or more volumes
+  ls          List volumes
+  prune       Remove all unused local volumes
+  rm          Remove one or more volumes
+
+Run 'docker volume COMMAND --help' for more information on a command.
+=====================================
+管理卷
+
+命令：
+  create      创建卷
+  inspect     显示一个或多个卷的详细信息
+  ls          列出卷
+  prune       删除所有未使用的本地卷
+  rm          删除一个或多个卷
+
+运行“docker volume COMMAND --help”以获取有关命令的更多信息。
+=====================================
+

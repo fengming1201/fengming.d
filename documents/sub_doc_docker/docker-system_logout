@@ -5,6 +5,11 @@ Usage:  docker logout [SERVER]
 Log out from a registry.
 If no server is specified, the default is defined by the daemon.
 ==============================================
+从注册表注销。
+如果未指定服务器，则缺省值由守护程序定义。
 
-
-
+==============================================
+关联：docker login
+关键字：
+重要简述：
+实例：

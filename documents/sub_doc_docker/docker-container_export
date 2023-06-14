@@ -18,8 +18,8 @@ Options:
 选项：
   -o, --output string   写入文件，而不是 STDOUT
 
-
-
+===================================================
+关联：docker image import, docker import
 关键字：
 重要简述：
 实例：

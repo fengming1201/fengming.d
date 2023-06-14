@@ -1,0 +1,14 @@
+=$ sudo docker  system --help    
+
+Usage:  docker system COMMAND
+
+Manage Docker
+
+Commands:
+  df          Show docker disk usage
+  events      Get real time events from the server
+  info        Display system-wide information
+  prune       Remove unused data
+
+Run 'docker system COMMAND --help' for more information on a command.
+==================================

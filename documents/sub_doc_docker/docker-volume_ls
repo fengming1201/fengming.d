@@ -1,0 +1,35 @@
+$ sudo docker  volume  ls --help        
+
+Usage:  docker volume ls [OPTIONS]
+
+List volumes
+
+Aliases:
+  docker volume ls, docker volume list
+
+Options:
+  -f, --filter filter   Provide filter values (e.g. "dangling=true")
+      --format string   Format output using a custom template:
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+  -q, --quiet           Only display volume names
+============================================
+列出卷
+
+别名：
+  docker volume ls, docker volume list
+
+选项：
+  -f, --filter filter   提供过滤器值（例如 "dangling=true")
+      --format string   使用自定义模板设置输出格式：
+                        'table':            以带有列标题的表格格式打印输出（默认）
+                        'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
+  -q, --quiet           仅显示卷名称
+
+============================================

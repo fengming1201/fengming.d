@@ -1,0 +1,21 @@
+$ sudo docker  volume  rm --help   
+
+Usage:  docker volume rm [OPTIONS] VOLUME [VOLUME...]
+
+Remove one or more volumes. You cannot remove a volume that is in use by a container.
+
+Aliases:
+  docker volume rm, docker volume remove
+
+Examples:
+
+$ docker volume rm hello
+hello
+
+
+Options:
+  -f, --force   Force the removal of one or more volumes
+===========================================
+
+
+

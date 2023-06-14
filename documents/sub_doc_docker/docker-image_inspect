@@ -18,6 +18,7 @@ Options:
                         'TEMPLATE':         使用给定的 Go 模板打印输出。
                         有关使用模板格式化输出的详细信息，请参阅 https://docs.docker.com/go/formatting/
 ========================================================================
+关联：docker container inspect
 关键字：检查 信息 查看
 
 重要简述：

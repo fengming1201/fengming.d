@@ -23,7 +23,73 @@ Options:
   -c, --change list      将 Dockerfile 指令应用于创建的映像
   -m, --message string   提交消息
   -p, --pause            提交期间暂停容器（默认 true）
-
+==============================================================
+关联：
 关键字：
 重要简述：
+创建镜像的方法主要有三种：
+1、基于已有镜像的容器创建。（子命令：commit）
+2、基于本地模板导入。（子命令：import）
+3、基于Dockerfile创建。（子命令：build）
+
 实例：
+使用docker commit来扩展一个镜像比较简单。
+root@67a0e13a1c3e:~# touch mytest
+root@67a0e13a1c3e:~# ll
+total 16
+drwx------ 1 root root 4096 Dec 11 10:03 ./
+drwxr-xr-x 1 root root 4096 Dec 11 10:03 ../
+-rw-r--r-- 1 root root 3106 Dec  5  2019 .bashrc
+-rw-r--r-- 1 root root  161 Dec  5  2019 .profile
+-rw-r--r-- 1 root root    0 Dec 11 10:03 mytest
+
+
+# docker images 
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+myubuntu     latest    ba6acccedd29   8 weeks ago      72.8MB
+ubuntu       latest    ba6acccedd29   8 weeks ago      72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago     63.1MB
+
+# docker ps -a
+CONTAINER ID   IMAGE          COMMAND   CREATED             STATUS                         PORTS     NAMES
+67a0e13a1c3e   myubuntu       "bash"    About an hour ago   Exited (0) 59 minutes ago                eloquent_moser
+6412144e5394   myubuntu       "bash"    About an hour ago   Exited (0) About an hour ago             musing_panini
+7c35a9c9df45   ba6acccedd29   "bash"    2 hours ago         Exited (0) 2 hours ago                   brave_cartwright
+bcf109848512   ubuntu:18.04   "bash"    2 hours ago         Exited (0) 2 hours ago                   stoic_noyce
+
+# docker commit -m "i create a file mytest" -a "fengming" 67a0e13a1c3e mytest:1.0.0    
+sha256:6452be9a8be01a062c13b3ef855d821f86ca7b19b0ee776feaee923b6f314fe0
+
+# docker images          
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+mytest       1.0.0     6452be9a8be0   28 seconds ago   72.8MB
+myubuntu     latest    ba6acccedd29   8 weeks ago      72.8MB
+ubuntu       latest    ba6acccedd29   8 weeks ago      72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago     63.1MB
+root@debian2USB:~# 
+
+运行刚创建的镜像
+# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+mytest       1.0.0     6452be9a8be0   4 minutes ago   72.8MB
+myubuntu     latest    ba6acccedd29   8 weeks ago     72.8MB
+ubuntu       latest    ba6acccedd29   8 weeks ago     72.8MB
+ubuntu       18.04     5a214d77f5d7   2 months ago    63.1MB
+
+
+# docker run -it mytest:1.0.0 bash 
+root@c26cfb196231:/# ls
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@c26cfb196231:/# cd /root/
+root@c26cfb196231:~# ls
+mytest
+root@c26cfb196231:~# 
+
+# docker ps -a 
+CONTAINER ID   IMAGE          COMMAND   CREATED             STATUS                         PORTS     NAMES
+c26cfb196231   mytest:1.0.0   "bash"    2 minutes ago       Exited (0) 54 seconds ago                nifty_kare
+67a0e13a1c3e   myubuntu       "bash"    About an hour ago   Exited (0) About an hour ago             eloquent_moser
+6412144e5394   myubuntu       "bash"    About an hour ago   Exited (0) About an hour ago             musing_panini
+7c35a9c9df45   ba6acccedd29   "bash"    2 hours ago         Exited (0) 2 hours ago                   brave_cartwright
+bcf109848512   ubuntu:18.04   "bash"    2 hours ago         Exited (0) 2 hours ago                   stoic_noyce
+

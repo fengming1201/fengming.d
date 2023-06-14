@@ -46,7 +46,7 @@ Options:
 IMAGE ID唯一标识镜像。
 
 实例：
-lshm@debian11xJ4125:workdir$ sudo docker images 
+$ sudo docker images 
 REPOSITORY                TAG       IMAGE ID       CREATED        SIZE
 仓库                       标签        镜像ID        创建时间        大小
 photoprism/photoprism     latest    c3f16b4fa20e   5 days ago     1.81GB

@@ -28,13 +28,26 @@ Options:
       --detach-keys string   覆盖用于分离容器的键序列
   -e, --env list             设置环境变量
       --env-file list        读入环境变量文件
-  -i, --interactive         即使未连接，也保持 STDIN 打开
+  -i, --interactive          即使未连接，也保持 STDIN 打开
       --privileged           为命令授予扩展权限
   -t, --tty                  分配伪 TTY
   -u, --user string          用户名或 UID（格式： "<name|uid>[:<group|gid>]")
   -w, --workdir string       容器内的工作目录
-
-
+=====================================================
+关联：docker attach
 关键字：
 重要简述：
+#两个命令的区别 
+docker exec   #进入容器后开启一个新的终端，可以在里面操作（常用） 
+docker attach #进入容器正在执行的终端，不会启动新的进程
+
 实例：
+# docker ps -a 
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
+8044d4dee1d9        ubuntu:latest       "bash"               11 minutes ago      Up 11 minutes                              busy_moser
+86b57e0453c7        httpd               "httpd-foreground"   4 months ago        Up About an hour    0.0.0.0:8080->80/tcp   httpd
+root@FJKdebian64:~# 
+root@FJKdebian64:~# docker exec -it 8044d4dee1d9 bash 
+root@8044d4dee1d9:/# 
+root@8044d4dee1d9:~# exit
+exit

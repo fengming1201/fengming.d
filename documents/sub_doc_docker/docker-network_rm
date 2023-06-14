@@ -1,0 +1,14 @@
+$ sudo docker network  rm  --help     
+
+Usage:  docker network rm NETWORK [NETWORK...]
+
+Remove one or more networks
+
+Aliases:
+  docker network rm, docker network remove
+
+Options:
+  -f, --force   Do not error if the network does not exist
+================================
+
+

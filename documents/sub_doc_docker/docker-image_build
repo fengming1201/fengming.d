@@ -79,6 +79,45 @@ Options:
       --ulimit ulimit                Ulimit 选项（默认 [])
 
 ============================================================================
+关联：Dockerfile syntax
 关键字：
 重要简述：
-实例：     
+创建镜像的方法主要有三种：
+1、基于已有镜像的容器创建。（子命令：commit）
+2、基于本地模板导入。（子命令：import）
+3、基于Dockerfile创建。（子命令：build）
+
+基于Dockerfile创建是最常见的方式。Dockerfile是一个文本文件，利用给定的指令描述基于某个父镜像创建新镜像的过程。
+实例：
+# docker images                    
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+ubuntu       18.04     5a214d77f5d7   2 months ago     63.1MB
+ 
+# cat Dockerfile                   
+FROM ubuntu:18.04
+
+RUN touch /root/test_dockerfile
+
+
+# docker build -t "mytest2:1.0.1" .
+Sending build context to Docker daemon  2.048kB
+Step 1/2 : FROM ubuntu:18.04
+ ---> 5a214d77f5d7
+Step 2/2 : RUN touch /root/test_dockerfile
+ ---> Running in bcce68da2fbd
+Removing intermediate container bcce68da2fbd
+ ---> a9bb5d5b11f8
+Successfully built a9bb5d5b11f8
+Successfully tagged mytest2:1.0.1
+
+ 
+# docker images                    
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+mytest2      1.0.1     a9bb5d5b11f8   4 seconds ago    63.1MB
+ubuntu       18.04     5a214d77f5d7   2 months ago     63.1MB
+ 
+
+# docker run -it mytest2:1.0.1 bash 
+root@81ce2dd0a4d7:/# ls /root/
+test_dockerfile
+root@81ce2dd0a4d7:/# 

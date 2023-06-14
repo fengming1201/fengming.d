@@ -1,0 +1,11 @@
+$ sudo docker network disconnect  --help
+
+Usage:  docker network disconnect [OPTIONS] NETWORK CONTAINER
+
+Disconnect a container from a network
+
+Options:
+  -f, --force   Force the container to disconnect from a network
+==================================
+
+

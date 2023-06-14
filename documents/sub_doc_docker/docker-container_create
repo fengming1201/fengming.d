@@ -107,8 +107,113 @@ Options:
       --volumes-from list              Mount volumes from the specified container(s)
   -w, --workdir string                 Working directory inside the container
 ==========================================================================
+创建新容器
 
+别名：
+  docker container create, docker create
 
+选项：
+      --add-host list                  添加自定义主机到 IP 的映射 (host:ip)
+  -a, --attach list                    连接到 STDIN、STDOUT 或 STDERR
+      --blkio-weight uint16            块 IO（相对权重），介于 10 和 1000 之间，或 0 表示禁用（默认值 0)
+      --blkio-weight-device list       块 IO 权重（相对设备权重）（默认值 [])
+      --cap-add list                   添加 Linux 功能
+      --cap-drop list                  删除 Linux 功能
+      --cgroup-parent string           容器的可选父 cgroup
+      --cgroupns string                要使用的 Cgroup 命名空间 (host|private)
+                                       'host':    在 Docker 主机的 cgroup 命名空间中运行容器
+                                       'private': 在容器自己的私有 cgroup 命名空间中运行容器
+                                       '':        使用由守护程序上的默认 cgroupns-mode 选项（默认）
+      --cidfile string                 将容器 ID 写入文件
+      --cpu-period int                 限制 CPU CFS（完全公平调度程序）周期
+      --cpu-quota int                  限制 CPU CFS（完全公平调度程序）配额
+      --cpu-rt-period int              限制 CPU 实时周期（以微秒为单位）
+      --cpu-rt-runtime int             限制 CPU 实时运行时间（以微秒为单位）
+  -c, --cpu-shares int                 CPU 份额（相对权重）
+      --cpus decimal                   处理器数量
+      --cpuset-cpus string             允许执行的 CPU (0-3, 0,1)
+      --cpuset-mems string             允许执行的 MEM (0-3, 0,1)
+      --device list                    将主机设备添加到容器
+      --device-cgroup-rule list        将规则添加到 cgroup 允许的设备列表
+      --device-read-bps list           限制设备的读取速率（每秒字节数）（默认值 []）
+      --device-read-iops list          限制设备的读取速率（每秒 IO）（默认值 []）
+      --device-write-bps list          限制设备的写入速率（每秒字节数）（默认值 []）
+      --device-write-iops list         限制设备的写入速率（每秒 IO）（默认值 []）
+      --disable-content-trust          跳过图像验证（默认为 true）
+      --dns list                       设置自定义 DNS 服务器
+      --dns-option list                设置 DNS 选项
+      --dns-search list                设置自定义 DNS 搜索域
+      --domainname string              容器 NIS 域名
+      --entrypoint string              覆盖映像的默认入口点
+  -e, --env list                       设置环境变量
+      --env-file list                  读入环境变量文件
+      --expose list                    公开一个或多个端口范围
+      --gpus gpu-request               GPU devices to add to the container ('all' to pass all GPUs)
+      --group-add list                 添加要加入的其他组
+      --health-cmd string              要运行以检查运行状况的命令
+      --health-interval duration       运行检查之间的时间 （ms|s|m|h） （默认为 0s）
+      --health-retries int             报告不正常所需的连续失败
+      --health-start-period duration   容器在开始运行状况重试倒计时之前初始化的开始周期 （ms|s|m|h）（默认值 0s）
+      --health-timeout duration        允许运行一次检查的最长时间 （ms|s|m|h）（默认为 0s）
+      --help                           打印使用情况
+  -h, --hostname string                容器主机名
+      --init                           在容器内运行一个 init，转发信号并收获进程
+  -i, --interactive                    即使未连接，也保持 STDIN 打开
+      --ip string                      IPv4 address (e.g., 172.30.100.104)
+      --ip6 string                     IPv6 address (e.g., 2001:db8::33)
+      --ipc string                     IPC mode to use
+      --isolation string               容器隔离技术
+      --kernel-memory bytes            内核内存限制
+  -l, --label list                     在容器上设置元数据
+      --label-file list                读取以行分隔的标签文件
+      --link list                      添加指向另一个容器的链接
+      --link-local-ip list             容器 IPv4/IPv6 链路本地地址
+      --log-driver string              容器的日志记录驱动程序
+      --log-opt list                   日志驱动程序选项
+      --mac-address string             容器 MAC 地址 (e.g., 92:d0:c6:0a:29:33)
+  -m, --memory bytes                   内存限制
+      --memory-reservation bytes       内存软限制
+      --memory-swap bytes              Swap limit equal to memory plus swap: '-1' to enable unlimited swap
+      --memory-swappiness int          调整容器内存交换（0 到 100）（默认值 -1）
+      --mount mount                    将文件系统挂载附加到容器
+      --name string                    为容器指定名称
+      --network network                将容器连接到网络
+      --network-alias list             为容器添加网络范围的别名
+      --no-healthcheck                 Disable any container-specified HEALTHCHECK
+      --oom-kill-disable               Disable OOM Killer
+      --oom-score-adj int              Tune host's OOM preferences (-1000 to 1000)
+      --pid string                     要使用的 PID 命名空间
+      --pids-limit int                 调整容器 pids 限制（设置为 -1 表示无限制）
+      --platform string                如果服务器支持多平台，则设置平台
+      --privileged                     向此容器授予扩展权限
+  -p, --publish list                   将容器的端口发布到主机
+  -P, --publish-all                    将所有公开的端口发布到随机端口
+      --pull string                    创建前拉取镜像 ("always", "|missing", "never") (default "missing")
+  -q, --quiet                          抑制拉取输出
+      --read-only                      将容器的根文件系统挂载为只读
+      --restart string                 重新启动要在容器退出时应用的策略（默认 "no")
+      --rm                             容器退出时自动移除容器
+      --runtime string                 用于此容器的运行时
+      --security-opt list              安全选项
+      --shm-size bytes                 大小 /dev/shm
+      --stop-signal string             停止容器的信号
+      --stop-timeout int               停止容器的超时（以秒为单位）
+      --storage-opt list               容器的存储驱动程序选项
+      --sysctl map                     系统选项（默认 map[])
+      --tmpfs list                     挂载 tmpfs 目录
+  -t, --tty                            分配伪 TTY
+      --ulimit ulimit                  Ulimit 选项（默认 [])
+  -u, --user string                    用户名或 UID（格式：<name|uid>[:<group|gid>])
+      --userns string                  要使用的用户命名空间
+      --uts string                     要使用的 UTS 命名空间
+  -v, --volume list                    绑定装载卷
+      --volume-driver string           容器的可选卷驱动程序
+      --volumes-from list              从指定的容器装载卷
+  -w, --workdir string                 容器内的工作目录
+==========================================================================
 关键字：
 重要简述：
+使用docker create新建的容器处于停止状态，可以使用dockers start命令来启动它。
+docker run命令等价于先执行docker create命令，再执行docker start命令。
+
 实例：

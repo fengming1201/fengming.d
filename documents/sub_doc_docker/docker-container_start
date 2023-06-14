@@ -21,9 +21,26 @@ Options:
   -a, --attach               连接 STDOUT/STDERR 和转发信号
       --detach-keys string   覆盖用于分离容器的键序列
   -i, --interactive          附加容器的 STDIN
-
-
-
+=========================================
 关键字：
 重要简述：
+-i 选项来开启交互模式，始终保持输入流开发。
+-a 选项来附加标准输入，输出或错误。
+
 实例：
+root@FJKdebian64:~# docker ps -a            
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS                     PORTS                  NAMES
+8044d4dee1d9        ubuntu:latest       "bash"               16 minutes ago      Exited (0) 3 seconds ago                          busy_moser
+86b57e0453c7        httpd               "httpd-foreground"   4 months ago        Up 2 hours                 0.0.0.0:8080->80/tcp   httpd
+root@FJKdebian64:~# 
+root@FJKdebian64:~# docker start  8044d4dee1d9   
+8044d4dee1d9
+root@FJKdebian64:~# docker ps -a 
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
+8044d4dee1d9        ubuntu:latest       "bash"               17 minutes ago      Up 5 seconds                               busy_moser
+86b57e0453c7        httpd               "httpd-foreground"   4 months ago        Up 2 hours          0.0.0.0:8080->80/tcp   httpd
+root@FJKdebian64:~#
+
+注意：run 的时候 -it，而且只有/bin/bash，那么在退出容器的 时候，容器也跟着退出，
+要想重新进入容器内，仅docker start的话，容器还是会退出。可以用 -i 选项重新进入容器。
+如：docker start -i  8044d4dee1d9
