@@ -26,6 +26,9 @@
 
 三、流程控制
 
+（0）包含
+Shell 文件包含的语法格式：. filename 或者source filename(其中 .和filename之间有空格)。
+
 （1）条件
 if
 
@@ -49,9 +52,11 @@ case
 
 （2）字典
 
-安全临时文件：mktemp
-
-
+安全临时文件：
+mktemp
+用法如：
+local tmp=$(mktemp) #创建临时文件
+rm $tmp             #退出前删除临时文件
 
 五、函数
 

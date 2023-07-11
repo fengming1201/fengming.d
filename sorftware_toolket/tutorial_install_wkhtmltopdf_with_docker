@@ -1,0 +1,47 @@
+docker安装wkhtmltopdf
+    step1：docker hub找镜像
+    step2：拉取镜像
+    step3：运行容器
+    step4：使用
+    step5：验证
+
+step1：docker hub找镜像
+
+docker hub: https://hub.docker.com/r/dicoming/wkhtmltopdf-ws.
+
+推荐这个镜像：dicoming/wkhtmltopdf-ws，把wkhtmltopdf当做一个http服务
+
+step2：拉取镜像
+
+去到自己机器（已安装docker），拉取镜像：
+docker pull dicoming/wkhtmltopdf-ws:latest
+
+检查镜像拉取结果：
+docker images | grep wkhtmltopdf
+
+step3：运行容器
+
+docker run -v /tmp/wkhtmltopdf:/tmp/wkhtmltopdf -p 10080:80 --name="wkhtmltopdf" -d wkhtmltopdf-ws
+
+参数说明：
+    -v /tmp/wkhtmltopdf:/tmp/wkhtmltopdf 容器文件夹/tmp/wkhtmltopdf挂载到宿主机/tmp/wkhtmltopdf
+    -p 10080:80 宿主机10080端口映射到容器80端口
+    –name=“wkhtmltopdf” 容器名称
+    -d 后台运行
+
+step4：使用
+使用说明：
+    访问方式：http
+    请求方式：post
+    参数格式：form-data
+    请求参数：key=command，value=wkhtmltopdf的完整命令
+    （图例：wkhtmltopdf http://www.baidu.com /tmp/wkhtmltopdf/baidu.pdf）
+
+
+step5：验证
+宿主机去到/tmp/wkhtmltopdf目录下检查是否存在baidu.pdf文件
+
+cd /tmp/wkhtmltopdf
+ll | grep baidu.pdf
+
+有baidu.pdf文件就是成功了

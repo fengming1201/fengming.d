@@ -2,6 +2,7 @@
 #author:fengming
 #date:Tue 10 Jan 2023 04:56:27 PM CST
 #***************************************#
+#alias fm-obj_keyword_grep='fm-grep_keyword_from_object_files'
 function fm-grep_keyword_from_object_files
 {
 	local ARM_NM=arm-fullhanv2-eabi-nm
@@ -13,6 +14,7 @@ function fm-grep_keyword_from_object_files
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "ERROR:parameter missing"
+		echo "discripttion:grep keyword from object files"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
@@ -97,7 +99,7 @@ function fm-grep_keyword_from_object_files
 	return 0
 }
 
-
+#function fm-grep_keyword_from_asm_or_dis_files
 function fm-grep_keyword_from_asm_or_dis_files
 {
 	local current_dir=$PWD
@@ -105,6 +107,7 @@ function fm-grep_keyword_from_asm_or_dis_files
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "ERROR:parameter missing"
+		echo "discripttion:grep keyword from asm or dis files"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
@@ -165,12 +168,13 @@ function fm-grep_keyword_from_asm_or_dis_files
 
 	return 0
 }
-
+#function fm-grep_keyword_from_static_librarys
 function fm-grep_keyword_from_static_librarys
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
 		echo "ERROR:parameter missing"
+		echo "discripttion:grep keyword from static librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME    exec_file"
@@ -179,12 +183,13 @@ function fm-grep_keyword_from_static_librarys
 
 	return 0
 }
-
+#function fm-grep_obj_files_from_librarys
 function fm-grep_obj_files_from_librarys
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
 		echo "ERROR:parameter missing"
+		echo "discripttion:grep keyword from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME    obj_files [library list]"
@@ -211,7 +216,7 @@ function fm-grep_obj_files_from_librarys
 	which ${nm_toos} > /dev/null
 	if [ $? -ne 0   ];then echo "${nm_toos} not found!";return 3;fi
 
-	local tmp_file=/tmp/tmp_grep_obj_files_from_librarys
+	local tmp_file=$(mktemp)
 	local result=
 	for file in $file_list
 	do
@@ -252,6 +257,7 @@ function fm-ls_app_dependent
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
 		echo "ERROR:parameter missing"
+		echo "discripttion:"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME    exec_file"
@@ -299,12 +305,13 @@ function fm-ls_app_dependent
 
 	return 0
 }
-
+#alias fm-lib_obj_ls='fm-ls_obj_from_library'
 function fm-ls_obj_from_library
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
 		echo "ERROR:parameter missing"
+		echo "discripttion:ls obj from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME    xxx.a or *.a"
@@ -353,12 +360,13 @@ function fm-ls_obj_from_library
 	return 0
 }
 
-
+#alias fm-lib_func_ls='fm-ls_func_list_from_library'
 function fm-ls_func_list_from_library
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
 		echo "ERROR:parameter missing"
+		echo "discripttion:ls func from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
 		echo "$FUNCNAME    xxx.a or *.a"
@@ -402,12 +410,13 @@ function fm-ls_func_list_from_library
 
 	return 0
 }
-
+#alias fm-lib_func_ls='fm-ls_func_list_from_library2'
 function fm-ls_func_list_from_library2
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
 		echo "ERROR:parameter missing"
+		echo "discripttion:ls func from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]  [--show]"
 		echo "$FUNCNAME    xxx.a or *.a"

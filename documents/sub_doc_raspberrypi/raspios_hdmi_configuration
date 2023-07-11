@@ -1,0 +1,71 @@
+HDMI Configuration 高清配置
+
+在绝大多数情况下，只需使用标准HDMI电缆将配备HDMI的显示器插入Raspberry Pi，即可自动使Raspberry Pi使用显示器支持的最佳分辨率。Raspberry Pi Zero，Zero W和Zero 2 W使用迷你HDMI端口，因此您需要迷你HDMI到全尺寸HDMI引线或适配器。在Raspberry Pi 4和Raspberry Pi 400上有两个微型HDMI端口，因此您需要为要连接的每台显示器配备微型HDMI到全尺寸HDMI引线或适配器。在打开树莓派之前，您应该连接任何 HDMI 引线。
+
+Raspberry Pi 4最多可以驱动两个显示器，分辨率高达1080p，刷新率为60Hz。在 4K 分辨率下，如果您连接两台显示器，那么您的刷新率限制为 30Hz。您还可以以 4Hz 刷新率驱动单个显示器：这要求显示器连接到 USB-C 电源输入（标记为 HDMI0）旁边的 HDMI 端口。您还必须通过在 config.txt 中设置 hdmi_enable_4kp60=1 标志来启用 4Kp60 输出。此标志也可以在桌面环境中使用“树莓派配置”工具进行设置。
+
+如果您运行的是 3D 图形驱动程序（也称为 FKMS 驱动程序），则在“首选项”菜单中，您将找到用于设置标准显示器（包括多显示器设置）的图形应用程序。
+
+注意 
+屏幕配置工具 （arandr） 是用于选择显示模式和设置多个显示器的图形工具。您可以在桌面首选项菜单中找到此工具，但前提是正在使用 3D 图形驱动程序，因为正是此驱动程序提供了所需的模式设置功能。使用“配置”菜单选项选择屏幕、分辨率和方向。如果您使用的是多屏幕设置，请在显示器周围拖动到所需的任何位置。完成所需的设置后，单击 勾选 按钮应用设置。
+
+如果您使用的是旧版图形驱动程序，或者发现自己处于 Raspberry Pi 可能无法确定最佳模式的情况下，或者您可能特别希望设置非默认分辨率，则本页的其余部分可能会有用。
+注意 所有命令都完整地记录在文档的配置.txt部分中。
+
+HDMI Groups and Mode HDMI 组和模式
+HDMI有两个常见的组：CEA（消费电子协会，电视通常使用的标准）和DMT（显示器计时，显示器通常使用的标准）。每个组通告一组特定的模式，其中模式描述输出的分辨率、帧速率、时钟速率和纵横比。
+What Modes does my Device Support? 我的设备支持哪些模式？
+您可以使用命令行上的 tvservice 应用程序来确定您的设备支持哪些模式以及其他有用数据：
+	• tvservice -s 显示当前HDMI状态，包括模式和分辨率
+	• tvservice -m CEA 列出所有支持的 CEA 模式
+	• tvservice -m DMT 列出所有支持的 DMT 模式
+如果您使用的是连接了多个显示器的Raspberry Pi 4，则需要告诉tvservice要询问哪个设备的信息。您可以使用以下命令获取所有连接设备的显示 ID：
+tvservice -l
+您可以通过在 tvservice 命令中添加 -v 来指定 tvservice 使用的显示器，例如：
+	• tvservice -v 7 -m CEA, 列出显示 ID 7 支持的所有 CEA 模式
+
+Setting a Specific HDMI Mode 设置特定的HDMI模式
+使用hdmi_group和hdmi_mode配置.txt条目设置特定模式。组条目在 CEA 或 DMT 之间进行选择，模式选择分辨率和帧速率。您可以在配置.txt视频配置页面上找到模式表，但您应该使用上述 tvservice 命令来准确了解您的设备支持哪些模式。
+在树莓派 4 和树莓派 400 上指定 HDMI 端口，在 config.txt 中的hdmi_group或hdmi_mode条目中添加索引标识符，例如 hdmi_mode：0或hdmi_group：1。
+
+Setting a Custom HDMI Mode 设置自定义 HDMI 模式
+设置自定义模式有两个选项：hdmi_cvt 和hdmi_timings。
+hdmi_cvt设置自定义协调视频计时条目，此处对此进行了完整描述：视频配置
+在某些极少数情况下，可能需要定义HDMI信号的确切时钟要求。这是一个完全自定义的模式，通过设置 hdmi_group=2 和 hdmi_mode=87 来激活。然后，您可以使用 hdmi_timings config.txt 命令来设置显示器的特定参数。hdmi_timings指定HDMI信号需要使用的所有时序。这些时序通常可在所用显示器的数据表中找到。
+
+hdmi_timings=<h_active_pixels> <h_sync_polarity> <h_front_porch> <h_sync_pulse> <h_back_porch> <v_active_pixels> <h_sync_polarity> <h_front_porch> <h_sync_pulse> <h_back_porch> <v_active_lines> <v_sync_polarity> v_front_porch> <v_sync_pulse> <v_back_porch> <v_sync_offset_a> <v_sync_offset_b> <pixel_rep> <frame_rate> <interlaced> <pixel_freq> <aspect_ratio>
+
+Timing	Purpose
+h_active_pixels	The horizontal resolution
+h_sync_polarity	0 or 1 to define the horizontal sync polarity
+h_front_porch	Number of horizontal front porch pixels
+h_sync_pulse	Width of horizontal sync pulse
+h_back_porch	Number of horizontal back porch pixels
+v_active_lines	The vertical resolution
+v_sync_polarity	0 or 1 to define the vertical sync polarity
+v_front_porch	Number of vertical front porch pixels
+v_sync_pulse	Width of vertical sync pulse
+v_back_porch	Number of vertical back porch pixels
+v_sync_offset_a	Leave at 0
+v_sync_offset_b	Leave at 0
+pixel_rep	Leave at 0
+frame_rate	Frame rate of mode
+interlaced	0 for non-interlaced, 1 for interlaced
+pixel_freq	The mode pixel frequency
+aspect_ratio	The aspect ratio required
+
+aspect_ratio应为下列项之一：
+Ratio	aspect_ratio ID
+4:3	1
+14:9	2
+16:9	3
+5:4	4
+16:10	5
+15:9	6
+21:9	7
+64:27	8
+要让树莓派 4 和树莓派 400 指定 HDMI 端口，您可以在配置中添加索引标识符.txt。例如
+ hdmi_cvt:0=... or hdmi_timings:1=.... If no port identifier is specified, the settings are applied to port 0.
+Troubleshooting your HDMI  对 HDMI 进行故障排除
+在极少数情况下，您可能需要增加HDMI驱动器强度，例如，当显示器上有斑点或使用很长的电缆时。有一个配置.txt项可以执行此操作，config_hdmi_boost，它记录在 config.txt video page.
+注意 树莓派 4B 尚不支持config_hdmi_boost，对此选项的支持将在未来的软件更新中添加。

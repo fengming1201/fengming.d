@@ -1,0 +1,60 @@
+名字:
+  wkhtmltopdf 0.12.6
+
+概要:
+  wkhtmltopdf [GLOBAL OPTION]... [OBJECT]... <output file>
+  
+文档对象:
+WKHTMLTOPDF 能够将多个对象放入输出文件中，一个对象是单个网页、封面网页或目录。 
+对象按照它们在命令行，可以基于每个对象或在全局中指定选项选项区域。
+“全局选项”部分中的选项只能放置在全局选项区域。页面对象将单个网页的内容放入输出文档中。
+
+  (page)? <input url/file name> [PAGE OPTION]...
+页面对象的选项可以放置在全局选项和页面中选项区域。适用的选项可以在页面选项和
+页眉和页脚选项部分。封面对象将单个网页的内容放入输出文档中，页面未显示在目录中，并且没有标题和页脚。
+
+  cover <input url/file name> [PAGE OPTION]...
+可以为页面对象指定的所有选项也可以为一个封面。
+目录对象将目录插入到输出中公文。
+  toc [TOC OPTION]...
+可以为页面对象指定的所有选项也可以为目录，此外，目录选项部分中的更多选项也可以是
+应用的。目录是通过 XSLT 生成的，这意味着它可以按照您希望的外观进行样式设置。了解如何操作
+这可以通过提供
+  --dump-default-toc-xsl, 以及它通过提供工作的大纲
+  --dump-outline, 请参阅大纲选项部分。
+
+描述:
+将一个或多个 HTML 页面转换为 PDF 文档，*不使用 wkhtmltopdf修补了 QT。
+全局选项:
+      --collate                       打印多份时整理（默认）
+      --no-collate                    打印多份时不进行整理
+      --copies <number>               要打印到 pdf 文件中的份数（默认为 1）
+  -H, --extended-help                 显示更广泛的帮助，详细说明不太常见的命令开关
+  -g, --grayscale                     PDF 将以灰度生成
+  -h, --help                          显示帮助
+      --license                       输出许可证信息并退出
+      --log-level <level>             将日志级别设置为：无、错误、警告或信息（默认信息）
+  -l, --lowquality                    生成质量较低的 pdf/ps。有助于缩小结果文档空间
+  -O, --orientation <orientation>     将方向设置为横向或纵向（默认为纵向）
+  -s, --page-size <Size>              将纸张大小设置为：A4、信纸等。（默认 A4）
+  -q, --quiet                         不那么冗长，保持向后兼容性;与使用 --log-level none 相同
+      --read-args-from-stdin          从 stdin 读取命令行参数
+      --title <text>                  生成的 pdf 文件的标题（如果未指定，则使用第一个文档的标题）
+  -V, --version                       输出版本信息并退出
+
+减少的功能：
+这个版本的 wkhtmltopdf 是针对一个没有 QT 的版本编译的wkhtmltopdf 补丁。
+因此，如果需要，缺少某些功能这些功能请使用静态版本。
+  目前，仅补丁 QT 支持的功能列表包括：
+ * 将多个 HTML 文档打印到 PDF 文件中。
+ * 在没有 X11 服务器的情况下运行。
+ * 将文档大纲添加到 PDF 文件。
+ * 将页眉和页脚添加到 PDF 文件。
+ * 生成目录。
+ * 在生成的 PDF 文件中添加链接。
+ * 使用丝网介质类型打印。
+ * 禁用 WebKit 的智能收缩功能。
+
+联系：
+  如果您遇到错误或想要请求新功能，请访问
+  <https://wkhtmltopdf.org/support.html>

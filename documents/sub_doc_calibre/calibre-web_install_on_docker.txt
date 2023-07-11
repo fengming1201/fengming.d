@@ -10,13 +10,27 @@ $mkdir /opt/calibre-web && mkdir /opt/calibre-web/config /opt/calibre-web/librar
  如：I:\Calibre Portable\Calibre Library
 
 step 3:启动镜像
-$sudo docker run -d --privileged \
+sudo docker run -d --privileged \
 --name=calibre-web \
 --restart=always \
 -p 8083:8083 \
 -v /opt/calibre-web/config:/config \
 -v /opt/calibre-web/library:/library \
 johngong/calibre-web
+
+mydocker>>>>>>
+sudo docker run -d --privileged \
+--name=calibre-web \
+--restart=always \
+-p 8083:8083 \
+-v /opt/calibre-web/config:/config \
+-v /opt/calibre-web/library:/library \
+-v /opt/calibre-web/library-tech:/library_tech \
+-v /opt/calibre-web/library-coll:/library_coll \
+-v /opt/calibre-web/library-cook:/library_cook \
+johngong/calibre-web
+
+<<<
 
 step 4：设置开机自启动  --此步可忽略。
 服务器关机后需要重新启动Docker，才能访问，可以设置开机自启动

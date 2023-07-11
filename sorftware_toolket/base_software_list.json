@@ -175,11 +175,23 @@
             "describe":"Tesseract command line OCR tool"
         },
         {
+            "app_name":"wkhtmltopdf",
+            "tool_level":1,
+            "install_methor":"apt install  wkhtmltopdf",
+            "describe":"Command line utilities to convert html to pdf or image using WebKit:https://wkhtmltopdf.org/index.html"
+        },
+        {
+            "app_name":"nmap",
+            "tool_level":"",
+            "install_methor":"",
+            "describe":"The Network Mapper.nmap命令（网络映射器）是一个用于网络发现的免费开源工具。"
+        },
+        {
             "app_name":"",
             "tool_level":"",
             "install_methor":"",
             "describe":""
-        }                                   
+        } 
     ]
 
 }

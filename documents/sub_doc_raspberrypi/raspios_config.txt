@@ -1,0 +1,79 @@
+#有关更多选项和信息，请参阅
+# http://rpf.io/configtxt
+#某些设置可能会影响设备功能。有关详细信息，请参阅上面的链接
+
+# 如果您在默认“安全”模式下的HDMI上没有图片，请取消注释
+#hdmi_safe=1
+
+# 取消注释以下内容以调整过扫描。如果主机离开屏幕，则使用正数，如果边框过多，则使用负数
+#overscan_left=16
+#overscan_right=16
+#overscan_top=16
+#overscan_bottom=16
+
+#取消注释以强制使用主机大小。默认情况下，它将是显示器的大小减去过扫描。
+#framebuffer_width=1280
+#framebuffer_height=720
+
+# 如果未检测到 HDMI 显示并且正在输出复合，请取消注释
+#hdmi_force_hotplug=1
+
+# 取消注释以强制使用特定的HDMI模式（这将强制VGA）
+#hdmi_group=1
+#hdmi_mode=1
+
+# 取消注释以强制使用 HDMI 模式而不是 DVI。这可以使音频在DMT（计算机显示器）模式下工作
+#hdmi_drive=2
+
+# 取消注释以增加到 HDMI 的信号，如果您有干扰、消隐或无显示
+#config_hdmi_boost=4
+
+# 复合 PAL 的取消注释
+#sdtv_mode=2
+
+#取消注释以超频手臂。默认值为 700 MHz。
+#arm_freq=800
+
+# 取消注释部分或全部以启用可选硬件接口
+#dtparam=i2c_arm=on
+#dtparam=i2s=on
+#dtparam=spi=on
+
+# 取消注释此项以启用红外通信。
+#dtoverlay=gpio-ir,gpio_pin=17
+#dtoverlay=gpio-ir-tx,gpio_pin=18
+
+# 其他覆盖和参数记录在 /boot/overlays/README
+
+# 启用音频（加载snd_bcm2835）
+dtparam=audio=on
+
+# 自动加载检测到的摄像机的叠加层
+camera_auto_detect=1
+
+# 自动加载检测到的 DSI 显示器的叠加层
+display_auto_detect=1
+
+# 启用 DRM VC4 V3D 驱动程序
+dtoverlay=vc4-kms-v3d
+max_framebuffers=2
+
+#在 64 位模式下运行
+arm_64bit=1
+
+# 禁用过扫描显示器补偿
+disable_overscan=1
+
+[cm4]
+# 在 2711 内置 XHCI USB 控制器上启用主机模式。
+#如果需要旧版 DWC2 控制器，则应删除此行
+# （例如，对于 USB 设备模式）或不需要 USB 支持。
+otg_mode=1
+
+[all]
+
+[pi4]
+# 在固件/板允许的范围内以最快的速度运行
+arm_boost=1
+
+[all]

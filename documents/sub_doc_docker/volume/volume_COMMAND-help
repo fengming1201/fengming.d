@@ -25,3 +25,5 @@ Run 'docker volume COMMAND --help' for more information on a command.
 运行“docker volume COMMAND --help”以获取有关命令的更多信息。
 =====================================
 
+
+如果用户需要在多个容器之间共享一些持续更新的数据，最简单的方式是使用数据卷容器。数据卷容器也是一个容器，但是它们的目的是专门提供数据卷给其他容器挂载。

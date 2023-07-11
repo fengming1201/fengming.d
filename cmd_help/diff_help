@@ -1,0 +1,191 @@
+Usage: diff [OPTION]... FILES
+Compare FILES line by line.
+
+Mandatory arguments to long options are mandatory for short options too.
+      --normal                  output a normal diff (the default)
+  -q, --brief                   report only when files differ
+  -s, --report-identical-files  report when two files are the same
+  -c, -C NUM, --context[=NUM]   output NUM (default 3) lines of copied context
+  -u, -U NUM, --unified[=NUM]   output NUM (default 3) lines of unified context
+  -e, --ed                      output an ed script
+  -n, --rcs                     output an RCS format diff
+  -y, --side-by-side            output in two columns
+  -W, --width=NUM               output at most NUM (default 130) print columns
+      --left-column             output only the left column of common lines
+      --suppress-common-lines   do not output common lines
+
+  -p, --show-c-function         show which C function each change is in
+  -F, --show-function-line=RE   show the most recent line matching RE
+      --label LABEL             use LABEL instead of file name and timestamp
+                                  (can be repeated)
+
+  -t, --expand-tabs             expand tabs to spaces in output
+  -T, --initial-tab             make tabs line up by prepending a tab
+      --tabsize=NUM             tab stops every NUM (default 8) print columns
+      --suppress-blank-empty    suppress space or tab before empty output lines
+  -l, --paginate                pass output through 'pr' to paginate it
+
+  -r, --recursive                 recursively compare any subdirectories found
+      --no-dereference            don't follow symbolic links
+  -N, --new-file                  treat absent files as empty
+      --unidirectional-new-file   treat absent first files as empty
+      --ignore-file-name-case     ignore case when comparing file names
+      --no-ignore-file-name-case  consider case when comparing file names
+  -x, --exclude=PAT               exclude files that match PAT
+  -X, --exclude-from=FILE         exclude files that match any pattern in FILE
+  -S, --starting-file=FILE        start with FILE when comparing directories
+      --from-file=FILE1           compare FILE1 to all operands;
+                                    FILE1 can be a directory
+      --to-file=FILE2             compare all operands to FILE2;
+                                    FILE2 can be a directory
+
+  -i, --ignore-case               ignore case differences in file contents
+  -E, --ignore-tab-expansion      ignore changes due to tab expansion
+  -Z, --ignore-trailing-space     ignore white space at line end
+  -b, --ignore-space-change       ignore changes in the amount of white space
+  -w, --ignore-all-space          ignore all white space
+  -B, --ignore-blank-lines        ignore changes where lines are all blank
+  -I, --ignore-matching-lines=RE  ignore changes where all lines match RE
+
+  -a, --text                      treat all files as text
+      --strip-trailing-cr         strip trailing carriage return on input
+
+  -D, --ifdef=NAME                output merged file with '#ifdef NAME' diffs
+      --GTYPE-group-format=GFMT   format GTYPE input groups with GFMT
+      --line-format=LFMT          format all input lines with LFMT
+      --LTYPE-line-format=LFMT    format LTYPE input lines with LFMT
+    These format options provide fine-grained control over the output
+      of diff, generalizing -D/--ifdef.
+    LTYPE is 'old', 'new', or 'unchanged'.  GTYPE is LTYPE or 'changed'.
+    GFMT (only) may contain:
+      %<  lines from FILE1
+      %>  lines from FILE2
+      %=  lines common to FILE1 and FILE2
+      %[-][WIDTH][.[PREC]]{doxX}LETTER  printf-style spec for LETTER
+        LETTERs are as follows for new group, lower case for old group:
+          F  first line number
+          L  last line number
+          N  number of lines = L-F+1
+          E  F-1
+          M  L+1
+      %(A=B?T:E)  if A equals B then T else E
+    LFMT (only) may contain:
+      %L  contents of line
+      %l  contents of line, excluding any trailing newline
+      %[-][WIDTH][.[PREC]]{doxX}n  printf-style spec for input line number
+    Both GFMT and LFMT may contain:
+      %%  %
+      %c'C'  the single character C
+      %c'\OOO'  the character with octal code OOO
+      C    the character C (other characters represent themselves)
+
+  -d, --minimal            try hard to find a smaller set of changes
+      --horizon-lines=NUM  keep NUM lines of the common prefix and suffix
+      --speed-large-files  assume large files and many scattered small changes
+      --color[=WHEN]       colorize the output; WHEN can be 'never', 'always',
+                             or 'auto' (the default)
+      --palette=PALETTE    the colors to use when --color is active; PALETTE is
+                             a colon-separated list of terminfo capabilities
+
+      --help               display this help and exit
+  -v, --version            output version information and exit
+
+FILES are 'FILE1 FILE2' or 'DIR1 DIR2' or 'DIR FILE' or 'FILE DIR'.
+If --from-file or --to-file is given, there are no restrictions on FILE(s).
+If a FILE is '-', read standard input.
+Exit status is 0 if inputs are the same, 1 if different, 2 if trouble.
+
+Report bugs to: bug-diffutils@gnu.org
+GNU diffutils home page: <https://www.gnu.org/software/diffutils/>
+General help using GNU software: <https://www.gnu.org/gethelp/>
+===============================================================
+用法: diff [OPTION]... FILES
+逐行比较文件。
+长期权的强制参数对于空头期权也是强制性的。
+      --normal                  输出正常差异（默认值）
+  -q, --brief                   仅在文件不同时报告
+  -s, --report-identical-files  当两个文件相同时报告
+  -c, -C NUM, --context[=NUM]   复制上下文的输出 NUM（默认为 3）行
+  -u, -U NUM, --unified[=NUM]   输出统一上下文的 NUM（默认 3）行
+  -e, --ed                      输出 ED 脚本
+  -n, --rcs                     输出 RCS 格式差异
+  -y, --side-by-side            两列输出
+  -W, --width=NUM               最多 NUM（默认为 130）打印列输出
+      --left-column             仅输出公共行的左列
+      --suppress-common-lines   不输出公共线路
+  -p, --show-c-function         显示每个更改在哪个 C 函数中
+  -F, --show-function-line=RE   显示最新的行匹配 RE
+      --label LABEL             使用 LABEL 而不是文件名和时间戳（可以重复）
+  -t, --expand-tabs             将制表符展开为输出中的空格
+  -T, --initial-tab             通过在前面加上选项卡来使选项卡对齐
+      --tabsize=NUM             制表符停止每个 NUM（默认为 8）打印列
+      --suppress-blank-empty    在空输出行之前禁止空格或制表符
+  -l, --paginate                通过“PR”传递输出以对其进行分页
+  -r, --recursive                 递归比较找到的任何子目录
+      --no-dereference            不要点击符号链接
+  -N, --new-file                  将缺少的文件视为空
+      --unidirectional-new-file   将缺少的第一个文件视为空
+      --ignore-file-name-case     比较文件名时忽略大小写
+      --no-ignore-file-name-case  比较文件名时考虑大小写
+  -x, --exclude=PAT               排除与 PAT 匹配的文件
+  -X, --exclude-from=FILE         排除与 FILE 中的任何模式匹配的文件
+  -S, --starting-file=FILE        比较目录时以 FILE 开头
+      --from-file=FILE1           将 FILE1 与所有操作数进行比较;FILE1 可以是目录
+      --to-file=FILE2             将所有操作数与 FILE2 进行比较;FILE2 可以是目录
+  -i, --ignore-case               忽略文件内容中的大小写差异
+  -E, --ignore-tab-expansion      忽略由于选项卡扩展引起的更改
+  -Z, --ignore-trailing-space     忽略行尾的空格
+  -b, --ignore-space-change       忽略空白量的变化
+  -w, --ignore-all-space          忽略所有空格
+  -B, --ignore-blank-lines        忽略行全为空的更改
+  -I, --ignore-matching-lines=RE  忽略所有行都与 RE 匹配的更改
+  -a, --text                      将所有文件视为文本
+      --strip-trailing-cr         输入上的带尾回车
+  -D, --ifdef=NAME                输出具有“#ifdef名称”差异的合并文件
+      --GTYPE-group-format=GFMT   使用 GFMT 格式化 GTYPE 输入组
+      --line-format=LFMT          使用 LFMT 格式化所有输入行
+      --LTYPE-line-format=LFMT    使用 LFMT 格式化 LTYPE 输入行
+    These format options provide fine-grained control over the output
+      of diff, generalizing -D/--ifdef.
+    LTYPE is 'old', 'new', or 'unchanged'.  GTYPE is LTYPE or 'changed'.
+    GFMT (only) may contain:
+      %<  lines from FILE1
+      %>  lines from FILE2
+      %=  lines common to FILE1 and FILE2
+      %[-][WIDTH][.[PREC]]{doxX}LETTER  printf-style spec for LETTER
+        LETTERs are as follows for new group, lower case for old group:
+          F  first line number
+          L  last line number
+          N  number of lines = L-F+1
+          E  F-1
+          M  L+1
+      %(A=B?T:E)  if A equals B then T else E
+    LFMT (only) may contain:
+      %L  contents of line
+      %l  contents of line, excluding any trailing newline
+      %[-][WIDTH][.[PREC]]{doxX}n  printf-style spec for input line number
+    Both GFMT and LFMT may contain:
+      %%  %
+      %c'C'  the single character C
+      %c'\OOO'  the character with octal code OOO
+      C    the character C (other characters represent themselves)
+  -d, --minimal            try hard to find a smaller set of changes
+      --horizon-lines=NUM  keep NUM lines of the common prefix and suffix
+      --speed-large-files  assume large files and many scattered small changes
+      --color[=WHEN]       colorize the output; WHEN can be 'never', 'always',
+                             or 'auto' (the default)
+      --palette=PALETTE    the colors to use when --color is active; PALETTE is
+                             a colon-separated list of terminfo capabilities
+      --help               display this help and exit
+  -v, --version            output version information and exit
+FILES are 'FILE1 FILE2' or 'DIR1 DIR2' or 'DIR FILE' or 'FILE DIR'.
+If --from-file or --to-file is given, there are no restrictions on FILE(s).
+If a FILE is '-', read standard input.
+Exit status is 0 if inputs are the same, 1 if different, 2 if trouble.
+Report bugs to: bug-diffutils@gnu.org
+GNU diffutils home page: <https://www.gnu.org/software/diffutils/>
+General help using GNU software: <https://www.gnu.org/gethelp/>
+===============================================================
+
+
+

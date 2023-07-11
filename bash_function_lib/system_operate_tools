@@ -43,3 +43,29 @@ function fm-parse_file_format
     return 0
 }
 
+function fm-diff_dir
+{
+    local app=diff
+    local default_opt="-d"
+    #check param
+	if [ $# -eq 2 ]
+	then
+		echo "ERROR:parameter missing"
+		echo "discripttion:compare two directories"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    dir1  dir2"
+		echo "$FUNCNAME    "
+		return 1
+	fi
+	local dir1=$1
+    local dir2=$2
+	#check tools
+	which ${app} > /dev/null
+	if [ $? -ne 0   ];then echo "${app} not found!";return 2;fi
+
+    ${app} -u <(ls ${dir1} | short)  <(ls ${dir2})
+    if [ $? -ne 0 ];then echo "${app} exec error!";return 3;fi
+
+    return 0
+}
