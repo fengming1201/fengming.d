@@ -1,0 +1,33 @@
+1,PhotoPrism 
+PhotoPrism 是一款开源的照片管理软件，基于 go 语言和 Google TensorFlow 开发，
+可以在 Linux、Windows 和 macOS 等操作系统上运行。支持多种格式的照片和视频文件，
+包括 JPEG、PNG、GIF、RAW 和 HEIF 等。
+docker镜像：
+photoprism/photoprism                latest                c3f16b4fa20e   4 weeks ago     1.81GB
+
+2,calibrecalibre-web
+calibre的docker版本，个人在线图书
+docker镜像：
+johngong/calibre-web                 latest                588d4bb8930a   3 months ago    972MB
+
+3，Jellyfin 影音库
+Jellyfin是一款媒体服务器软件，可在多个平台管理和播放流媒体文件，还可以从外网观看家里的影片，
+docker镜像：
+NAME                              DESCRIPTION                                     STARS
+jellyfin/jellyfin                 The Free Software Media Browser                 959 
+nyanmisaka/jellyfin               nyanmisaka's Jellyfin 10.8.9 (23/04/14)         483
+
+
+4，Navidrome
+Navidrome 是一个开源的基于网络的音乐收藏和流媒体服务器，与 Subsonic/Airsonic 兼容。
+它让您可以自由地从任何浏览器或移动设备收听您的音乐收藏。就像您的个人 Spotify！
+
+
+
+
+
+
+
+
+
+

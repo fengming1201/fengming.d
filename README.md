@@ -21,7 +21,7 @@ make sure download completed
 └── what_is_by_keyword
 
 step 2:install mybashrc
-$bash /etc/fengming.d/sorftware_toolket/install_script/script_install_bashrc_env.sh
+$sudo bash /etc/fengming.d/sorftware_toolket/install_script/script_install_bashrc_env.sh
 
 check exec result:
 if [ -f /etc/fengming.d/mybashrc ];then
