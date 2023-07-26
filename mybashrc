@@ -201,7 +201,7 @@ function fm-document_show
 	if [ $# -lt 1 ];then tree -L 1 ${doc_file_path};return 0;fi
 	if [ $1 = "-a" ] || [ $1 = "--all" ]
 	then
-		tree ${doc_file_path}
+		tree -sh ${doc_file_path}
 		return 0
 	elif [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
@@ -224,7 +224,7 @@ function fm-document_show
 		then
 			for dir in ${dir_file}
 			do
-				tree ${dir}
+				tree -sh ${dir}
 			done
 			continue
 		fi
