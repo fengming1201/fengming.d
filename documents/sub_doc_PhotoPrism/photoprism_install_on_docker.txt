@@ -8,6 +8,7 @@ Open a terminal and run this command to start the app after replacing ~/Pictures
 打开终端并运行以下命令以在将~/Pictures替换为包含图片的文件夹后启动应用程序：
 docker run -d \
   --name photoprism \
+  --restart=always \
   --security-opt seccomp=unconfined \
   --security-opt apparmor=unconfined \
   -p 2342:2342 \
@@ -15,6 +16,23 @@ docker run -d \
   -e PHOTOPRISM_ADMIN_PASSWORD="insecure" \
   -v /photoprism/storage \
   -v ~/Pictures:/photoprism/originals \
+  photoprism/photoprism
+
+或者
+docker run -d \
+  --name photoprism \
+  --restart=always \
+  --security-opt seccomp=unconfined \
+  --security-opt apparmor=unconfined \
+  -p 2342:2342 \
+  -e PHOTOPRISM_AUTH_MODE="public" \
+  -e PHOTOPRISM_READONLY="true"  \
+  -e PHOTOPRISM_HTTP_COMPRESSION="gzip" \
+  -e PHOTOPRISM_EXPERIMENTAL="false" \
+  -e PHOTOPRISM_DISABLE_TENSORFLOW="true" \
+  -e PHOTOPRISM_DISABLE_CLASSIFICATION="true" \
+  -v /root/.storage:/photoprism/storage \
+  -v /root/Pictures:/photoprism/originals \
   photoprism/photoprism
 
 The server port and other config options can be changed as needed. 

@@ -1,0 +1,144 @@
+version: '3.5'
+
+# Example Docker Compose config file for PhotoPrism (Linux / AMD64)
+#
+# Note:
+# - Running PhotoPrism on a server with less than 4 GB of swap space or setting a memory/swap limit can cause unexpected
+#   restarts ("crashes"), for example, when the indexer temporarily needs more memory to process large files.
+# - If you install PhotoPrism on a public server outside your home network, please always run it behind a secure
+#   HTTPS reverse proxy such as Traefik or Caddy. Your files and passwords will otherwise be transmitted
+#   in clear text and can be intercepted by anyone, including your provider, hackers, and governments:
+#   https://docs.photoprism.app/getting-started/proxies/traefik/
+#
+# Setup Guides:
+# - https://docs.photoprism.app/getting-started/docker-compose/
+# - https://docs.photoprism.app/getting-started/raspberry-pi/
+# - https://www.photoprism.app/kb/activation
+#
+# Troubleshooting Checklists:
+# - https://docs.photoprism.app/getting-started/troubleshooting/
+# - https://docs.photoprism.app/getting-started/troubleshooting/docker/
+# - https://docs.photoprism.app/getting-started/troubleshooting/mariadb/
+#
+# CLI Commands:
+# - https://docs.photoprism.app/getting-started/docker-compose/#command-line-interface
+#
+# All commands may have to be prefixed with "sudo" when not running as root.
+# This will point the home directory shortcut ~ to /root in volume mounts.
+
+services:
+  photoprism:
+    ## Use photoprism/photoprism:preview for testing preview builds:
+    image: photoprism/photoprism:latest
+    ## Don't enable automatic restarts until PhotoPrism has been properly configured and tested!
+    ## If the service gets stuck in a restart loop, this points to a memory, filesystem, network, or database issue:
+    ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
+    # restart: unless-stopped
+    stop_grace_period: 10s
+    depends_on:
+      - mariadb
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    ports:
+      - "2342:2342" # HTTP port (host:container)
+    environment:
+      PHOTOPRISM_ADMIN_USER: "admin"                 # 管理员登录用户名
+      PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # 初始管理员密码（8-72 个字符）
+      PHOTOPRISM_AUTH_MODE: "public"                 # 身份验证模式 (public, password)
+      PHOTOPRISM_SITE_URL: "http://localhost:2342/"  # 格式为“http（s）://domain.name（:p ort）/（path）”的服务器 URL
+      PHOTOPRISM_DISABLE_TLS: "false"                # 禁用 HTTPS/TLS，即使站点 URL 以 https:// 开头且证书可用
+      PHOTOPRISM_DEFAULT_TLS: "true"                 # 如果没有其他证书可用，则默认为自签名 HTTPS/TLS 证书
+      PHOTOPRISM_ORIGINALS_LIMIT: 5000               # 以 MB 为单位的原件文件大小限制（高分辨率视频增加）
+      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # 提高传输速度和带宽利用率（无或 GZIP）
+      PHOTOPRISM_LOG_LEVEL: "info"                   # 日志级别：跟踪、调试、信息、警告、错误、严重或死机
+      PHOTOPRISM_READONLY: "false"                   # 不修改原始目录（减少功能）
+      PHOTOPRISM_EXPERIMENTAL: "false"               # 启用实验性功能
+      PHOTOPRISM_DISABLE_CHOWN: "false"              # 禁用在启动时通过 chmod 和 chown 更新存储权限
+      PHOTOPRISM_DISABLE_WEBDAV: "false"             # 禁用内置的 WebDAV 服务器
+      PHOTOPRISM_DISABLE_SETTINGS: "false"           # 禁用设置 UI 和 API
+      PHOTOPRISM_DISABLE_TENSORFLOW: "false"         # 根据 TensorFlow 禁用所有功能
+      PHOTOPRISM_DISABLE_FACES: "false"              # 禁用人脸检测和识别（需要 TensorFlow）
+      PHOTOPRISM_DISABLE_CLASSIFICATION: "false"     # 禁用图像分类（需要 TensorFlow）
+      PHOTOPRISM_DISABLE_VECTORS: "false"            # 禁用矢量图形支持
+      PHOTOPRISM_DISABLE_RAW: "false"                # 禁用 RAW 图像的索引和转换
+      PHOTOPRISM_RAW_PRESETS: "false"                # 允许在转换 RAW 图像时应用用户预设（降低性能）
+      PHOTOPRISM_JPEG_QUALITY: 85                    # 较高的值会增加 JPEG 图像和缩略图的质量和文件大小 （25-100）
+      PHOTOPRISM_DETECT_NSFW: "false"                # 自动将可能令人反感的照片标记为私密（需要 TensorFlow）
+      PHOTOPRISM_UPLOAD_NSFW: "true"                 # 允许可能令人反感的上传（没有TensorFlow就没有效果）
+      # PHOTOPRISM_DATABASE_DRIVER: "sqlite"         # SQLite是一个不需要服务器的嵌入式数据库
+      PHOTOPRISM_DATABASE_DRIVER: "mysql"            # 使用 MariaDB 10.5+ 或 MySQL 8+ 代替 SQLite 来提高性能
+      PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB 或 MySQL 数据库服务器（主机名：端口）
+      PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB 或 MySQL 数据库模式名称
+      PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB 或 MySQL 数据库用户名
+      PHOTOPRISM_DATABASE_PASSWORD: "insecure"       # MariaDB 或 MySQL 数据库用户密码
+      PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
+      PHOTOPRISM_SITE_DESCRIPTION: ""                # 元网站描述
+      PHOTOPRISM_SITE_AUTHOR: ""                     # 元网站作者
+      ## Video Transcoding (https://docs.photoprism.app/getting-started/advanced/transcoding/):
+      # PHOTOPRISM_FFMPEG_ENCODER: "software"        # H.264/AVC encoder (software, intel, nvidia, apple, raspberry, or vaapi)
+      # PHOTOPRISM_FFMPEG_SIZE: "1920"               # video size limit in pixels (720-7680) (default: 3840)
+      # PHOTOPRISM_FFMPEG_BITRATE: "32"              # video bitrate limit in Mbit/s (default: 50)
+      ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
+      # PHOTOPRISM_INIT: "https gpu tensorflow"
+      ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
+      # PHOTOPRISM_UID: 1000
+      # PHOTOPRISM_GID: 1000
+      # PHOTOPRISM_UMASK: 0000
+    ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
+    # user: "1000:1000"
+    ## Share hardware devices with FFmpeg and TensorFlow (optional):
+    # devices:
+    #  - "/dev/dri:/dev/dri"                         # Intel QSV
+    #  - "/dev/nvidia0:/dev/nvidia0"                 # Nvidia CUDA
+    #  - "/dev/nvidiactl:/dev/nvidiactl"
+    #  - "/dev/nvidia-modeset:/dev/nvidia-modeset"
+    #  - "/dev/nvidia-nvswitchctl:/dev/nvidia-nvswitchctl"
+    #  - "/dev/nvidia-uvm:/dev/nvidia-uvm"
+    #  - "/dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools"
+    #  - "/dev/video11:/dev/video11"                 # Video4Linux Video Encode Device (h264_v4l2m2m)
+    working_dir: "/photoprism" # do not change or remove
+    ## Storage Folders: "~" is a shortcut for your home directory, "." for the current directory
+    volumes:
+      # "/host/folder:/photoprism/folder"                # Example
+      - "/opt/pictures:/photoprism/originals"               # 原始媒体文件（请勿删除）
+      # - "/example/family:/photoprism/originals/family" # *其他*媒体文件夹可以这样安装
+      # - "~/Import:/photoprism/import"                  # *可选*可将文件导入原始文件夹的基本文件夹
+      - "./storage:/photoprism/storage"                  # *缓存、数据库和sidecar文件的可写*存储文件夹（不要删除）
+
+  ## Database Server (recommended)
+  ## see https://docs.photoprism.app/getting-started/faq/#should-i-use-sqlite-mariadb-or-mysql
+  mariadb:
+    image: mariadb:10.11
+    ## If MariaDB gets stuck in a restart loop, this points to a memory or filesystem issue:
+    ## https://docs.photoprism.app/getting-started/troubleshooting/#fatal-server-errors
+    restart: unless-stopped
+    stop_grace_period: 5s
+    security_opt: # see https://github.com/MariaDB/mariadb-docker/issues/434#issuecomment-1136151239
+      - seccomp:unconfined
+      - apparmor:unconfined
+    command: mariadbd --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
+    ## Never store database files on an unreliable device such as a USB flash drive, an SD card, or a shared network folder:
+    volumes:
+      - "./database:/var/lib/mysql" # DO NOT REMOVE
+    environment:
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_INITDB_SKIP_TZINFO: "1"
+      MARIADB_DATABASE: "photoprism"
+      MARIADB_USER: "photoprism"
+      MARIADB_PASSWORD: "insecure"
+      MARIADB_ROOT_PASSWORD: "insecure"
+
+  ## Watchtower upgrades services automatically (optional)
+  ## see https://docs.photoprism.app/getting-started/updates/#watchtower
+  ## activate via "COMPOSE_PROFILES=update docker compose up -d"
+  watchtower:
+    restart: unless-stopped
+    image: containrrr/watchtower
+    profiles: ["update"]
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 7200 # checks for updates every two hours
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "~/.docker/config.json:/config.json" # optional, for authentication if you have a Docker Hub account

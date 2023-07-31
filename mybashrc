@@ -212,7 +212,24 @@ function fm-document_show
 		echo "        ${FUNCNAME}  image_build"
 		return 1
 	fi
-	
+	#point to sub dir 
+	if [ -d ${doc_file_path}/${1} ] && [ $# -eq 2 ]
+	then
+		#check text file
+		txt_file=$(find ${doc_file_path}/${1} -type f -iname "*${2}*" -o -type l -iname "*${2}*")
+		if [ "x${txt_file}" != x ]
+		then
+			for file_each in ${txt_file}
+			do
+				echo "start >>>"
+				cat ${file_each}
+				echo "end <<<"
+				echo "file:${file_each}"
+			done
+		fi
+		return 0
+	fi
+
 	local parameter=$@
 	local txt_file="none"
 	local dir_file="none"
