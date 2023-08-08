@@ -1,0 +1,49 @@
+# snap --help 
+The snap command lets you install, configure, refresh and remove snaps.
+Snaps are packages that work across many different Linux distributions,
+enabling secure delivery and operation of the latest apps and utilities.
+
+Usage: snap <command> [<options>...]
+
+Commonly used commands can be classified as follows:
+
+           Basics: find, info, install, remove, list
+          ...more: refresh, revert, switch, disable, enable, create-cohort
+          History: changes, tasks, abort, watch
+          Daemons: services, start, stop, restart, logs
+      Permissions: connections, interface, connect, disconnect
+    Configuration: get, set, unset, wait
+      App Aliases: alias, aliases, unalias, prefer
+          Account: login, logout, whoami
+        Snapshots: saved, save, check-snapshot, restore, forget
+           Device: model, reboot, recovery
+     Quota Groups: set-quota, remove-quota, quotas, quota
+  Validation Sets: validate
+        ... Other: warnings, okay, known, ack, version
+      Development: validate
+
+For more information about a command, run 'snap help <command>'.
+For a short summary of all commands, run 'snap help --all'.
+
+============================================================
+# snap --help 
+snap 命令允许您安装、配置、刷新和删除快照。快照是适用于许多不同 Linux 发行版的软件包，
+支持最新应用程序和实用程序的安全交付和操作。
+用法: snap <command> [<options>...]
+常用的命令可分为以下几类：
+           基本: find, info, install, remove, list
+        ...更多: refresh, revert, switch, disable, enable, create-cohort
+           历史: changes, tasks, abort, watch
+      守护 进程: services, start, stop, restart, logs
+           权限: connections, interface, connect, disconnect
+           配置: get, set, unset, wait
+       应用别名: alias, aliases, unalias, prefer
+          帐户: login, logout, whoami
+          快照: saved, save, check-snapshot, restore, forget
+          装置: model, reboot, recovery
+        配额组: set-quota, remove-quota, quotas, quota
+        验证集: validate
+       ...其他: warnings, okay, known, ack, version
+          开发: validate
+For more information about a command, run 'snap help <command>'.
+For a short summary of all commands, run 'snap help --all'.
