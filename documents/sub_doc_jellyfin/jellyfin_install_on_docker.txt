@@ -1,0 +1,4 @@
+
+step 1: pull docker images
+docker pull jellyfin/jellyfin 
+

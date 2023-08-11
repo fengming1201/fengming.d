@@ -1,0 +1,12 @@
+
+step 1:pull docker images
+docker pull ghcr.io/ajnart/homarr:latest
+
+step 2:prepare work dir for config
+
+
+step 3:run container
+
+
+
+
