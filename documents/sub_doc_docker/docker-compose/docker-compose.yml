@@ -1,0 +1,147 @@
+
+compose Yml文件编写
+　　1、Compose文件是一个定义服务，网络和卷的YAML文件
+　　2、Compose文件的默认文件名为docker-compose.yml
+
+提示：您可以对此文件使用.yml或.yaml扩展名， 他们都工作
+与docker运行一样，默认情况下，Dockerfile中指定的选项(例如，CMD，EXPOSE，VOLUME，ENV)都被遵守，
+你不需要在docker-compose.yml中再次指定它们
+
+同时你可以使用类似Bash的$ {VARIABLE} 语法在配置值中使用环境变量
+
+（1） build
+该参数指定Dockerfile文件的路径，Docker Compose会通过Dockerfile构建并生成镜像，然后使用该镜像
+
+build: #构建的地址
+    context: /oldboyedu/dockerfile/docker-composedockerfile: Dockerfile
+
+（2）image
+指定启动容器的镜像，可以是镜像仓库/标签或者镜像id(或者id的前一部分)
+
+image: centos
+
+如果镜像不存在，Compose将尝试从官方镜像仓库将其pull下来，如果你还指定了build，在这种情况下，它将使用指定的build选项构建它，
+并使用image指定的名字和标记对其进行标记
+
+（3）container_name
+指定一个自定义容器名称，而不是生成的默认名称
+
+container_name: docker-compose-centos
+
+由于Docker容器名称必须是唯一的，因此如果指定了自定义名称，则无法将服务扩展到多个容器
+
+(4) volumes
+卷挂载路径设置。可以设置宿主机路径 (HOST:CONTAINER) 或加上访问模式 (HOST:CONTAINER:ro),挂载数据卷的默认权限是读写(rw)，
+可以通过ro指定为只读
+
+你可以在主机上挂载相对路径，该路径将相对于当前正在使用的Compose配置文件的目录进行扩展。相对路径应始终以 . 或者 .. 开始
+
+volumes: # 只需指定一个路径，让引擎创建一个卷 
+- /oldboyedu/data/docker-compose # 指定绝对路径映射 
+- /opt/data:/oldboyedu/data/docker-compose # 相对于当前compose文件的相对路径 
+- ./cache:/oldboyedu/data/docker-compose # 用户家目录相对路径 
+- ~/configs:/oldboyedu/data/docker-compose:ro # 命名卷 
+- datavolume:/oldboyedu/data/docker-compose
+
+但是，如果要跨多个服务并重用挂载卷，请在顶级volumes关键字中命名挂在卷，但是并不强制，如下的示例亦有重用挂载卷的功能，但是不提倡
+
+version: "3"
+services:web1:  
+build: ./web/  
+volumes:     
+- ../code:/oldboyedu/data/docker-composeweb2:  
+build: ./web/  
+volumes:     
+- ../code:/oldboyedu/data/docker-compose
+
+注意：通过顶级volumes定义一个挂载卷，并从每个服务的卷列表中引用它， 这会替换早期版本的Compose文件格式中volumes_from
+
+(5) links
+
+　　链接到另一个服务中的容器
+
+　　请指定服务名称和链接别名(SERVICE：ALIAS)，或者仅指定服务名称
+
+web:links:  - db  - db:database  - redis
+
+　　在当前的web服务的容器中可以通过链接的db服务的别名database访问db容器中的数据库应用，如果没有指定别名，则可直接使用服务名访问
+
+　　链接不需要启用服务进行通信 - 默认情况下，任何服务都可以以该服务的名称到达任何其他服务
+
+　　(实际是通过设置/etc/hosts的域名解析，从而实现容器间的通信。故可以像在应用中使用localhost一样使用服务的别名链接其他容器的服务，前提是多个服务容器在一个网络中可路由联通)
+
+　　links也可以起到和depends_on相似的功能，即定义服务之间的依赖关系，从而确定服务启动的顺序
+
+　　| external_links
+
+　　链接到docker-compose.yml 外部的容器，甚至并非 Compose 管理的容器，参数格式跟 links 类似
+
+external_links:- redis_1- project_db_1:mysql- project_db_1:postgresql
+
+(6) expose
+
+　　暴露端口，但不映射到宿主机，只被连接的服务访问仅可以指定内部端口为参数
+
+expose:- "3000"- "8000"
+
+(7) ports
+
+　　暴露端口信息常用的简单格式：使用宿主：容器 (HOST:CONTAINER)格式或者仅仅指定容器的端口(宿主将会随机选择端口)都可以
+
+　　注意：当使用 HOST:CONTAINER 格式来映射端口时，如果你使用的容器端口小于 60 你可能会得到错误得结果，因为 YAML 将会解析 xx:yy 这种数字格式为 60 进制。所以建议采用字符串格式
+
+　　简单的短格式：
+
+ports:- "3000"- "3000-3005"- "8000:8000"- "9090-9091:8080-8081"- "49100:22"- "127.0.0.1:8001:8001"- "127.0.0.1:5000-5010:5000-5010"- "6060:6060/udp"
+
+　　在v3.2中ports的长格式的语法允许配置不能用短格式表示的附加字段长格式：
+
+　　式：
+
+ports: - target: 80  published: 8080  protocol: tcp  mode: host
+
+(8) restart
+
+　　no是默认的重启策略，在任何情况下都不会重启容器
+
+　　指定为always时，容器总是重新启动，如果退出代码指示出现故障错误，则on-failure将重新启动容器
+
+restart: "no"restart: alwaysrestart: on-failurerestart: unless-stopped
+
+　(9) environment
+
+　　添加环境变量。你可以使用数组或字典两种形式。任何布尔值; true，false，yes，no需要用引号括起来，以确保它们不被YML解析器转换为True或False
+
+　　只给定名称的变量会自动获取它在 Compose 主机上的值，可以用来防止泄露不必要的数据
+
+environment:RACK_ENV: developmentSHOW: 'true'SESSION_SECRET:environment: - RACK_ENV=development - SHOW=true - SESSION_SECRET
+
+　　注意：如果你的服务指定了build选项，那么在构建过程中通过environment定义的环境变量将不会起作用。将使用build的args子选项来定义构建时的环境变量
+
+(10) pid
+
+　　将PID模式设置为主机PID模式吗， 这就打开了容器与主机操作系统之间的共享PID地址空间
+
+　　使用此标志启动的容器将能够访问和操作裸机的命名空间中的其他容器，反之亦然。即打开该选项的容器可以相互通过进程 ID 来访问和操作
+
+pid: "host"
+
+(11) dns
+
+　　配置 DNS 服务器。可以是一个值，也可以是一个列表
+
+dns: 8.8.8.8dns:- 223.5.5.5 - 8.8.8.8
+
+　　compose案例
+
+　　| 部署zabbix5.4
+
+cat >docker-compose.yml<<'EOF'version: '3'services:  mysql-server:    image: mysql:8.0    restart: always    environment:      MYSQL_ROOT_PASSWORD: root_pwd      MYSQL_DATABASE: zabbix      MYSQL_USER: zabbix      MYSQL_PASSWORD: zabbix_pwd    networks:      - zabbix-net    command: ["--character-set-server=utf8", "--collation-server=utf8_bin", "--default-authentication-plugin=mysql_native_password"]     zabbix-java-gateway:    image: zabbix/zabbix-java-gateway:alpine-5.4-latest    restart: always    networks:      - zabbix-net     zabbix-server:    depends_on:      - mysql-server    image: zabbix/zabbix-server-mysql:alpine-5.4-latest    restart: always    environment:      DB_SERVER_HOST: mysql-server      MYSQL_DATABASE: zabbix      MYSQL_USER: zabbix      MYSQL_PASSWORD: zabbix_pwd      MYSQL_ROOT_PASSWORD: root_pwd      ZBX_JAVAGATEWAY: zabbix-java-gateway    networks:      - zabbix-net    ports:      - "10051:10051"       zabbix-web-nginx-mysql:    depends_on:      - zabbix-server    image: zabbix/zabbix-web-nginx-mysql:alpine-5.4-latest    ports:      - "80:8080"    restart: always    environment:      DB_SERVER_HOST: mysql-server      MYSQL_DATABASE: zabbix      MYSQL_USER: zabbix      MYSQL_PASSWORD: zabbix_pwd      MYSQL_ROOT_PASSWORD: root_pwd    networks:      - zabbix-netnetworks:  zabbix-net:EOF
+
+　　| 使用docker-compose工具管理zabbix容器
+
+# 创建容器并启动.docker-compose up# 停止并删除容器.docker-compose down# 创建容器并后台启动docker-compose up -d# 容器全部启动docker-compose start# 仅启动abbix-server服务对应的容器docker-compose stop zabbix-server# 容器全部停止.docker-compose stop# 仅停止zabbix-server服务对应的容器.docker-compose stop zabbix-server# 容器全部重启.docker-compose restart# 要注意端口冲突的问题,指定的services不应该有ports属性.docker-compose scale zabbix-java-gateway=3
+
+　　温馨提示:
+
+　　其他帮助信息请直接参考:"docker-compose --help"

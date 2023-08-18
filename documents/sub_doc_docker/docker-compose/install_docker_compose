@@ -1,0 +1,15 @@
+
+step1: download docker-compose
+curl -L "https://github.com/docker/compose/releases/download/1.28.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+
+step2：
+chmod +x /usr/local/bin/docker-compose
+
+step3:
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+step4:test
+docker-compose --version
+docker-compose version 1.28.4, build cabd5cfb
+

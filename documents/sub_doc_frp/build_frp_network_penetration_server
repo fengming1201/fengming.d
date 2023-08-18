@@ -1,0 +1,191 @@
+使用frp将内网映射到公网
+
+什么是frp
+frp 是一个高性能的反向代理应用，可以帮助您轻松地进行内网穿透，对外网提供服务，支持 tcp, http, https 等协议类型，
+并且 web 服务支持根据域名进行路由转发。
+frp 是一个开源、简洁易用、高性能的内网穿透和反向代理软件，支持 tcp, udp, http, https等协议。
+frp 是一个可用于内网穿透的高性能的反向代理应用，分为服务端frps和客户端frpc，支持 tcp, udp, http, https 协议。
+详情可浏览该项目的Github主页: https://github.com/fatedier/frp/
+除了上述的基本流程之外，frp还支持更多的高级功能，例如：
+1.端口转发：您可以使用frp将内部网络中的多个端口映射到外部网络的一个端口上，从而简化配置过程。
+2.域名解析：您可以将frp配置为使用自己的域名，而不是IP地址，以便更方便地访问内部网络中的应用程序。
+3.反向代理：您可以使用frp设置反向代理，以便在内部网络中运行的应用程序可以访问外部网络中的资源。
+4.负载均衡：如果您有多个frp客户端和多个应用程序，您可以使用frp的负载均衡功能来分配流量，以确保性能和可靠性。
+
+
+frp工作原理
+(1)
+1.服务端运行，监听一个主端口，等待客户端的连接；
+2.客户端连接到服务端的主端口，同时告诉服务端要监听的端口和转发类型；
+3.服务端fork新的进程监听客户端指定的端口；
+4.外网用户连接到客户端指定的端口，服务端通过和客户端的连接将数据转发到客户端；
+5.客户端进程再将数据转发到本地服务，从而实现内网对外暴露服务的能力。
+(2)
+服务端运行，监听一个主端口，等待客户端的连接；
+客户端连接到服务端的主端口，同时告诉服务端要监听的端口和转发类型；
+服务端fork新的进程监听客户端指定的端口；
+外网用户连接到客户端指定的端口，服务端通过和客户端的连接将数据转发到客户端；
+客户端进程再将数据转发到本地服务，从而实现内网对外暴露服务的能力。
+(3)
+1.客户端向frp服务器发送请求。当客户端启动时，它会向frp服务器发送一条请求，请求服务器分配一个唯一的客户端ID。
+
+2.服务器返回分配的客户端ID。frp服务器将分配一个唯一的客户端ID，并将其返回给客户端。
+
+3.客户端连接到服务器。客户端使用分配的客户端ID连接到frp服务器，以便服务器可以知道客户端要连接的计算机和端口。
+
+4.服务器将请求转发到客户端。当外部网络发出请求时，frp服务器将请求转发到客户端，客户端将请求转发到指定的计算机和端口上。
+
+准备
+在使用frp之前，需要一台有公网IP的服务器（下文称外网主机），一台需要实现内网穿透的机器（下文称内网主机），SSH工具，
+以及一个域名（如果只是建立SSH反向代理则不需要域名）。
+
+我的云服务器（腾讯云）：116.62.103.60
+
+开始使用
+根据机器的操作系统，在Release页面中找到对应的frp程序，然后分别在外网主机和内网主机中下载它。
+我安装的是0.24.1版本，现在最新版本好像到了3.6，但不影响使用。
+
+公网主机(云服务器主机)
+SSH连接上外网主机后，使用wget指令下载frp。
+
+wget https://github.com/fatedier/frp/releases/download/v0.24.1/frp_0.24.1_linux_amd64.tar.gz
+
+使用tar指令解压tar.gz文件
+tar -zxvf frp_0.24.1_linux_amd64.tar.gz
+
+包内容：
+[4.0K]  frp_0.51.2_linux_amd64
+├── [ 14M]  frpc            ------客户端执行程序
+├── [ 12K]  frpc_full.ini   ------客户端完整配置文件
+├── [ 126]  frpc.ini        --------客户端简易配置文件
+├── [ 16M]  frps            ------ 服务器执行程序
+├── [5.8K]  frps_full.ini   --------服务器完整配置文件
+├── [  26]  frps.ini        --------服务器简易配置文件
+└── [ 11K]  LICENSE
+
+外网主机作为服务端，可以删掉不必要的客户端文件，使用rm指令删除文件。
+rm -f frpc
+rm -f frpc.ini
+
+接下来要修改服务器配置文件，即frps.ini文件。使用vi指令对目标文件进行编辑。
+
+打开frps.ini后可以看到默认已经有很多详细的配置和示范样例，该文章仅以达到内网穿透为目的，所以这里选择删掉或注释掉里面的所有内容，
+然后根据群晖的情况，按照官方的中文文档添加以下配置。（这里的操作都使用vi命令，关于vi命令的使用方式这里不作详细介绍，
+可以自行搜索相关使用方法。）
+
+[common]
+bind_port = 7000            #服务端口这个是frp和客户端通讯端口，如果不冲突就不用改
+dashboard_port = 7500
+token = 12345678
+dashboard_user = admin
+dashboard_pwd = admin
+vhost_http_port = 10080      #访问客户端web服务自定义的端口号
+vhost_https_port = 10443     #访问客户端web服务自定义的端口号
+
+[common]部分是必须有的配置。
+如果没有必要，端口均可使用默认值，token、user和password项请自行设置。
+bind_port :表示frp的客户端和服务端连接的端口，这个端口号我们之后在配置客户端的时候要用到。
+dashboard_port :是服务端仪表板的端口，若使用7500端口，在配置完成服务启动后可以通过浏览器访问 x.x.x.x:7500 （其中x.x.x.x为VPS的IP）查看frp服务运行信息。
+token :是用于客户端和服务端连接的口令，请自行设置并记录，稍后会用到。
+dashboard_user 和 dashboard_pwd :表示打开仪表板页面登录的用户名和密码，自行设置即可。
+vhost_http_port 和vhost_https_port :用于反向代理HTTP主机时使用，本文不涉及HTTP协议，因而照抄或者删除这两条均可。
+
+保存上面的配置后，使用以下指令启动frp服务端。（如果需要在后台运行，请往下翻阅关于后台运行的部分。）
+
+root@ubuntu2204:~/frp# ./frps -c frps.ini  & 
+[1] 561744
+2023/08/18 18:15:32 [I] [root.go:204] frps uses config file: frps.ini
+2023/08/18 18:15:32 [I] [service.go:206] frps tcp listen on 0.0.0.0:7000
+2023/08/18 18:15:32 [I] [root.go:213] frps started successfully
+
+此时访问 x.x.x.x:7500 并使用自己设置的用户名密码登录，即可看到仪表板界面
+
+
+客户端
+
+客户端前面的操作和服务端是一模一样的，这里不一一解释。
+因为我客户端主机是arm32位的，所以我安装的版本是：
+客户端的配置如下
+
+ cat frpc.ini 
+[common]
+server_addr = 116.62.103.60    #这里是公网服务器的IP
+server_port = 7000
+token = 12345678
+
+[ssh]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 22
+remote_port = 6000              #访问公网服务器的6000端口，就相当于访问本地22端口
+
+[web]                           #公网访问内部web服务器以http方式
+type = http                     #访问协议
+local_port = 8080               #内网web服务的端口号
+custom_domains = repo.iwi.com   #所绑定的公网服务器域名，一级、二级域名都可以
+
+[common]中的server_addr填frp服务端的ip（也就是外网主机的IP）server_port填frp服务端的bind_prot。
+frp实际使用时，会按照端口号进行对应的转发
+frpc.ini的rdp、smb字段都是自己定义的规则，自定义端口对应时格式如下。
+
+“[xxx]”表示一个规则名称，自己定义，便于查询即可。
+“type”表示转发的协议类型，有TCP和UDP等选项可以选择，如有需要请自行查询frp手册。
+“local_port”是本地应用的端口号，按照实际应用工作在本机的端口号填写即可。
+“remote_port”是该条规则在服务端开放的端口号，自己填写并记录即可。
+
+保存配置，输入以下指令运行frp客户端。（同样如果需要在后台运行，请往下翻阅关于后台运行的部分。）
+注意：这里设置完之后要需要去服务器后台查看防火墙是否允许这几个端口的访问，如果拒绝了这几个端口的访问，即使内网映射成功了，
+还是没有办法通过外网访问到内网。
+
+debian11xJ4125:frp_0.51.2_linux_amd64# ./frpc -c frpc.ini &     
+[1] 336463
+debian11xJ4125:frp_0.51.2_linux_amd64# 2023/08/18 18:16:39 [I] [root.go:220] start frpc service for config file [frpc.ini]
+2023/08/18 18:16:39 [I] [service.go:301] [0e5dbe80a1b30b19] login to server success, get run id [0e5dbe80a1b30b19]
+2023/08/18 18:16:39 [I] [proxy_manager.go:150] [0e5dbe80a1b30b19] proxy added: [ssh]
+2023/08/18 18:16:39 [I] [control.go:172] [0e5dbe80a1b30b19] [ssh] start proxy success
+
+此时在服务端会看到”start proxy sucess”字样，即连接成功。
+2023/08/18 18:16:39 [I] [service.go:539] [0e5dbe80a1b30b19] client login info: ip [113.88.12.223:42626] version [0.51.2] hostname [] os [linux] arch [amd64]
+2023/08/18 18:16:39 [I] [tcp.go:81] [0e5dbe80a1b30b19] [ssh] tcp proxy listen port [6000]
+2023/08/18 18:16:39 [I] [control.go:497] [0e5dbe80a1b30b19] new proxy [ssh] type [tcp] success
+
+现在可以用SSH通过公网服务器主机IP:6000建立SSH连接。
+root@FJKdebian64:~# ssh root@116.62.103.60 -p 6000
+root@116.62.103.60's password: 
+Linux debian11xJ4125 5.10.0-22-amd64 #1 SMP Debian 5.10.178-3 (2023-04-22) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Fri Aug 18 18:02:38 2023 from 127.0.0.1
+debian11xJ4125:~# 
+
+让frp在后台运行
+
+虽然现在frp运作起来了，内网穿透也实现了，但这还是不够的。此时如果断开与服务端或者客户端的SSH连接（比如关掉了Xshell）也就中止了frp的运行。
+
+保持frp运行是关键是让服务端的frp和客户端的frp在后台运行，这里提两个方法供参考，一个是使用screen指令，另一个是使用nohup指令。nohup相对简单很多，这里就只介绍nohup了。
+下面分别是服务端和客户端的frp运行指令。
+
+服务端：
+
+nohup ./frps -c ./frps.ini &
+
+    1
+
+客户端：
+
+nohup ./frpc -c ./frpc.ini &
+
+    1
+
+这样就成功让frp在后台运行了。
+
+
+
+
+
+
