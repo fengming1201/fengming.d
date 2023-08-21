@@ -1,0 +1,223 @@
+TrueNAS docker应用列表
+
+elastic-search
+强大的搜索开源框架，Elasticsearch 是一个分布式的、开源的搜索分析引擎，支持各种数据类型，包括文本、数字、地理、结构化、非结构化。
+全文检索是计算机程序通过扫描文章中的每一个词，对每一个词建立一个索引，指明该词在文章中出现的次数和位置。当用户查询时根据建立的索引查找，类似于通过字典的检索字表查字的过程。
+
+nextcloud
+nextcloud是一个文件共享服务器，它可以将您自己数据的控制和安全性交回您的手中。
+NextCloud是一个开源的云存储解决方案，可以在自己的服务器上搭建个人云存储系统。它提供了与市面上主流云存储服务（如Dropbox、Google Drive）相似的功能，包括文件存储、共享、同步、协作等。
+NextCloud的主要优势在于它是开源的，使用者可以自由地在自己的服务器上安装和使用。此外，NextCloud还提供了丰富的应用市场，可以为用户提供更多的功能和扩展。
+NextCloud的主要功能包括：
+文件存储：NextCloud可以用于存储各种类型的文件，包括文本文档、表格、演示文稿、图片、视频等。用户可以使用Web界面或客户端软件（如NextCloud Desktop Client）来上传和管理文件。
+文件共享：NextCloud提供了多种方式来共享文件，包括公共链接、用户/用户组共享、外部共享（如与Google Drive共享）等。
+文件同步：NextCloud提供了多种方式来同步文件，包括使用Web界面、客户端软件（如NextCloud Desktop Client）或者使用同步客户端（如rsync）等。
+协作功能：NextCloud提供了丰富的协作功能，包括实时文档编辑、聊天、日程等。
+
+collabora
+一个很棒的，适合家庭使用的在线办公套件图像。使用Collabora在线开发版（CODE）Docker Image，您可以在家中托管自己的在线Office Suite！这个Docker图片是针对家庭用户的，包含了最新和最伟大的发展。只需将其集成到您喜欢的文件同步和共享（FSS）中，即可轻松启动并运行您自己的在线Office套件！
+
+plex
+Plex是一个媒体播放器和媒体服务器的组合，它可以让你把所有的媒体文件都放在一个地方，然后在任何设备上都可以轻松地访问和播放。你只需要在一台电脑或NAS上安装Plex Media Server，然后把你的媒体文件添加到它的数据库中，就可以通过网络把它们提供给其他设备。你可以在手机、平板、电视、游戏机等设备上安装Plex Media Player，然后连接到Plex Media Server，
+
+prometheus
+Prometheus是一个开源的系统监控和警报工具包。
+
+
+storj
+storj共享您的额外存储空间并赚钱
+
+minio
+MinIO是在Apache License v2.0下发布的高性能对象存储。它是API兼容亚马逊S3云存储服务。使用MinIO为机器学习、分析和应用程序数据工作负载构建高性能基础设施。 
+MiniO 是一个基于Apache License v2.0开源协议的对象存储服务。非常适合于存储大容量非结构化的数据，例如图片、视频、日志文件、备份数据和容器/虚拟机镜像等，而一个对象文件可以是任意大小，从几kb到最大5T不等。
+
+
+emby
+Emby Server是一款个人媒体服务器，几乎每台设备上都有应用程序
+
+diskoverdata
+？？？？？
+
+netdata
+Netdata是一个快速、简单的监控和故障排除系统。Netdata对系统和应用程序进行分布式、实时、性能和健康监控。
+
+wg-easy
+WireGuard是一个轻量级的虚拟专用网络 （VPN），支持 IPv4 和 IPv6 连接。使用wireguard组建虚拟局域网
+
+photoprism
+PhotoPrism是一款基于服务器的应用程序，用于浏览、组织和共享您的个人照片集。
+
+syncthing
+syncthing是一个连续的文件同步程序。它在两台或多台计算机之间实时同步文件，安全地防止窥探。
+
+pihole
+为您的网络进行DNS和广告过滤。Pi-hole是一款开源的网络广告屏蔽软件，采用Linux操作系统和DNS服务器软件，并通过黑名单和白名单来过滤广告和恶意域名。它支持多种平台和设备，包括树莓派、虚拟机、Docker容器等。用户只需要将Pi-hole设置为本地DNS服务器即可实现广告屏蔽和域名过滤。
+
+home-assistant
+家庭助理。 Home Assistant（以下简称HA）是个开源的智能家居平台，就像一个软件，比如我们的QQ软件，微信软件。
+ Home Assistant把家中的智能家居设备整合到HA中，它能够接入的设备非常的多比如大名鼎鼎的小米、博联、易微联、飞利浦、特斯拉…，也可以接入软件，让后让各个品牌之间的设备可以联网
+ 一个设备，在没接入HA之前，它是个单一设备，智能在自己的生态里面联动，一旦接入到HA上，它就活了他可以在所有接入的平台里面自己联动，实现各种各样的自动化
+ HomeAssistant是构建智慧空间的神器。是一个成熟完整的基于 Python 的智能家居系统，设备支持度高，支持自动化（Automation)、群组化（Group）、UI 客制化（Theme) 等等高度定制化设置。同样实现设备的 Siri 控制。基于HomeAssistant，可以方便地连接各种外部设备（智能设备、摄像头、邮件、短消息、云服务等，成熟的可连接组件有近千种），手动或按照自己的需求自动化地联动这些外部设备，构建随心所欲的智慧空间。HomeAssistant是开源的，它不属于任何商业公司，用户可以无偿使用。
+
+grafana
+Grafana是适用于所有数据库的开源分析和监控解决方案。
+Grafana是一个开源的度量分析与可视化套件。纯 Javascript 开发的前端工具，通过访问库（如InfluxDB），展示自定义报表、显示图表等。大多使用在时序数据的监控方面，如同Kibana类似。Grafana的UI更加灵活，有丰富的插件，功能强大。
+Grafana支持许多不同的数据源。每个数据源都有一个特定的查询编辑器,该编辑器定制的特性和功能是公开的特定数据来源。
+
+ipfs
+IPFS是星际文件系统，是一个旨在创建持久且分布式存储和共享文件的网络传输协议。它是一种内容可寻址的对等超媒体分发协议。在IPFS网络中的节点将构成一个分布式文件系统。它是一个开放源代码项目，自2014年开始由Protocol Labs在开源社区的帮助下发展。其最初由Juan Benet设计。
+IPFS协议，就是一个神奇的存在，它的全称是InterPlanetary File System，星际文件系统。IPFS是一个分布式的web,点到点超媒体协议.可以让我们的互联网速度更快,更加安全,并且更加开放. IPFS协议的目标是取代传统的互联网协议HTTP。
+星际文件系统IPFS（InterPlanetary File System），它其实是一个面向全球、点对点的分布式版本文件系统，能将所有具有相同文件系统的计算设备连接在一起，
+
+komga
+Komga是一个免费的开源漫画服务器。Komga 是一个免费、开源的漫画服务器，支持 REST API 和 OPDS 。因此 Komga 理论上适用于任何支持 OPDS 协议的阅读器。支持的文件格式包括： CBZ、CBR、PDF 和 epub 格式。
+
+node-red
+Node RED是一个编程工具，用于以新的有趣的方式将硬件设备、API和在线服务连接在一起。它提供了一个基于浏览器的编辑器，可以使用调色板中的各种节点轻松地将流连接在一起，只需单击一下即可将其部署到其运行时。Node-RED 是一种基于流的编程工具
+
+lidarr
+Lidarr是Usenet和BitTorrent用户的音乐收藏经理。
+
+clamav
+ClamAV-ClamAV®是一款开源防病毒引擎，用于检测特洛伊木马、病毒、恶意软件和其他恶意威胁。ClamAV是一个C语言开发的开源病毒扫描工具用于检测木马/病毒/恶意软件等。可以在线更新病毒库
+
+adguard-home
+AdGuardHome 是一款高效的网络广告屏蔽器，提供了多个定制化选项，可以帮助用户轻松过滤掉恼人的广告、跟踪器和恶意软件。
+
+nginx-proxy-manager
+nginx-proxy-manager 是一个反向代理管理系统，它基于 NGINX，具有漂亮干净的 Web UI。它使您可以轻松地转发到您在家里或其他地方运行的网站。
+
+plex-auto-languages
+
+tiny-media-manager
+tinyMediaManager是一个用Java/Swing编写的媒体管理工具。tinyMediaManager是一款本地视频管理工具，它可以对你的电脑中视频很好的管理，对于用户的需要能够很好的满足，让你更好的分类，并在里面去快速的找到你需要的内容。tinyMediaManager是一款本地视频管理工具，它可以对你的电脑中视频很好的管理，对于用户的需要能够很好的满足，让你更好的分类，并在里面去快速的找到你需要的内容。tinyMediaManager可以将你的视频文件按照削刮来的信息重新命名，创建或者重命名你的电影文件夹，并将削刮的元数据保留到对应的文件夹，在寻找电影的时候可以让你体会到满满的舒适感；
+
+radarr
+Radarr是Usenet和BitTorrent用户的电影收藏经理。
+
+tautulli
+Tautulli是一个基于python的web应用程序，用于Plex Media Server的监控、分析和通知。
+
+minecraft
+minecraft一般指我的世界。Minecraft是一款沙盒游戏。 
+
+tdarr
+Tdarr是一个分布式代码转换系统
+
+
+jellyseerr
+Jellyseer是一个免费的开源软件应用程序，用于管理媒体库的请求。Jellyseerr（Overseerr 的一个分支）是Jellyfin服务器用户的Web前端，它可以请求新的电影和节目，然后将其传递给 Radarr 和 Sonarr 以进行自动下载。
+
+jellyfin
+Jellyfin是一个免费软件媒体系统，让你控制管理和流媒体。Jellyfin是一个自由软件媒体系统，它让您能够控制管理和流媒体。它是专有Emby和Plex的替代方案，可以通过多个应用程序从专用服务器向最终用户设备提供媒体。Jellyfin是Emby 3.5.2版本的派生版本，jellyfin是一个自由的软件媒体系统，用于控制和管理媒体和流媒体。它可以让你把所有的媒体文件都放在一个地方，然后在任何设备上都可以轻松地浏览、搜索、播放。它还可以让你观看来自各种内容提供商的免费电影和电视节目。
+
+qbittorrent
+qBittorrent项目旨在提供µTorrent的开源软件替代方案。QBittorrent是一个新的轻量级BitTorrent客户端。qbittorrent是一款免费开源跨平台的多协议多源的下载软件。它支持HTTP/HTTPS、FTP、SFTP、BitTorrent和Metalink等多种协议和格式，可以让你轻松下载各种类型的文件。
+
+bazarr
+Bazarr是Sonarr和Radarr的配套应用程序。它根据您的要求管理和下载字幕。
+
+rsyncd
+Rsyncd是一个开源实用程序，提供快速增量文件传输。
+
+pgadmin
+pgAdmin是PostgreSQL最流行、功能最丰富的开源管理和开发平台。
+
+chia
+Chia于2017年8月成立，旨在开发改进的区块链和智能交易平台。我们正在建立Chia网络，以改善全球金融和支付系统。Chia将是第一个企业级数字货币。自从比特币以来，Chia正在使用首个新的Nakamoto共识算法。。Chia是一种加密货币网络，他是由"BT之父"Bram Cohen创建的。
+
+tailscale
+Tailscale对共享资源的安全远程访问。Tailscale：让你可以随时随地用 NAS 和家里的电脑，Tailscale属于一种虚拟组网工具，基于WireGuard。 他能帮助我们把安装了Tailscale服务的机器，都放到同一个局域网。也就是我在家里的NAS和PC，还有父母家的PC，甚至云服务器都能放到同一个局域网。Tailscale是一家VPN替代产品开发商，为远程团队和组织提供安全访问所需服务的工具。
+
+navidrome
+Navidrome是一项个人流媒体服务，Navidrome 是一开源的音乐服务器，可以用来自建云端音乐播放器，让你在任何地方通过浏览器或者手机来收听自己的音乐，兼容 Subsonic、Aironic 播放器。
+Navidrome 是一款开源音乐服务器，它可以把你硬盘里的音乐文件以流媒体的方式展示出来，就可以在任何浏览器里收听了，也支持不少第三方客户端，最终在全平台播放收听。类似自家的 Spotify、Apple Music、网易云音乐、QQ音乐的意思。
+
+homepage
+主页是一个现代化、安全、高度可定制的应用程序面板。
+
+mumble
+Mumble是一款开源、低延迟、高质量的语音聊天。Mumble语音服务器，Mumble是一个免费和开源的IP语音（VoIP）应用程序，主要用于游戏玩家。 Mumble类似于TeamSpeak和Ventrilo。 Mumble使用客户端 - 服务器架构，允许用户在连接到同一服务器时彼此通信。 它具有简单的管理界面，并具有低延迟，高质量的编解码器。
+
+vaultwarden
+vaultwarden - 一个强大的密码管理服务器
+你是不是有很多账号都是一样的密码, 但是又怕撞库攻击? 亦或者是虽然都是不同的密码但是很难全部记住? Vaultwarden针对这种情况提供了有效的密码管理解决方案, 功能强大, 支持跨平台
+
+prowlarr
+Prowlarr 是建立在流行的 arr .net/reactjs 基础堆栈上的索引器管理器/代理，可与您的各种 PVR 应用程序集成。Prowlarr 支持对 Torrent Trackers 和 Usenet Indexers 管理。它与 Lidarr、Mylar3、Radarr、Readarr 和 Sonar 无缝集成，为您的索引器提供完整的管理，无需为每个应用程序设置索引器。
+
+sabnzbd
+SABnzbd是一个用Python编写的开源二进制新闻阅读器。sabnzbd是一款基于互联网的博客工具，支持使用Python语言编写，可以抓取数据网络，SABnzbd下载基于Web的用户界面和先进的内置在后处理选项，自动验证，修理，提取和清理职位，下载新闻组等等。
+SABnzbd是一个基于Web的用户界面，为第三方应用和NZB文件和支持RSS feeds的API。SABnzbd是设计在后台运行，你可以使用它与文件从网络简化您的工作。
+新闻是一个世界性的分布式网络讨论的系统，让用户阅读和发送信息到一个或多个类别，被称为新闻组。
+
+wordpress
+Wordpress是一个网络内容管理系统。WordPress是一个使用PHP语言开发的内容管理系统（CMS），它极大地简化了构建博客或网站的过程，用户可以在支持PHP和MySQL数据库的服务器上架设属于自己的网站（博客）。WordPress不仅为大量商业网站和博客提供支持，它也是创建电子商务商店的流行方式，例如可以创建商业网站、电子商务商店、作品集网站、论坛、社交网络等。
+WordPress是一款个人博客系统，并逐步演化成一款内容管理系统软件，它是使用PHP语言和MySQL数据库开发的,用户可以在支持 PHP 和 MySQL数据库的服务器上使用自己的博客。
+WordPress有许多第三方开发的免费模板，安装方式简单易用。不过要做一个自己的模板，则需要你有一定的专业知识。比如你至少要懂的标准通用标记语言下的一个应用HTML代码、CSS、PHP等相关知识。
+
+jenkins
+作为领先的开源自动化服务器，Jenkins提供了数百个插件来支持任何项目的构建、部署和自动化。
+Jenkins是一个开源的、提供友好操作界面的持续集成工具，起源于Hidson，主要用于持续、自动的构建或测试软件项目、监控外部任务的运行。
+
+redis
+
+terraria
+Terraria是一款像素风格的沙盒游戏。 Terraria是一片充满冒险的土地！神秘之地！一片属于你的土地，可以塑造、捍卫和享受。
+
+webdav
+WebDAV是HTTP协议的一组扩展，允许用户协作编辑和管理远程web服务器上的文件。WebDAV是指允许您在服务器上读取和编辑文件的机制，可以在Web浏览器上完成。
+WebDAV类似于当前流行的Google Drive等在线存储服务，云上的多个用户可以相对安全地进行文件共享和编辑。
+
+zerotier
+Zerotier安全连接任何设备，任何位置。Zerotier是一款用于构建异地虚拟局域网的工具。通过电脑上的Zerotier客户端连接各个异地电脑到虚拟局域网，从而实现组网。
+zerotier是一款可以实现异地组建局域网的虚拟局域网软件。通俗的讲就是：zerotier可以把网络上天南地北的计算机连成一个局域网，在局域网中你可以实现远程打印机共享，远程控制、文件共享、局域网对战等一系列在常规局域网中能做的事情。例如：你在外面想把文件上传到家里的NAS设备，想远程控制家里的电脑、想直接发送文件到家里的打印机、想看看家里的监控等等，这些你都可以在zerotier虚拟的局域网中实现。
+
+mineos
+MineOS是一个服务器前端，用于轻松管理Minecraft管理任务。
+MineOS是服务器前端，可简化Minecraft管理任务的管理。 使用Node.js进行的此次迭代旨在通过利用事件触发的Node.JS和Websockets异步模型来增强以前的MineOS脚本（基于Python）。
+
+deluge
+Deluge是一款轻量级、免费软件、跨平台的BitTorrent客户端。
+
+searxng
+SearXNG是一个尊重隐私、可破解的元搜索引擎
+Searx是一个完全免费开源、尊重隐私的搜索引擎平台，它的强大之处在于支持70多种搜索服务的结果，包括文件、图片、地图、音乐、新闻、学术等内容，而且搜索结果来自许多渠道。
+
+sonarr
+Sonarr是Usenet和BitTorrent用户的PVR。它可以监控多个RSS订阅源，以获取你最喜欢的节目的新剧集，并对其进行抓取、排序和重命名。
+
+autobrr
+Autobrr是torrents和usenet的现代下载自动化工具。
+autobrr是种子自动化下载工具。
+
+overseerr
+Overserr是一个免费的开源软件应用程序，用于管理媒体库的请求。它与您现有的服务集成，如Sonarr、Radarr和Plex！
+
+ddns-updater
+DDNS更新程序是一个具有web UI的轻量级通用DDNS更新器
+
+immich
+Immich-移动设备上照片和视频的自托管备份解决方案。Immich 是直接从您的手机上自行托管照片和视频的备份解决方案。
+Immich：高性能的自托管照片和视频备份方案。安装服务端后，配合手机客户端可以进行相片自动备份到NAS设备。
+immich是一个开源的照片备份解决方案，可以基于docker部署到自己的家庭服务器上。优点：有配套的手机app，缺点：需要使用多个容器部署比较慢。
+
+homarr
+Homarr是一个时尚、现代的仪表板，可以将您的所有应用程序和服务放在指尖。
+Homarr 是一个简单轻量级的服务器主页，通过可定制的浏览器主页与您的家庭服务器的 Docker 容器（即 Sonarr/Radarr ）进行交互，可帮助您在一个地方轻松访问所有服务。
+Homarr是一款由老外开发的简约时尚现代化的面板，可以通过部署Hamarr的形式，将所有网页轻松汇聚到一起，让所有的服务和应用轻松触手可及。使用Homarr，您可以在一个方便的位置访问和控制所有内容。Homarr 与您添加的应用程序无缝集成，为您提供有价值的信息并让您完全控制。安装轻而易举，Homarr 支持多种部署方法。
+
+filebrowser
+Filebrowser在指定的目录中提供了一个文件管理界面，可用于上传、删除、预览、重命名和编辑文件。
+filebrowser 是一个使用go语言编写的软件，功能是可以通过浏览器对服务器上的文件进行管理。可以是修改文件，或者是添加删除文件，甚至可以分享文件，是一个很棒的文件管理器，你甚至可以当成一个网盘来使用。总之使用非常简单方便，功能很强大。
+
+tftpd-hpa
+
+readarr
+Readarr是Usenet和BitTorrent用户的电子书和有声读物收藏管理器。
+
+gitea
+Gitea 是一款使用 Golang 编写的可自运营的代码管理工具。在这个领域，名气最响的应该是 Gitlab。
+
+recyclarr
+Recyclarr将TRaSH指南中的推荐设置同步到您的Sonarr/Radarr实例。

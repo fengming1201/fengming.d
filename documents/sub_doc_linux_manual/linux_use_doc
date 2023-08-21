@@ -222,6 +222,14 @@
 
 },
 {
+    Linux：如何获取Linux发行版的内核头文件
+    搜索：
+    apt search linux-headers-$(uname -r)
+    下载安装：
+    apt install linux-headers-$(uname -r)
+    或者其他版本
+},
+{
 
-
+    
 }
