@@ -1,0 +1,8 @@
+
+
+
+docker run -d \
+--name webssh \
+-p 5032:5032 \
+--restart always \
+lihaixin/webssh2:ssh

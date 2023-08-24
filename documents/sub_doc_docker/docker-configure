@@ -1,0 +1,114 @@
+由于 Linux 不同发行版所采用的默认管理框架的不同，Docker 在不同环境下所使用的默认配置文件也有所不同。
+这给初学者带来了极大的困惑和不便。好消息是，Docker 官方也意识到了这个问题，所以从 V1.12 开始，
+引入了并行通用配置文件/etc/docker/daemon.json。从此以后，用户可以在所有平台统一通过调整该配置文件来调整 Docker Engine。
+本文对此进行简要说明。
+
+配置文件
+（1）通用配置文件 /etc/docker/daemon.json
+
+Docker Engine V1.12 之后版本，用户可以自行创建 daemon.json 文件对 Docker Engine 进行配置和调整。要点如下：
+该文件作为 Docker Engine 的配置管理文件, 里面几乎涵盖了所有 docker 命令行启动可以配置的参数。
+不管是在哪个平台以何种方式启动, Docker 默认都会来这里读取配置。使用户可以统一管理不同系统下的 docker daemon 配置。
+相关参数的使用说明，可以参阅man dockerd帮助信息，或者参阅官方文档。
+默认配置文件目录及支持的参数说明：
+
+Linux：/etc/docker/daemon.json, 支持的完成参数配置示例如下（最新的支持参数列表可以参阅官方文档)：
+{
+	"authorization-plugins": [],
+	"data-root": "",
+	"dns": [],
+	"dns-opts": [],
+	"dns-search": [],
+	"exec-opts": [],
+	"exec-root": "",
+	"experimental": false,
+	"storage-driver": "",
+	"storage-opts": [],
+	"labels": [],
+	"live-restore": true,
+	"log-driver": "",
+	"log-opts": {},
+	"mtu": 0,
+	"pidfile": "",
+	"cluster-store": "",
+	"cluster-store-opts": {},
+	"cluster-advertise": "",
+	"max-concurrent-downloads": 3,
+	"max-concurrent-uploads": 5,
+	"default-shm-size": "64M",
+	"shutdown-timeout": 15,
+	"debug": true,
+	"hosts": [],
+	"log-level": "",
+	"tls": true,
+	"tlsverify": true,
+	"tlscacert": "",
+	"tlscert": "",
+	"tlskey": "",
+	"swarm-default-advertise-addr": "",
+	"api-cors-header": "",
+	"selinux-enabled": false,
+	"userns-remap": "",
+	"group": "",
+	"cgroup-parent": "",
+	"default-ulimits": {},
+	"init": false,
+	"init-path": "/usr/libexec/docker-init",
+	"ipv6": false,
+	"iptables": false,
+	"ip-forward": false,
+	"ip-masq": false,
+	"userland-proxy": false,
+	"userland-proxy-path": "/usr/libexec/docker-proxy",
+	"ip": "0.0.0.0",
+	"bridge": "",
+	"bip": "",
+	"fixed-cidr": "",
+	"fixed-cidr-v6": "",
+	"default-gateway": "",
+	"default-gateway-v6": "",
+	"icc": false,
+	"raw-logs": false,
+	"allow-nondistributable-artifacts": [],
+	"registry-mirrors": [],
+	"seccomp-profile": "",
+	"insecure-registries": [],
+	"disable-legacy-registry": false,
+	"no-new-privileges": false,
+	"default-runtime": "runc",
+	"oom-score-adjust": -500,
+	"runtimes": {
+		"runc": {
+			"path": "runc"
+		},
+		"custom": {
+			"path": "/usr/local/bin/my-runc-replacement",
+			"runtimeArgs": ["--debug"]
+		}
+	}
+}
+
+
+（2）文件"/etc/default/docker"是Docker的配置文件，用于设置Docker的选项和参数。
+/etc/default/docker
+
+
+（3）
+配置文件参数：
+1 优先解析在config-file命令行参数
+2 在root模式下 Docker Daemon 默认配置文件路径“/etc/docker/daemon.json”
+3 在rootless模式下 默认配置文件路径在~/.docker/
+
+TLS模式下证书路径：
+1 优先选择环境变量 DOCKER_CERT_PATH
+2 再选择环境变量 DOCKER_CONFIG
+3 在选择 当前用户home目录的.docker文件夹下
+4 证书名字优先解析参数 tlscacert、tlscert、tlskey
+5 再在默认证书路径下的ca.pem、key.pem、cert.pem
+
+Docker 运行时目录：/var/run/docker
+Docker PID 文件目录：/var/run/docker.pid
+
+containerd 通信sock路径 /run/containerd/containerd.sock
+
+

@@ -2,3 +2,28 @@
 step 1: pull docker images
 docker pull jellyfin/jellyfin 
 
+
+step 2:mkdir workdir
+mkdir -p /opt/jellyfin/config /opt/jellyfin/cache /opt/jellyfin/media
+
+step 3：run container
+docker run -d \
+    --name jellyfin \
+    --restart=always \
+    -p 8096:8096 \
+    -v /opt/jellyfin/config:/config \
+    -v /opt/jellyfin/cache:/cache \
+    -v /opt/jellyfin/media:/media \
+    jellyfin/jellyfin
+
+
+在以上命令中，我们使用了以下参数：
+    -d：指定容器以守护进程模式运行。
+    --name jellyfin：给容器命名为jellyfin。
+    -p 8096:8096：将主机的8096端口映射到容器的8096端口。
+    -v /opt/jellyfin/config:/config：将主机的/opt/jellyfin/config目录挂载到容器的/config目录。
+    -v /opt/jellyfin/cache:/cache：将主机的/opt/jellyfin/cache目录挂载到容器的/cache目录。
+    -v /opt/jellyfin/media:/media：将主机的/opt/jellyfin/media目录挂载到容器的/media目录。
+    jellyfin/jellyfin：使用Jellyfin官方镜像。
+
+等待容器启动后，您可以通过浏览器访问http://localhost:8096/来访问Jellyfin的Web界面。

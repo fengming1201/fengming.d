@@ -1,0 +1,101 @@
+
+step 1: pull Image
+docker pull nginx:latest
+
+step 2:run container
+docker run --name nginx-proxy -p 8080:80 -d nginx
+
+step 3:
+最后我们可以通过浏览器可以直接访问 8080 端口的 nginx 服务：IP：8080
+
+step 4:config，反向代理配置
+docker exec -it nginx-proxy bash
+cd /etc/nginx/ 
+root@hecs-160833:~/nginx# cat nginx.conf.org 
+user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+
+
+cd conf.d    
+vim default.conf
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  www.luoshengming.top;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    #location / {
+    #    root   /usr/share/nginx/html;
+    #    index  index.html index.htm;
+    #}
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    location / {
+        proxy_pass   http://139.9.186.120:7575;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+
+step 5:test and check config is't OK
+nginx -t
+exit
+docker restart nginx 
+
+
+
