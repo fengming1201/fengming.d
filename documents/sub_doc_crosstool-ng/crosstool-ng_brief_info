@@ -1,0 +1,27 @@
+
+office website：
+https://crosstool-ng.github.io/
+
+github：
+https://github.com/crosstool-ng/crosstool-ng
+
+download lastet version：Released 1.25.0
+wget -c  http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.25.0.tar.xz
+
+extrat pack:
+
+tar -Jxf crosstool-ng-1.25.0.tar.xz
+tree -d -L 1 crosstool-ng-1.25.0
+crosstool-ng-1.25.0
+├── bash-completion
+├── config
+├── contrib
+├── docs
+├── kconfig
+├── licenses.d
+├── m4
+├── maintainer
+├── packages
+├── samples
+├── scripts
+└── testing

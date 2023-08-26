@@ -1,0 +1,93 @@
+构建工具链
+要构建工具链，只需键入：
+
+ct-ng build
+这将使用上述配置来检索、提取和修补 组件，构建，安装并最终测试您新构建的工具链。 如果一切顺利，您应该看到如下所示的内容：
+
+[INFO ]  Performing some trivial sanity checks
+[INFO ]  Build started 20170319.002217
+[INFO ]  Building environment variables
+[EXTRA]  Preparing working directories
+[EXTRA]  Installing user-supplied crosstool-NG configuration
+[EXTRA]  =================================================================
+[EXTRA]  Dumping internal crosstool-NG configuration
+[EXTRA]    Building a toolchain for:
+[EXTRA]      build  = x86_64-pc-linux-gnu
+[EXTRA]      host   = x86_64-pc-linux-gnu
+[EXTRA]      target = mipsel-sde-elf
+[EXTRA]  Dumping internal crosstool-NG configuration: done in 0.05s (at 00:02)
+[INFO ]  =================================================================
+[INFO ]  Retrieving needed toolchain components' tarballs
+[EXTRA]    Retrieving 'gmp-6.1.2'
+[EXTRA]    Saving 'gmp-6.1.2.tar.xz' to local storage
+[EXTRA]    Retrieving 'mpfr-3.1.5'
+[EXTRA]    Saving 'mpfr-3.1.5.tar.xz' to local storage
+...
+[INFO ]  Installing cross-gdb
+[EXTRA]    Configuring cross-gdb
+[EXTRA]    Building cross-gdb
+[EXTRA]    Installing cross-gdb
+[EXTRA]    Installing '.gdbinit' template
+[INFO ]  Installing cross-gdb: done in 98.55s (at 10:51)
+[INFO ]  =================================================================
+[INFO ]  Cleaning-up the toolchain's directory
+[INFO ]    Stripping all toolchain executables
+[EXTRA]    Creating toolchain aliases
+[EXTRA]    Removing access to the build system tools
+[EXTRA]    Removing installed documentation
+[INFO ]  Cleaning-up the toolchain's directory: done in 0.42s (at 10:52)
+[INFO ]  Build completed at 20170319.003309
+[INFO ]  (elapsed: 10:51.42)
+[INFO ]  Finishing installation (may take a few seconds)...
+然后，您可以自由地在 PATH 中添加工具链的目录以使用它 信。/bin
+
+停止和重新启动构建
+如果要在调试步骤后停止生成，可以通过 要制作的变量：STOP
+
+ct-ng build STOP=some_step
+相反，如果您想在特定步骤重新启动构建，则 调试时，您可以传递变量以使其：RESTART
+
+ct-ng build RESTART=some_step
+或者，您可以使用步骤的名称调用make来执行此操作 步：
+
+ct-ng libc_headers
+相当于：
+
+ct-ng build RESTART=libc_headers STOP=libc_headers
+快捷方式和允许分别停止 或在该步骤重新启动。因此+step_namestep_name+
+
+ct-ng +libc_headers
+相当于
+
+ct-ng build STOP=libc_headers
+和
+
+ct-ng libc_headers+
+相当于：
+
+ct-ng build RESTART=libc_headers
+要获取可接受的步骤列表，请致电：
+
+ct-ng list-steps
+请注意，为了重新启动构建，您必须对配置说 选项 ，并且以前的构建有效地进行了 那么远。YCT_DEBUG_CT_SAVE_STEPS
+
+覆盖作业数
+如果要覆盖要在其中运行的作业数（选项 make），您可以重新进入菜单配置，或者简单地将其添加到 命令行，如下所示：-j
+
+ct-ng build.4
+它告诉 crosstool-NG 将作业数覆盖为 4。
+
+您可以在 帮助菜单。这些是它们后面的那些（例如，或，等等）。[.#]build[.#]build-all[.#]
+
+注意
+
+crosstool-NG脚本是一个Makefile-script。它不会并行执行（没有太多收获）。当谈到 作业，我们指的是制造组件时的作业数量。
+也就是说，我们谈论用于建立的就业机会数量 GCC、glibc 等。ct-ng
+
+一次构建所有工具链
+可以生成所有示例;只需致电：
+
+ct-ng build-all
+请注意，这非常耗时（具体取决于您的计算机配置 和主机操作系统，需要 24 小时到整整一周的时间）。
+默认情况下，这将删除 成功构建后的每个构建树，但保留解压缩/修补的构建树 源，以便它们可以被下面的示例重用）。然而，
+即使 考虑到组件的多样性，会消耗大量磁盘空间 示例中表示的版本。

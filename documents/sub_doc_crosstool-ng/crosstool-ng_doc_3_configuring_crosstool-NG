@@ -1,0 +1,81 @@
+配置交叉工具-NG
+crosstool-NG配置了一个配置器，呈现一个菜单结构 选项集。这些选项允许您指定工具链所需的方式 
+内置、安装位置、架构和特定处理器 它将支持您要使用的组件的版本等。 然后，这些选项的值将存储在配置文件中。
+
+配置器的工作方式与配置 Linux 内核的方式相同。是的 假设您知道如何处理此问题。
+
+要进入菜单，请键入：
+ct-ng menuconfig
+
+几乎每个配置项都有一个帮助条目。仔细阅读它们。
+
+字符串和数字选项可以引用环境变量。在这种情况下， 必须使用 shell 语法：。您不得单倍或双倍 引用字符串/数字选项。${VAR}
+
+有三个环境变量由crosstool-NG计算，并且 您可以使用：
+    CT_TARGET：表示要为其构建的目标元组。 例如，您可以在安装/前缀目录中使用它， 如：。如果需要，也可以以 、 和 的形式提供部分 。/opt/x-tools/${CT_TARGET}CT_TARGETCT_TARGET_ARCHCT_TARGET_VENDORCT_TARGET_KERNELCT_TARGET_SYS
+
+    CT_TOP_DIR：运行交叉工具-NG 的顶部目录。 在大多数情况下，您不需要它。一种情况，您 如果您有本地补丁或配置文件并且 您将它们存储在当前的工作目录中，您可以参考 通过使用 来给他们，例如： 。CT_TOP_DIR${CT_TOP_DIR}/patches.myproject
+
+    CT_VERSION：您正在使用的交叉工具NG版本。不多 为您使用，但如果您需要它，它就在那里。
+
+    您也可以递归引用配置变量，但需要 注意避免循环依赖或嵌套引用 深度（crosstool-NG目前仅跟随它们到10的深度）。
+
+示例配置
+Crosstool-NG 附带多个示例配置（预配置的工具链 已知可以构建和工作）。示例名称是 1 到 4 部分元组。 
+若要获取这些示例的列表并查看有关任何示例的更多详细信息， do（将“arm-unknown-linux-gnueabi”替换为要查看的示例名称）：
+
+ct-ng list-samples
+ct-ng show-arm-unknown-linux-gnueabi
+
+选择一个样本作为起点后，将其作为基础加载并微调 如上所述使用：ct-ng menuconfig
+
+ct-ng arm-unknown-linux-gnueabi
+ct-ng menuconfig
+
+有趣的配置选项
+    CT_LOCAL_TARBALLS_DIR：如果您已经有一些压缩包 目录，在此处输入。这将加快检索阶段， 否则crosstool-NG会下载这些压缩包。
+
+    CT_PREFIX_DIR：这是工具链将安装的地方 （现在，它将从哪里运行）。常见的用途是添加 目录路径中的目标元组，例如（见上文）：。/opt/x-tools/${CT_TARGET}
+
+    CT_TARGET_VENDOR：工具链的标识符，将采用 放置在目标元组的供应商部分。它不得包含空格或短划线。通常，
+    将其保留为一个单词字符串， 或者根据需要使用下划线分隔单词。避免点， 逗号和特殊字符。它可以设置为空，到 从目标元组中删除供应商字符串。
+
+    CT_TARGET_ALIAS：工具链的别名。它将用作 工具链工具的前缀。例如，您将拥有 .${CT_TARGET_ALIAS}-gcc
+
+此外，如果您认为自己没有看到足够的版本，可以尝试启用以下版本之一 那些：
+
+    CT_OBSOLETE：显示工具的过时版本。大多数时候， 您不想将工具链基于太旧的版本（ 例如，海湾合作委员会）。
+    但有时，使用这样的 用于回归测试或支持某些过时的旧版本 系统配置。那些旧版本是隐藏的 后。这些版本（或功能）如此标记 
+    因为维护对 crosstool-NG 中的那些人的支持太过分了 成本高昂，时间明智，时间宝贵。请注意，这些版本是 
+    可能会在下一个crosstool-NG版本中消失。CT_OBSOLETE
+
+    CT_EXPERIMENTAL：显示工具和交叉工具-NG的实验版本 特征。这可能会允许使用工具的未发布版本， 
+    或者以未经全面测试的方式配置工具链。 请小心使用。
+
+重建现有工具链
+如果您有现有的工具链，则可以重用用于构建它的选项 以创建新的工具链。这需要你付出一点努力 但很容易。构建工具链的选项与 工具链，
+您可以通过运行以下命令来检索此配置：
+
+${CT_TARGET}-ct-ng.config
+另一种方法是从文件中提取配置。 如果您的工具链是在 之前使用 crosstool-NG 构建的，但可以与任何版本的 build.log 文件一起使用，则这是必需的：build.log1.4.0
+
+ct-ng extractconfig <build.log >.config
+或者，如果您的文件被压缩（很可能！build.log
+
+bzcat build.log.bz2 | ct-ng extractconfig >.config
+上述命令会将配置转储到 ，以便重建 使用此配置的工具链，只需将输出重定向到文件：stdout.config
+
+${CT_TARGET}-ct-ng.config >.config
+ct-ng oldconfig
+然后，您可以通过运行以下命令来查看和更改配置：
+
+ct-ng menuconfig
+    注意
+    此过程适用于使用相同版本的 交叉工具-NG。
+
+从以前的跨工具 NG 配置升级
+在crosstool-NG的1.24.0版本之前，没有特定的升级 程序。上一节中描述的过程在某些 例;当某些选项被删除或 重 命名。
+这尤其会影响各种 工具链组件;因此，在运行（或）后，您必须验证所有设置。ct-ng oldconfigct-ng olddefconfig
+
+从 crosstool-NG 的 1.24.0 版本开始，新命令具有 被介绍，.它可以升级配置 从 1.23.0 版本;从 1.23.0 和 1.24.0 之间的版本升级 
+不受支持。预计在 1.24.0 版本之后，甚至 可以使用同一命令升级临时未发布版本。ct-ng upgradeconfig

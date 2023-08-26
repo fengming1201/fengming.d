@@ -1,0 +1,31 @@
+简介：
+
+
+github:
+
+
+
+docker部署：
+step 1:
+docker pull wiznote/wizserver:latest
+
+step 2:
+mkdir -p /opt/wiznote
+
+step 3:
+docker run -d -it \
+    --restart=always \
+    --name wiznote \
+    -v /opt/wiznote/storage:/wiz/storage \
+    -p 8080:80   \
+    wiznote/wizserver:latest
+
+
+step 4:
+http://ip:8080
+
+它的初始账号： admin@wiz.cn, 密码：123456
+
+
+
+

@@ -1,0 +1,75 @@
+#apt search qemu
+qemu/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  fast processor emulator, dummy package //dummy包快速处理器模拟器
+
+qemu-block-extra/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  extra block backend modules for qemu-system and qemu-utils //qemu系统和qemu实用程序的额外块后端模块
+
+qemu-efi/oldoldstable,oldoldstable 0~20181115.85588389-3+deb10u3 all
+  transitional dummy package  //过渡伪封装
+
+qemu-efi-aarch64/oldoldstable,oldoldstable 0~20181115.85588389-3+deb10u3 all
+  UEFI firmware for 64-bit ARM virtual machines  //用于64位ARM虚拟机的UEFI固件
+
+qemu-efi-arm/oldoldstable,oldoldstable 0~20181115.85588389-3+deb10u3 all
+  UEFI firmware for 32-bit ARM virtual machines  //用于32位ARM虚拟机的UEFI固件
+
+qemu-guest-agent/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  Guest-side qemu-system agent  //客端qemu系统代理
+
+qemu-kvm/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU Full virtualization on x86 hardware  //QEMU x86硬件上的完全虚拟化
+
+qemu-skiboot/oldoldstable,oldoldstable 6.2-1 all
+  OpenPower firmware component  //OpenPower固件组件
+
+qemu-slof/oldoldstable,oldoldstable 20180702+dfsg-1 all
+  Slimline Open Firmware -- QEMU PowerPC version  //Slimline开放固件——QEMU PowerPC版本
+
+qemu-system/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries  //QEMU全系统仿真二进制文件
+
+qemu-system-arm/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (arm)   //QEMU全系统仿真二进制文件（arm）
+
+qemu-system-common/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (common files)  //QEMU全系统仿真二进制文件（通用文件）
+
+qemu-system-data/oldoldstable,oldoldstable 1:3.1+dfsg-8+deb10u8 all
+  QEMU full system emulation (data files)  //QEMU全系统仿真（数据文件）
+
+qemu-system-gui/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (user interface and audio support)  //QEMU全系统仿真二进制文件（用户界面和音频支持）
+
+qemu-system-mips/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64 
+  QEMU full system emulation binaries (mips)  //QEMU全系统仿真二进制文件（mips）
+
+qemu-system-misc/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (miscellaneous)  //QEMU全系统仿真二进制文件（杂项）
+
+qemu-system-ppc/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (ppc)  //QEMU全系统仿真二进制文件（ppc）
+
+qemu-system-sparc/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (sparc)  //QEMU全系统仿真二进制文件（sparc）
+
+qemu-system-x86/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU full system emulation binaries (x86)  //QEMU全系统仿真二进制文件（x86）
+
+qemu-user/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU user mode emulation binaries   //QEMU用户模式模拟二进制文件
+
+qemu-user-binfmt/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU user mode binfmt registration for qemu-user  //QEMU用户的QEMU用户模式binfmt注册
+
+qemu-user-static/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU user mode emulation binaries (static version)  //QEMU用户模式模拟二进制文件（静态版本）
+
+qemu-utils/oldoldstable 1:3.1+dfsg-8+deb10u8 amd64
+  QEMU utilities   //QEMU 实用程序
+
+qemubuilder/oldoldstable 0.88 amd64
+  pbuilder using QEMU as backend   //使用QEMU作为后端的pbuilder
+
+qemuctl/oldoldstable 0.3.1-4+b1 amd64
+  controlling GUI for qemu  //qemu的控制GUI

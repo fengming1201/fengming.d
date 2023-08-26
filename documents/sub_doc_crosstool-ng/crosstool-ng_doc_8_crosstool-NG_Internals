@@ -1,0 +1,259 @@
+交叉工具-NG 内部结构
+在内部，crosstool-NG是基于脚本的。为了便于使用，前端是 基于生成文件。
+
+生成文件前端
+crosstool-NG的入口点是Makefile脚本。叫 这个带有操作的脚本将完全像生成文件一样运行 当前工作目录和 make 被调用，操作为 统治。因此：ct-ng
+
+ct-ng menuconfig
+等效于将生成文件放在 中并调用：CWD
+
+make menuconfig
+拥有 ct-ng 可以避免到处复制 Makefile，并采取行动 作为传统命令。
+
+ct-ng 从库目录加载子生成文件， 在配置时使用 进行设置。$(CT_LIB_DIR)./configure
+
+CT-NG 还搜索配置文件、子工具、示例、脚本和 该库目录中的修补程序。
+
+由于我无法追踪的愚蠢行为/错误， 隐式生成规则已禁用：使用 WILL 安装 触发这些规则，MCONF 是不可构建的。--local
+
+Kconfig parser
+kconfig语言是一个被黑客入侵的版本，从Linux吸血鬼 内核，并且（在很大程度上）适应了我的需求。
+
+最显着的变化列表（至少我记得的那些） 遵循：
+
+前缀已替换为CONFIG_CT_
+
+跳过前导提示，后续前导空格 未修剪;否则，前导空格将被静默修剪|
+
+删除了有关未定义的环境变量的警告
+
+kconfig 解析器（conf 和 mconf）不是预先构建的，而是作为 源文件。因此，您可以拥有crosstool-NG所在的目录 安装，导出（通过NFS或其他方式）并让客户端 不同的体系结构使用相同的跨工具-NG 安装，并且大多数 值得注意的是，同一组补丁。
+
+特定于体系结构
+注意
+
+这一章写得不是很好，因此可能有点 有点复杂，难以理解。为了更好地掌握什么是 架构是，恳请读者查看子目录，并查看现有架构，看看如何 事情已经摆好了。arch/
+
+体系结构由以下部分定义：
+人类可读的名称，小写字母，数字为 适当;允许下划线;空格和特殊字符是 不是，例如：
+
+arm
+x86_64
+中的文件，以体系结构的名称命名，以及 后缀为 ，例如：config/arch/.in
+
+config/arch/arm.in
+中的文件，以体系结构的 名称，并以 为后缀，例如：scripts/build/arch/.sh
+
+scripts/build/arch/arm.sh
+体系结构的文件 API.in
+注意
+
+在这里，以及下面，将替换为实际的 体系结构名称。%arch%
+
+选项ARCH_%arch%
+此配置选项既不能有类型，也不能有提示！也 它不能依赖于任何其他配置选项。
+
+EXPERIMENTAL像在内核选项中一样进行管理。
+
+必须为此体系结构定义一个（简短的）帮助条目，例如，
+
+config ARCH_arm
+  help
+    The ARM architecture.
+可以选择适当的相关配置选项，例如，
+
+config ARCH_arm
+  select ARCH_SUPPORTS_BOTH_ENDIAN
+  select ARCH_DEFAULT_LE
+  help
+    The ARM architecture.
+注意
+
+64 位体系结构应选择 。ARCH_64
+
+config ARCH_x86_64
+   select ARCH_64
+   help
+     The x86_64 architecture.
+其他特定于目标的选项
+由您自行决定。但请注意，为了避免名称冲突，例如 选项应以 为前缀。ARCH_%arch%
+
+注意
+
+由于历史原因，以及没有时间清理代码，我 可能留下了一些不完全符合的配置选项 这，因为架构名称写成全大写。然而 前缀在体系结构中是唯一的，不会造成伤害）。
+
+体系结构的文件 API.sh
+函数CT_DoArchTupleValues
+
+参数：无
+
+环境：
+
+文件中的所有变量，.config
+
+两个变量和哪些是字节序后缀target_endian_ebtarget_endian_el
+
+返回值：成功时，失败时0!0
+
+提供：
+
+环境变量（必填CT_TARGET_ARCH)
+
+包含：目标元组的体系结构部分， 例如 适用于大端 ARM，或 i386armebi386
+环境变量（可选）CT_TARGET_SYS
+
+包含：目标元组的系统部分，例如，对于大多数架构上的 glibc，或用于 ARM EABI 上的 glibcgnugnueabi
+
+默认为：
+
+gnu用于基于 glibc 的工具链
+
+uclibc适用于基于 uClibc 的工具链
+
+用于配置跨 GCC 的环境变量（默认值） （可选）
+
+GCC ./配置交换机	选择	违约
+CT_ARCH_WITH_ARCH	体系结构级别	--with-arch=${CT_ARCH_ARCH}
+CT_ARCH_WITH_ABI	ABI 级别	--with-abi=${CT_ARCH_ABI}
+CT_ARCH_WITH_CPU	中央处理器指令集	--with-cpu=${CT_ARCH_CPU}
+CT_ARCH_WITH_TUNE	调度	--with-tune=${CT_ARCH_TUNE}
+CT_ARCH_WITH_FPU	防暴组类型	--with-fpu=${CT_ARCH_FPU}
+CT_ARCH_WITH_FLOAT	浮点运算。	--with-float=soft或 [空]
+要传递给跨 GCC 进行构建的环境变量 目标二进制文件（默认值）（可选）
+
+GCC ./配置交换机	选择	违约
+CT_ARCH_ARCH_CFLAG	体系结构级别	-march=${CT_ARCH_ARCH}
+CT_ARCH_ABI_CFLAG	ABI 级别	-mabi=${CT_ARCH_ABI}
+CT_ARCH_CPU_CFLAG	中央处理器指令集	-mcpu=${CT_ARCH_CPU}
+CT_ARCH_TUNE_CFLAG	调度	-mtune=${CT_ARCH_TUNE}
+CT_ARCH_FPU_CFLAG	防暴组类型	-mfpu=${CT_ARCH_FPU}
+CT_ARCH_FLOAT_CFLAG	浮点运算。	-msoft-float或 [空]
+CT_ARCH_ENDIAN_CFLAG	大字节序或小端序	-mbig-endian或-mlittle-endian
+用于配置核心和最终环境变量 特定于此体系结构的编译器（可选）：
+
+CT_ARCH_CC_CORE_EXTRA_CONFIG： 附加， 架构 特定核心标志gcc ./configure
+
+CT_ARCH_CC_EXTRA_CONFIG： 附加， 架构 特定的最终标志gcc ./configure
+
+默认值：全部为空
+
+特定于体系结构和（可选）：CFLAGSLDFLAGS
+
+CT_ARCH_TARGET_CLFAGS
+
+CT_ARCH_TARGET_LDFLAGS
+
+默认值：全部为空
+
+您可以查看并查看实际体系结构描述的相当完整的示例 看来。config/arch/arm.inscripts/build/arch/arm.sh
+
+内核特定
+内核由下式定义：
+人类可读的名称，小写字母，数字为 适当;允许下划线，空格和特殊字符为 不是（尽管它们在内部替换为下划线）;例如：
+
+linux
+bare-metal
+中的文件，以内核名称命名，以及 后缀为 ，例如：config/kernel/.in
+
+config/kernel/linux.in
+config/kernel/bare-metal.in
+中的文件，以内核名称命名，以及 后缀为 ，例如：scripts/build/kernel/.sh
+
+scripts/build/kernel/linux.sh
+scripts/build/kernel/bare-metal.sh
+内核的文件必须包含：.in
+一个可选行，包含确切的 ，从 开始于 第一列，没有任何后续空格或其他 字符。# EXPERIMENTAL
+
+如果存在此行，则考虑此内核，并且正确的依赖项将是 设置。EXPERIMENTALEXPERIMENTAL
+
+配置选项（其中 替换为实际的内核名称，所有特殊 字符和空格替换为下划线），例如：KERNEL_%kernel_name%%kernel_name%
+
+KERNEL_linux
+KERNEL_bare_metal
+此配置选项既不能有类型，也不能有提示！ 此外，它不能依赖于.EXPERIMENTAL
+
+必须为此内核定义一个（简短的）帮助条目，例如：
+
+config KERNEL_bare_metal
+  help
+    Build a compiler for use without any kernel.
+可以选择足够的相关配置选项，例如：
+
+config KERNEL_bare_metal
+  select BARE_METAL
+  help
+    Build a compiler for use without any kernel.
+其他内核特定选项，由您自行决定。但请注意 为了避免名称冲突，此类选项应以 ，其中再次为 替换为实际的内核名称。KERNEL_%kernel_name%%kernel_name%
+
+注意
+
+由于历史原因，以及没有时间清理代码，Yann 可能留下了一些不完全符合的配置选项 这，因为内核名称全部写成大写。然而， 前缀在内核中是唯一的，不会造成伤害）。
+
+内核的文件 API：.sh
+是一个 bash 脚本片段
+
+定义函数CT_DoKernelTupleValues
+
+请参阅体系结构的 ，但以下各项除外： [修复我？CT_DoArchTupleValues
+
+设置环境变量，内核部分 目标元组CT_TARGET_KERNEL
+
+返回值：忽略
+
+定义函数：do_kernel_get
+
+参数：无
+
+环境：
+
+文件中的所有变量。.config
+返回值：表示成功，表示失败。0!0
+
+行为：下载内核的源代码，并存储压缩包 到。为此，可以使用一个功能 抽象下载压缩包：${CT_TARBALLS_DIR}
+
+CT_DoGet <tarball_base_name> <URL1 [URL...]>，例如：
+
+CT_DoGet linux-2.6.26.5 ftp://ftp.kernel.org/pub/linux/kernel/v2.6
+注意
+
+从SVN，CVS，git等检索源代码不是 由 支持。你必须手动完成， 就像在 中为 eglibc 所做的那样。CT_DoGetscripts/build/libc/eglibc.sh
+
+定义函数：do_kernel_extract
+
+参数：无
+
+环境：
+
+文件中的所有变量，.config
+返回值：表示成功，表示失败。0!0
+
+行为：将内核的压缩包解压缩到 ，以及 应用所需的修补程序。为此，可以使用一个功能 抽象提取压缩包：${CT_SRC_DIR}
+
+CT_ExtractAndPatch <tarball_base_name>，例如：
+
+CT_ExtractAndPatch linux-2.6.26.5
+定义函数：do_kernel_headers
+
+参数：无
+
+环境：
+
+文件中的所有变量，.config
+返回值：表示成功，表示失败。0!0
+
+行为：在 中安装内核标头（如果有）${CT_SYSROOT_DIR}/usr/include
+
+定义任何特定于内核的帮助程序函数
+
+这些函数（如果有）必须以 为前缀，其中将替换为 实际的内核名称，以避免任何名称冲突。do_kernel_%CT_KERNEL%_%CT_KERNEL%
+
+你可以看看和作为一个复杂内核的例子 描述看起来像。config/kernel/linux.inscripts/build/kernel/linux.sh
+
+添加组件的新版本
+当一个新组件，如 Linux 内核、gcc 或任何其他组件 发布，将新版本添加到 crosstool-NG 非常容易。有 一个脚本，可以为您完成所有这些工作：
+
+maintainer/manager-packages.sh
+运行它以获得一些帮助。--help
+
+构建脚本
+[待以后再写...]

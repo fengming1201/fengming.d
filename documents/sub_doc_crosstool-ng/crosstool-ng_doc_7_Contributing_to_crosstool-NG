@@ -1,0 +1,28 @@
+为交叉工具NG做出贡献
+发送错误报告
+请在Github上提交错误报告。
+
+Crosstool-NG在 crossgcc@sourceware.org 也有一个邮件列表。 存档和订阅信息可在此处找到：https://sourceware.org/ml/crossgcc/
+
+有时您可以通过 #crosstool-ng 联系 IRC 上的维护者 Libera.Chat （irc.libera.chat） 上的频道。
+
+使用邮件列表或 IRC 对问题进行分类是可以的。如果它看起来像一个错误， 系统会要求您在 Github 上提交问题。如果看起来像飞行员错误， 您可能会更快地通过邮件列表或IRC获得建议。
+
+发送补丁
+提交补丁的首选方法是通过 Github 的拉取 请求。当前挂起的拉取请求的状态可以是 检查这里。
+
+邮件列表中也欢迎补丁。
+
+修补程序应附带相应的签名者行（SOB 行）。SOB 线是 通常像这样：
+
+Signed-off-by: John DOE <john.doe@somewhere.net>
+为什么需要这一行在 Linux 内核关于补丁提交的文档中有很好的描述。
+
+如果适用，您还可以添加以下任何行：
+
+Acked-by:
+Tested-by:
+Reviewed-by:
+如果通过邮件列表提交补丁，也请关注其他 Linux 内核指南中描述的准则。
+
+我们以前使用拼凑进行开发，但现在不再使用。我想要 以查看仍然适用的补丁在 GitHub 上转换为拉取请求。以下是待处理补丁的列表。

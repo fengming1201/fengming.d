@@ -1,0 +1,84 @@
+配置
+管理员可以使用多个入口点来管理其服务器的配置。本节旨在概述所有这些配置方法，解释哪些选项可用，以及每个选项的作用。
+
+注意
+此处的配置选项不同于 Web 客户端中管理员仪表板提供的运行时设置。此处的配置选项通常是静态的，并在启动服务器之前设置。
+
+命令行选项
+可以通过在运行 Jellyfin 可执行文件时添加标志来获取可用命令行选项的文档。--help
+
+服务器路径
+服务器使用的文件路径根据下面概述的规则确定。通常，对于非 Windows 系统，默认情况下遵循 XDG 规范。
+
+数据目录
+这是保存所有Jellyfin数据的目录，也用作下面其他一些路径的默认基本目录。它是从以下源按优先级递减顺序设置的。
+命令行选项 ，如果指定--datadir
+环境变量，如果指定JELLYFIN_DATA_DIR
+<%APPDATA%>/jellyfin，如果在 Windows 上运行
+$XDG_DATA_HOME/jellyfin，如果存在$XDG_DATA_HOME
+$HOME/.local/share/jellyfin
+
+配置目录
+这是包含服务器配置文件的目录。它是从以下源按优先级递减顺序设置的。
+命令行选项 ，如果指定--configdir
+环境变量，如果指定JELLYFIN_CONFIG_DIR
+<Data Directory>/config，如果存在或在 Windows 上运行
+$XDG_CONFIG_HOME/jellyfin如果存在$XDG_CONFIG_HOME
+$HOME/.config/jellyfin
+
+缓存目录
+这是包含服务器缓存的目录。它是从以下源按优先级递减顺序设置的。
+命令行选项 ，如果指定--cachedir
+环境变量，如果指定$JELLYFIN_CACHE_DIR
+<Data Directory>/cache，如果窗口
+$XDG_CACHE_HOME/jellyfin如果存在$XDG_CACHE_HOME
+$HOME/.cache/jellyfin
+
+网络目录
+这是包含来自 Web 客户端版本的构建文件的目录。它是从以下源按优先级递减顺序设置的。
+命令行选项 ，如果指定--webdir
+环境变量，如果指定$JELLYFIN_WEB_DIR
+<Binary Directory>/jellyfin-web，其中包含 Jellyfin 可执行文件的目录<Binary Directory>
+注意
+仅当服务器配置为托管 Web 客户端时，才使用此设置。有关更多详细信息，请参阅下面“主配置选项”部分中的选项。hostwebclient
+
+日志目录
+这是将存储Jellyfin日志的目录。它是从以下源按优先级递减顺序设置的。
+命令行选项 ，如果指定--logdir
+环境变量，如果指定$JELLYFIN_LOG_DIR
+<Data Directory>/log
+
+主要配置
+主服务器配置基于 ASP .NET 配置框架构建，该框架提供了加载配置的分层方法。
+用于查找配置文件的基目录是使用配置目录设置的。配置源如下所示，更高版本的源具有更高的优先级并覆盖早期源中的值。
+
+1，硬编码默认值：这些默认值在 Jellyfin 源代码中指定，无法更改。
+
+2，默认日志记录配置文件 （）： 用户不应手动修改此文件。它由服务器保留，以便在每个新版本上被新设置覆盖。logging.default.json
+
+3，系统特定的日志记录配置文件 （）：如果要进行自定义日志记录设置，则应更改此文件。
+Jellyfin 使用 Serilog 日志记录框架，您可以在其文档中阅读可用的配置选项。logging.json
+
+注意
+此文件可以在运行时更改，这将自动重新加载配置并立即应用更改。
+
+4，环境变量：Microsoft提供的文档介绍了如何通过环境变量设置这些配置选项。Jellyfin 对这些变量使用自己的自定义前缀。
+例如，若要为设置设置值，应为环境变量设置值。JELLYFIN_HttpListenerHost:DefaultRedirectPathJELLYFIN_HttpListenerHost__DefaultRedirectPath
+
+5，命令行选项：某些命令行选项加载到配置系统中，并具有最高优先级。以下命令行选项映射到关联的配置选项。
+
+--nowebclient将配置设置设置为 falsehostwebclient
+--plugin-manifest-url设置配置设置的值InstallationManager:PluginManifestUrl
+
+
+主要配置选项
+本节列出了所有可用的配置选项并解释了它们的功能。
+
+钥匙	                默认值	            描述
+hostwebclient	        True	            设置为服务器是否应托管 Web 客户端。True
+HttpListenerHost:DefaultRedirectPath	"web/index.html"如果为真; 如果为假hostwebclient"swagger/index.html"hostwebclient	用于 URL 基前缀无效或缺失的请求的默认重定向路径
+InstallationManager:PluginManifestUrl	"https://repo.jellyfin.org/releases/plugin/manifest.json"	The URL for the plugin repository JSON manifest.
+FFmpeg:probesize	"1G"	Value to set for the FFmpeg format option. See the FFmpg documentation for more details.probesize
+FFmpeg:analyzeduration	"200M"	The value to set for the FFmpeg format option. See the FFmpg documentation for more details.analyzeduration
+playlists:allowDuplicates	True	Whether playlists should allow duplicate items or automatically filter out duplicates.
+PublishedServerUrl	Server Url based on primary IP address

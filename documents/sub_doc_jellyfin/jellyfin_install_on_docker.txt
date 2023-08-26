@@ -16,6 +16,15 @@ docker run -d \
     -v /opt/jellyfin/media:/media \
     jellyfin/jellyfin
 
+docker run -d \
+ --name jellyfin \
+ --user uid:gid \
+ --net=host \
+ --volume /path/to/config:/config \ # Alternatively --volume jellyfin-config:/config
+ --volume /path/to/cache:/cache \ # Alternatively --volume jellyfin-cache:/cache
+ --mount type=bind,source=/path/to/media,target=/media \
+ --restart=unless-stopped \
+ jellyfin/jellyfin
 
 在以上命令中，我们使用了以下参数：
     -d：指定容器以守护进程模式运行。

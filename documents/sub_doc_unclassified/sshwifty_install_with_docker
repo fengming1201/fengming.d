@@ -1,29 +1,32 @@
+简介：
+Sshwifty是一款专为Web设计的SSH和Telnet连接器。它可以部署在您的计算机或服务器上，为任何兼容（标准）的Web浏览器提供SSH和Telnet访问界面。
+
+Sshwifty 是为 Web 设计的 SSH 和 Telnet 连接器。它可以部署在您的计算机或服务器上，为任何兼容的（标准）Web 浏览器提供 SSH 和 Telnet 访问接口。
+
+sshwifty是一款Web SSH & Telnet（WebSSH & WebTelnet 客户端工具。
+
+
 github:
 https://github.com/nirui/sshwifty
 
-1.sshwifty简介
-    sshwifty是一款Web SSH & Telnet（WebSSH & WebTelnet 客户端工具。
 
-2.shwifty 特点
-    shwifty 是为 Web 设计的 SSH 和 Telnet 连接器。它可以部署在您的计算机或服务器上，
-    为任何兼容（标准）的网络浏览器提供 SSH 和 Telnet 访问接口。
-
-3.下载sshwifty镜像
+docker部署：
+1.下载sshwifty镜像
 docker pull  niruix/sshwifty:latest
 
 
-4.创建部署目录
+2.创建部署目录
 mkdir -p  /opt/sshwifty
 cd /opt/sshwifty
 
-5.服务器生成凭证文件
+3.服务器生成凭证文件
 openssl req -newkey rsa:4096 -nodes -keyout domain.key -x509 -days 90 -out domain.crt
 
 opt/sshwifty/
 ├── domain.crt
 └── domain.key
 
-6.创建sshwifty容器
+4.创建sshwifty容器
 docker run --detach \
   --restart always \
   --publish 8182:8182 \
@@ -33,7 +36,9 @@ docker run --detach \
   niruix/sshwifty:latest
 
 
-7.
+5.
 https://IP:8182
 
 
+实测情况：
+亲测OK

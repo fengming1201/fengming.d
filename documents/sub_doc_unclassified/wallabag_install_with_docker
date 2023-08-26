@@ -1,0 +1,206 @@
+
+简介：
+Wallabag 是一款开源的网络书签、稍后阅读工具，自带 1460 个网站匹配规则，可通过浏览器、手机、Kindle 等方式进行内容收藏，
+支持自动标签规则让分类更简单，最有意思的是，Wallabag 支持生成 RSS，让你在 RSS 阅读器中阅读自己保存的文章。
+
+
+Wallabag是一个用于保存网页的自托管应用程序。与其他服务不同，wallabag是免费的（如自由）和开源的。
+使用此应用程序，您将不会再错过内容。点击，保存，在需要时阅读。它保存您选择的内容，以便您可以在有时间时阅读它。
+
+github:
+https://github.com/wallabag/wallabag
+https://hub.docker.com/r/wallabag/wallabag/
+
+docker部署：
+
+环境变量
+-e MYSQL_ROOT_PASSWORD=...（MariaDB 容器初始化和 Wallabag 容器中的入口点创建数据库和用户（如果不存在）需要）
+-e POSTGRES_PASSWORD=...（Postgres 容器初始化和 wallabag 容器中的入口点创建数据库和用户（如果不存在）需要）
+-e POSTGRES_USER=...（Poggres 容器初始化和 Wallabag 容器中的入口点创建数据库和用户（如果不存在）需要）
+-e SYMFONY__ENV__DATABASE_DRIVER=...（默认为“pdo_sqlite”，这将设置要使用的数据库驱动程序）
+-e SYMFONY__ENV__DATABASE_HOST=...（默认为“127.0.0.1”，如果使用 mysql，这应该是 mariaDB 容器的名称）
+-e SYMFONY__ENV__DATABASE_PORT=...（数据库主机的端口）
+-e SYMFONY__ENV__DATABASE_NAME=...（默认为“symfony”，这是要使用的数据库名称）
+-e SYMFONY__ENV__DATABASE_USER=...（默认为“root”，这是要使用的数据库用户的名称）
+-e SYMFONY__ENV__DATABASE_PASSWORD=...（默认为“~”，这是数据库用户使用的密码）
+-e SYMFONY__ENV__DATABASE_CHARSET=...（默认为 UTF8，这是要使用的数据库字符集）
+-e SYMFONY__ENV__DATABASE_TABLE_PREFIX=...（默认为“wallabag_”。指定每个数据库表的前缀）
+-e SYMFONY__ENV__SECRET=...（默认为 “ovmpmAWXRCabNlMgzlzFXDYmCFfzGv”）
+-e SYMFONY__ENV__LOCALE=...（默认为 en）
+-e SYMFONY__ENV__MAILER_DSN=...（默认为“smtp://127.0.0.1”）
+-e SYMFONY__ENV__FROM_EMAIL=...（默认为“”，Wallabag用于传出电子邮件的地址）wallabag@example.com
+-e SYMFONY__ENV__TWOFACTOR_AUTH=...（默认为“true”，启用或禁用双因素身份验证）
+-e SYMFONY__ENV__TWOFACTOR_SENDER=...（默认为“”，Wallabag用于双因素电子邮件的地址）no-reply@wallabag.org
+-e SYMFONY__ENV__FOSUSER_REGISTRATION=...（默认为“true”，启用或禁用公共用户注册）
+-e SYMFONY__ENV__FOSUSER_CONFIRMATION=...（默认为“true”，启用或禁用注册确认）
+-e SYMFONY__ENV__DOMAIN_NAME=...默认为 “”，即您的袋鼠实例的 URL）https://your-wallabag-instance.wallabag.org
+-e SYMFONY__ENV__REDIS_SCHEME=...（默认为“TCP”，用于与目标服务器（TCP、UNIX 或 HTTP）通信的协议）
+-e SYMFONY__ENV__REDIS_HOST=...（默认为“redis”，目标服务器的 IP 或主机名）
+-e SYMFONY__ENV__REDIS_PORT=...（默认为“6379”，目标主机的端口）
+-e SYMFONY__ENV__REDIS_PATH=...（默认为“~”，Unix 套接字文件的路径）
+-e SYMFONY__ENV__REDIS_PASSWORD=...（默认为“~”，这是 Redis 服务器配置中定义的密码）
+-e SYMFONY__ENV__SENTRY_DSN=...（默认为“~”，这是哨兵的数据源名称）
+-e POPULATE_DATABASE=...（默认为“真”。数据库是必须填充还是现有数据库）
+-e SYMFONY__ENV__SERVER_NAME=...（默认为“您的袋子实例”。为 2FA 颁发者指定用户友好名称）
+
+step 1:过去镜像
+docker pull wallabag/wallabag
+
+
+step 2:
+
+存储数据库的选择：
+（1）SQLite
+启动wallabag的最简单方法是使用SQLite后端。你可以用
+$ docker run -p 8080:80 -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" wallabag/wallabag
+，然后将浏览器指向 。对于持久存储，应使用卷启动容器：http://localhost
+$ docker run \
+    -v /opt/wallabag/data:/var/www/wallabag/data \
+    -v /opt/wallabag/images:/var/www/wallabag/web/assets/images \
+    -p 8080:80 \
+    -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" \
+    wallabag/wallabag
+
+
+（2）MariaDB / MySQL
+要使用MariaDB或MySQL，您必须使用容器定义一些环境变量。例：
+$ docker run --name wallabag-db -e "MYSQL_ROOT_PASSWORD=my-secret-pw" -d mariadb
+$ docker run --name wallabag \
+    --link wallabag-db:wallabag-db \
+    -e "MYSQL_ROOT_PASSWORD=my-secret-pw" \
+    -e "SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql" \
+    -e "SYMFONY__ENV__DATABASE_HOST=wallabag-db" \
+    -e "SYMFONY__ENV__DATABASE_PORT=3306" \
+    -e "SYMFONY__ENV__DATABASE_NAME=wallabag" \
+    -e "SYMFONY__ENV__DATABASE_USER=wallabag" \
+    -e "SYMFONY__ENV__DATABASE_PASSWORD=wallapass" \
+    -e "SYMFONY__ENV__DATABASE_CHARSET=utf8mb4" \
+    -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" \
+    -p 8080:80 wallabag/wallabag
+
+
+（3）PostgreSQL
+要使用PostgreSQL，您必须使用容器定义一些环境变量。例：
+$ docker run --name wallabag-db \
+    -e "POSTGRES_PASSWORD=my-secret-pw" \
+    -e "POSTGRES_USER=my-super-user" -d postgres:9.6
+$ docker run --name wallabag -d \
+    --link wallabag-db:wallabag-db \
+    -e "POSTGRES_PASSWORD=my-secret-pw" \
+    -e "POSTGRES_USER=my-super-user" \
+    -e "SYMFONY__ENV__DATABASE_DRIVER=pdo_pgsql" \
+    -e "SYMFONY__ENV__DATABASE_HOST=wallabag-db" \
+    -e "SYMFONY__ENV__DATABASE_PORT=5432" \
+    -e "SYMFONY__ENV__DATABASE_NAME=wallabag" \
+    -e "SYMFONY__ENV__DATABASE_USER=wallabag" \
+    -e "SYMFONY__ENV__DATABASE_PASSWORD=wallapass" \
+    -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" \
+    -p 8080:80 wallabag/wallabag
+
+（4）Redis
+要将 redis 与 Docker 链接一起使用，需要一个具有名称的 redis 容器，并且不需要任何环境变量：redisREDIS
+$ docker run -p 6379:6379 --name redis redis:alpine
+$ docker run -p 8080:80 -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" --link redis:redis wallabag/wallabag
+要将 redis 与外部 redis 主机一起使用，请设置适当的环境变量。例：
+$ docker run -p 8080:80 \
+    -e "SYMFONY__ENV__REDIS_HOST=my.server.hostname" \
+    -e "SYMFONY__ENV__REDIS_PASSWORD=my-secret-pw" \
+    -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" wallabag/wallabag
+
+
+升级
+如果有需要数据库迁移的版本升级。最简单的方法是运行以下命令：migrate
+$ docker run --link wallabag-db:wallabag-db -e <... your config variables here ...>  wallabag/wallabag migrate
+
+或者，您可以使用新映像启动容器并手动运行迁移命令：
+$ docker exec -t NAME_OR_ID_OF_YOUR_WALLABAG_CONTAINER /var/www/wallabag/bin/console doctrine:migrations:migrate --env=prod --no-interaction
+
+采用docker-compose.yml方式安装：
+下面可以看到一个示例 docker-compose 文件：
+version: '3'
+services:
+  wallabag:
+    image: wallabag/wallabag
+    environment:
+      - MYSQL_ROOT_PASSWORD=wallaroot
+      - SYMFONY__ENV__DATABASE_DRIVER=pdo_mysql
+      - SYMFONY__ENV__DATABASE_HOST=db
+      - SYMFONY__ENV__DATABASE_PORT=3306
+      - SYMFONY__ENV__DATABASE_NAME=wallabag
+      - SYMFONY__ENV__DATABASE_USER=wallabag
+      - SYMFONY__ENV__DATABASE_PASSWORD=wallapass
+      - SYMFONY__ENV__DATABASE_CHARSET=utf8mb4
+      - SYMFONY__ENV__DATABASE_TABLE_PREFIX="wallabag_"
+      - SYMFONY__ENV__MAILER_DSN=smtp://127.0.0.1
+      - SYMFONY__ENV__FROM_EMAIL=wallabag@example.com
+      - SYMFONY__ENV__DOMAIN_NAME=https://your-wallabag-instance.wallabag.org
+      - SYMFONY__ENV__SERVER_NAME="Your wallabag instance"
+    ports:
+      - "8080"
+    volumes:
+      - /opt/wallabag/images:/var/www/wallabag/web/assets/images
+    healthcheck:
+      test: ["CMD", "wget" ,"--no-verbose", "--tries=1", "--spider", "http://localhost"]
+      interval: 1m
+      timeout: 3s
+    depends_on:
+      - db
+      - redis
+  db:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=wallaroot
+    volumes:
+      - /opt/wallabag/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 20s
+      timeout: 3s
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 20s
+      timeout: 3s
+请注意，您必须根据邮件配置填写与邮件相关的变量。
+
+
+最后：
+默认登录名为 wallabag:wallabag
+
+
+
+
+
+
+遇到问题1：采用（1）中SQLite方式安装出现如下问题。
+docker run \
+    --name wallabag \
+    -v /opt/wallabag/data:/var/www/wallabag/data \
+    -v /opt/wallabag/images:/var/www/wallabag/web/assets/images \
+    -p 8080:80 \
+    -e "SYMFONY__ENV__DOMAIN_NAME=http://localhost" \
+    wallabag/wallabag
+Starting wallabag ...
+wc: /var/www/wallabag/data/db/wallabag.sqlite: No such file or directory
+Configuring the SQLite database ...
+
+In ExceptionConverter.php line 76:
+                                                                               
+  An exception occurred in the driver: SQLSTATE[HY000] [14] unable to open database file                                                                  
+                                                                               
+
+In Exception.php line 28:
+                                                     
+  SQLSTATE[HY000] [14] unable to open database file  
+                                                     
+
+In Driver.php line 44:
+                                                     
+  SQLSTATE[HY000] [14] unable to open database file 
+
+解决方法：
+
+
+
+

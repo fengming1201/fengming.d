@@ -1,15 +1,6 @@
-Docker Compose是一个用来定义和运行复杂应用的Docker工具
+Docker Compose是用于定义和运行多容器 Docker 应用程序的工具。通过 Compose，您可以使用 YML 文件来配置应用程序需要的所有服务。
+然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。
 
-一个使用Docker容器的应用，通常由多个容器组成。使用Docker Compose不再需要使用shell脚本来启动容器
-
-Compose 通过一个配置文件来管理多个Docker容器，在配置文件中，所有的容器通过services来定义，
-然后使用docker-compose脚本来启动，停止和重启应用，和应用中的服务以及所有依赖服务的容器，
-非常适合组合使用多个容器进行开发的场景。
-
-Compose 使用的三个步骤：
-　　使用 Dockerfile 定义应用程序的环境
-　　使用 docker-compose.yml 定义构成应用程序的服务，这样它们可以在隔离环境中一起运行
-　　最后，执行 docker-compose up 命令来启动并运行整个应用程序
 
 为什么需要docker-compose
 Docker帮助我们解决服务的打包安装的问题，随着而来的问题就是服务过多的带来如下问题：

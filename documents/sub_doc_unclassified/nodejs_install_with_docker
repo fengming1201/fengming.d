@@ -1,6 +1,10 @@
 Docker 安装 Node.js
+
+简介：
 Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行环境，是一个让 JavaScript 运行在服务端的开发平台。 
 
+
+docker部署：
 step1:
 docker pull node:latest
 

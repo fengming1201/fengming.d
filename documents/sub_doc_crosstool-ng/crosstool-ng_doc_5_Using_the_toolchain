@@ -1,0 +1,157 @@
+使用工具链
+使用工具链就像在 您的 ，例如：PATH
+
+export PATH="${PATH}:/your/toolchain/path/bin"
+根据正在编译的项目，可能会有不同的方法 以指定工具链。
+
+如果软件使用 GNU 自动工具或类似的配置脚本，您应该 使用元组告诉构建系统使用工具链 （如果软件包使用自动工具系统，您还应该 通过，为完整起见）：--host--build
+
+./configure --host=your-host-tuple --build=your-build-tuple
+其他系统可能需要，例如：
+
+make CC=your-host-tuple-gcc
+make CROSS_COMPILE=your-host-tuple-
+make CHOST=your-host-tuple
+等等。请阅读正在编译的软件包的文档 至于如何交叉编译。
+
+注意
+
+在上面的例子中，指的是程序的主机（即 工具链的目标），而不是工具链的主机;并指您构建程序的计算机， 是工具链的主机。hostbuild
+
+组装根文件系统
+为目标设备组装根文件系统需要连续 为目标架构构建一组软件包。 构建包可能需要生成为 早期版本的一部分。请注意，并非所有安装为 在目标的根文件系统上需要包的一部分（例如， 人/信息文件，包括文件等）。 因此，我们必须区分目录和目录。stagingrootfs
+
+目录是我们安装所有构建的位置 工件。然后，我们可以将未来的构建指向此位置，以便他们可以 查找相应的头文件和库文件。目录是一个 我们仅将目标上想要的文件放置到的位置。stagingrootfs
+
+这里有四种思想流派：
+
+选项 1：直接安装到工具链的系统根中。
+
+默认情况下（即，如果您不向工具传递任何参数 会改变这种行为）构建的工具链由 crosstool-NG 只会在其工具链目录中查找系统 头文件和库文件：
+
+#include "..." search starts here:
+#include <...> search starts here:
+<ct-ng install path>/lib/gcc/<host tuple>/4.5.2/include
+<ct-ng install path>/lib/gcc/<host tuple>/4.5.2/include-fixed
+<ct-ng install path>/lib/gcc/<host tuple>/4.5.2/../../../../<host tuple>/include
+<ct-ng install path>/<host tuple>/sysroot/usr/include
+换句话说，编译器将自动查找标头和 没有额外标志的库（如果它们安装在 工具链的系统根目录。
+
+但是，这很糟糕，因为工具链被污染了，并且不能 可重复使用。
+
+$ ./configure --build=<build tuple> --host=<host tuple> \
+      --prefix=/usr --enable-foo-bar...
+$ make
+$ make DESTDIR=/<ct-ng install path>/<host tuple>/sysroot install
+选项 2：将工具链的系统根复制到该区域。staging
+
+如果首先将工具链的系统根目录复制到 您的暂存区，您可以简单地继续安装所有您的 将项目打包到同一暂存区域。然后，您只需要 为任何编译器指定一个选项 后续构建以及所有必需的头文件和库文件 将被找到/使用。--sysroot=<staging area>
+
+这是一个可行的选项，但要求用户始终指定才能包含 ，或者要求 使用包装器到一些选择的工具（GCC，LD...）来传递这个 旗。CFLAGS--sysroot=<staging area>
+
+而不是污染工具链的系统根，而是复制它的 内容到新位置并污染该新位置中的内容 位置。通过指定选项，您可以有效地 放弃默认的 sysroot，转而使用您自己的系统根。--sysroot
+
+顺便说一下，这就是buildroot在使用包装器时所做的 外部工具链。
+
+$ cp -a $(<host tuple>-gcc --your-cflags-except-sysroot -print-sysroot) \
+      /path/to/staging
+$ ./configure --build=<build tuple> --host=<host tuple>          \
+              --prefix=/usr --enable-foo-bar...                  \
+              CC="<host tuple>-gcc --sysroot=/path/to/staging"    \
+              CXX="<host tuple>-g++ --sysroot=/path/to/staging"  \
+              LD="<host tuple>-ld --sysroot=/path/to/staging"    \
+              AND_SO_ON="tuple-andsoon --sysroot=/path/to/staging"
+$ make
+$ make DESTDIR=/path/to/staging install
+选项 3：使用单独的暂存目录和系统根目录。
+
+在此方案中，您使用暂存区域安装程序，但您这样做 不要用工具链的 sysroot 预填充该暂存区域。在这种情况下 编译器将在其系统根目录中找到系统包含和库 区域，但你必须通过适当的并告诉它 从暂存区域查找标头和库的位置（或使用 包装器）。CPPFLAGSLDFLAGS
+
+$ ./configure --build=<build tuple> --host=<host tuple>          \
+              --prefix=/usr --enable-foo-bar...                  \
+              CPPFLAGS="-I/path/to/staging/usr/include"          \
+              LDFLAGS="-L/path/to/staging/lib -L/path/to/staging/usr/lib"
+$ make
+$ make DESTDIR=/path/to/staging install
+选项 4：混合选项 2 和 3，使用精心制作的接头安装座。
+
+暂存区域是以下项的联合安装：
+
+作为只读分支的系统根
+
+作为读写分支的真实暂存区域
+
+这也需要传递以指向联合 挂载，但具有其他优点，例如允许每个包 分期，以及一些更晦涩的优点。它也有它的 缺点，因为它可能需要非 root 用户 创建联合装载。此外，联合安装座尚未 主流在Linux内核中，所以需要打补丁。那里 是基于 FUSE 的 unionfs 实现，但开发是 几乎停滞不前，有几个陷阱。--sysroot
+
+$ (good luck!)
+强烈建议不要将工具链系统根目录用作 为您的程序/软件包安装目录（即选项 1）。如果你这样做 因此，您将无法将工具链用于其他项目。它 甚至强烈建议您的工具链被 chmod 设置为只读 成功安装后，这样您就不会污染您的工具链 与您的程序/包文件。这可以通过选择 来自crosstool-NG的“路径和杂项”中的“将工具链渲染为只读” 选项“配置页。
+
+因此，当您构建程序/包时，请将其安装在单独的， 暂存，目录并让跨工具链继续使用自己的， 原始的，系统根目录。
+
+当你完成构建并想要组装你的根时，你可以 只需获取暂存目录的全部内容，然后使用脚本从 sysroot 添加必要的文件即可。 但是，您创建的暂存区域将包含大量构建 您不一定想要/需要的目标工件。为 示例：静态库、头文件、链接帮助程序文件、MAN/信息 .pages。您还需要添加各种配置文件、脚本和 目录到 rootfs 以便它启动。populate
+
+因此，您最终可能会创建一个单独的 rootfs 目录 您将从暂存区填充，必要的附加功能，以及 然后使用 crosstool-NG 的填充脚本添加必要的系统根 图书馆。
+
+脚本populate
+当你的根目录准备好时，它仍然缺少一些重要的 位：工具链的库。填充根目录 那些库，只需运行：
+
+your-target-tuple-populate -s /your/root -d /your/root-populated
+这将复制到 中，并将 需要，那里只有需要的库。因此您不会污染 /your/root 带有不再需要的任何面包屑，如果您有 删除内容。 总是只包含那些你的东西 安装在其中。/your/root/your/root-populated/your/root
+
+然后，您可以使用 来构建文件系统 图像、压缩包或从目标或 NFS 挂载它的任何内容 需要。/your/root-populated
+
+填充脚本接受以下选项：
+
+-s src_dir：用作未填充的根目录。src_dir
+
+-d dst_dir：将填充的根目录放在 中。dst_dir
+
+-l lib1 [...]：始终添加指定的库。
+
+-L file：始终添加 中列出的库。file
+
+-f：如果以前存在，则删除;即使即使继续 指定或缺少的任何库。dst_dir-l-L
+
+-v：啰嗦，并告诉发生了什么（你可以准确地看到 库来自哪里）。
+
+-h：打印帮助。
+
+有关选项的详细信息，请参阅。your-target-tuple-populate -h
+
+以下是填充的工作原理：
+
+执行一些健全性检查：
+src_dir并被指定，dst_dir
+src_dir存在
+除非被迫，否则不存在，dst_dir
+src_dir!= .dst_dir
+复制到 。src_dirdst_dir
+
+将强制库添加到：dst_dir
+从和选项构建列表，-l-L
+从系统根获取强制库（启发式方法见下文）
+在第一个缺少的库上中止，除非指定。-f
+将所有缺少的库添加到：dst_dir
+扫描每个可执行或共享对象的 ELF 文件dst_dir
+列出“需要共享库”字段
+检查库是否已在或dst_dir/libdst_dir/usr/lib
+如果没有，请从系统根获取库
+如果位于 中，请将其复制到sysroot/libdst_dir/lib
+如果位于 中，请将其复制到sysroot/usr/libdst_dir/usr/lib
+在这两种情况下，使用 的 库来创建 中的文件SONAMEdst_dir
+如果在系统根中找不到它，则这是一个错误。
+跨 ldd 脚本
+crosstool-NG提供了另一个脚本来与系统根一起工作 在主机上。动态链接的应用程序将加载某些共享 运行时的库。这些库反过来可能需要更多共享 库作为依赖项。每个动态的搜索路径 对象不同，并查找给定所需的共享库 应用并不总是微不足道的。Crosstool-NG试图解决这个问题 通过在生成的工具链中提供脚本来执行任务 （可选，如果选择了“安装类似 ldd 的助手”选项 在配置中）。${CT_TARGET}-ldd
+
+此脚本以递归方式解析所有动态库依赖项 并以与 GNU libc 的脚本。它需要指定系统根， 使用选项或环境变量。ldd--rootCT_XLDD_ROOT
+
+例如：
+
+PATH=~/x-tools/powerpc64-multilib-linux-gnu/bin:$PATH
+powerpc64-multilib-linux-gnu-gcc -o example example.c
+powerpc64-multilib-linux-gnu-ldd --root=`powerpc64-multilib-linux-gnu-gcc -print-sysroot` example
+生成如下输出：
+
+        libc.so.6 => /lib64/libc.so.6 (0x00000000deadbeef)
+        ld64.so.1 => /lib64/ld64.so.1 (0x00000000deadbeef)
+加载地址显然是假的，因为此脚本实际上不是 加载库。

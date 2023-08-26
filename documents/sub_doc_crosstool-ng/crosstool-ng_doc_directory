@@ -1,0 +1,30 @@
+Documentation
+1,Introduction
+2,Installing crosstool-NG
+3,Configuring crosstool-NG
+4,Building the Toolchain
+5,Using the toolchain
+6,Toolchain Types
+7,Contributing to crosstool-NG
+8,crosstool-NG Internals
+9,How a toolchain is constructed
+Credits
+10,Known issues
+Setting up host OS
+11,Notes on specific toolchain features
+
+====================================
+文档
+1,介绍
+2,安装交叉工具-NG
+3,配置交叉工具-NG
+4,构建工具链
+5,使用工具链
+6,工具链类型
+7,为交叉工具NG做出贡献
+8,交叉工具-NG 内部结构
+9,如何构建工具链
+学分
+10,已知问题
+设置主机操作系统
+11,有关特定工具链功能的说明

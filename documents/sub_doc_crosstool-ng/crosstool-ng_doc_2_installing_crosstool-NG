@@ -1,0 +1,101 @@
+安装交叉工具-NG
+在安装 crosstool-NG 之前，您可能需要在 主机操作系统。针对多个受支持的操作系统的具体说明，以及 
+此处提供了发行版。请注意，并非所有 脚本当前检测到依赖项;缺少一些 它们以后可能会导致失败。
+configurect-ng build
+
+有两种方法可以获取交叉工具NG源：
+    通过下载已发布的压缩包;
+    或通过克隆当前开发存储库。
+
+还有两种方法可以使用crosstool-NG：
+    构建并安装它，然后摆脱诸如 你会为大多数程序做;
+    或者仅构建它并从源目录运行。
+
+典型的工作流程假设使用已发布的压缩包并安装 crosstool-NG。 如果您打算在crosstool-NG上进行一些开
+发和/或提交补丁， 您可能需要存储库的克隆并从源目录运行。
+
+下载已发布的压缩包
+首先，下载压缩包：
+wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.bz2
+或
+
+wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.xz
+从 1.21.0 开始，版本使用 Bryan Hundven 的 PGP 密钥进行签名。这 指纹是：
+
+561E D9B6 2095 88ED 23C6 8329 CAD7 C8FC 35B8 71D1
+从 1.23.0 开始，版本使用 Alexey Neyman 的 PGP 密钥进行签名。这 指纹是：
+
+64AA FBF2 1475 8C63 4093 45F9 7848 649B 11D6 18A4
+从 1.25.0 开始，版本使用 Chris Packham 的 PGP 密钥进行签名。这 指纹是：
+
+721B 0FB1 CDC8 318A EBB8  88B8 09F6 DD5F 1F30 EF2E
+公钥位于 http://pgp.surfnet.nl/ 上。 要验证发布压缩包运行，您需要从密钥服务器导入密钥 并下载压缩包的签名，然后使用两者验证压缩包 同一目录中的压缩包和签名：
+
+gpg --keyserver pgp.surfnet.nl --recv-keys 35B871D1 11D618A4
+wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.bz2.sig
+gpg --verify crosstool-ng-VERSION.tar.bz2.sig
+Crosstool-NG 版本 1.19.0 及更早版本为压缩包提供了 MD5/SHA1/SHA512 摘要。 使用 // 命令验证压缩包：md5sumsha1sumsha512sum
+
+md5sum -c crosstool-ng-VERSION.tar.bz2.md5
+sha1sum -c crosstool-ng-VERSION.tar.bz2.sha1
+sha512sum -c crosstool-ng-VERSION.tar.bz2.sha512
+
+克隆存储库
+如果发布的版本不够新，无法满足您的目的，则 可以尝试使用当前开发的版本进行构建。为此， 克隆 Git 存储库：
+
+git clone https://github.com/crosstool-ng/crosstool-ng
+在运行配置之前，您需要运行脚本：bootstrap
+./bootstrap
+
+安装方法
+首先解压缩压缩包并进入目录。cdcrosstool-ng-VERSION
+    注意
+    由于发布脚本中的错误，crosstool-ng 的 1.22.0 版本是 打包时不带版本后缀。
+
+然后遵循经典食谱：方式：configure./configure
+
+./configure --prefix=/some/place
+make
+make install
+export PATH="${PATH}:/some/place/bin"
+然后，您可以摆脱交叉工具NG源。接下来创建一个要服务的目录 作为一个工作场所，在那里运行：cd
+
+mkdir work-dir
+cd work-dir
+ct-ng help
+    注意
+    如果您致电，您将获得有关 的帮助。这是 因为CT-NG实际上是一个脚本。对此没有干净的解决方法。ct-ng --helpmake(1)make(1)
+
+还安装了该实用程序的手册页。你可以得到一些简介 通过键入帮助。ct-ngman ct-ng
+
+
+黑客的方式
+然后，您运行 crosstool-NG 的本地执行：./configure
+./configure --enable-local
+make
+
+现在，不要删除交叉工具NG源。它们需要运行 十字工具-NG！留在保存源的目录中，然后运行：
+
+./ct-ng help
+
+准备包装
+如果你打算打包crosstool-NG，你肯定不想安装它 在根文件系统中。crosstool-NG 的安装过程遵循变量：DESTDIR
+
+./configure --prefix=/usr
+make
+make DESTDIR=/packaging/place install
+
+壳体完成
+crosstool-NG带有一个shell脚本片段，定义了bash兼容 完成。该外壳片段当前未自动安装。
+
+要安装 shell 脚本片段，您有两种选择：
+
+在系统范围内安装，最有可能通过复制到 或./bash-completion/ct-ng/etc/bash_completion.d/
+
+为单个用户安装，方法是从 ../bash-completion/ct-ng${HOME}/${HOME}/.bashrc
+
+贡献的代码
+有些人贡献了由于各种原因无法合并的代码。 此代码在子目录中作为 lzma 压缩的补丁提供。这些补丁将应用于交叉工具-NG 的源， 在安装之前，请使用如下所示的内容：contrib/
+
+lzcat contrib/foobar.patch.lzma | patch -p1
+不能保证特定贡献适用于当前 版本的 crosstool-ng，或者它根本就可以工作。在以下位置使用贡献 风险自负。
