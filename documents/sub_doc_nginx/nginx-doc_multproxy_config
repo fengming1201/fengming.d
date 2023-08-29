@@ -1,0 +1,188 @@
+（1）
+像如下的映射，nginx如何配置：
+example.top  或 www.example.top            139.9.186.120:7575
+example.top/cs           139.9.186.120:8083
+example.top/ss           139.9.186.120:8084
+example.top/cook         139.9.186.120:8085
+
+答：
+要将这些路径映射到特定的端口和 IP 地址，并且让 `example.top` 和 `www.example.top` 默认映射到 `139.9.186.120:7575`，
+您可以按照以下方式配置 Nginx：
+
+1. 打开 Nginx 的配置文件，通常位于 `/etc/nginx/nginx.conf` 或 `/etc/nginx/conf.d/default.conf`。
+
+2. 在配置文件中找到与您要配置的域名相关的虚拟主机部分。
+
+3. 在该虚拟主机部分中，添加以下配置来进行路径映射：
+
+```nginx
+server {
+    listen 80;
+    server_name example.top www.example.top;
+
+    location / {
+        proxy_pass http://139.9.186.120:7575;
+    }
+
+    location /cs {
+        proxy_pass http://139.9.186.120:8083;
+    }
+
+    location /ss {
+        proxy_pass http://139.9.186.120:8084;
+    }
+
+    location /cook {
+        proxy_pass http://139.9.186.120:8085;
+    }
+
+    # 其他配置
+}
+```
+
+将 `example.top` 和 `www.example.top` 替换为您的域名。
+
+4. 保存配置文件并重新加载 Nginx：
+
+```shell
+sudo service nginx reload
+```
+
+现在，当访问 `example.top` 或 `www.example.top` 时，Nginx 将代理请求到 `139.9.186.120:7575`。
+同时，访问 `example.top/cs` 将代理到 `139.9.186.120:8083`，
+访问 `example.top/ss` 将代理到 `139.9.186.120:8084`，
+访问 `example.top/cook` 将代理到 `139.9.186.120:8085`。
+
+请注意，上述配置假设您的应用程序在指定的 IP 地址和端口上运行，并且已通过防火墙和其他网络设置允许访问。
+确保您的应用程序在相应的端口上正在监听请求，并且网络设置允许 Nginx 访问这些地址和端口。
+
+（2）
+在同一台云服务器上部署nginx和frp，nginx如何配合frp实现通过域名访问内网设备，给完整配置。
+像如下的映射
+example.top  或 www.example.top            139.9.186.120:7575  在该云服务器本地
+example.top/cs           139.9.186.120:8083    转内网NAS
+example.top/ss           139.9.186.120:8084    转内网NAS
+example.top/cook           139.9.186.120:8085    转内网NAS
+
+
+答：
+要在同一台云服务器上使用 Nginx 配合 frp 实现通过域名访问内网设备，您可以按照以下步骤进行配置：
+
+1. 安装和配置 frp 服务端（frps）
+   - 在您的云服务器上安装和配置 frp 服务端（frps）。
+   - 在 frps 配置文件中，将以下内容添加到 `[common]` 部分：
+     ```
+     [common]
+     bind_port = 7000
+     token = YOUR_TOKEN
+     ```
+     将 `YOUR_TOKEN` 替换为您自定义的令牌，用于验证客户端连接。
+   - 在 frps 配置文件中，添加以下映射配置：
+     ```
+     [cs]
+     type = tcp
+     remote_port = 8083
+     local_ip = 内网NAS的IP地址
+     local_port = 8083
+     [ss]
+     type = tcp
+     remote_port = 8084
+     local_ip = 内网NAS的IP地址
+     local_port = 8084
+     [cook]
+     type = tcp
+     remote_port = 8085
+     local_ip = 内网NAS的IP地址
+     local_port = 8085
+     ```
+     将 `内网NAS的IP地址` 替换为您的内网NAS的实际 IP 地址。
+
+2. 安装和配置 Nginx
+   - 在云服务器上安装 Nginx。
+   - 打开 Nginx 的配置文件，通常位于 `/etc/nginx/nginx.conf` 或 `/etc/nginx/conf.d/default.conf`。
+   - 在配置文件中找到默认的虚拟主机部分（`server` 块）。
+   - 在该虚拟主机部分中，添加以下配置来将流量代理到 frps 和内网设备：
+     ```nginx
+     server {
+         listen 80;
+         server_name example.top www.example.top;
+
+         location / {
+             proxy_pass http://139.9.186.120:7575;
+         }
+
+         location /cs {
+             proxy_pass http://127.0.0.1:8083;
+         }
+
+         location /ss {
+             proxy_pass http://127.0.0.1:8084;
+         }
+
+         location /cook {
+             proxy_pass http://127.0.0.1:8085;
+         }
+     }
+     ```
+
+3. 启动 frp 服务端（frps）
+   - 在云服务器上启动 frp 服务端（frps）。
+
+4. 启动 frp 客户端（frpc）
+   - 在云服务器上安装并配置 frp 客户端（frpc）。
+   - 在 frpc 配置文件中，将以下内容添加到 `[common]` 部分，以便连接到 frps：
+     ```
+     [common]
+     server_addr = 127.0.0.1
+     server_port = 7000
+     token = YOUR_TOKEN
+     ```
+     将 `YOUR_TOKEN` 替换为与 frps 配置文件中的令牌相同的值。
+   - 启动 frp 客户端（frpc）。
+
+现在，当通过浏览器访问 `http://example.top` 或 `http://www.example.top` 时，Nginx 将代理请求到 `139.9.186.120:7575`，
+访问 `http://example.top/cs` 将代理到 `127.0.0.1:8083`，
+访问 `http://example.top/ss` 将代理到 `127.0.0.1:8084`，
+访问 `http://example.top/cook` 将代理到 `127.0.0.1:8085`。
+
+请确保防火墙和路由器设置允许所需的端口通过，并且域名解析已正确配置以指向云服务器的 IP 地址。
+
+对于内网主机的配置，您需要确保 frp 客户端（frpc）正确安装和配置在内网设备上。以下是 frpc 的配置示例：
+
+1. 安装和配置 frp 客户端（frpc）
+   - 在内网设备上安装并配置 frp 客户端（frpc）。
+   - 在 frpc 配置文件中，将以下内容添加到 `[common]` 部分，以便连接到 frps：
+     ```
+     [common]
+     server_addr = 服务器公网IP
+     server_port = 7000
+     token = YOUR_TOKEN
+     ```
+     将 `服务器公网IP` 替换为您云服务器的公网 IP 地址，将 `YOUR_TOKEN` 替换为与 frps 配置文件中的令牌相同的值。
+   - 在 frpc 配置文件中，添加以下映射配置：
+     ```
+     [cs]
+     type = tcp
+     local_ip = 内网NAS的IP地址
+     local_port = 8083
+     remote_port = 8083
+     [ss]
+     type = tcp
+     local_ip = 内网NAS的IP地址
+     local_port = 8084
+     remote_port = 8084
+     [cook]
+     type = tcp
+     local_ip = 内网NAS的IP地址
+     local_port = 8085
+     remote_port = 8085
+     ```
+     将 `内网NAS的IP地址` 替换为您的内网NAS的实际 IP 地址。
+
+2. 启动 frp 客户端（frpc）
+   - 在内网设备上启动 frp 客户端（frpc）。
+
+通过以上配置，frp 客户端（frpc）将与 frp 服务端（frps）建立连接，并将内网设备的端口映射到云服务器上。
+Nginx 代理配置中的 `proxy_pass` 将流量转发到内网设备的相应端口。
+
+请确保内网设备上的防火墙允许 frp 客户端所需的端口通过，并且内网设备的 IP 地址正确配置。

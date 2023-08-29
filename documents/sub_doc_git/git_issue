@@ -1,0 +1,15 @@
+
+（1）
+root@debian11:/etc# git clone   https://github.com/fengming1201/fengming.d.git
+Cloning into 'fengming.d'...
+fatal: unable to access 'https://github.com/fengming1201/fengming.d.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
+root@debian11:/etc# 
+
+fix:
+apt install gnutls-bin
+git config --global http.sslVerify false
+git config --global http.postBuffer 1048576000
+
+(2)
+
+

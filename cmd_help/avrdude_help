@@ -34,3 +34,79 @@ Options:
 avrdude version 6.3-20171130, URL: <http://savannah.nongnu.org/projects/avrdude/>
 
 =================================================================
+使用方法：avrdude [选项]
+选项：
+  -p <partno>                必需。指定 AVR 设备。
+  -b <baudrate>              覆盖 RS-232 波特率。
+  -B <bitclock>              指定 JTAG/STK500v2 位时钟周期（微秒）。
+  -C <config-file>           指定配置文件的位置。
+  -c <programmer>            指定编程器类型。
+  -D                         禁用对闪存的自动擦除。
+  -i <delay>                 ISP 时钟延迟（微秒）。
+  -P <port>                  指定连接端口。
+  -F                         覆盖无效签名检查。
+  -e                         执行芯片擦除。
+  -O                         执行 RC 振荡器校准（参见 AVR053）。
+  -U <memtype>:r|w|v:<filename>[:format]
+                             内存操作规范。
+                             可以使用多个 -U 选项，每个请求按指定的顺序执行。
+  -n                         不向设备写入任何内容。
+  -V                         不进行验证。
+  -u                         禁用安全模式，默认在脚本运行时启用。
+  -s                         安静的安全模式操作，不会询问是否更改保险丝设置。
+  -t                         进入终端模式。
+  -E <exitspec>[,<exitspec>] 列出编程器退出规范。
+  -x <extended_param>        向编程器传递 <extended_param>。
+  -y                         计算 EEPROM 中的擦除循环次数。
+  -Y <number>                初始化 EEPROM 中的擦除循环次数。
+  -v                         详细输出。-v -v 以获取更多详细信息。
+  -q                         禁止显示进度输出。-q -q 以减少输出。
+  -l logfile                 使用日志文件而不是 stderr 进行诊断。
+  -?                         显示此使用说明。
+
+avrdude 版本 6.3-20171130，网址：<http://savannah.nongnu.org/projects/avrdude/>
+======================================================
+使用示例：
+（1）
+以下是一些使用avrdude的实例：
+
+1. 擦除芯片：
+   avrdude -c <programmer> -p <partno> -P <port> -e
+
+2. 将程序烧录到芯片：
+   avrdude -c <programmer> -p <partno> -P <port> -U flash:w:<filename>:<format>
+
+3. 读取芯片的程序：
+   avrdude -c <programmer> -p <partno> -P <port> -U flash:r:<filename>:<format>
+
+4. 编写Fuse位：
+   avrdude -c <programmer> -p <partno> -P <port> -U fusebits:w:<fusevalue>:<format>
+
+5. 读取Fuse位的值：
+   avrdude -c <programmer> -p <partno> -P <port> -U fusebits:r:<filename>:<format>
+
+请注意，上述命令中的 `<programmer>` 是指编程器类型，例如 `usbasp`、`arduino` 等。`<partno>` 是指AVR设备的型号，例如 `atmega328p`、`attiny85` 等。`<port>` 是指与编程器连接的端口，例如 `/dev/ttyUSB0`、`COM3` 等。`<filename>` 是文件名，
+用于保存程序或读取的数据。`<format>` 是文件的格式，例如 `ihex`、`bin` 等。
+
+请根据你的实际情况和需求替换上述命令中的参数，并确保你已经正确连接了编程器和目标芯片。
+
+（2）
+以下是使用avrdude烧写单片机程序的示例：
+
+1. 使用USBasp编程器烧写ATmega328P芯片上的程序（Intel Hex格式）：
+   ```
+   avrdude -c usbasp -p atmega328p -U flash:w:program.hex:i
+   ```
+
+2. 使用Arduino作为ISP编程器烧写ATtiny85芯片上的程序（二进制格式）：
+   ```
+   avrdude -c arduino -p attiny85 -P /dev/ttyUSB0 -U flash:w:program.bin:r
+   ```
+
+3. 使用AVRISP mkII编程器烧写ATmega2560芯片上的程序（Intel Hex格式）：
+   ```
+   avrdude -c avrispmkII -p atmega2560 -P usb -U flash:w:program.hex:i
+   ```
+
+请根据你的实际情况和需求替换上述命令中的参数。确保你已经正确连接了编程器和目标芯片，并提供正确的设备型号和文件路径。
+另外，根据你所使用的编程器和操作系统，可能需要调整 `-c` 和 `-P` 参数的值。
