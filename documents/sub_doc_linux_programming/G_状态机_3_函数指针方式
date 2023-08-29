@@ -1,0 +1,102 @@
+
+给出“函数指针方式”实现状态机的C语言示例。
+以下是使用函数指针方式实现状态机的C语言示例：
+
+```c
+#include <stdio.h>
+
+// 状态枚举
+typedef enum {
+    STATE_A,
+    STATE_B,
+    STATE_C
+} State;
+
+// 输入条件枚举
+typedef enum {
+    CONDITION_1,
+    CONDITION_2
+} Condition;
+
+// 状态处理函数类型
+typedef State (*StateHandler)(Condition);
+
+// 状态处理函数
+State state_A_handler(Condition input_condition);
+State state_B_handler(Condition input_condition);
+State state_C_handler(Condition input_condition);
+
+// 状态处理函数数组
+StateHandler state_handlers[] = {
+    state_A_handler,
+    state_B_handler,
+    state_C_handler
+};
+
+// 状态A的处理函数
+State state_A_handler(Condition input_condition) {
+    if (input_condition == CONDITION_1) {
+        printf("Action: Transition from State A to State B\n");
+        return STATE_B;
+    } else if (input_condition == CONDITION_2) {
+        printf("Action: Transition from State A to State C\n");
+        return STATE_C;
+    }
+    return STATE_A;
+}
+
+// 状态B的处理函数
+State state_B_handler(Condition input_condition) {
+    if (input_condition == CONDITION_1) {
+        printf("Action: Transition from State B to State A\n");
+        return STATE_A;
+    } else if (input_condition == CONDITION_2) {
+        printf("Action: Transition from State B to State C\n");
+        return STATE_C;
+    }
+    return STATE_B;
+}
+
+// 状态C的处理函数
+State state_C_handler(Condition input_condition) {
+    if (input_condition == CONDITION_1) {
+        printf("Action: Transition from State C to State A\n");
+        return STATE_A;
+    } else if (input_condition == CONDITION_2) {
+        printf("Action: Transition from State C to State B\n");
+        return STATE_B;
+    }
+    return STATE_C;
+}
+
+int main() {
+    State current_state = STATE_A;
+    Condition input_condition;
+
+    while (1) {
+        // 获取输入条件
+        printf("Enter input condition (1 or 2): ");
+        scanf("%d", &input_condition);
+
+        // 获取当前状态的处理函数
+        StateHandler handler = state_handlers[current_state];
+
+        // 调用状态处理函数，获取下一个状态
+        State next_state = handler(input_condition);
+
+        // 更新当前状态
+        current_state = next_state;
+    }
+
+    return 0;
+}
+```
+
+在这个示例中，我们定义了状态枚举和输入条件枚举，并创建了状态处理函数类型 `StateHandler`。然后，
+我们为每个状态定义了相应的状态处理函数。这些状态处理函数接收输入条件并根据条件执行相应的动作，并返回下一个状态。
+我们将这些状态处理函数存储在函数指针数组 `state_handlers` 中。
+
+在主循环中，我们获取输入条件，并根据当前状态从 `state_handlers` 数组中获取相应的状态处理函数。然后，
+我们调用该状态处理函数，传入输入条件，并获取下一个状态。最后，我们更新当前状态为下一个状态，并继续下一次循环。
+
+请注意，示例中的动作函数只是简单地打印一条消息，您可以根据实际需求来定义自己的动作函数。

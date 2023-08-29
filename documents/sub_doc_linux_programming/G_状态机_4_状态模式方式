@@ -1,0 +1,120 @@
+给出“状态模式方式”实现状态机的C语言示例。
+以下是使用状态模式方式实现状态机的C语言示例：
+
+```c
+#include <stdio.h>
+
+// 状态枚举
+typedef enum {
+    STATE_A,
+    STATE_B,
+    STATE_C
+} State;
+
+// 输入条件枚举
+typedef enum {
+    CONDITION_1,
+    CONDITION_2
+} Condition;
+
+// 状态接口
+typedef struct {
+    State (*handle_input)(Condition);
+} StateInterface;
+
+// 状态A结构体
+typedef struct {
+    StateInterface base;  // 基类接口
+} StateA;
+
+// 状态B结构体
+typedef struct {
+    StateInterface base;  // 基类接口
+} StateB;
+
+// 状态C结构体
+typedef struct {
+    StateInterface base;  // 基类接口
+} StateC;
+
+// 状态A的处理函数
+State state_A_handle_input(Condition input_condition) {
+    if (input_condition == CONDITION_1) {
+        printf("Action: Transition from State A to State B\n");
+        return STATE_B;
+    } else if (input_condition == CONDITION_2) {
+        printf("Action: Transition from State A to State C\n");
+        return STATE_C;
+    }
+    return STATE_A;
+}
+
+// 状态B的处理函数
+State state_B_handle_input(Condition input_condition) {
+    if (input_condition == CONDITION_1) {
+        printf("Action: Transition from State B to State A\n");
+        return STATE_A;
+    } else if (input_condition == CONDITION_2) {
+        printf("Action: Transition from State B to State C\n");
+        return STATE_C;
+    }
+    return STATE_B;
+}
+
+// 状态C的处理函数
+State state_C_handle_input(Condition input_condition) {
+    if (input_condition == CONDITION_1) {
+        printf("Action: Transition from State C to State A\n");
+        return STATE_A;
+    } else if (input_condition == CONDITION_2) {
+        printf("Action: Transition from State C to State B\n");
+        return STATE_B;
+    }
+    return STATE_C;
+}
+
+// 初始化状态接口
+void state_interface_init(StateInterface *state_interface, State (*handle_input)(Condition)) {
+    state_interface->handle_input = handle_input;
+}
+
+int main() {
+    StateInterface state_interfaces[] = {
+        {state_A_handle_input},
+        {state_B_handle_input},
+        {state_C_handle_input}
+    };
+
+    State current_state = STATE_A;
+    Condition input_condition;
+
+    while (1) {
+        // 获取输入条件
+        printf("Enter input condition (1 or 2): ");
+        scanf("%d", &input_condition);
+
+        // 获取当前状态的接口
+        StateInterface *state_interface = &state_interfaces[current_state];
+
+        // 调用当前状态的处理函数，获取下一个状态
+        State next_state = state_interface->handle_input(input_condition);
+
+        // 更新当前状态
+        current_state = next_state;
+    }
+
+    return 0;
+}
+```
+
+在这个示例中，我们定义了状态枚举和输入条件枚举，并创建了状态接口 `StateInterface`。然后，
+我们为每个状态定义了相应的状态结构体（`StateA`、`StateB`、`StateC`），每个结构体都包含一个基类接口 `StateInterface`。
+
+我们还为每个状态定义了相应的处理函数（`state_A_handle_input`、`state_B_handle_input`、`state_C_handle_input`），
+这些处理函数接收输入条件并根据条件执行相应的动作，并返回下一个状态。
+
+在主函数中，我们创建了状态接口数组 `state_interfaces`，并初始化每个状态的接口。然后，在主循环中，我们获取输入条件，
+并根据当前状态从 `state_interfaces` 数组中获取相应的状态接口。然后，我们调用当前状态的处理函数，传入输入条件，
+并获取下一个状态。最后，我们更新当前状态为下一个状态，并继续下一次循环。
+
+请注意，示例中的动作函数只是简单地打印一条消息，您可以根据实际需求来定义自己的动作函数。

@@ -6,16 +6,36 @@ fengming_top_dir=/etc/fengming.d
 fengming_tools_dir=/etc/fengming.d/linux_tools
 fengming_func_lib_dir=/etc/fengming.d/bash_function_lib
 
-alias ll='ls -hl --color=auto'
-alias lll='ls -hl --color=auto'
-alias llll='ls -hla --color=auto'
-alias la='ls -aF --color=auto'
-alias lf='ls -AF --color=auto'
-alias l='ls -CF --color=auto'
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+	
+	alias l='ls -CF --color=auto'
+	alias ll='ls -hl --color=auto'
+	alias lll='ls -hl --color=auto'
+	alias llll='ls -hla --color=auto'
+	alias la='ls -aF --color=auto'
+	alias lf='ls -AF --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+
+	alias treee='tree -C'
+	alias treeee='tree -C'
+else
+	alias l='ls -CF'
+	alias ll='ls -hl'
+	alias lll='ls -hl'
+	alias llll='ls -hla'
+	alias la='ls -aF'
+	alias lf='ls -AF'
+	
+	alias treee='tree'
+	alias treeee='tree'
+fi
 
 alias bd=". bd -si"
-alias treee='tree'
-alias treeee='tree'
 alias cman='man -M  /usr/share/man/zh_CN'
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'

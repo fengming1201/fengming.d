@@ -1,0 +1,104 @@
+给出“事件驱动方式”实现状态机的C语言示例。 
+以下是使用事件驱动方式实现状态机的C语言示例：
+
+```c
+#include <stdio.h>
+
+// 状态枚举
+typedef enum {
+    STATE_A,
+    STATE_B,
+    STATE_C
+} State;
+
+// 输入事件枚举
+typedef enum {
+    EVENT_1,
+    EVENT_2
+} Event;
+
+// 状态机处理函数类型
+typedef State (*StateMachineHandler)(Event);
+
+// 状态机处理函数
+State state_machine_handler(State current_state, Event input_event);
+
+// 状态A的处理函数
+State state_A_handler(Event input_event) {
+    if (input_event == EVENT_1) {
+        printf("Action: Transition from State A to State B\n");
+        return STATE_B;
+    } else if (input_event == EVENT_2) {
+        printf("Action: Transition from State A to State C\n");
+        return STATE_C;
+    }
+    return STATE_A;
+}
+
+// 状态B的处理函数
+State state_B_handler(Event input_event) {
+    if (input_event == EVENT_1) {
+        printf("Action: Transition from State B to State A\n");
+        return STATE_A;
+    } else if (input_event == EVENT_2) {
+        printf("Action: Transition from State B to State C\n");
+        return STATE_C;
+    }
+    return STATE_B;
+}
+
+// 状态C的处理函数
+State state_C_handler(Event input_event) {
+    if (input_event == EVENT_1) {
+        printf("Action: Transition from State C to State A\n");
+        return STATE_A;
+    } else if (input_event == EVENT_2) {
+        printf("Action: Transition from State C to State B\n");
+        return STATE_B;
+    }
+    return STATE_C;
+}
+
+int main() {
+    State current_state = STATE_A;
+    Event input_event;
+
+    while (1) {
+        // 获取输入事件
+        printf("Enter input event (1 or 2): ");
+        scanf("%d", &input_event);
+
+        // 调用状态机处理函数，获取下一个状态
+        State next_state = state_machine_handler(current_state, input_event);
+
+        // 更新当前状态
+        current_state = next_state;
+    }
+
+    return 0;
+}
+
+// 状态机处理函数
+State state_machine_handler(State current_state, Event input_event) {
+    switch (current_state) {
+        case STATE_A:
+            return state_A_handler(input_event);
+        case STATE_B:
+            return state_B_handler(input_event);
+        case STATE_C:
+            return state_C_handler(input_event);
+        default:
+            return current_state;
+    }
+}
+```
+
+在这个示例中，我们定义了状态枚举和输入事件枚举，并创建了状态机处理函数类型 `StateMachineHandler`。
+
+我们为每个状态定义了相应的处理函数（`state_A_handler`、`state_B_handler`、`state_C_handler`），
+这些处理函数接收输入事件并根据事件执行相应的动作，并返回下一个状态。
+
+在主函数中，我们使用一个循环来不断获取输入事件，并根据当前状态调用状态机处理函数 `state_machine_handler`，
+传入当前状态和输入事件，并获取下一个状态。然后，我们更新当前状态为下一个状态，并继续下一次循环。
+
+请注意，示例中的动作函数只是简单地打印一条消息，您可以根据实际需求来定义自己的动作函数。

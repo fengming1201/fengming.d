@@ -1,0 +1,102 @@
+给出“表格驱动方式”实现状态机的C语言示例。
+
+以下是使用表格驱动方式实现状态机的C语言示例：
+
+```c
+#include <stdio.h>
+
+// 状态枚举
+typedef enum {
+    STATE_A,
+    STATE_B,
+    STATE_C
+} State;
+
+// 输入条件枚举
+typedef enum {
+    CONDITION_1,
+    CONDITION_2
+} Condition;
+
+// 状态转换表项结构体
+typedef struct {
+    State current_state;
+    Condition input_condition;
+    State next_state;
+    void (*action)();  // 动作函数指针
+} Transition;
+
+// 状态转换表
+Transition transition_table[] = {
+    {STATE_A, CONDITION_1, STATE_B, action_A_to_B},
+    {STATE_A, CONDITION_2, STATE_C, action_A_to_C},
+    {STATE_B, CONDITION_1, STATE_A, action_B_to_A},
+    {STATE_B, CONDITION_2, STATE_C, action_B_to_C},
+    {STATE_C, CONDITION_1, STATE_A, action_C_to_A},
+    {STATE_C, CONDITION_2, STATE_B, action_C_to_B}
+};
+
+// 动作函数
+void action_A_to_B() {
+    printf("Action: Transition from State A to State B\n");
+}
+
+void action_A_to_C() {
+    printf("Action: Transition from State A to State C\n");
+}
+
+void action_B_to_A() {
+    printf("Action: Transition from State B to State A\n");
+}
+
+void action_B_to_C() {
+    printf("Action: Transition from State B to State C\n");
+}
+
+void action_C_to_A() {
+    printf("Action: Transition from State C to State A\n");
+}
+
+void action_C_to_B() {
+    printf("Action: Transition from State C to State B\n");
+}
+
+int main() {
+    State current_state = STATE_A;
+    Condition input_condition;
+
+    while (1) {
+        // 获取输入条件
+        printf("Enter input condition (1 or 2): ");
+        scanf("%d", &input_condition);
+
+        // 在状态转换表中查找下一个状态和动作
+        int i;
+        for (i = 0; i < sizeof(transition_table) / sizeof(Transition); i++) {
+            if (transition_table[i].current_state == current_state &&
+                transition_table[i].input_condition == input_condition) {
+                // 执行动作
+                if (transition_table[i].action != NULL) {
+                    transition_table[i].action();
+                }
+
+                // 更新当前状态
+                current_state = transition_table[i].next_state;
+                break;
+            }
+        }
+
+        // 未找到匹配的状态转换
+        if (i == sizeof(transition_table) / sizeof(Transition)) {
+            printf("Invalid input condition for current state.\n");
+        }
+    }
+
+    return 0;
+}
+```
+
+这个示例中，我们定义了状态枚举和输入条件枚举，然后创建了状态转换表（`transition_table`）来定义状态机的行为。
+每个表项包含当前状态、输入条件、下一个状态和对应的动作函数指针。在主循环中，我们获取输入条件，并在状态转换表中查找匹配的表项，
+执行相应的动作并更新当前状态。如果找不到匹配的状态转换，我们输出错误信息。请注意，示例中的动作函数只是简单地打印一条消息，
+您可以根据实际需求来定义自己的动作函数。

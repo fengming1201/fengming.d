@@ -1,0 +1,65 @@
+要在Linux上安装 `avrdude` 工具，您可以按照以下步骤进行操作：
+
+1. 更新软件包列表：打开终端，并使用以下命令更新软件包列表：
+
+   ```shell
+   sudo apt update
+   ```
+
+2. 安装 `avrdude`：使用以下命令来安装 `avrdude` 工具：
+
+   ```shell
+   sudo apt install avrdude
+   ```
+
+   这将从软件源中下载并安装 `avrdude` 工具及其相关依赖项。
+
+3. 验证安装：安装完成后，您可以使用以下命令来验证 `avrdude` 是否成功安装：
+
+   ```shell
+   avrdude -v
+   ```
+
+   如果成功安装，您将看到 `avrdude` 工具的版本号信息。
+
+现在，您已经成功安装了 `avrdude` 工具。您可以使用先前提到的命令来烧写单片机程序。请确保您已正确连接单片机和编程接口，并提供正确的设备参数、编程器类型和要烧写的HEX文件路径。您可以使用 `avrdude --help` 命令查看更多关于 `avrdude` 工具的使用说明和选项。
+
+如果在安装过程中遇到任何问题，请确保您的系统已经正确设置，并检查您的网络连接和软件源设置。另外，您也可以参考 `avrdude` 工具的官方文档或开发者社区获取更多帮助和支持。
+
+
+========================================================================
+以下是一个使用 `avrdude` 工具的示例命令，用于烧写一个名为 `example.hex` 的HEX文件到 ATmega328P 单片机上：
+
+```shell
+avrdude -c <programmer> -p m328p -P <port> -U flash:w:example.hex
+```
+
+请根据您的实际情况替换以下参数：
+
+- `<programmer>`: 编程器类型。例如，如果您正在使用USBasp编程器，可以使用 `-c usbasp`。
+- `<port>`: 串口端口。例如，如果您的编程器连接在 `/dev/ttyUSB0` 端口上，可以使用 `-P /dev/ttyUSB0`。
+- `m328p`: 目标单片机型号。这里使用的是 ATmega328P，如果您使用的是其他型号，请相应地更改。
+- `example.hex`: 要烧写的HEX文件路径。请将其替换为您实际的文件路径。
+
+请注意，上述命令中的参数和选项可能会因您使用的编程器、单片机型号和串口端口而有所不同。确保根据您的实际情况进行适当的调整。
+
+此外，您可能还需要提供其他选项，如波特率、芯片擦除操作等。您可以查阅 `avrdude` 工具的文档或使用 `avrdude --help` 命令来获取更多关于命令选项和参数的详细信息。
+
+请注意，在执行烧写操作之前，请确保您已正确连接编程器和目标单片机，并且已经为编程器提供了足够的供电。此外，谨慎操作，确保您选择了正确的目标单片机和编程器类型，以避免意外擦除或烧写错误。
+
+============================================================================
+# avrdude -v
+
+avrdude: Version 6.3-20171130
+         Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
+         Copyright (c) 2007-2014 Joerg Wunsch
+
+         System wide configuration file is "/etc/avrdude.conf"
+         User configuration file is "/root/.avrduderc"
+         User configuration file does not exist or is not a regular file, skipping
+
+
+avrdude: no programmer has been specified on the command line or the config file
+         Specify a programmer using the -c option and try again
+
+ 

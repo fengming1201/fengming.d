@@ -1,0 +1,74 @@
+下面是一个简单的LED灯的驱动示例，基于Linux的字符设备驱动框架：
+
+```c
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/fs.h>
+#include <linux/gpio.h>
+
+#define LED_GPIO_PIN 17
+#define DEVICE_NAME "led_driver"
+
+static int led_open(struct inode *inode, struct file *file)
+{
+    gpio_direction_output(LED_GPIO_PIN, 1); // 设置GPIO引脚为输出模式，并设置高电平
+    return 0;
+}
+
+static int led_release(struct inode *inode, struct file *file)
+{
+    gpio_direction_output(LED_GPIO_PIN, 0); // 设置GPIO引脚为输出模式，并设置低电平
+    return 0;
+}
+
+static struct file_operations fops = {
+    .open = led_open,
+    .release = led_release,
+};
+
+static int __init led_driver_init(void)
+{
+    int result;
+
+    // 请求GPIO引脚
+    result = gpio_request(LED_GPIO_PIN, "LED");
+    if (result < 0) {
+        printk(KERN_ALERT "无法请求GPIO引脚\n");
+        return result;
+    }
+
+    // 注册字符设备驱动
+    result = register_chrdev(0, DEVICE_NAME, &fops);
+    if (result < 0) {
+        printk(KERN_ALERT "无法注册字符设备驱动\n");
+        gpio_free(LED_GPIO_PIN);
+        return result;
+    }
+
+    printk(KERN_INFO "LED驱动初始化成功\n");
+    return 0;
+}
+
+static void __exit led_driver_exit(void)
+{
+    unregister_chrdev(0, DEVICE_NAME); // 注销字符设备驱动
+    gpio_free(LED_GPIO_PIN); // 释放GPIO引脚
+    printk(KERN_INFO "LED驱动退出\n");
+}
+
+module_init(led_driver_init);
+module_exit(led_driver_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Your Name");
+MODULE_DESCRIPTION("LED Driver");
+```
+
+这个驱动示例使用了Linux内核的字符设备驱动框架。在`led_open`函数中，我们将GPIO引脚设置为输出模式，并将其电平设置为高电平，
+以点亮LED灯。在`led_release`函数中，我们将GPIO引脚电平设置为低电平，以关闭LED灯。
+
+在初始化函数`led_driver_init`中，我们首先请求所需的GPIO引脚，并注册字符设备驱动。在退出函数`led_driver_exit`中，
+我们注销字符设备驱动并释放GPIO引脚。
+
+请注意，这只是一个简单的示例，用于展示LED灯的驱动原理。在实际应用中，您可能需要添加更多的功能和错误处理。此外，
+确保您的系统具有正确的GPIO引脚编号，并根据需要进行相应的修改。

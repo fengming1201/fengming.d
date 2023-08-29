@@ -1,0 +1,66 @@
+给出“if-else语句方式”实现状态机的C语言示例。
+以下是使用 if-else 语句方式实现状态机的C语言示例：
+
+```c
+#include <stdio.h>
+
+// 状态枚举
+typedef enum {
+    STATE_A,
+    STATE_B,
+    STATE_C
+} State;
+
+// 输入条件枚举
+typedef enum {
+    CONDITION_1,
+    CONDITION_2
+} Condition;
+
+int main() {
+    State current_state = STATE_A;
+    Condition input_condition;
+
+    while (1) {
+        // 获取输入条件
+        printf("Enter input condition (1 or 2): ");
+        scanf("%d", &input_condition);
+
+        // 根据当前状态和输入条件执行相应的动作
+        if (current_state == STATE_A) {
+            if (input_condition == CONDITION_1) {
+                printf("Action: Transition from State A to State B\n");
+                current_state = STATE_B;
+            } else if (input_condition == CONDITION_2) {
+                printf("Action: Transition from State A to State C\n");
+                current_state = STATE_C;
+            }
+        } else if (current_state == STATE_B) {
+            if (input_condition == CONDITION_1) {
+                printf("Action: Transition from State B to State A\n");
+                current_state = STATE_A;
+            } else if (input_condition == CONDITION_2) {
+                printf("Action: Transition from State B to State C\n");
+                current_state = STATE_C;
+            }
+        } else if (current_state == STATE_C) {
+            if (input_condition == CONDITION_1) {
+                printf("Action: Transition from State C to State A\n");
+                current_state = STATE_A;
+            } else if (input_condition == CONDITION_2) {
+                printf("Action: Transition from State C to State B\n");
+                current_state = STATE_B;
+            }
+        }
+    }
+
+    return 0;
+}
+```
+
+在这个示例中，我们定义了状态枚举和输入条件枚举。
+
+在主函数中，我们使用一个循环来不断获取输入条件，并根据当前状态和输入条件执行相应的动作，并更新当前状态。
+通过一系列的 if-else 语句，我们根据当前状态和输入条件来判断应该执行哪个动作以及转换到哪个状态。
+
+请注意，示例中的动作函数只是简单地打印一条消息，并更新当前状态，您可以根据实际需求来定义自己的动作函数。
