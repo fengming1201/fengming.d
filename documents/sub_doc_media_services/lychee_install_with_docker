@@ -1,0 +1,125 @@
+（1）
+使用Docker搭建Lychee服务器，非docker-compose.yml方式
+
+如果您不想使用 `docker-compose.yml` 文件来搭建 Lychee 服务器，您可以使用单独的 Docker 命令来完成。以下是使用 Docker 命令搭建 Lychee 服务器的示例：
+
+1. 创建数据目录：首先，在您选择的目录下创建一个名为 `lychee` 的文件夹，用于存储 Lychee 的配置和数据。
+
+2. 拉取 Lychee 镜像：打开终端，并运行以下命令来拉取 Lychee 的 Docker 镜像：
+
+   ```bash
+   docker pull linuxserver/lychee
+   ```
+
+   Docker 将会从 Docker Hub 上下载 Lychee 镜像。
+
+3. 运行 Lychee 容器：运行以下命令来创建并运行 Lychee 容器：
+
+   ```bash
+   docker run -d \
+     --name lychee \
+     --restart=always \
+     -p 8080:80 \
+     -e PUID=<your_user_id> \
+     -e PGID=<your_group_id> \
+     -v /path/to/lychee:/config \
+     -v /path/to/photos/lychee-data:/var/www/html/uploads/import \
+     linuxserver/lychee
+   ```
+注意：我入坑
+用于存储本地的照片在容器内部不能映射为/app/www/public/uploads/import，因为lychee会清空里面的内容。
+用上面的目录/var/www/html/uploads/import即可，只是在导入是需要自己填写。
+
+   请将 `<your_user_id>` 和 `<your_group_id>` 替换为您当前用户的用户 ID 和组 ID。
+   您可以通过运行id -u和id -g命令来获取它们。将 `/path/to/lychee` 替换为您创建的数据目录的路径。
+   将上述命令中的 /path/to/photos/lychee-data 替换为您创建的照片存储目录的路径：
+   运行该命令后，Docker 将会创建一个名为 `lychee` 的容器，并将 Lychee 服务器映射到主机的 8080 端口。
+
+4. 访问 Lychee 服务器：在您的 Web 浏览器中输入 `http://localhost:8080`，Lychee 的安装页面将显示出来。
+按照页面上的指示完成 Lychee 的初始化设置。
+
+现在，您已经成功地使用 Docker 搭建了 Lychee 服务器。您可以通过上传照片和管理相册来开始使用 Lychee。
+请注意，如果您想停止或删除 Lychee 容器，可以使用 `docker stop lychee` 和 `docker rm lychee` 命令。
+
+（2）
+用docker搭建Lychee服务器，给出示例
+
+当使用Docker搭建Lychee服务器时，您可以按照以下步骤进行操作：
+
+1. 安装Docker和Docker Compose：确保您的系统上已经安装了Docker和Docker Compose。您可以根据您的操作系统选择适当的安装方式，并确保它们都正确安装和配置。
+
+2. 创建Docker Compose文件：在您选择的目录下创建一个名为`docker-compose.yml`的文件，并使用文本编辑器打开它。
+
+3. 编写Docker Compose配置：将以下内容复制到`docker-compose.yml`文件中：
+
+```yaml
+version: '3'
+services:
+  lychee:
+    image: linuxserver/lychee
+    container_name: lychee
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PUID=<your_user_id>
+      - PGID=<your_group_id>
+    volumes:
+      - ./lychee:/config
+```
+
+请注意，您需要将`<your_user_id>`和`<your_group_id>`替换为您当前用户的用户ID和组ID。您可以通过运行`id -u`和`id -g`命令来获取它们。
+
+4. 创建数据目录：在与`docker-compose.yml`文件相同的目录下创建一个名为`lychee`的文件夹，用于存储Lychee的配置和数据。
+
+5. 启动Lychee服务器：在终端中导航到包含`docker-compose.yml`文件的目录，并运行以下命令启动Lychee服务器：
+
+```bash
+docker-compose up -d
+```
+
+Docker将下载Lychee镜像并启动一个名为`lychee`的容器。Lychee将通过端口映射在主机的8080端口上运行。
+
+6. 访问Lychee服务器：打开您的Web浏览器，并在地址栏中输入`http://localhost:8080`。Lychee的安装页面将显示出来。按照页面上的指示完成Lychee的初始化设置。
+
+现在，您已经成功地使用Docker搭建了Lychee服务器。您可以通过上传照片和管理相册来开始使用Lychee。请记住，您可以根据需要自定义Docker Compose配置，例如更改端口映射或添加其他环境变量。
+
+
+（3）我的运行实例
+lychee/
+├── build_info
+├── config
+│   ├── crontabs
+│   ├── custom.js
+│   ├── database.sqlite
+│   ├── keys
+│   ├── log
+│   ├── logs
+│   ├── nginx
+│   ├── php
+│   ├── sym
+│   ├── user.css
+│   ├── user.ini
+│   └── www
+└── storage
+    └── yiyi_pic
+
+build_info内容：
+
+docker run -d \
+        --name lychee \
+        --restart=always \
+        -p 2342:80 \
+        -e PUID=1000 \            
+        -e PGID=1000 \
+        -v /opt/lychee/config:/config \
+        -v /opt/lychee/storage:/var/www/html/uploads \
+        linuxserver/lychee
+
+注意：首次登陆会注册管理员账户，后续由它创建其他用户，导入照片等。
+
+问题1：登陆页面提示
+502 Bad Gateway
+nginx
+
+原因是我用root用户运行docker，即-e PUID=0 -e PGID=0；lychee有删除原文件的操作，所以不能用root作为ID，要用普通用户。

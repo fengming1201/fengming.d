@@ -1,0 +1,88 @@
+
+官网：
+https://lychee.electerious.com/
+
+（1）
+Lychee docker中以文件夹的方式导入照片，如何配置
+
+要在 Lychee Docker 中以文件夹的方式导入照片，您可以按照以下步骤进行配置：
+
+1. 停止 Lychee 容器：如果 Lychee 正在运行，请停止相关的 Docker 容器。您可以使用以下命令停止容器：
+
+   ```bash
+   docker stop lychee
+   ```
+
+2. 创建照片存储目录：选择一个目录，用于存储要导入的照片。例如，您可以在 `/path/to/imported-photos` 目录下创建一个文件夹：
+
+   ```bash
+   mkdir /path/to/imported-photos
+   ```
+
+3. 将照片复制到导入目录：将要导入的照片复制到刚创建的导入目录中。确保您的照片位于 `/path/to/imported-photos` 目录中。
+
+4. 修改 Docker 命令：在运行 Lychee 容器的 Docker 命令中，添加一个卷挂载参数，将导入目录映射到容器内部的相应位置。将以下命令中的 `/path/to/imported-photos` 替换为您创建的导入目录的路径：
+
+   ```bash
+   docker run -d \
+     --name lychee \
+     -p 8080:80 \
+     -e PUID=<your_user_id> \
+     -e PGID=<your_group_id> \
+     -v /path/to/lychee:/config \
+     -v /path/to/imported-photos:/var/www/html/uploads/import \
+     linuxserver/lychee
+   ```
+
+   这里使用了 `-v /path/to/imported-photos:/var/www/html/uploads/import` 参数将导入目录映射到容器内部的 `/var/www/html/uploads/import` 目录。
+
+5. 启动 Lychee 容器：运行修改后的 Docker 命令，启动 Lychee 容器：
+
+   ```bash
+   docker start lychee
+   ```
+
+现在，Lychee 将从导入目录中读取照片，并将其导入到 Lychee 服务器中。导入的照片将在 Lychee 界面中显示和管理。请确保导入目录中的照片具有适当的权限，以便 Lychee 容器可以读取和处理这些文件。
+
+注意：导入目录是一个临时目录，Lychee 只会从该目录中读取照片并导入到数据库中。导入完成后，Lychee 会将照片移动到默认的存储目录中。如果您希望在导入后仍然保留照片的文件夹结构，请使用其他方法，如通过 Lychee 的导入功能或使用 Lychee 提供的 API 进行导入。
+
+（2）
+Lychee docker如何导入照片
+
+在 Lychee Docker 中导入照片，您可以使用以下方法之一：
+
+1. 通过 Lychee 界面导入照片：
+   - 确保 Lychee Docker 容器正在运行。
+   - 打开浏览器并访问 Lychee 的 Web 界面，通常是通过 `http://localhost:8080` 进行访问（根据您的配置可能会有所不同）。
+   - 登录到 Lychee（如果尚未登录）。
+   - 在 Lychee 界面中，点击顶部菜单栏中的 "Import"（导入）按钮。
+   - 在导入页面中，选择要导入的照片，并按照界面上的指示完成导入过程。
+
+2. 使用 Lychee 提供的 API 导入照片：
+   - 确保 Lychee Docker 容器正在运行。
+   - 使用任何 HTTP 请求工具（如 cURL 或 Postman）向 Lychee 的 API 发送请求。
+   - 使用 Lychee API 中的 `import` 方法来导入照片。您需要提供照片的 URL 或使用 multipart/form-data 格式上传照片文件。
+   - 根据 Lychee API 的文档和要求，构建和发送相应的请求来导入照片。
+
+无论您选择哪种方法，Lychee 都会将照片保存到其指定的存储位置，并在 Lychee 界面中显示和管理这些照片。请确保您配置了正确的存储位置，并具有适当的权限，以便 Lychee 容器可以读取和写入照片文件。
+
+（3）
+Lychee 如何设置不用登陆就能看相册
+
+要在 Lychee 中设置无需登录即可查看相册，您可以按照以下步骤进行配置：
+
+1. 打开 Lychee 的 Web 界面。
+2. 使用管理员账户登录到 Lychee。
+3. 点击顶部菜单栏中的 "Settings"（设置）按钮。
+4. 在设置页面中，选择 "Public"（公开）选项卡。
+5. 在 "Public Mode"（公开模式）部分，将 "Enable public mode"（启用公开模式）选项设置为 "Yes"。
+6. 根据您的需求，可以选择以下选项：
+   - "Enable download"（启用下载）：设置为 "Yes"，允许访问者下载照片。
+   - "Enable sharing"（启用分享）：设置为 "Yes"，允许访问者通过链接分享照片。
+   - "Enable RSS"（启用 RSS）：设置为 "Yes"，允许访问者订阅相册的 RSS 源。
+7. 点击页面底部的 "Save"（保存）按钮，保存设置更改。
+
+现在，您的 Lychee 相册将配置为公开模式，访问者可以在不登录的情况下查看相册和照片。您可以通过共享相册链接或直接访问 Lychee 的 URL 来与他人共享相册。
+
+请注意，公开模式下，访问者只能查看相册和照片，不能进行编辑、上传或删除操作。如果您需要更多的访问控制和权限管理，可以考虑其他选项，如创建访客账户或使用 Lychee 的用户管理功能。
+
