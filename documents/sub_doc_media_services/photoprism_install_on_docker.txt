@@ -1,6 +1,8 @@
 官网：https://www.photoprism.app/
 官方文档：https://docs.photoprism.app/
 
+先评价：经过一段时间的使用体验，虽然它有诸多“智能的功能”，但在多用户和导入照片功能方面有欠缺。可以改用Lychee。
+
 Step 1: Start the server
 步骤 1：启动服务器
 
