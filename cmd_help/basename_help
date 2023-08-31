@@ -1,0 +1,44 @@
+basename 命令用于提取文件路径中的文件名部分，并可以选择去掉文件名的后缀。以下是 basename 命令的一般用法和示例：
+
+用法：
+
+basename [选项] 文件路径
+
+选项：
+
+    -s, --suffix=SUFFIX：指定要去掉的后缀。
+    -a, --multiple：处理多个文件路径参数，并分别提取它们的文件名。
+    -z, --zero：以 null 字符（\0）作为文件名的分隔符，适用于与其他命令进行流式处理。
+    -p, --suffix=PREFIX：指定要保留的前缀而不是后缀。
+    -s, --strip-trailing-slashes：去掉文件名末尾的斜杠（/）。
+    --help：显示帮助信息并退出。
+    --version：显示版本信息并退出。
+示例：
+
+基本用法：提取文件路径中的文件名部分。
+    basename /path/to/file.txt
+    输出：file.txt
+
+-s, --suffix=SUFFIX：指定要去掉的后缀。
+    指定后缀：去掉文件名的指定后缀。
+    basename -s .txt /path/to/file.txt
+    
+    输出：file
+
+-a, --multiple：处理多个文件路径参数，并分别提取它们的文件名。
+    basename -a /path/to/file1.txt /path/to/file2.txt
+
+    输出：
+    file1.txt
+    file2.txt
+
+-z, --zero：以 null 字符（\0）作为文件名的分隔符，适用于与其他命令进行流式处理。
+    find /path/to/directory -type f -print0 | xargs -0 basename -z
+
+    这个示例使用 find 命令查找指定目录中的所有文件，并使用 xargs 命令将文件名作为参数传递给 basename 命令。-print0 选项和 -0 选项用于处理文件名中可能包含空格或特殊字符的情况。
+
+-p, --suffix=PREFIX：指定要保留的前缀而不是后缀。
+    basename -p .txt file.txt
+
+    输出：.txt
+    

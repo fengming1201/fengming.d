@@ -16,9 +16,8 @@ docker run -d \
     --name emby \
     --restart=always \
     -p 8096:8096 \
-    -e PUID=<your_user_id> \
-    -e PGID=<your_group_id> \
-    --user <uid>:<gid> \
+    -v /path/to/config:/config \
+    -v /path/to/media:/media \
     emby/embyserver
    ```
    将 `/path/to/config` 替换为你希望存储 Emby 配置文件的本地路径，将 `/path/to/media` 替换为你希望共享给 Emby 的媒体文件所在的本地路径。
@@ -33,23 +32,3 @@ docker run -d \
 记得根据你的实际需求和环境进行适当的配置和调整。
 
 (2)
-Emby匿名登陆设置
-
-要在 Emby 中启用匿名登录，你可以按照以下步骤进行配置：
-
-1. 登录 Emby 控制台：在浏览器中访问 Emby 控制台，通常是通过 `http://localhost:8096` 或 `http://<your-server-ip>:8096` 进行访问。
-
-2. 导航到用户设置：在 Emby 控制台的左侧导航栏中，点击 "用户" 或 "Users" 选项。
-
-3. 创建匿名用户：点击 "添加用户" 或 "Add User" 按钮，创建一个新用户。
-
-4. 配置匿名用户：在创建用户的界面中，输入一个用户名（例如，"Anonymous"）并确保 "密码" 字段为空。你可以选择为匿名用户分配一个特定的用户组，也可以将其保留为默认用户组。
-
-5. 启用匿名访问：在用户创建完成后，找到匿名用户并点击其用户名。在用户详细信息页面中，确保 "启用匿名访问" 或 "Enable Anonymous Access" 选项被勾选。
-
-6. 保存设置：点击 "保存" 或 "Save" 按钮，以应用所做的更改。
-
-完成上述步骤后，匿名用户将被启用，并可以在 Emby 控制台中访问媒体内容而无需登录。请注意，匿名用户将具有有限的权限，具体权限可以在用户设置中进行配置。
-
-希望这些步骤能帮助你在 Emby 中启用匿名登录！
-
