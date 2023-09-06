@@ -3,5 +3,289 @@
 SDCC是完全免费的，与Keil uVision等其他软件不同，它对代码大小没有限制。
 
 
+一、SDCC简介
+　　SDCC是一款免费开源的编译器，它支持标准（ANSI C89 / ISO C90，ISO C99，ISO C11 /ISO C17）C编译。
+SDCC是由Sandeep Dutta为8位单片机设计的编译器，支持MCS51(8051,8052,8031,8032等)、STM8、PIC、DS80C390，HC08，Z80等十几种架构的单片机的编译。
+SDCC还是一款跨平台的编译器，支持windows、linux和Mac OS，同一个代码工程可以在不同平台编译和调试。
+
+二、SDCC组成
+　　SDCC主要由可执行文件和库组成，其中，可执行文件由如下构成：
+
+    1、sdcc compiler
+          这个是编译器，可以单纯编译代码，但是没有对生成文件进行链接
+    　　2、sdcpp prepocessor
+    　　  这个是预处理器，可以对头文件和相关宏进行预处理
+    　　3、sdas assemblers and sdld linker
+          这个是汇编语言处理器和链接器，可以编译汇编语言，并且链接所有的生成文件，生成ihx格式的烧录文件。
+    　　4、sdbinutils utilties（sdar，sdranlib，sdnm，sdobjcopy）
+    　　  这个主要是由GUN Binutils分离出来的，比如可以用sdobject进行反汇编。
+    　　5、ucsim simulator
+          这是软件仿真器
+    　　6、sdcdb debugger
+    　　  这个是代码调试器
+    　　7、Packihx
+           这个工具可以把ihx后缀的文件转换成hex后缀的文件
+    　　8、makebin
+    　　   这个工具可以将ihx文件转换成bin文件
+    　　9、SDCC run-time libraries
+
+
+　　库由如下构成：
+
+    　1、dbuf library
+    　　2、Boost C++ libraries
+
+三、SDCC支持的基本数据类型
+　　SDCC支持多种数据类型，如下图所示：
+http://c.51hei.com/d/forum/202006/14/215810rmmn9kp65mk6ioie.png
+
+编译器也允许在函数的任何地方内联汇编代码，另外，也可以调用在汇编中开发的例程。
+四、SDCC的下载和安装
+  1、源码安装
+SDCC源码和二进制文件包可以在到http://sdcc.sourceforge.net/snap.php#Source下载。
+
+如果想要自己编译的话，可以直接下载源码编译安装。官方给源码，主要是为了兼容多个平台，比如x86、ARM v6和ARM v8等。
+只要在对应平台编译源码，就能产生相应的可执行二进制文件。
+对linux而言，源码的安装包括三个步骤：配置（configure）、编译（make）和安装（make install）。
+configure文件是一个可执行的脚本文件，它有很多选项，在待安装的源码目录下使用命令./configure –help可以输出详细的选项列表。
+其中--prefix选项是配置安装目录，如果不配置该选项，安装后可执行文件默认放在/usr /local/bin，库文件默认放在/usr/local/lib，
+配置文件默认放在/usr/local/etc，其它的资源文件放在/usr /local/share。可以通过./configure --prefix=目录，来指定安装的路径。
+
+以Ubuntu16.4为例，下载源码后解压，然后进入源码目录，打开终端输入
+
+    ./configure --disable-pic14-port --disable-pic16-port --prefix=/opt/SDCC/ 
+
+这时configure文件会检测系统是否符合安装的条件,可能会出现一些错误：
+
+    1、缺少bison
+
+    configure: error: Cannot find required program bison
+
+    解决方法：sudo apt-get install flex bison
+
+    2、找不到找不到adjacency_list.hpp
+
+    configure: error: boost library not found (boost/graph/adjacency_list.hpp).
+
+    解决方法：sudo apt-get install libboost-date-time-dev libboost-program-options-dev libboost-system-dev libboost-filesystem-dev    libboost-iostreams-dev
+
+    3、没有PIC14、PIC16设备
+
+    failed for device/lib/pic14
+
+    解决方法：./configure --disable-pic14-port --disable-pic16-port
+
+  如果条件符合，再输入：make，即可编译源码。编译源码的过程中，可能出现：
+
+    1、fatal error: zlib.h:
+
+    解决方法： sudo apt-get install zlib1g-dev
+
+等待编译完成后，输入：sudo make install，即可安装SDCC到Ubuntu中，而且安装目录就在指定的/usr/SDCC。
+如果是自己指定的目录，需要手动添加环境变量，按照本例子，输入：
+
+    vi /etc/profile
+
+在最后添加
+
+    export PATH=/opt/SDCC/bin:$PATH
+
+然后再执行
+
+    source profile
+
+使之生效。
+
+卸载SDCC也比较简单，如果是按照上面的那种，直接删除/usr/SDCC文件夹即可。如果没有指定prefix，也可以在源码目录输入
+
+    sudo make uninstall
+
+（可能有些源码不带uninstall），实现自动卸载程序。
+　　2、二进制文件包安装
+　　  如果想方便的话，可以直接下载官方对应各个平台编译好的二进制文件包，注意根据不同平台的选择下载对应的二进制文件。
+比如window系统，是下载exe后缀的文件，还有注意32位系统还是64位系统。Linux平台的话，比如Ubuntu，
+可以在终端输入：sudo apt-get install sdcc，系统会自动下载安装SDCC及其组件。不过，这种方式安装的SDCC可能不是最新版本。
+SDCC官方也提供树莓派可以直接使用的二进制包，想想直接树莓派编译开发8051单片机也是一件比较有趣的操作！
+
+3、查看SDCC版本
+在终端输入
+
+    sdcc -v
+
+可以查看sdcc的版本信息。目前我下载使用的SDCC版本为4.0.2版本。
+
+五、SDCC的使用
+1、生成文件解析
+　　SDCC支持命令行操作，最常用的命令就是sdcc sourcefile.c，这个命令是编译并且链接生成文件，生成的文件有如下几种：
+
+    sourcefile.asm - 由编译器创建的汇编文件
+
+    　　sourcefile.lst - 由汇编器创建的汇编链接文件
+
+    　　sourcefile.rst - 由链接编辑器创建的具有链接信息更新的汇编链接文件
+
+    　　sourcefile.sym - 由汇编器创建的源文件链接标识
+
+    　　sourcefile.rel - 由汇编器产生的目标文件，可以作链接编辑器的输入
+
+    　　sourcefile.map - 由链接器创建的加载模块的内存映射
+
+    　　sourcefile.mem - 带有内存使用情况的文件
+
+    　　sourcefile.ihx - 以Intel hex forma格式的加载模块
+
+  2、多个源文件编译
+   如果只有一个源文件，可以直接用sdcc xxx.c命令编译生成ihx文件。对于多个源文件，可以分别编译源文件产生目标文件，最后将所有目标文件链接起来就行。
+   假设现在同一个目录下有三个源文件：foo1.c、foo2.c和foolmain.c，其中main函数在foolmain.c里。有两种方法编译：
+
+    sdcc -c foo1.c
+
+    sdcc -c foo2.c
+
+    sdcc -c foomain.c
+
+    sdcc foomain.rel foo1.rel foo2.rel
+
+解释：sdcc -c foo1.c告诉SDCC编译但是不链接文件，编译后产生目标文件foo1.rel。sdcc foomain.rel foo1.rel foo2.rel则是告诉SDCC链接foomain.rel需要依赖foo1.rel和foo2.rel，最后可以生成ihx文件
+
+    sdcc -c foo1.c
+
+    sdcc -c foo2.c
+
+    sdcc foomain.c foo1.rel foo2.rel
+
+解释：这个和上面的步骤是等价的。sdcc foomain.c foo1.rel foo2.rel告诉SDCC编译和链接foomain.c需要依赖foo1.rel foo2.rel。
+3、生成hex文件
+   所有源文件编译链接完成后，会产生ihx后缀的文件，这个文件无法支持用STC-ISP烧录单片机，所以需要将ihx转成hex文件。首先找到SDCC的安装目录下的bin目录，复制packihx文件到源文件目录下，然后在终端输入packihx xxx.ihx > xxx.hex，然后就可以生成hex文件了。
+4、其他选项
+  SDCC还有许多其他命令可以选择，比如：
+
+    sdcc --code-loc 0x2000 source.c，可以指定程序从0x2000开始存放
+
+    sdcc --opt-code-speed source.c，可以让SDCC对代码的运行速度做优化
+
+    Sdcc --model-large source.c，可以指定单片机的数据存储模型为large。
+
+    sdcc -mmcs51 source.c可以选择目标处理器为MCS51，这个也是SDCC的默认选项，可以不用指定。但是如果要编译STM8单片机的源文件，则要sdcc -mstm8 source.c，指定STM8。为目标处理器。
+
+  此外，还有许多其他选项，有兴趣的可以查看官方说明手册，链接：http://sdcc.sourceforge.net/doc/sdccman.pdf
+六、存储类型
+  MCS51内部存储类型如下图所示：
+  http://c.51hei.com/d/forum/202006/14/215810rchdpz1f8199s9ai.png
+
+1、__data/__near
+  这个是默认的存储类型，声明变量被分配到8051内存存储器RAM的可直接寻址的地址空间data里。访问此类型变量也是速度最快的
+使用如下：
+
+    __data unsigned char value;
+
+  2、__xdata/__far
+这种存储类型声明的变量被分配到外部存储器RAM(xdata)中去，这个是large数据存储模型单片机的默认地址分配（意思就是如果指定-model-large数据存储模型，定义变量就算不加__xdata，变量也会被自动分配到外部存储器RAM(xdata)中）
+使用如下：
+
+    __xdata unsigned char value;
+
+   3、__idata
+  这种存储器类型的声明被分配到8051内部存储器RAM的间接寻址空间(idata)
+使用如下：
+
+    __idata unsigned char value;
+
+4、__pdata
+这种存储类型声明的变量被分配到外部存储器RAM(xdata)的前256字节空间去，这个是medium数据存储模型单片机的默认地址分配。
+使用如下：
+
+    __pdata unsigned char value;
+
+  5、__code
+这种存储类型声明的变量被分配到代码存储区，这种类型的变量是只读的，常用__code来声明一些常量，比如查表数据等。
+使用如下：
+
+    __code unsigned char value;
+
+
+   6、__bit
+  这种存储类型声明的变量被分配到8051存储器的可寻址区域。8051内核有16字节的可寻址RAM（0x20-02F），总共可以提供16x8=128bits寻址位。
+使用如下：
+
+    __bit value;
+
+7、__sfr / __sfr16 / __sfr32 / __sbit
+  这种存储类型通常用于特殊功能寄存器，可以以位、字节和字访问。比如：
+
+    __sfr __at (0x80) P0  //端口P0
+
+      _sbit __at (0x80+1)   //端口P0_1
+
+
+其中，__at表示指派一个绝对地址
+七、绝对地址
+  通常使用__at来指派一个绝对地址，可以指定一个变量的RAM存储地址。比如：
+
+    __xdata __ar (0x2000) unsigned char value //指定变量value存放在外部RAM的0x2000到0x2001地址。
+
+    __code __at (0x3000) char name[5] = "SDCC";//字符串SDCC存放0x3000的ROM空间
+
+
+八、指针
+  SDCC编译器用*字符支持变量指针的声明，SDCC指针可用在所有标准C中可用的操作中。但是，因为8051和派生系列的独特结构，SDCC编译器提供两个类型的指针：通用指针和存储器指针。一些指针声明的例子如下：
+
+    __xdata unsigned char * __data p;//内部ram的指针p指向外部ram的数据对象
+    __data unsigned char * __xdata p;//外部ram的指针p指向内部ram的数据对象
+    __xdata unsigned char * __code p;//rom的指针p指向外部ram的数据对象
+    __code unsigned char * __code p;//rom的指针p指向rom的数据对象
+    usigned char * __xdata p;//位于xdata空间的普通指针
+    unsigned char * p;//位于默认存储空间的普通指针
+    char (* __data fp) (void);//位于data空间的函数指针
+
+
+
+九、中断服务例程
+  SDCC编译器支持在C语言源程序直接编写8051单片机的中断服务例程，需要用到关键字__interrupt，中断函数的定义格式如下：
+
+    void 函数名 (void) __interrupt (n) __using(n)
+
+其中，第一个n表示中断号，第二个n表示使用寄存器组。
+其中，不同中断的入口地址计算如下图所示：
+http://c.51hei.com/d/forum/202006/14/215810o1n9eenn4qfko1oj.png
+
+__using(n)可以指定中断服务例程所使用的寄存器组，单片机进入中断函数会先保存当前寄存器组的内容，如果指定其他的寄存器组，可以不保存当前的寄存器组的内容，直接使用指定寄存器组，可以提高效率。
+  如果中断服务例程没有指定一个寄存器组（没有__using)或者使用__using(0)，编译器将保存所有被使用的寄存器到堆栈的入口之上并且在退出时恢复。然而，如果中断服务例程调用其他函数，整个寄存器组被保存到堆栈中。该方案对使用非常少的寄存器的小中断服务例程是非常有利的。
+  使用时，除了定义中断服务函数，还需要在main函数的源文件声明该中断服务例程，这样才能正常进入中断
+十、使用内嵌汇编代码
+  SDCC支持两种内嵌汇编代码格式：
+
+    第一种：__asm  __endasm
+
+    第二种：__asm__("inline_assembler_code")
+
+其中，第二种格式需要SDCC 3.2.0版本及以上才支持。两种格式使用示例如下所示：
+
+    第一种示例：
+
+    __asm
+
+    　　; This is a comment
+
+    　　label:
+
+           nop
+
+    __endasm
+
+    第二种示例：
+
+    __asm__("; This is a comment\nlabel:\n\tnop");
+
+第二种格式需要使用\n来换行，没有第一种直观，一般推荐使用第一种方式内嵌汇编代码。
+可以使用内嵌汇编来实现nop（空操作）的功能，一般用于延时等，可以如下定义：
+
+    #define DELAY  \
+        __asm      \
+           nop     \
+           nop     \
+       _endasm
+
+下一部分我会基于一个实际工程模板介绍makefile的编写，通过makefile管理工程多个源文件、头文件和宏。
 
 

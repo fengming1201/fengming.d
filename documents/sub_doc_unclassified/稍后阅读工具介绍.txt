@@ -1,0 +1,109 @@
+(1)
+推荐类似wallabag的开源稍后阅读软件，并给出docker部署方法
+
+如果你正在寻找类似 Wallabag 的开源稍后阅读软件，并希望使用 Docker 进行部署，我可以向你推荐两个选择：
+
+1. Shaarli：Shaarli 是一个简单、轻量级的开源稍后阅读应用程序。它允许你保存链接、文章和笔记，
+并进行标记和分类。Shaarli 的界面简洁易用，并且具有一些有用的功能，如标签、搜索和导出。
+你可以使用以下步骤在 Docker 中部署 Shaarli：
+
+   - 首先，创建一个名为 `shaarli` 的目录，并进入该目录。
+   - 创建一个名为 `docker-compose.yml` 的文件，并将以下内容复制到文件中：
+
+     ```yaml
+     version: '3'
+     services:
+       shaarli:
+         image: shaarli/shaarli
+         ports:
+           - 8000:80
+         volumes:
+           - ./data:/var/www/shaarli/data
+     ```
+
+   - 保存文件后，在终端中运行以下命令启动 Shaarli：
+
+     ```
+     docker-compose up -d
+     ```
+
+   - 等待一段时间，直到容器成功启动。然后，你可以通过浏览器访问 `http://localhost:8000` 来访问 Shaarli。
+
+2. Wallabag：虽然 Wallabag 本身不是完全开源的，但有一个名为 "Wallabag Docker" 的开源项目，
+提供了一个使用 Docker 部署 Wallabag 的方法。你可以按照以下步骤进行部署：
+
+   - 首先，创建一个名为 `wallabag` 的目录，并进入该目录。
+   - 在终端中运行以下命令，从 Wallabag Docker 仓库中下载 Docker 配置文件：
+
+     ```
+     curl -LJO https://github.com/wallabag/docker/archive/2.4.3.tar.gz
+     tar -xzf 2.4.3.tar.gz --strip-components=1
+     ```
+
+   - 运行以下命令启动 Wallabag 容器：
+
+     ```
+     docker-compose up -d
+     ```
+
+   - 等待一段时间，直到容器成功启动。然后，你可以通过浏览器访问 `http://localhost:8080` 来访问 Wallabag。
+
+这些是两个开源的稍后阅读应用程序，并提供了使用 Docker 进行部署的方法。你可以根据自己的需求选择适合你的应用程序，
+并按照上述步骤进行部署。
+
+除了 Shaarli 和 Wallabag，还有一些其他的开源稍后阅读软件可以考虑。以下是其中两个的简介和 Docker 部署方法：
+
+1. Joplin：Joplin 是一个开源的笔记和稍后阅读应用程序，具有强大的功能和跨平台支持。
+它支持将文章、网页和笔记保存为 Markdown 格式，并提供了标签、文件夹和搜索等组织和管理功能。
+你可以使用以下步骤在 Docker 中部署 Joplin Server：
+
+   - 首先，创建一个名为 `joplin` 的目录，并进入该目录。
+   - 创建一个名为 `docker-compose.yml` 的文件，并将以下内容复制到文件中：
+
+     ```yaml
+     version: '3'
+     services:
+       joplin:
+         image: joplin/server
+         ports:
+           - 22300:22300
+         volumes:
+           - ./data:/data
+     ```
+
+   - 保存文件后，在终端中运行以下命令启动 Joplin Server：
+
+     ```
+     docker-compose up -d
+     ```
+
+   - 等待一段时间，直到容器成功启动。然后，你可以通过 Joplin 客户端连接到 `http://localhost:22300` 来使用 Joplin。
+
+2. Wallaroolabs/epub-press-clients：EpubPress 是一个将网页内容转换为 EPUB 格式的工具，
+可以方便地保存和阅读稍后阅读的内容。Wallaroolabs/epub-press-clients 是 EpubPress 的开源客户端，
+你可以使用以下步骤在 Docker 中部署它：
+
+   - 首先，创建一个名为 `epub-press` 的目录，并进入该目录。
+   - 创建一个名为 `docker-compose.yml` 的文件，并将以下内容复制到文件中：
+
+     ```yaml
+     version: '3'
+     services:
+       epub-press:
+         image: wallaroolabs/epub-press-clients
+         ports:
+           - 8080:8080
+     ```
+
+   - 保存文件后，在终端中运行以下命令启动 EpubPress 客户端：
+
+     ```
+     docker-compose up -d
+     ```
+
+   - 等待一段时间，直到容器成功启动。然后，你可以通过浏览器访问 `http://localhost:8080` 来使用 EpubPress。
+
+这些是另外两个开源的稍后阅读应用程序，并提供了使用 Docker 进行部署的方法。
+你可以根据自己的需求选择适合你的应用程序，并按照上述步骤进行部署。
+
+

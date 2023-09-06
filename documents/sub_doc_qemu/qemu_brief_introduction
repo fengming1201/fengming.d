@@ -1,0 +1,21 @@
+
+QEMU简介
+
+    QEMU的英文单词是：QuickEmulator，它是一个小巧的模拟器。还有很多模拟器，比如VMWare、Virtual Box等。
+    但是VMWare、VirtualBox只能模拟x86、AMD64/Intel64等PC系统；而QEMU可以模拟更多硬件：ARM、MIPS、PPC、x86、AMD64/Intel64。
+    QEMU用途广泛，比如Xen、Android模拟器等都是基于QEMU的。
+    在嵌入式领域，很多人使用QEMU来深研Linux，比如研究文件系统、优化等等。
+    QEMU有两种模式： 
+
+
+
+
+
+
+
+
+
+
+
+
+
