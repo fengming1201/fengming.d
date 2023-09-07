@@ -153,12 +153,12 @@ function fm-cmd_help
 	local help_file="none"
 	for file_list in ${parameter}
 	do
-		help_file=$(find ${help_file_path} -type f -iname "${file_list}*")
+		help_file=$(find ${help_file_path} -type f -iname "${file_list}*" -o -type l -iname "${file_list}*")
 		if [ "x${help_file}" = x ]
 		then 
 			echo "no found help file with prefix ${file_list}"
 			
-			local maybe_file=$(find ${help_file_path} -type f -iname "*${file_list}*")
+			local maybe_file=$(find ${help_file_path} -type f -iname "*${file_list}*" -o -type l -iname "*${file_list}*")
 			if [ "x${maybe_file}" != x ]
 			then
 				echo "maybe you looking for: "
