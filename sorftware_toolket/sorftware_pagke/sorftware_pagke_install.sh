@@ -136,22 +136,40 @@ function exe_func
 
 function install_scheduler_func
 {
-	exe_func buildin_install_vim_config_pkg
+	local select=$1
 
-	exe_func buildin_install_z_pkg
-
-	exe_func buildin_install_7zz_pkg
-
-	exe_func build_install_advcpmv_pkg
+	if [ ${select} = "A" ] || [ ${select} = "a" ] || [ ${select} = "all" ]
+	then
+		exe_func buildin_install_vim_config_pkg
+	fi		
+	if [ ${select} = "B" ] || [ ${select} = "b" ] || [ ${select} = "all" ]
+	then
+		exe_func buildin_install_z_pkg
+	fi		
+	if [ ${select} = "C" ] || [ ${select} = "c" ] || [ ${select} = "all" ]
+	then
+		exe_func buildin_install_7zz_pkg
+	fi
+	if [ ${select} = "D" ] || [ ${select} = "d" ] || [ ${select} = "all" ]
+	then
+		exe_func build_install_advcpmv_pkg
+	fi
 
 	return 0
 }
 
-install_scheduler_func $*
-ret=$?
-if [ ${ret} -ne 0 ]
+if [ $# -lt 1 ]
 then
-	echo "ERROR:tool_scheduler_func fail,ret=%{ret}"
+	echo "parameter error"
+	echo "A --install_vim_config_pkg"
+	echo "B --install_z_pkg"
+	echo "C --install_7zz_pkg"
+	echo "D --install_advcpmv_pkg"
+	echo "all install ABCD"
 	exit 1
-fi 
+fi
+for opt in $@
+do
+	install_scheduler_func $opt
+done
 exit 0
