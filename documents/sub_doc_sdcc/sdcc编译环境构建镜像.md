@@ -66,6 +66,10 @@ docker run -it --name my-container --device=/dev/ttyUSB0 ubuntu:latest
 # 使用基础镜像
 FROM ubuntu:latest
 
+# 设置工作目录
+WORKDIR /root
+
+RUN mkdir work
 # 更新软件包列表并安装SDCC和编译所需的依赖项
 RUN apt-get update && apt-get install -y \
                 sdcc \
@@ -74,32 +78,13 @@ RUN apt-get update && apt-get install -y \
                 build-essential \
                 git
 
-# 设置工作目录
-WORKDIR /work
-# 映射工作目录
-VOLUME 
 
 # 设置容器启动时执行的命令
 CMD ["/bin/bash"]
 
+docker build -t sdcc_51compiler .
 
-docker run -it --name sdcc_51compiler -v /home/lshm/Sourcecodes/sdcc/workdir:/work --device=/dev/ttyUSB0 sdcc-compiler
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+docker run -it --name sdcc_51compiler -v /home/lshm/Sourcecodes/sdcc/workdir:/work --device=/dev/ttyUSB0 dcc-compiler
 
 
 

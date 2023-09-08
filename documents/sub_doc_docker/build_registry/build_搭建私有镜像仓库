@@ -1,0 +1,201 @@
+(1)
+搭建无认证docker私有仓库
+
+要搭建一个无认证的Docker私有仓库，您可以使用Docker官方提供的开源项目Docker Registry。以下是搭建无认证Docker私有仓库的基本步骤：
+
+1. 安装Docker：确保您的服务器上已经安装了Docker。您可以按照Docker官方文档提供的指南安装Docker。
+
+2. 拉取Docker Registry镜像：运行以下命令来拉取Docker Registry镜像：
+
+```
+docker pull registry
+```
+
+3. 运行Docker Registry容器：运行以下命令来启动Docker Registry容器：
+
+```
+docker run -d \
+    --name myregistry \
+    --restart=always \
+    -p 5000:5000 \
+    -v /my_registry/registry:/var/lib/registry\
+    registry
+```
+
+这将在后台运行一个名为`registry`的容器，并将容器的5000端口映射到主机的5000端口。`--restart=always`选项将确保容器在服务器重启后自动启动。
+
+现在，您的无认证Docker私有仓库已经搭建完成。
+
+4. 推送和拉取镜像：您可以使用`docker push`命令将本地的Docker镜像推送到私有仓库，使用`docker pull`命令从私有仓库拉取镜像。例如，要推送一个镜像到私有仓库，可以运行以下命令：
+
+```
+docker tag <image-name> localhost:5000/<image-name>
+docker push localhost:5000/<image-name>
+```
+
+其中，`<image-name>`是您要推送的镜像的名称。
+
+要从私有仓库拉取镜像，可以运行以下命令：
+
+```
+docker pull localhost:5000/<image-name>
+```
+
+这将从私有仓库拉取指定名称的镜像。
+
+请注意，由于私有仓库没有认证机制，任何人都可以推送和拉取镜像。这意味着您的私有仓库对外是开放的，
+任何人都可以访问其中的镜像。如果您需要更严格的访问控制和认证机制，
+可以考虑配置Docker Registry的认证功能或者使用其他第三方的私有仓库管理工具。
+
+希望这可以帮助您搭建无认证的Docker私有仓库！如果您有任何其他问题，请随时提问。
+
+(2)
+教你搭建属于自己的镜像仓库
+
+学了这么久的Docker,相信大家也根据自己的需求构建了不少的镜像,但是打包，上传镜像太过麻烦，
+如果有一个属于自己的仓库来存放岂不美哉？
+
+想用哪个就下哪个，学完这篇你距离拥有自己的Docker兵器库就不远了。
+什么是Docker仓库
+• Docker仓库就是存放docker镜像并有docker pull方法下载的云环境
+docker pull 用法可以参考docker系列文章的第一篇:
+• Docker仓库分为公有仓库和私有仓库。
+• 公有仓库指Docker Hub(官方)等开放给用户使用、允许用户管理镜像。
+• 私有仓库指由用户自行搭建的存放镜像的云环境。
+
+(2)-(1)
+如何搭建无认证私有仓库
+
+主要步骤如下:
+• 第一步：在需要搭建仓库的服务器上安装docker。
+
+• 第二步：在服务器上，从docker hub下载registry仓库
+    docker pull registry
+
+• 第三步：在服务器上，启动仓库
+docker run -d -it \
+    --restart always\
+    --name my-registry\
+    -p 5000:5000\
+    -v /my_registry:/var/lib/registry\
+    registry
+
+ 注意：registry内部对外开放端口是5000。默认情况下，会镜像存放于容器内的/var/lib/registry(官网Dockerfile中查看)目录下，
+ 这样如果容器被删除，则存放于容器中的镜像也会丢失。
+注意:本地利用curl 服务器IP:5000/v2_catalog查看当前仓库中的存放的镜像列表。（注意打开5000端口访问）
+    curl localhost:5000/v2/_catalog
+    {"repositories":["debian_sdcc_for_51_new"]}
+
+向私有仓库上传、下载镜像
+• 第一步：利用docker tag重命名需要上传的镜像
+    docker tag IMAGE 服务器IP:端口/IMAGE_NAME
+
+• 第二步：利用docker push上传刚刚重命名的镜像
+    docker push 服务器IP:端口/IMAGE_NAME
+
+• 注意：
+如果push出现了类似https的错误，如
+root@FJKdebian64:~# docker push  116.62.103.60:5000/debian_with_rust 
+The push refers to repository [116.62.103.60:5000/debian_with_rust]
+Get https://116.62.103.60:5000/v2/: http: server gave HTTP response to HTTPS client
+
+那么需要往配置文件/etc/docker/daemon.json里添加：”insecure-registries”:[“服务器IP:端口”]
+
+root@FJKdebian64:scripts# cat /etc/docker/daemon.json 
+{
+    "registry-mirrors": ["http://hub-mirror.c.163.com","https://3laho3y3.mirror.aliyuncs.com","https://registry.docker-cn.com"],
+    "insecure-registries":["116.62.103.60:5000"]
+}
+然后重启docker。
+systemctl restart docker
+
+(2)-(2)
+搭建带认证的私有仓库
+在服务器上:
+• 第一步：删除先前创建的无认证的仓库容器
+    docker rm -f my_registry
+
+• 第二步：创建存放认证用户名和密码的文件：
+    mkdir /my_registry/auth -p
+
+• 第三步：创建密码验证文件。注意将将USERNAME和PASSWORD替换为设置的用户名和密码
+    1,首先，您需要安装Apache工具集中的htpasswd工具,apt-get install apache2-utils
+    2,创建密码验证文件：使用以下命令创建密码验证文件，并设置用户名和密码：格式：htpasswd -Bc /path/to/auth/htpasswd username
+    htpasswd -Bc /my_registry/auth/htpasswd fengming
+    New password: 
+    Re-type new password: 
+    Adding password for user fengming
+    将/path/to/auth/htpasswd替换为您希望保存密码的文件路径，username替换为您要创建的用户名。
+    执行命令后，系统将提示您输入密码并确认密码。
+    如果要添加更多用户，可以省略-c选项，例如：htpasswd -B /path/to/auth/htpasswd another_user
+
+    3，验证密码文件：您可以使用以下命令验证密码文件中的用户名和密码是否正确：
+    htpasswd -Bv /path/to/auth/htpasswd username
+
+    如果用户名和密码正确，将显示password verification successful消息。
+
+• 第四步：重新启动仓库镜像
+docker run -d -it \
+    --name myregistry \
+    --restart=always \
+    -p 5000:5000 \
+    -v /my_registry/registry:/var/lib/registry \
+    -v /my_registry/auth:/auth \
+    -e "REGISTRY_AUTH=htpasswd" \
+    -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+    -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd" \
+    registry
+
+
+带认证的私有仓库，如何上传、下载镜像
+
+在本地机器上:
+• 第一步：首先登录到服务器，按提示输入账户密码。
+    docker login  服务器IP:5000
+
+• 第二步：然后执行pull或者push命令,参考无认证仓库的上传/下载
+
+• 第三步：操作完毕后，可以退出登录
+    docker logout 服务器IP:5000
+
+这是如果想查看仓库中已有的镜像，那么需要进行http验证才可以。可以直接借助浏览器访问服务器IP:8000/v2/_catalog就可以访问了
+学到这，就赶紧动手搭建一个，不要光收藏不动手哇~
+
+
+
+（2）
+使用registry搭建私有仓库，如何查看仓库里有哪些镜像
+
+
+要查看Registry私有仓库中的镜像列表，您可以使用Docker命令行界面（CLI）或Registry的Web界面。
+
+使用Docker CLI查看Registry镜像列表的步骤如下：
+
+1. 确保您已经安装了Docker CLI，并且可以与Registry私有仓库建立连接。
+
+2. 运行以下命令来列出Registry私有仓库中的镜像：
+
+```
+docker search <registry-url>
+```
+
+其中，`<registry-url>`是您Registry私有仓库的URL地址。例如，如果您的私有仓库在本地主机上运行，并且端口映射为5000，
+则命令可能如下所示：
+
+```
+docker search localhost:5000
+```
+
+这将列出Registry私有仓库中的所有可用镜像。
+
+另外，您还可以使用Registry的Web界面来查看镜像列表。Registry提供了一个简单的Web界面，您可以通过浏览器访问。
+只需在浏览器中输入Registry的URL地址，即可打开Web界面。在界面上，您将能够浏览和搜索可用的镜像。
+
+请注意，Registry默认情况下是无认证的，因此任何人都可以访问其中的镜像。如果您需要更严格的访问控制和认证机制，
+请考虑配置Registry的认证功能或者使用其他第三方的私有仓库管理工具。
+
+希望这可以帮助您查看Registry私有仓库中的镜像列表！如果您有任何其他问题，请随时提问。
+
+
+
+
