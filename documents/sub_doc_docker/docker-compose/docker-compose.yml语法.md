@@ -119,8 +119,41 @@ networks:
 希望这个模板对您有所帮助。如果您有其他问题，请随时提问。
 
 
+（3）
+docker-compose.yml文件的所有保留字
 
+Docker Compose YAML 文件中的保留字和关键字包括以下内容：
+1. version：指定 Docker Compose 文件的版本号。
+2. services：定义各个服务的配置块。
+3. networks：定义网络的配置块。
+4. volumes：定义卷的配置块。
+5. image：指定服务所使用的镜像。
+6. build：指定构建镜像所需的上下文路径和 Dockerfile。
+7. ports：定义端口映射关系。
+8. expose：暴露容器的端口，但不进行主机端口映射。
+9. environment：设置服务的环境变量。
+10. env_file：从文件中加载环境变量。
+11. command：覆盖容器默认的启动命令。
+12. entrypoint：覆盖容器默认的入口点。
+13. volumes：定义数据卷的映射关系。
+14. networks：指定服务所连接的网络。
+15. depends_on：定义服务之间的依赖关系。
+16. restart：定义容器的重启策略。
+17. deploy：用于定义服务的部署配置，例如副本数、更新策略等。
+18. labels：为服务添加标签。
+19. external_links：连接到外部容器。
+20. extends：扩展其他服务的配置。
+21. secrets：引用 Docker 密钥管理器中的机密。
+22. configs：引用 Docker 配置管理器中的配置。
+23. healthcheck：定义容器的健康检查。
+24. sysctls：设置容器的内核参数。
+25. cap_add：添加容器的 Linux 能力。
+26. cap_drop：删除容器的 Linux 能力。
+27. tmpfs：将临时文件系统挂载到容器内部。
 
+这些保留字和关键字用于定义和配置 Docker Compose 文件中的各种属性和行为。根据您的需求，您可以使用这些关键字来编写适合您应用程序的 Docker Compose 文件。
+
+请注意，保留字和关键字是大小写敏感的，应按照正确的大小写形式使用它们。此外，Docker Compose 还支持其他选项和功能，您可以查阅 Docker Compose 的官方文档以获取更详细的信息和示例。
 
 
 

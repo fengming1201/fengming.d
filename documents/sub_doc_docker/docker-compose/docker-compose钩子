@@ -1,0 +1,170 @@
+（1）
+Docker Compose 有哪些钩子
+
+Docker Compose 提供了几个钩子（hooks），可以在特定的生命周期事件中执行自定义的操作。以下是 Docker Compose 中可用的一些钩子：
+
+1. `pre-build`：在《构建服务镜像》之前执行的命令或脚本。
+2. `post-build`：在《构建服务镜像》之后执行的命令或脚本。
+
+3. `pre-up`：在《启动服务容器》之前执行的命令或脚本。
+4. `post-up`：在《启动服务容器》之后执行的命令或脚本。
+
+5. `pre-down`：在《停止服务容器》之前执行的命令或脚本。
+6. `post-down`：在《停止服务容器》之后执行的命令或脚本。
+
+7. `pre-restart`：在《重启服务容器》之前执行的命令或脚本。
+8. `post-restart`：在《重启服务容器》之后执行的命令或脚本。
+
+您可以通过在 `docker-compose.yml` 文件中为每个服务定义这些钩子来使用它们。
+
+请注意，钩子只能在 Docker Compose 版本 3.7 或更高版本中使用。确保您的 Docker Compose 版本符合要求，
+并根据您的实际需求进行配置和调整。
+
+
+（2）
+Docker Compose 提供了哪些钩子（hooks），并给出使用示例
+
+Docker Compose 提供了以下钩子（hooks）：
+
+1. `pre-build`：在构建服务镜像之前执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 pre-build 钩子
+       lifecycle:
+         pre-build:
+           command: echo "执行 pre-build 钩子"
+   ```
+
+2. `post-build`：在构建服务镜像之后执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 post-build 钩子
+       lifecycle:
+         post-build:
+           command: echo "执行 post-build 钩子"
+   ```
+
+3. `pre-up`：在启动服务容器之前执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 pre-up 钩子
+       lifecycle:
+         pre-up:
+           command: echo "执行 pre-up 钩子"
+   ```
+
+4. `post-up`：在启动服务容器之后执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 post-up 钩子
+       lifecycle:
+         post-up:
+           command: echo "执行 post-up 钩子"
+   ```
+
+5. `pre-down`：在停止服务容器之前执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 pre-down 钩子
+       lifecycle:
+         pre-down:
+           command: echo "执行 pre-down 钩子"
+   ```
+
+6. `post-down`：在停止服务容器之后执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 post-down 钩子
+       lifecycle:
+         post-down:
+           command: echo "执行 post-down 钩子"
+   ```
+
+7. `pre-restart`：在重启服务容器之前执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 pre-restart 钩子
+       lifecycle:
+         pre-restart:
+           command: echo "执行 pre-restart 钩子"
+   ```
+
+8. `post-restart`：在重启服务容器之后执行的命令或脚本。
+   
+   示例：
+   ```yaml
+   version: "3"
+
+   services:
+     your_service:
+       image: your_image
+       # 其他服务配置...
+
+       # 定义 post-restart 钩子
+       lifecycle:
+         post-restart:
+           command: echo "执行 post-restart 钩子"
+   ```
+
+以上示例中，我们为每个钩子定义了一个简单的命令 `echo "执行钩子名称"`。您可以根据实际需求替换这些命令，执行自定义的操作。
+
+请注意，钩子只能在 Docker Compose 版本 3.7 或更高版本中使用。确保您的 Docker Compose 版本符合要求，
+并根据您的实际需求进行配置和调整。
+
+

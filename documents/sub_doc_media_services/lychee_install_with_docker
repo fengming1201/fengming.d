@@ -23,12 +23,13 @@
      -e PUID=<your_user_id> \
      -e PGID=<your_group_id> \
      -v /path/to/lychee:/config \
-     -v /path/to/photos/lychee-data:/var/www/html/uploads/import \
+     -v /opt/lychee/import:/import:ro \
+     -v /opt/lychee/storage:/app/www/public/uploads \
      linuxserver/lychee
    ```
 注意：我入坑
-用于存储本地的照片在容器内部不能映射为/app/www/public/uploads/import，因为lychee会清空里面的内容。
-用上面的目录/var/www/html/uploads/import即可，只是在导入是需要自己填写。
+用于存储本地的照片在容器内部不能映射为/app/www/public/uploads/import，因为lychee会清空里面的内容。/** 注意 **/
+用上面的目录/import即可，只是在导入是需要自己填写。
 
    请将 `<your_user_id>` 和 `<your_group_id>` 替换为您当前用户的用户 ID 和组 ID。
    您可以通过运行id -u和id -g命令来获取它们。将 `/path/to/lychee` 替换为您创建的数据目录的路径。
@@ -110,10 +111,11 @@ docker run -d \
         --name lychee \
         --restart=always \
         -p 2342:80 \
-        -e PUID=1000 \            
+        -e PUID=1000 \
         -e PGID=1000 \
         -v /opt/lychee/config:/config \
-        -v /opt/lychee/storage:/var/www/html/uploads \
+        -v /opt/lychee/import:/import:ro \
+        -v /opt/lychee/storage:/app/www/public/uploads \
         linuxserver/lychee
 
 注意：首次登陆会注册管理员账户，后续由它创建其他用户，导入照片等。
@@ -123,3 +125,26 @@ docker run -d \
 nginx
 
 原因是我用root用户运行docker，即-e PUID=0 -e PGID=0；lychee有删除原文件的操作，所以不能用root作为ID，要用普通用户。
+
+特别注意：
+删除docker后如何恢复？
+
+如上述中-v /opt/lychee/storage:/app/www/public/uploads 的映射是前提必备条件，因为上传或充 上传的照片会存储在这个目录下，
+但docker删除后重新运行会删除这个目录的所有内容，因此想要恢复之前上传的照片，就必须要拷贝这个目录（即主机下/opt/lychee/storage）
+，操作如下
+1，先停止docker，
+docker stop lychee
+cd -v /opt/lychee
+cp -r storage storage_bak
+
+2,删除已经停止的docker
+docker rm lychee
+
+3，修改配置或其他动作，如端口号
+
+
+4，启动新的docker,此时storage会被清空，需要手动把storage_bak拷回去，这样重新进入lychee，相册存储的内容都回来了。
+
+
+
+

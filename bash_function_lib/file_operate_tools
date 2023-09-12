@@ -278,3 +278,91 @@ function fm-json_format
 
 	return 0
 }
+
+function fm-dockerfile_vim_dictionary_copy2current_dir
+{
+	local dic_file_path=${fengming_top_dir}/documents/sub_doc_docker/Dockerfile/work_dictionary
+	local target_file=.work_dictionary
+	#check
+	if [ ! -f ${dic_file_path} ]
+	then
+		echo "vim dict file:$dic_file_path not exist"
+		return 1
+	fi
+	cp -v ${dic_file_path} ${target_file}
+	return 0
+}
+
+function fm-docker_compose_vim_dictionary_copy2current_dir
+{
+	local dic_file_path=${fengming_top_dir}/documents/sub_doc_docker/docker-compose/work_dictionary
+	local target_file=.work_dictionary
+	#check
+	if [ ! -f ${dic_file_path} ]
+	then
+		echo "vim dict file:$dic_file_path not exist"
+		return 1
+	fi
+	cp -v ${dic_file_path} ${target_file}
+	return 0
+}
+
+function fm-yml_file_check
+{
+	local yml_check_tool=yamllint 
+	#check
+	which ${yml_check_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "tool:${yml_check_tool} not exist."
+		echo "please install it first"
+		echo "apt install yamllint"
+		return 1
+	fi
+
+	for file in $@
+	do
+		if [ -f ${file} ]
+		then
+			${yml_check_tool} ${file}
+		else
+			echo "file:${file} not exist"
+		fi
+	done
+	return 0
+}
+function fm-docker_compose_check
+{
+	
+	local docker_compose_check1=docker-compose
+	local target_file=docker-compose.yml
+
+	echo "================== YML Check ============================"
+	fm-yml_file_check ${target_file}
+
+	which ${docker_compose_check1} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "tool:${docker_compose_check1} not exist."
+		echo "please install it first"
+		return 1
+	fi
+
+	echo "================= docker-compose config ================"
+	${docker_compose_check1} config
+	return 0
+}
+
+function fm-cmake_vim_dictionary_copy2current_dir
+{
+	local dic_file_path=${fengming_top_dir}/documents/sub_doc_cmake/work_dictionary
+	local target_file=.work_dictionary
+	#check
+	if [ ! -f ${dic_file_path} ]
+	then
+		echo "vim dict file:$dic_file_path not exist"
+		return 1
+	fi
+	cp -v ${dic_file_path} ${target_file}
+	return 0
+}
