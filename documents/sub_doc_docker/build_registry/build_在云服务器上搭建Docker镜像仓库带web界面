@@ -1,0 +1,117 @@
+搭建 Docker 私有镜像仓库
+
+我们获取镜像，绝大多数情况下，从 Docker 官方仓库或者知名第三方仓库（如阿里云）中获取，
+但是对于公司内基于自身的业务生成的 Docker 镜像，很有可能涉及到商业利益，肯定不能对外公开，
+因此需要存放在公司的 Docker 私有镜像仓库中。
+
+有关 Docker 的私有仓库的搭建过程，也非常简单，一般是获取和运行 Docker 官方提供的 Registry 镜像来实现。
+但是官网没有提供图形化界面，第三方提供了图形化界面 docker-registry-ui 镜像可以使用。
+本篇博客就展示带有图形化界面的 Docker 私有镜像仓库搭建过程。
+
+DockerRegistry 的官网地址为：https://hub-stage.docker.com/_/registry
+Docker Registry Web UI
+
+    Docker Hub: parabuzzle/craneoperator
+        docker pull parabuzzle/craneoperator:2.2.5
+    Docker Hub: evedel/bow
+        docker pull evedel/bow:alpine-latest
+    Docker Hub: joxit/docker-registry-ui
+        docker pull joxit/docker-registry-ui
+    Docker Hub: quiq/docker-registry-ui
+        docker pull quiq/docker-registry-ui
+    klausmeyer/docker-registry-browser
+        docker pull klausmeyer/docker-registry-browser
+
+一、配置 Docker 信任地址
+
+本篇博客基于之前已经安装好 Docker 的虚拟机进行演示，虚拟机的 ip 地址是：192.168.216.128
+
+使用命令 vim /etc/docker/daemon.json 编辑 docker 服务配置文件，内容如下：
+
+root@FJKdebian64:~# cat /etc/docker/daemon.json 
+{
+        "registry-mirrors": ["http://hub-mirror.c.163.com","https://3laho3y3.mirror.aliyuncs.com","https://registry.docker-cn.com"],
+        "insecure-registries":["139.9.186.120:8080"]
+}
+
+以上内容新增加了即将要搭建的 Docker 私有镜像仓库的 web 图形化界面访问的地址和端口。
+
+添加完成之后，需重新加载 daemon 服务以及重启 docker 服务：
+
+# 重新加载 daemon
+systemctl daemon-reload
+
+# 重启 docker
+systemctl restart docker
+
+二、搭建私有镜像仓库
+
+我个人喜欢把软件安装在 /app 目录中，因此我先在 app 目录下创建一个目录：mkdir /app/registry-ui
+
+然后进入目录：cd /app/registry-ui/ ，然后创建并编辑 docker-compose.yml 文件：vim docker-compose.yml
+
+cat docker-compose.yml
+root@hecs-160833:~/registry_ui# cat docker-compose.yml
+version: '3.8'
+
+services:
+  registry-ui:
+    image: joxit/docker-registry-ui:main
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - SINGLE_REGISTRY=true
+      - REGISTRY_TITLE=Docker Registry UI
+      - DELETE_IMAGES=true
+      - SHOW_CONTENT_DIGEST=true
+      - NGINX_PROXY_PASS_URL=http://registry-server:5000
+      - SHOW_CATALOG_NB_TAGS=true
+      - CATALOG_MIN_BRANCHES=1
+      - CATALOG_MAX_BRANCHES=1
+      - TAGLIST_PAGE_SIZE=100
+      - REGISTRY_SECURED=false
+      - CATALOG_ELEMENTS_LIMIT=1000
+    container_name: registry-ui
+
+  registry-server:
+    image: registry:2.8.2
+    restart: always
+    environment:
+      REGISTRY_HTTP_HEADERS_Access-Control-Origin: '[http://registry.example.com]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: '[HEAD,GET,OPTIONS,DELETE]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Credentials: '[true]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: '[Authorization,Accept,Cache-Control]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers: '[Docker-Content-Digest]'
+      REGISTRY_STORAGE_DELETE_ENABLED: 'true'
+    volumes:
+      - ./registry_data:/var/lib/registry
+    container_name: registry-server
+
+在 registry 镜像下配置了数据卷的映射：./registry_data:/var/lib/registry ，因为我们运行 docker-compose 命令是在 /app/registry-ui/ 目录下运行，因此后续我们上传的私有 Docker 镜像，就会存放在 /var/lib/registry 目录中。
+
+三、最后，让我们在 /registry-ui/ 下运行 docker-compose 命令吧：docker-compose up -d
+
+然后我们就可以打开浏览器输入 http://192.168.216.128:8050 访问搭建好的 docker 私有镜像仓库页面。
+
+
+
+（3）
+docker-registry-ui 提示 Pagination number invalid 错误
+错误描述
+
+{"errors":[{"code":"PAGINATION_NUMBER_INVALID","message":"invalid number of results requested","detail":{"n":100000}}]}
+
+解决方法 
+
+加一个参数 -e CATALOG_ELEMENTS_LIMIT="1000" \
+
+
+docker run -p 8280:80 --name registry-ui \
+--link registry2:registry2 \
+-e REGISTRY_URL="http://registry2:5000" \
+-e DELETE_IMAGES="true" \
+-e REGISTRY_TITLE="Registry2" \
+-e CATALOG_ELEMENTS_LIMIT="1000" \
+-d joxit/docker-registry-ui:static
+

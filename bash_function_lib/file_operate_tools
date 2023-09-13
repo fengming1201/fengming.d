@@ -353,6 +353,38 @@ function fm-docker_compose_check
 	return 0
 }
 
+function fm-docker_compose_template
+{
+	local template_file=${fengming_top_dir}/documents/sub_doc_docker/docker-compose/docker-compose.yml.template
+	local target_file=docker-compose.yml
+	if [ ! -f ${template_file} ]
+	then
+		echo "template file:${template_file} not exist"
+		return 1
+	fi
+	echo " "
+	cat -n ${template_file}
+	echo " "
+	local opt="N"
+	if [ -f ${target_file} ]
+	then
+		read -p "Overwrite Current docker-compose.yml? [y/N]"  opt
+		if [ "x${opt}" = "x" ];then opt="N";fi
+		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
+		then
+			cp -v ${template_file} ${target_file}
+		fi
+	else
+		read -p "Copy docker-compose.yml template to here? [Y/n]"  opt
+		if [ "x${opt}" = "x" ];then opt="Y";fi
+		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
+		then
+			cp -v ${template_file} ${target_file}
+		fi
+	fi
+	return 0
+}
+
 function fm-cmake_vim_dictionary_copy2current_dir
 {
 	local dic_file_path=${fengming_top_dir}/documents/sub_doc_cmake/work_dictionary

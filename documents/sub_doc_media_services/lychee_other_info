@@ -86,3 +86,19 @@ Lychee 如何设置不用登陆就能看相册
 
 请注意，公开模式下，访问者只能查看相册和照片，不能进行编辑、上传或删除操作。如果您需要更多的访问控制和权限管理，可以考虑其他选项，如创建访客账户或使用 Lychee 的用户管理功能。
 
+
+
+symbolic links
+Import files using symbolic links to originals
+符号链接
+使用到原始文件的符号链接导入文件
+
+Skip duplicates
+Existing media files are skipped
+跳过重复项
+跳过现有媒体文件
+
+Re-sync metadata
+Opdate metadata of existing media files
+重新同步元数据
+现有媒体文件的Opdate元数据
