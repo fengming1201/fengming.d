@@ -1,0 +1,65 @@
+
+step 1:
+Get the Excalidraw Docker Image: Excalidraw provides an official Docker image that you can use to set up a self-hosted instance. Pull the latest Excalidraw Docker image from the Docker Hub using the following command:
+
+#docker pull excalidraw/excalidraw:latest
+
+step 2:
+Run Excalidraw Docker Container: Once you have the Excalidraw image, you can run a new Docker container using the following command:
+
+#docker run -d -p 8080:80 --name my-excalidraw-instance excalidraw/excalidraw:latest
+
+This command will create and run a new Excalidraw container, mapping port 80 inside the container to port 8080 on your host machine. You can replace “8080” with your desired port number.
+
+step 3:
+Access the Self-Hosted Excalidraw Client: After the container is running, you can access the self-hosted Excalidraw client by navigating to http://localhost:8080 (or your chosen port) in your web browser.
+
+
+Setting up Excalidraw with Docker Compose
+
+You can use the following Docker Compose code to setup Excalidraw. Create a docker-compose.yml file with the following contents:
+version: '3.3'
+
+services:
+  excalidraw:
+    image: excalidraw/excalidraw:latest
+    restart: always
+    ports:
+      - 3000:80
+    container_name: excalidraw
+
+or 
+You can easily combine this with a reverse proxy like Traefik to connect using a secure connection. You can do that with example code that looks something like this:
+
+version: "3.8"
+
+services:
+  excalidraw:
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    container_name: excalidraw
+    ports:
+      - "3000:80"
+    restart: on-failure
+    stdin_open: true
+    healthcheck:
+      disable: true
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./:/opt/node_app/app:delegated
+      - ./package.json:/opt/node_app/package.json
+      - ./yarn.lock:/opt/node_app/yarn.lock
+      - notused:/opt/node_app/app/node_modules
+
+volumes:
+  notused:
+
+step 4:
+Once you have your docker-compose.yml file created, simply issue the command:
+
+#docker-compose up -d
+
+learn more to see:https://www.virtualizationhowto.com/2023/04/excalidraw-whiteboard-ultimate-docker-self-hosted-home-lab-diagramming/

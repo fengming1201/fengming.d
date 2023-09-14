@@ -1,0 +1,59 @@
+version: '3'
+services:
+  service1:
+    image: image1
+    build:
+      context: .
+      dockerfile: Dockerfile1
+    command: command1
+    container_name: container1
+    depends_on:
+      - service2
+    entrypoint: entrypoint1
+    environment:
+      - KEY1=value1
+    expose:
+      - 8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - network1
+    ports:
+      - "8000:80"
+    restart: always
+    volumes:
+      - /path/to/volume1:/app/data1
+
+  service2:
+    image: image2
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    command: command2
+    container_name: container2
+    depends_on:
+      - service1
+    entrypoint: entrypoint2
+    environment:
+      - KEY2=value2
+    expose:
+      - 8081
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - network1
+    ports:
+      - "8001:80"
+    restart: always
+    volumes:
+      - /path/to/volume2:/app/data2
+
+networks:
+  network1:
+    driver: bridge

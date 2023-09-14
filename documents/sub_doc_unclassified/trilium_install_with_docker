@@ -1,0 +1,74 @@
+（1）
+docker部署Trilium，给出docker-compose.yml
+
+
+当使用 Docker 部署 Trilium 时，可以创建一个 `docker-compose.yml` 文件来定义容器的配置和服务。
+下面是一个示例的 `docker-compose.yml` 文件，用于部署 Trilium：
+
+```yaml
+version: '3'
+services:
+    trilium:
+        image: nriver/trilium-cn
+        container_name: trilium-cn
+        restart: always
+        ports:
+            - 8000:8080
+        environment:
+            - TRILIUM_DATA_DIR=/data
+        volumes:
+            - ./data:/data
+```
+[可以直接部署]
+
+在这个示例中，我们使用了 `trilium/trilium` 镜像，并将容器的重启策略设置为 `always`，以确保容器在意外关闭后会自动重新启动。我们将容器的 `8080` 端口映射到主机的 `8080` 端口，以便可以通过浏览器访问 Trilium。最后，我们将 Trilium 的数据目录挂载到主机的 `./data` 目录，以便数据可以持久化保存。
+
+要部署 Trilium，按照以下步骤操作：
+
+1. 在服务器上创建一个目录，用于保存 `docker-compose.yml` 文件和 Trilium 的数据。
+2. 在该目录中创建一个名为 `docker-compose.yml` 的文件，并将上述示例 `docker-compose.yml` 内容复制到文件中。
+3. 打开终端或命令行界面，导航到保存了 `docker-compose.yml` 文件的目录。
+4. 运行以下命令启动 Trilium 容器：
+
+   ```
+   docker-compose up -d
+   ```
+
+   这将会下载 Trilium 镜像（如果尚未下载），并在后台启动 Trilium 容器。
+
+5. 等待一段时间，直到容器启动完成。您可以使用以下命令检查容器的运行状态：
+
+   ```
+   docker-compose ps
+   ```
+
+   如果一切正常，您应该看到 `trilium` 服务处于运行状态。
+
+6. 现在，您可以通过浏览器访问 `http://localhost:8080` 来访问 Trilium。如果您在远程服务器上部署 Trilium，则需要替换 `localhost` 为服务器的 IP 地址或域名。
+
+请注意，这只是一个简单的示例 `docker-compose.yml` 文件，您可以根据需要进行修改和调整。另外，确保您的服务器已经安装了 Docker 和 Docker Compose，以便能够成功部署 Trilium。
+
+
+（2）
+环境变量配置
+
+Trilium 的 Docker 容器支持一些常见的环境变量，可以用于配置和自定义 Trilium 的行为。以下是一些常见的 Trilium Docker 环境变量：
+
+- `TRILIUM_APP_PORT`：指定 Trilium 应用程序的端口号，默认为 `8080`。
+- `TRILIUM_APP_HOST`：指定 Trilium 应用程序的主机地址，默认为 `0.0.0.0`，表示接受所有入站连接。
+- `TRILIUM_APP_PROTOCOL`：指定 Trilium 应用程序的协议，默认为 `http`。如果使用 SSL/TLS 加密，请设置为 `https`。
+- `TRILIUM_APP_DATA_DIR`：指定 Trilium 数据的存储目录，默认为 `/app/data`。您可以将此目录挂载到主机上的某个位置，以便数据可以持久化保存。
+- `TRILIUM_APP_TMP_DIR`：指定 Trilium 的临时文件目录，默认为 `/app/tmp`。类似地，您可以将此目录挂载到主机上的某个位置。
+- `TRILIUM_APP_LOG_DIR`：指定 Trilium 的日志文件目录，默认为 `/app/log`。您可以将此目录挂载到主机上的某个位置，以便查看和管理日志文件。
+- `TRILIUM_APP_DB_TYPE`：指定 Trilium 数据库的类型，默认为 `sqlite`。其他可选值包括 `postgres`（PostgreSQL）和 `mysql`（MySQL）。
+- `TRILIUM_APP_DB_HOST`：指定 Trilium 数据库的主机地址，默认为空。如果使用外部数据库服务器，请设置为相应的主机地址。
+- `TRILIUM_APP_DB_PORT`：指定 Trilium 数据库的端口号，默认为空。如果使用非默认端口，请设置为相应的端口号。
+- `TRILIUM_APP_DB_NAME`：指定 Trilium 数据库的名称，默认为 `triliumdb`。
+- `TRILIUM_APP_DB_USER`：指定 Trilium 数据库的用户名，默认为 `trilium`。
+- `TRILIUM_APP_DB_PASS`：指定 Trilium 数据库的密码，默认为空。
+
+您可以根据需要设置这些环境变量，以满足特定的配置需求。例如，如果您希望将 Trilium 数据存储到主机上的 `/mydata` 目录，可以将 `TRILIUM_APP_DATA_DIR` 设置为 `/mydata`，然后将该目录挂载到容器中。
+
+请注意，这些环境变量只是一部分常见的选项，Trilium 还提供了其他高级配置选项，可以在官方文档中找到更多详细信息。
+
+

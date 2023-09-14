@@ -1,0 +1,63 @@
+（1）
+docker部署Laverna，给出docker-composee.yml
+
+当使用 Docker Compose 部署 Laverna 时，可以创建一个 `docker-compose.yml` 文件来定义容器的配置和服务。以下是一个示例的 `docker-compose.yml` 文件：
+
+```yaml
+version: '3'
+services:
+  laverna:
+    image: thklein/laverna:latest
+    ports:
+      - 8080:80
+    volumes:
+      - ./data:/usr/share/nginx/html/data
+    restart: always
+```
+
+在这个示例中，我们定义了一个 `laverna` 服务，使用 `laverna/laverna` 镜像。我们将容器的 80 端口映射到主机的 8080 端口，并将 `./data` 目录挂载到容器内的 `/usr/share/nginx/html/data` 目录，以持久化保存数据。
+
+要部署 Laverna，您可以执行以下步骤：
+
+1. 创建一个名为 `docker-compose.yml` 的文件，并将上述示例内容复制到该文件中。
+
+2. 打开终端或命令提示符，导航到包含 `docker-compose.yml` 文件的目录。
+
+3. 运行以下命令来启动 Laverna 容器：
+
+```
+docker-compose up -d
+```
+
+这将使用 Docker Compose 启动 Laverna 容器，并在后台运行。
+
+4. 访问 Laverna：打开您的浏览器，访问 `http://localhost:8080`（或适当的端口，如果您在 `docker-compose.yml` 文件中更改了映射）。您应该能够看到 Laverna 的登录界面。
+
+请注意，这只是一个基本的部署示例。您可以根据需要调整端口映射和数据目录的挂载路径。另外，请确保您在使用 Laverna 或任何其他开源软件之前，仔细阅读官方文档和相关指南，以确保正确配置和操作。
+
+
+（2）
+免费、好用、强大的开源笔记软件综合评测：https://baijiahao.baidu.com/s?id=1736795298787342547&wfr=spider&for=pc
+具体包括，Joplin、 Turtle、 Laverna、 Boostnote、 Anytype、 Focalboard、 TiddlyWiki 、 Athens、 Trilium.
+
+Joplin —— EverNote/印象笔记的开源替代品
+Turtle —— 强大的开源笔记软件
+Laverna —— 强大的开源笔记软件
+Boostnote—— 一款适合程序员的开源笔记应用程序
+Anytype —— Notion 的开源替代品
+Focalboard —— Notion 的开源替代品
+TiddlyWiki —— Roam Research 的开源替代品
+Athens —— Roam Research 的开源替代品
+Trilium —— 类似 Obsidian 的开源个人知识库
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,53 @@
+（1）
+用docker搭建rocket.chat，给出docker-compose.yml
+
+
+当使用 Docker 搭建 Rocket.Chat 时，可以使用 Docker Compose 来管理容器和服务。下面是一个示例的 `docker-compose.yml` 文件，用于搭建 Rocket.Chat：
+
+```yaml
+version: '3'
+services:
+  rocketchat:
+    image: rocketchat/rocket.chat:latest
+    restart: unless-stopped
+    container_name: myrocketchat
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - ROOT_URL=http://localhost:3000
+    depends_on:
+      - mongo
+    volumes:
+      - ./uploads:/app/uploads
+
+  mongo:
+    image: mongo:4.4
+    restart: unless-stopped
+    volumes:
+      - ./data/db:/data/db
+```
+
+[上述yml直接可用]
+
+这个 `docker-compose.yml` 文件定义了两个服务：`rocketchat` 和 `mongo`。
+
+- `rocketchat` 服务使用 `rocketchat/rocket.chat` 镜像，将容器的 3000 端口映射到主机的 3000 端口。它设置了一些环境变量来配置 Rocket.Chat，如 `MONGO_URL`、`MONGO_OPLOG_URL` 和 `ROOT_URL`。此外，它依赖于 `mongo` 服务，并将 `./uploads` 目录挂载到容器的 `/app/uploads` 目录，用于存储上传的文件。
+
+- `mongo` 服务使用 `mongo:4.4` 镜像，并将容器的 `/data/db` 目录挂载到主机的 `./data/db` 目录，用于持久化存储 MongoDB 数据。
+
+要使用上述 `docker-compose.yml` 文件，请按照以下步骤操作：
+
+1. 在与 `docker-compose.yml` 文件相同的目录中创建一个名为 `uploads` 的空文件夹，用于存储上传的文件。
+
+2. 使用以下命令启动 Rocket.Chat 和 MongoDB 容器：
+   ```
+   docker-compose up -d
+   ```
+
+   `-d` 参数表示在后台运行容器。
+
+3. 等待容器启动完成，然后在浏览器中访问 `http://localhost:3000`，即可打开 Rocket.Chat 的 Web 界面。
+
+这样，您就成功使用 Docker 搭建了 Rocket.Chat。您可以根据需要进行进一步的配置和定制，例如设置反向代理、配置域名等。
