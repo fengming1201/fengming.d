@@ -24,3 +24,6 @@ sysctls
 tmpfs
 version
 volumes
+always
+unless-stopped
+on-failure

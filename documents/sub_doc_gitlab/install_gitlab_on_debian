@@ -1,0 +1,46 @@
+载安装GitLab 免费版
+
+官方Linux安装包（推荐）
+
+通过单个安装包（Omnibus）进行安装，安装包内已捆绑了运行GitLab 所需的所有服务与工具。 
+
+ 1. 安装和配置必须的依赖项
+
+sudo apt-get update 
+sudo apt-get install -y curl openssh-server ca-certificates perl
+
+（可选）下一步，安装 Postfix 以发送电子邮件通知。如果您想使用其他解决方案发送电子邮件，
+请跳过此步骤并在安装GitLab 后配置外部 SMTP 服务器。
+
+sudo apt-get install -y postfix
+
+在安装 Postfix 的过程中可能会出现一个配置界面，在该界面中选择“Internet Site”并按下回车。
+把“mail name”设置为您服务器的外部 DNS 域名并按下回车。如果还有其它配置界面出现，继续按下回车以接受默认配置。
+2. 下载/安装GitLab
+
+配置GitLab 软件源镜像。
+
+curl -fsSL https://packages.gitlab.cn/repository/raw/scripts/setup.sh | /bin/bash
+
+接下来，安装GitLab。确保您已正确设置您的 DNS，并更改 https://gitlab.example.com 为您要访问GitLab 实例的 URL。
+安装包将在该 URL 上自动配置和启动GitLab。
+
+对于 https 站点，GitLab 将使用 Let's Encrypt 自动请求 SSL 证书，这需要有效的主机名和入站 HTTP 访问。
+您也可以使用自己的证书或仅使用 http://（不带s）。
+
+如果您想为初始管理员用户(root)指定自定义密码，请查看文档。如果未指定密码，将自动生成随机密码。
+
+执行如下命令开始安装：
+
+sudo EXTERNAL_URL="https://gitlab.example.com" apt-get install gitlab-jh
+
+3. 访问GitLab 实例并登录
+
+除非您在安装过程中指定了自定义密码，否则将随机生成一个密码并存储在 /etc/gitlab/initial_root_password 文件中(出于安全原因，
+24 小时后，此文件会被第一次 gitlab-ctl reconfigure 自动删除，因此若使用随机密码登录，建议安装成功初始登录成功之后，
+立即修改初始密码）。使用此密码和用户名 root 登录。
+
+有关安装和配置的详细说明，请参阅我们的文档。
+4. 后续配置
+
+完成安装后，请参考建议的后续配置，包括身份验证选项和注册限制的配置。

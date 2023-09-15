@@ -1,0 +1,39 @@
+
+Docker部署nginx-rtmp实现流媒体服务与ffmpeg推流测试
+
+step 1: pull images
+
+docker search nginx-rtmp
+docker pull  tiangolo/nginx-rtmp
+
+
+step 2: edit docker-compose.yml
+
+version: "3.8"
+    
+services:
+    nginx_rtmp:
+        image: tiangolo/nginx-rtmp
+        container_name: nginx-rtmp
+        ports:
+            - "1935:1935"
+
+step 3: run up 
+docker-compose up -d
+
+
+step 4：推流
+将视频文件用ffmpeg推流到流媒体服务器中。
+安装：apt install ffmpeg
+
+
+ffmpeg -re -i 阿索卡第04集.mp4  -vcodec libx264 -acodec aac -f flv rtmp://localhost:1935/live/123456
+
+
+step 5:拉流播放
+VLC player:
+
+rtmp://localhost:1935/live/123456
+
+
+
