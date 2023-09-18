@@ -1,0 +1,78 @@
+要使用 Docker Compose 部署 Piwigo，您可以按照以下步骤进行操作：
+
+1. 安装 Docker Compose：确保您的服务器上已安装 Docker Compose。您可以按照 Docker Compose 官方文档中的指引进行安装。
+
+2. 创建 Docker Compose 文件：在您的服务器上创建一个名为 `docker-compose.yml` 的文件，并添加以下内容：
+
+```yaml
+version: '3'
+services:
+  piwigo:
+    image: piwigo
+    network_mode: bridge
+    ports:
+      - 2342:80
+    volumes:
+      - piwigo_data:/var/www/html/galleries
+    environment:
+      - PUID=1000
+      - PGID=1000
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - piwigo_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=<mysql-root-password>
+      - MYSQL_DATABASE=piwigodb
+      - MYSQL_USER=piwigo
+      - MYSQL_PASSWORD=12345678
+    restart: always
+
+volumes:
+  piwigo_data:
+  piwigo_db:
+```
+==========================
+version: "3"
+
+services:
+  piwigo:
+    image: linuxserver/piwigo
+    container_name: piwigo
+    network_mode: bridge
+    ports:
+      - 2342:80
+    environment:
+      - PUID=1000
+      - PGID=1000
+    links:
+      - db
+
+  db:
+    image: mysql:latest
+    network_mode: bridge
+    environment:
+      MYSQL_USER: "piwigo"
+      MYSQL_PASSWORD: "12345678"
+      MYSQL_DATABASE: "piwigo"
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+
+
+请替换 `<user-id>`、`<group-id>`、`<mysql-root-password>`、`<mysql-database>`、`<mysql-user>` 和 `<mysql-password>` 为您自己的值。
+
+3. 启动容器：在包含 `docker-compose.yml` 文件的目录中，运行以下命令启动 Piwigo 容器：
+
+```bash
+docker-compose up -d
+```
+
+这将启动 Piwigo 和 MySQL 容器，并将它们连接在一起。Piwigo 将通过端口 8080 进行访问，您可以根据需要更改端口映射。
+
+4. 访问 Piwigo：在浏览器中访问 `http://<服务器IP地址>:8080`，按照 Piwigo 的安装向导进行配置。您需要提供数据库连接信息和其他必要的设置。
+
+通过以上步骤，您可以使用 Docker Compose 快速部署 Piwigo，并开始使用它来上传和管理您的图片库。请记得根据您的需求进行进一步的配置和定制。

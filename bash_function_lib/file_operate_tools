@@ -168,7 +168,7 @@ function fm-grep_aviv
     local filename=none
 
 	#check parameter
-    if [ $# -ne 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
@@ -196,7 +196,7 @@ function fm-grep_aviv
     $app ${default_opt} $*
 	$app -in $* ${tmp_file}
 	
-	if [ ${filename} != none ]
+	if [ "${filename}" != "none" ]
 	then
 		$app ${default_opt} ${filename}
 		$app -in ${filename} ${tmp_file}
@@ -336,7 +336,16 @@ function fm-docker_compose_check
 	
 	local docker_compose_check1=docker-compose
 	local target_file=docker-compose.yml
-
+	
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "$FUNCNAME [filename],but default para is ./docker-compose.yml"
+		return 1
+	fi
+	if [ $# -eq 1 ]
+	then
+		target_file=$1
+	fi
 	echo "================== YML Check ============================"
 	fm-yml_file_check ${target_file}
 
@@ -398,3 +407,5 @@ function fm-cmake_vim_dictionary_copy2current_dir
 	cp -v ${dic_file_path} ${target_file}
 	return 0
 }
+
+

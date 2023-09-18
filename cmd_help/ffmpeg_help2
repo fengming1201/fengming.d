@@ -29,7 +29,24 @@ FFmpeg 是一个功能强大的跨平台多媒体处理工具，提供了许多�
 建议查阅 FFmpeg 的官方文档和手册以了解更多命令选项和用法，并根据具体需求进行相应配置。
 
 示例：
-ffmpeg -re -i 阿索卡第04集.mp4 -f flv  -vcodec libx264 -acodec aac  rtmp://localhost:1935/live/123456
 
+要使用 FFmpeg 将视频文件推流到流媒体服务器，您可以使用以下命令：
 
+ffmpeg -re -i input_file -c:v codec -c:a codec -f format rtmp://server/live/stream_key
 
+其中，各个参数的含义如下：
+
+    -re：以实时速度推流，适用于实时直播。
+    -i input_file：指定输入文件的路径和文件名。
+    -c:v codec：指定视频编码器。
+    -c:a codec：指定音频编码器。
+    -f format：指定输出文件的格式，这里是流媒体格式。
+    rtmp://server/live/stream_key：指定推流的流媒体服务器地址和流密钥。
+
+请将上述命令中的 input_file 替换为您要推流的视频文件的路径和文件名，codec 替换为适合您需求的视频编码器和音频编码器，format 替换为流媒体服务器支持的格式，server 替换为流媒体服务器的地址，live 替换为流媒体服务器上的应用程序名称，stream_key 替换为流媒体服务器上的流密钥。
+
+例如，如果您要将名为 video.mp4 的视频文件推流到名为 live 的应用程序并使用密钥 stream123，并且流媒体服务器的地址为 rtmp://example.com，则命令如下：
+
+ffmpeg -re -i video.mp4 -c:v libx264 -c:a aac -f flv rtmp://example.com/live/stream123
+
+请确保您已经正确安装和配置了 FFmpeg，并且流媒体服务器支持所选的编码器和格式。
