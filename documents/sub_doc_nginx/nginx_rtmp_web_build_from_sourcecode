@@ -1,0 +1,170 @@
+(1)
+构建nginx_rtmp_web，并带web管理页面
+
+要构建带有RTMP模块和Web管理页面的nginx，您需要执行以下步骤：
+
+1. 下载nginx源代码：
+   ```bash
+   wget http://nginx.org/download/nginx-1.21.3.tar.gz
+   tar -zxvf nginx-1.21.3.tar.gz
+   cd nginx-1.21.3/
+   ```
+
+2. 下载nginx-rtmp-module模块源代码：
+   ```bash
+   git clone https://github.com/arut/nginx-rtmp-module.git
+   ```
+
+3. 安装编译依赖：
+   ```bash
+   sudo apt-get install build-essential libpcre3 libpcre3-dev libssl-dev zlib1g-dev
+   ```
+
+4. 配置并编译nginx：
+   ```bash
+   ./configure --add-module=path/to/nginx-rtmp-module
+   make
+   make install
+   ```
+
+   请将`path/to/nginx-rtmp-module`替换为实际的`nginx-rtmp-module`模块的路径。
+
+5. nginx的Web管理页面的文件夹：
+   ```bash
+   tree -d /usr/local/nginx/
+    /usr/local/nginx/
+    ├── client_body_temp
+    ├── conf
+    ├── fastcgi_temp
+    ├── html
+    ├── logs
+    ├── proxy_temp
+    ├── sbin
+    ├── scgi_temp
+    └── uwsgi_temp
+
+    9 directories
+   ```
+
+6. 拷贝Web管理页面的样式文件：
+   ```bash
+    cp nginx-rtmp-module/stat.xsl /usr/local/nginx/html/stat.xsl
+   ```
+
+7. 创建nginx配置文件：
+   ```bash
+   vim /usr/local/nginx/conf/nginx.conf
+   ```
+
+   在打开的文件中，添加以下内容：
+   ```nginx
+    worker_processes  1;
+
+    events {
+        worker_connections  1024;
+    }
+
+    rtmp {
+        server {
+            listen 1935;
+            chunk_size 4096;
+
+            application live {
+                live on;
+                record off;
+            }
+        }
+    }
+
+    http {
+        include       mime.types;
+        default_type  application/octet-stream;
+
+        server {
+            listen       8090;
+            server_name  localhost;
+
+            location /stat {
+                rtmp_stat all;
+                rtmp_stat_stylesheet stat.xsl;
+            }
+            location /stat.xsl {
+                root /usr/local/nginx/html/;
+            }
+            location / {
+                root   html;
+                index  index.html index.htm;
+            }
+        }
+    }
+
+   ```
+
+   保存并关闭文件。
+
+8. 启动nginx服务：
+   ```bash
+   /usr/local/nginx/sbin/nginx
+   ```
+
+   现在，您已经构建了带有RTMP模块和Web管理页面的nginx服务器。您可以通过访问服务器的IP地址或域名来查看Web管理页面，并使用RTMP协议推流到服务器。
+
+请注意，这只是一个基本的示例配置，您可能需要根据您的实际需求进行进一步的配置和调整。
+
+（2）
+docker容器化
+
+以debian镜像为基础，在其中构建编译安装nginx_rtmp_web，然后将该容器转为镜像即可。
+（1）运行基础容器
+docker run -it -d --name nginx_rtmp_web_build  debian_base:v1.1  /bin/bash
+
+2，进入容器中构建nginx_rtmp_web
+docker exec -it nginx_rtmp_web_build /bin/bash
+
+   wget http://nginx.org/download/nginx-1.21.3.tar.gz
+   git clone https://github.com/arut/nginx-rtmp-module.git
+   tar -zxvf nginx-1.21.3.tar.gz
+   cd nginx-1.21.3/
+   ./configure --add-module=path/to/nginx-rtmp-module
+   make
+   make install
+
+3，清理编译中间文件，退出容器
+exit
+
+4,将容器转为镜像
+docker commit -m "build nginx_rtmp_web images" -a "fengming" fffb4e2adf15 nginx_rtmp_web:v1.0
+
+5,用Dockerfile再次包装
+因为之前的镜像（nginx_rtmp_web:v1.0）nginx还不能自启动，所以需要再次包装
+cat Dockerfile 
+FROM nginx_rtmp_web:v1.0
+
+EXPOSE 1935
+EXPOSE 80
+
+CP nginx.conf /usr/local/nginx/conf/nginx.conf
+CP stat.xsl   /usr/local/nginx/html/stat.xsl
+
+CMD ["nginx", "-g", "daemon off;"]
+
+docker build -t nginx_rtmp_web:v1.1 .
+
+6,用docker-compose.yml启动
+cat docker-compose.yml 
+version: '3'
+services:
+  service:
+    image: 139.9.186.120:8080/nginx_rtmp_web:v1.1
+    container_name: nginx_rtmp_web
+    ports:
+      - "8090:80"
+      - "1935:1935"
+    restart: unless-stopped
+
+
+注意：上述用到的nginx.conf和stat.xsl文件在前面已经给出。
+
+至此，自己动手构建带有web界面的nginx_rtmp完成了。
+
+
