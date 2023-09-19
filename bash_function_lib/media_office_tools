@@ -36,10 +36,60 @@ function fm-movie_stream_push_by_ffmpeg
 {
 	local push_tool=ffmpeg
 
+	local server_ip=localhost
+	local server_port=1935
+
+	if [ $# -lt 4 ] || [ "$1" = "-h" ] || [ "$1" = "--help"]
+	then
+		echo "ERROR:parameter wrong"
+		echo "$FUNCNAME  loop_times  IP port video_file_lsit"
+		echo "e.g:$FUNCNAME 10 116.62.103.60 1935 1.mp4 2.flv ..."
+		return 1
+	fi
+	which ${push_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${push_tool} not found,please install it first"
+		echo "apt install ${push_tool}"
+		return 2
+	fi
+	local loop_times=$1
+	local server_ip=$2
+	local server_port=$3
+	if ! expr "${loop_times}" : '^[0-9]\+$' >/dev/null
+	then
+		echo "para:${loop_times} is not number"
+		echo "$FUNCNAME  loop_times  video_file_lsit"
+		return 3
+	fi
+	if ! expr "${server_port}" : '^[0-9]\+$' >/dev/null
+	then
+		echo "para:${server_port} is not number"
+		echo "$FUNCNAME  loop_times  IP port  video_file_lsit"
+		return 3
+	fi	
+	shift 3
+	while [ ${loop_times} -gt 0 ]
+	do
+		for file in "$@"
+		do
+			echo "${push_tool} -re -i "$file" -c copy -f flv rtmp://${server_ip}:${server_port}/live/movie1234"
+			${push_tool} -re -i "$file" -c copy -f flv rtmp://${server_ip}:${server_port}/live/movie1234
+		done
+		loop_times=$(expr ${loop_times} - 1)
+	done
+	
+	return 0
+}
+
+function fm-movie_stream_push_by_ffmpeg_to_mymedia_server
+{
+	local push_tool=ffmpeg
+
 	local server_ip=116.62.103.60
 	local server_port=1935
 
-	if [ $# -lt 2 ]
+	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help"]
 	then
 		echo "ERROR:parameter wrong"
 		echo "$FUNCNAME  loop_times  video_file_lsit"
@@ -71,11 +121,5 @@ function fm-movie_stream_push_by_ffmpeg
 		loop_times=$(expr ${loop_times} - 1)
 	done
 
-#	if [ $# -eq 1 ]
-#	then
-#		echo "${push_tool} -re -stream_loop -10 -i "$1" -c copy -f flv rtmp://${server_ip}:${server_port}/live/movie1234"
-#		#${push_tool} -re -stream_loop -10 -i "$1" -c copy -f flv rtmp://${server_ip}:${server_port}/live/movie1234
-#	fi
-#	
 	return 0
 }
