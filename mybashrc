@@ -525,3 +525,6 @@ function fm-download_whole_website
 	return 0
 }
 
+echo "****                                    ****"
+echo "**** fengming.d work environment loaded ****"
+echo "****                                    ****"
