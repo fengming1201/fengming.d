@@ -278,6 +278,45 @@ function fm-json_format
 
 	return 0
 }
+function fm-upload_files_to_fileserver
+{
+	local fileserver_ip=139.9.186.120
+	local fileserver_port=1201
+	local target_path=/root/http_share/data/unclassified
+
+	if [ $# -lt 1 ]
+	then
+		echo "paramter wrong!"
+		echo "you can -h or --help for help"
+		return 1
+	fi
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "$FUNCNAME  file_list"
+		echo "e.g. $FUNCNAME  file1 file2 fileN ..."
+		return 2
+	fi
+	
+	local file_list
+	#check file stat
+	for file in "$@"
+	do
+		if [ ! -f ${file} ]
+		then 
+			echo "WARNING:<${file}> not found,ignore it"
+		else
+			file_list+=("${file}")
+		fi
+	done
+	
+	if [ ${#file_list[@]} -ge 1 ]
+	then
+		echo "scp -P ${fileserver_port}  ${file_list[@]}   root@${fileserver_ip}:${target_path}"
+		scp -P ${fileserver_port}  ${file_list[@]}   root@${fileserver_ip}:${target_path}
+	fi
+	echo "all done ..."
+	return 0
+}
 
 function fm-dockerfile_vim_dictionary_copy2current_dir
 {

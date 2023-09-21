@@ -43,12 +43,14 @@ alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias clr='clear'
 
 #source other files
-except_do_source_list="env_variable"
+#incude first
+source ${fengming_func_lib_dir}/env_variable
+except_do_source_list=("env_variable")
 for file in $(ls ${fengming_func_lib_dir})
 do
-	for except in ${except_do_source_list}
+	for except in "${except_do_source_list[@]}"
 	do
-		if [ ${file} = ${except} ];then continue 1;fi
+		if [ ${file} = ${except} ];then  continue 1;fi
 	done
 	source ${fengming_func_lib_dir}/${file}
 done

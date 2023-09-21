@@ -23,7 +23,10 @@ services:
       - network1
     ports:
       - "8000:80"
-    restart: always
+    restart: unless-stopped
+    command: /bin/bash
+    stdin_open: true
+    tty: true
     volumes:
       - /path/to/volume1:/app/data1
 

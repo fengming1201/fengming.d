@@ -27,3 +27,5 @@ volumes
 always
 unless-stopped
 on-failure
+stdin_open
+tty

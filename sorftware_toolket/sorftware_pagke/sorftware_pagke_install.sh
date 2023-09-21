@@ -2,17 +2,46 @@
 
 #comm value
 fengming_root_dir=/etc/fengming.d
-sorftware_pagke_path=${fengming_root_dir}/sorftware_toolket/sorftware_pagke
+fengming_sorftware_pkg_dir=${fengming_root_dir}/sorftware_toolket/sorftware_pagke
+sorftware_pagke_url=http://139.9.186.120:8050/software_package/
+sorftware_pagke_path=none
+local_dir_for_download=sorftware_pkg
+
+function __find_tool_package_path
+{
+	local tool_pkg_name=none
+	#check para
+	if [ $# -ne 1 ]
+	then
+		echo ""
+		return 1
+	fi
+	tool_pkg_name="$1"
+	#check local first
+	#check tool package
+	if [ ! -f ${sorftware_pagke_path}/${tool_package} ] && [ ! -f ./${tool_package} ]
+	then
+		#to download from server
+	fi
+
+	#if local not have,then download from server
+	
+	sorftware_pagke_path=
+
+	return 0
+}
 
 function buildin_install_vim_config_pkg
 {
-	local vim_comfig_pack=${sorftware_pagke_path}/vim_cfg_dir.tar.gz
+	local tool_package=vim_cfg_dir.tar.gz
 	local config_file=/etc/vim/vimrc
 	local target_dir=${HOME}
 
 	#check 
 	which vim > /dev/null
 	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},vim not install yet.";return 1;fi
+
+
 	if [ -d ${target_dir}/.vim ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
 	tar -zxvf ${vim_comfig_pack} -C ${target_dir}/
 	if [ ! -d ${target_dir}/.vim ];then echo "ERROR:${FUNCNAME},tar fail...";return 2;fi

@@ -1,0 +1,7 @@
+#***************************************#
+#author:fengming
+#date:Thu 21 Sep 2023 08:20:01 PM CST
+#***************************************#
+g_my_cloud_server_ip_huawei="139.9.186.120"
+g_my_cloud_server_ip_tencen="116.62.103.60"
+g_my_cloud_server_ssh_port="1201"
