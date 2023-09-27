@@ -61,6 +61,147 @@ Linux md 设备（又名 RAID 阵列）
 有关选项的一般帮助，请使用
          mdadm --help-options
 =====================================================
+`mdadm` 是一个用于管理 Linux 软件 RAID（Redundant Array of Independent Disks）的命令行工具。它允许用户创建、管理和监控软件 RAID 配置。下面是 `mdadm` 命令的一些常用选项和用法：
 
+1. 创建 RAID 设备：
 
+   ```
+   mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sda1 /dev/sdb1
+   ```
 
+   该命令将创建一个 RAID 级别为 1（镜像）的 RAID 设备 `/dev/md0`，使用 `/dev/sda1` 和 `/dev/sdb1` 作为 RAID 设备的组成部分。
+
+2. 添加磁盘到 RAID 设备：
+
+   ```
+   mdadm --add /dev/md0 /dev/sdc1
+   ```
+
+   该命令将磁盘 `/dev/sdc1` 添加到 RAID 设备 `/dev/md0` 中。
+
+3. 从 RAID 设备中移除磁盘：
+
+   ```
+   mdadm --remove /dev/md0 /dev/sdc1
+   ```
+
+   该命令将磁盘 `/dev/sdc1` 从 RAID 设备 `/dev/md0` 中移除。
+
+4. 监控 RAID 设备：
+
+   ```
+   mdadm --monitor --scan --daemonize
+   ```
+
+   该命令将启动 `mdadm` 守护进程，监控并自动恢复 RAID 设备的故障。
+
+5. 查看 RAID 设备的状态：
+
+   ```
+   mdadm --detail /dev/md0
+   ```
+
+   该命令将显示 RAID 设备 `/dev/md0` 的详细信息，包括设备状态、成员磁盘等。
+
+6. 停用 RAID 设备：
+
+   ```
+   mdadm --stop /dev/md0
+   ```
+
+   该命令将停用 RAID 设备 `/dev/md0`。
+
+7. 启用 RAID 设备：
+
+   ```
+   mdadm --assemble /dev/md0 /dev/sda1 /dev/sdb1
+   ```
+
+   该命令将启用 RAID 设备 `/dev/md0`，并使用 `/dev/sda1` 和 `/dev/sdb1` 作为 RAID 设备的组成部分。
+
+这些只是 `mdadm` 命令的一些常见用法，还有许多其他选项和功能可用于更复杂的 RAID 管理任务。可以使用 `man mdadm` 命令查看 `mdadm` 的完整文档和更多用法示例。
+
+==============================
+以下内容来自 manpage 页:
+
+基本语法 ： mdadm [mode] [options]
+
+[mode]  有7种：
+
+Assemble：将以前定义的某个阵列加入当前在用阵列。
+
+Build：Build a legacy array ，每个device 没有 superblocks
+
+Create：创建一个新的阵列，每个device 具有 superblocks
+
+Manage： 管理阵列，比如 add 或 remove
+
+Misc：允许单独对阵列中的某个 device 做操作，比如抹去superblocks 或 终止在用的阵列。
+
+Follow or Monitor:监控 raid 1,4,5,6 和 multipath 的状态
+
+Grow：改变raid 容量或 阵列中的 device 数目
+
+可用的 [options]:
+
+-A, –assemble：加入一个以前定义的阵列
+
+-B, –build：Build a legacy array without superblocks.
+
+-C, –create：创建一个新的阵列
+
+-Q, –query：查看一个device，判断它为一个 md device 或是 一个 md 阵列的一部分
+
+-D, –detail：打印一个或多个 md device 的详细信息
+
+-E, –examine：打印 device 上的 md superblock 的内容
+
+-F, –follow, –monitor：选择 Monitor 模式
+
+-G, –grow：改变在用阵列的大小或形态
+
+-h, –help：帮助信息，用在以上选项后，则显示该选项信息
+
+–help-options
+
+-V, –version
+
+-v, –verbose：显示细节
+
+-b, –brief：较少的细节。用于 –detail 和 –examine 选项
+
+-f, –force
+
+-c, –config= ：指定配置文件，缺省为 /etc/mdadm/mdadm.conf
+
+-s, –scan：扫描配置文件或 /proc/mdstat以搜寻丢失的信息。配置文件/etc/mdadm/mdadm.conf
+
+create 或 build 使用的选项:
+
+-c, –chunk=:Specify chunk size of kibibytes.  缺省为 64.
+
+–rounding=: Specify rounding factor for linear array (==chunk size)
+
+-l, –level=:设定 raid level.
+
+–create可用:linear, raid0, 0, stripe, raid1,1, mirror, raid4, 4, raid5, 5, raid6, 6, multipath, mp.
+
+–build可用：linear, raid0, 0, stripe.
+
+-p, –parity=：设定 raid5 的奇偶校验规则:eft-asymmetric, left-symmetric, right-asymmetric, right-symmetric, la, ra, ls, rs.缺省为left-symmetric
+
+–layout=:类似于–parity
+
+-n, –raid-devices=:指定阵列中可用  device 数目，这个数目只能由 –grow 修改
+
+-x, –spare-devices=：指定初始阵列的富余device 数目
+
+-z, –size=：组建RAID1/4/5/6后从每个device获取的空间总数
+
+–assume-clean:目前仅用于 –build 选项
+
+-R, –run:阵列中的某一部分出现在其他阵列或文件系统中时，mdadm会确认该阵列。此选项将不作确认。
+
+-f, –force:通常mdadm不允许只用一个device 创建阵列，而且创建raid5时会使用一个device作为missing drive。此选项正相反。
+
+-a, –auto{=no,yes,md,mdp,part,p}{NN}：

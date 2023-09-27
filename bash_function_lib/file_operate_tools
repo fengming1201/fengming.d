@@ -196,7 +196,7 @@ function fm-grep_aviv
     $app ${default_opt} $*
 	$app -in $* ${tmp_file}
 	
-	if [ "${filename}" != "none" ]
+	if [ "x${filename}" != "x" ]
 	then
 		$app ${default_opt} ${filename}
 		$app -in ${filename} ${tmp_file}

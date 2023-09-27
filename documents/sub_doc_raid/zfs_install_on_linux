@@ -1,0 +1,42 @@
+要在 Linux 系统上安装 ZFS，需要执行以下步骤：
+
+1. 检查内核模块支持：首先，确保系统的内核支持 ZFS。在大多数现代 Linux 发行版中，ZFS 内核模块已经包含在默认内核中。可以使用以下命令检查是否已加载 ZFS 模块：
+
+   ```
+   lsmod | grep zfs
+   ```
+
+   如果输出中包含 `zfs`，则表示 ZFS 模块已加载。
+
+2. 安装 ZFS 软件包：接下来，需要安装 ZFS 软件包。不同的 Linux 发行版可能有不同的软件包管理工具和软件包名称。以下是一些常见发行版的安装命令示例：
+
+   - Ubuntu/Debian：
+
+     ```
+     sudo apt-get install zfsutils-linux
+     ```
+
+   - CentOS/RHEL/Fedora：
+
+     ```
+     sudo dnf install zfs
+     ```
+
+   - Arch Linux：
+
+     ```
+     sudo pacman -S zfs
+     ```
+
+   请根据你使用的发行版选择适当的命令。
+
+3. 验证安装：安装完成后，可以使用以下命令验证 ZFS 是否正确安装：
+
+   ```
+   sudo modprobe zfs  # 加载 ZFS 内核模块
+   zpool version      # 显示 ZFS 版本信息
+   ```
+
+   如果能够成功加载 ZFS 模块并显示版本信息，则表示 ZFS 安装成功。
+
+安装完成后，你可以使用 `zpool` 和 `zfs` 命令来创建、管理和操作 ZFS 存储池和文件系统。请参考 ZFS 的文档和相关资源以了解更多关于 ZFS 的使用和配置信息。
