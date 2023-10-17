@@ -136,8 +136,10 @@
     用 dmidecode 来判断Linux是否运行在虚拟环境：
     在物理机上：
     sudo dmidecode -s system-product-name
+    Default string
     在虚拟机上：
     sudo dmidecode -s system-product-name
+    VMware, Inc.
     但是它有个缺陷，就是不支持容器的检查。在容器中运行 dmidecode 会提示错误信息 /dev/mem: No such file or directory 
     若你把 /dev 挂载进容器，则又会被识别为物理急。
     
@@ -145,13 +147,21 @@
     原来 systemd 已经提供了一个命令来帮你完成这项任务了，那就是 systemd-detect-virt：
 
     在物理机上：
-    systemd-detect-virt;exit 0
-
+    systemd-detect-virt
+    none
     在虚拟机上：
-    systemd-detect-virt;exit 0
-
+    systemd-detect-virt
+    vmware
     在容器上:
-    systemd-detect-virt;exit 0
+    systemd-detect-virt
+    ?
+    方法三：检查 /sys 目录：
+    在物理机上：
+    cat /sys/devices/virtual/dmi/id/product_name
+    Default string
+    在虚拟机上：
+    cat /sys/devices/virtual/dmi/id/product_name
+    VMware Virtual Platform
 },
 {
     使用foremost恢复已删除文件
