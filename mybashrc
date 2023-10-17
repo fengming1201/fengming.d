@@ -301,6 +301,22 @@ function fm-document_show
 	return 0
 }
 
+function fm-document_grep
+{
+	local doc_file_path=${fengming_top_dir}/documents
+	
+	#check para
+	if [ $# -lt 1 ]
+	then
+		echo "e.g $FUNCNAME  keyword"
+		return 1
+	fi
+	echo "grep -rn $@ ${doc_file_path}"
+	grep -rn $@ ${doc_file_path}
+
+	return 0
+}
+
 function fm-software_list
 {
 	local sorftware_tutorial_dir=${fengming_top_dir}/sorftware_toolket
