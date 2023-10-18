@@ -359,7 +359,7 @@ function fm-yml_file_check
 		return 1
 	fi
 
-	for file in $@
+	for file in "$@"
 	do
 		if [ -f ${file} ]
 		then
