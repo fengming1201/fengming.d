@@ -1,0 +1,29 @@
+lshm@debian11x:~$ mpv --help 
+Usage:   mpv [options] [url|path/]filename
+
+Basic options:
+--start=<time>    seek to given (percent, seconds, or hh:mm:ss) position
+--no-audio        do not play sound
+--no-video        do not play video
+--fs              fullscreen playback
+--sub-file=<file> specify subtitle file to use
+--playlist=<file> specify playlist file
+
+--list-options    list all mpv options
+--h=<string>      print options which contain the given string in their name
+
+==============================================================
+$ mpv --help 
+Usage:   mpv [options] [url|path/]filename
+
+基本选项：
+--start=<time>    寻求给定（百分比、秒或 HH：MM：SS）位置
+--no-audio        不播放声音
+--no-video        不播放视频
+--fs              全屏播放
+--sub-file=<file> 指定要使用的字幕文件
+--playlist=<file> 指定播放列表文件
+
+--list-options    列出所有 MPV 选项
+--h=<string>      名称中包含给定字符串的打印选项
+

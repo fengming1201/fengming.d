@@ -1,0 +1,39 @@
+lshm@debian11xJ4125:bash_function_lib$ evince --help 
+Usage:
+evince [OPTION…] [FILE…] GNOME Document Viewer
+
+Help Options:
+-h, --help                  Show help options
+--help-all                  Show all help options
+--help-gtk                  Show GTK+ Options
+
+Application Options:
+-p, --page-label=PAGE       The page label of the document to display.
+-i, --page-index=NUMBER     The page number of the document to display.
+-n, --named-dest=DEST       Named destination to display.
+-f, --fullscreen            Run evince in fullscreen mode
+-s, --presentation          Run evince in presentation mode
+-w, --preview               Run evince as a previewer
+-l, --find=STRING           The word or phrase to find in the document
+--display=DISPLAY           X display to use
+
+==================================================================
+$ evince --help 
+Usage:
+evince [OPTION…] [FILE…] GNOME Document Viewer
+
+帮助选项：
+-h, --help                  显示帮助选项
+--help-all                  显示所有帮助选项
+--help-gtk                  显示 GTK+ 选项
+
+应用选项：
+-p, --page-label=PAGE       要显示的文档的页面标签。
+-i, --page-index=NUMBER     要显示的文档的页码。
+-n, --named-dest=DEST       要显示的命名目标。
+-f, --fullscreen            在全屏模式下运行
+-s, --presentation          在演示模式下运行演示
+-w, --preview               作为预览器运行
+-l, --find=STRING           要在文档中查找的单词或短语
+--display=DISPLAY           X display to use
+
