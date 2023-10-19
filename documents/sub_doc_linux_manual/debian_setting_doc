@@ -99,3 +99,19 @@
     step4：
     重启。
 },
+{
+（1）linux 更改系统语言
+	1，安装语言包 sudo apt install locales
+	2，配置语言环境 sudo dpkg-reconfigure locales
+
+（2）docker 更改容器debian系统语言
+	1，安装语言包 sudo apt install locales
+	2，Dockerfile中添加
+	RUN cat <<-EOF >> .bashrc
+	export LANG=en_US.UTF-8
+	EOF
+
+	RUN cp /etc/locale.gen /etc/locale.gen.bak;\
+	echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen;\
+	locale-gen
+},

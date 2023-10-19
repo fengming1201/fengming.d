@@ -10,3 +10,13 @@ Options:
   -f, --force           Do not prompt for confirmation
       --volumes         Prune volumes
 =========================================
+Usage:  docker system prune [OPTIONS]
+
+删除未使用的数据
+
+选项：
+-a, --all             删除所有未使用的图像，而不仅仅是悬空的图像
+--filter filter   提供筛选器值 (e.g. "label=<key>=<value>")
+-f, --force           不提示确认
+--volumes         修剪卷
+

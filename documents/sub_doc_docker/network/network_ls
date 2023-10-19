@@ -18,6 +18,20 @@ Options:
       --no-trunc        Do not truncate the output
   -q, --quiet           Only display network IDs
 ==========================================
+Usage:  docker network ls [OPTIONS]
 
+列出网络
 
+别名：
+docker network ls, docker network list
 
+选项：
+-f, --filter filter   提供筛选器值 (e.g. "driver=bridge")
+--format string   使用自定义模板设置输出格式：
+	'table':            以带有列标题的表格格式打印输出（默认）
+	'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+	'json':             以 JSON 格式打印
+	'TEMPLATE':         使用给定的 Go 模板打印输出。
+	Refer to https://docs.docker.com/go/formatting/ 有关使用模板设置输出格式的详细信息
+--no-trunc        不要截断输出
+-q, --quiet           仅显示网络 ID

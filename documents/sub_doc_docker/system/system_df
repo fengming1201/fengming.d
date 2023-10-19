@@ -13,4 +13,16 @@ Options:
                         Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
   -v, --verbose         Show detailed information on space usage
 ==========================================
+Usage:  docker system df [OPTIONS]
+
+显示 docker 磁盘使用情况
+
+选项：
+--format string   使用自定义模板设置输出格式：
+	'table':            以带有列标题的表格格式打印输出（默认）
+	'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+	'json':             以 JSON 格式打印
+	'TEMPLATE':         使用给定的 Go 模板打印输出。
+	Refer to https://docs.docker.com/go/formatting/ 有关使用模板设置输出格式的详细信息
+-v, --verbose         显示有关空间使用情况的详细信息
 

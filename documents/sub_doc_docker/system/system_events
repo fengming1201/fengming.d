@@ -13,6 +13,15 @@ Options:
       --since string    Show all events created since timestamp
       --until string    Stream events until this timestamp
 =========================================
+Usage:  docker system events [OPTIONS]
 
+从服务器获取实时事件
 
+别名：
+docker system events, docker events
 
+选项：
+-f, --filter filter   根据提供的条件过滤输出
+	--format string   使用给定的 Go 模板格式化输出
+	--since string    显示自时间戳以来创建的所有事件
+	--until string    流式传输事件直到此时间戳

@@ -15,5 +15,18 @@ Commands:
 
 Run 'docker network COMMAND --help' for more information on a command.
 ============================================
+Usage:  docker network COMMAND
 
+管理网络
+
+命令：
+connect     将容器连接到网络
+create      创建网络
+disconnect  断开容器与网络的连接
+inspect     显示一个或多个网络上的详细信息
+ls          列出网络
+prune       删除所有未使用的网络
+rm          删除一个或多个网络
+
+Run 'docker network COMMAND --help' 以获取有关命令的详细信息。
 

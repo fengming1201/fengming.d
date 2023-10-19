@@ -16,6 +16,16 @@ hello
 Options:
   -f, --force   Force the removal of one or more volumes
 ===========================================
+Usage:  docker volume rm [OPTIONS] VOLUME [VOLUME...]
 
+删除一个或多个卷。不能删除容器正在使用的卷。
 
+别名：
+  docker volume rm, docker volume remove
 
+例子：
+$ docker volume rm hello
+hello
+
+选项：
+  -f, --force   强制删除一个或多个卷

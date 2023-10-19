@@ -22,5 +22,24 @@ Options:
       --scope string         Control the network's scope
       --subnet strings       Subnet in CIDR format that represents a network segment
 ===========================================
+Usage:  docker network create [OPTIONS] NETWORK
 
+创建网络
 
+选项：
+--attachable           启用手动容器连接
+--aux-address map      网络驱动程序使用的辅助 IPv4 或 IPv6 地址（默认map[])
+--config-from string   要从中复制配置的网络
+--config-only          创建仅配置网络
+-d, --driver string        用于管理网络的驱动程序（默认“网桥”）
+--gateway strings      主子网的 IPv4 或 IPv6 网关
+--ingress              创建群体路由网状网络
+--internal             限制对网络的外部访问
+--ip-range strings     从子范围分配容器 IP
+--ipam-driver string   IP 地址管理驱动程序（默认“默认”）
+--ipam-opt map         设置 IPAM 驱动程序特定选项（默认map []）
+--ipv6                 启用 IPv6 网络
+--label list           在网络上设置元数据
+-o, --opt map              设置特定于驱动程序的选项（默认 map[])
+--scope string         控制网络范围
+--subnet strings       表示网段的 CIDR 格式子网

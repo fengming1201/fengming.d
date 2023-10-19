@@ -12,3 +12,15 @@ Commands:
 
 Run 'docker system COMMAND --help' for more information on a command.
 ==================================
+Usage:  docker system COMMAND
+
+管理 Docker
+
+命令：
+df          显示 docker 磁盘使用情况
+events      从服务器获取实时事件
+info        显示系统范围的信息
+prune       删除未使用的数据
+
+Run 'docker system COMMAND --help' 以获取有关命令的详细信息。
+

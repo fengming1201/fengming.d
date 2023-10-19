@@ -10,5 +10,12 @@ Aliases:
 Options:
   -f, --force   Do not error if the network does not exist
 ================================
+Usage:  docker network rm NETWORK [NETWORK...]
 
+删除一个或多个网络
 
+别名：
+  docker network rm, docker network remove
+
+选项：
+  -f, --force   如果网络不存在，则不出错

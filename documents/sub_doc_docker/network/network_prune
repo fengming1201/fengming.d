@@ -8,5 +8,12 @@ Options:
       --filter filter   Provide filter values (e.g. "until=<timestamp>")
   -f, --force           Do not prompt for confirmation
 ===============================================
+Usage:  docker network prune [OPTIONS]
+
+删除所有未使用的网络
+
+选项：
+    --filter filter   提供筛选器值 (e.g. "until=<timestamp>")
+	-f, --force           不提示确认
 
 

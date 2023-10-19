@@ -7,5 +7,9 @@ Disconnect a container from a network
 Options:
   -f, --force   Force the container to disconnect from a network
 ==================================
+Usage:  docker network disconnect [OPTIONS] NETWORK CONTAINER
 
+断开容器与网络的连接
 
+选项：
+  -f, --force   强制容器断开与网络的连接

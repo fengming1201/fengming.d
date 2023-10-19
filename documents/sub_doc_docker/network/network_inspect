@@ -11,10 +11,14 @@ Options:
                         Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
   -v, --verbose         Verbose output for diagnostics
 ======================================
+Usage:  docker network inspect [OPTIONS] NETWORK [NETWORK...]
 
+显示一个或多个网络上的详细信息
 
-
-
-
-
+选项：
+-f, --format string   使用自定义模板设置输出格式：
+	'json':             以 JSON 格式打印
+	'TEMPLATE':         使用给定的 Go 模板打印输出。
+	Refer to https://docs.docker.com/go/formatting/ 有关使用模板设置输出格式的详细信息
+-v, --verbose         用于诊断的详细输出
 
