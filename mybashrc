@@ -91,7 +91,7 @@ function fm-git_show_mygitinfo
 
 function fm-git_mytoken_manage
 {   
-    local git_token_list=("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" "end")
+    local git_token_list=("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" "end")
 	
 	echo "token:"
 	echo "${git_token_list[*]}"
@@ -102,7 +102,11 @@ function fm-git_mytoken_manage
     echo "<USERNAME>：包括<>在内的全部字符替换成你的username"
     echo "<REPO>：包括<>在内的全部字符替换成你要访问的仓库名称"
 	echo "e.g.:"
-    echo "git remote set-url origin  https://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@github.com/fengming1201/fengming.d.git"
+    echo "git remote set-url origin  https://<your token>/fengming1201/fengming.d.git"
+	echo "or"
+	echo "git push origin main"
+	echo "username:"
+	echo "password:<your token>"
 
     return 0
 }
