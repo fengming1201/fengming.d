@@ -80,11 +80,16 @@ function fm-mybuild_image_version_show
 function fm-git_show_mygitinfo
 {
 	local mygit_site="https://github.com/fengming1201/fengming.d.git"
-	local fengming_dir="-C ${fengming_top_dir}"
+	local fengming_dir=("${fengming_top_dir}" "${fengming_top_dir}.bak" "${fengming_top_dir}.backup")
 
-	echo ${mygit_site} > /tmp/fengming.git
-	echo ${mygit_site}
-	git ${fengming_dir}  log  -1
+	for dir in ${fengming_dir[*]}
+	do
+		if [ -d ${dir} ]
+		then
+			echo ${mygit_site}
+			git -C ${dir}  log  -1
+		fi
+	done
 
 	return 0;
 }
