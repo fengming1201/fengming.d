@@ -76,7 +76,7 @@ function fm-script_putout
 	local scriptfifo=($(ls ${tmp_dir}/scriptfifo*))
 	local num=1
 	local array_len=${#scriptfifo[@]}
-	echo "array_len=$array_len"
+
 	#find out scriptfifo file
 	if [ ${array_len} -gt 0 ]
 	then
@@ -120,7 +120,7 @@ function fm-script_putin
 	local scriptfifo=($(ls ${tmp_dir}/scriptfifo*))
 	local num=1
 	local array_len=${#scriptfifo[@]}
-	echo "array_len=$array_len"
+
 	#find out scriptfifo file
 	if [ ${array_len} -gt 0 ]
 	then
