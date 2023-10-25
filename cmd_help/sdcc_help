@@ -1,0 +1,260 @@
+SDCC : mcs51/z80/z180/r2k/r3ka/gbz80/tlcs90/ez80_z80/ds390/TININative/ds400/hc08/s08/stm8/pdk13/pdk14/pdk15 4.0.0 #11528 (Linux)
+published under GNU General Public License (GPL)
+Usage : sdcc [options] filename
+Options :-
+
+常规选项：
+      --help                显示此帮助
+  -v  --version             显示 sdcc 的版本
+      --verbose             跟踪对预处理器、汇编器和链接器的调用
+  -V                        详细执行。在子命令运行时显示子命令
+  -d                        有效的 mcaro 定义的输出列表。与 -E 一起使用
+  -D                        Define macro as in -Dmacro
+  -I                        Add to the include (*.h) path, as in -Ipath
+  -A                        
+  -U                        Undefine macro as in -Umacro
+  -M                        预处理器选项
+  -W                        Pass through options to the pre-processor (p), assembler (a) or linker (l)
+  -S                        仅编译;不要组装或链接
+  -c  --compile-only        编译和汇编，但不链接
+  -E  --preprocessonly      仅预处理，不编译
+      --c1mode              在 c1 模式下操作。 标准输入是预处理代码，输出是汇编代码。
+  -o                        将输出放入给定的路径或文件中
+      --print-search-dirs   显示编译器搜索路径中的目录
+      --vc                  messages are compatible with Micro$oft visual studio
+      --use-stdout          将错误发送到标准输出而不是标准输出
+      --nostdlib            不要在搜索路径中包含标准库目录
+      --nostdinc            不要在搜索路径中包含标准包含目录
+      --less-pedantic       禁用一些更迂腐的警告
+      --disable-warning     <nnnn> 禁用特定警告
+      --Werror              将警告视为错误
+      --debug               启用调试符号输出
+      --cyclomatic          显示已编译函数的复杂性
+      --std-c89             Use ISO C90 (aka ANSI C89) standard (slightly incomplete)
+      --std-sdcc89          Use ISO C90 (aka ANSI C89) standard with SDCC extensions
+      --std-c95             Use ISO C95 (aka ISO C94) standard (slightly incomplete)
+      --std-c99             Use ISO C99 standard (incomplete)
+      --std-sdcc99          Use ISO C99 standard with SDCC extensions
+      --std-c11             Use ISO C11 standard (incomplete)
+      --std-sdcc11          Use ISO C11 standard with SDCC extensions (default)
+      --std-c2x             Use ISO C2X standard (incomplete)
+      --std-sdcc2x          Use ISO C2X standard with SDCC extensions
+      --fdollars-in-identifiers  允许“$”作为标识符字符
+      --fsigned-char        Make "char" signed by default
+      --use-non-free        搜索/包含非自由许可库和头文件
+
+代码生成选项：
+  -m                        设置要使用的端口 e.g. -mz80.
+  -p                        选择特定于端口的处理器 e.g. -mpic14 -p16f84
+      --stack-auto          堆栈自动变量
+      --xstack              使用外部堆栈
+      --int-long-reent      对 int 和 long 支持函数使用重入调用
+      --float-reent         对浮点支持函数使用重入调用
+      --xram-movc           使用 movc 而不是 movx 来读取 xram （xdata）
+      --callee-saves        <func[,func,...]> 使被调用函数保存寄存器而不是调用方
+      --profile             在支持的端口上，生成额外的性能分析信息
+      --fomit-frame-pointer 省略帧指针。
+      --all-callee-saves    被叫方将始终保存使用的寄存器
+      --stack-probe         在每个函数序幕中插入对函数__stack_probe的调用
+      --no-xinit-opt        不要从代码中初始化 XRAM
+      --no-c-code-in-asm    不要在 ASM 文件中将 C 代码作为注释包含在内
+      --no-peep-comments    不要包含窥视孔优化器注释
+      --codeseg             <name> 将此名称用于代码段
+      --constseg            <name> 将此名称用于常量段
+      --dataseg             <name> 对数据细分受众群使用此名称
+
+优化选项：
+      --nooverlay           禁用叠加叶函数自动变量
+      --nogcse              禁用 GCSE 优化
+      --nolabelopt          停用标签优化
+      --noinvariant         禁用不变量优化
+      --noinduction         禁用循环变量归纳
+      --noloopreverse       禁用循环反向优化
+      --no-peep             禁用窥视孔程序集文件优化
+      --no-reg-params       在某些端口上，禁用在寄存器中传递某些参数
+      --peep-asm            在内联装配体上启用窥视孔优化
+      --peep-return         为返回指令启用窥视孔优化
+      --no-peep-return      禁用返回指令的窥视孔优化
+      --peep-file           <file> 使用这个额外的窥视孔文件
+      --opt-code-speed      优化代码速度而不是大小
+      --opt-code-size       针对代码大小而不是速度进行优化
+      --max-allocs-per-node  在树分解的每个节点上考虑的最大寄存器分配数
+      --nolospre            禁用 lospre
+      --allow-unsafe-read   允许优化随时读取任何内存位置
+      --nostdlibcall        禁用对标准库调用的优化
+
+内部调试选项：
+      --dump-ast            在生成i-code之前转储前端 AST
+      --dump-i-code         在所有阶段转储i-code结构
+      --dump-graphs         转储图（控制流、冲突等）
+      --i-code-in-asm       将 i-code 作为注释包含在 asm 文件中
+      --fverbose-asm        在 asm 输出中包含代码生成器注释
+
+链接器选项：
+  -l                        在链接中包含给定的库
+  -L                        将下一个字段添加到库搜索路径
+      --lib-path            <path> 使用此路径搜索库
+      --out-fmt-ihx         英特尔十六进制格式输出
+      --out-fmt-s19         以 S19 十六进制格式输出
+      --xram-loc            <nnnn> 外部RAM起始位置
+      --xram-size           <nnnn> 外部RAM大小
+      --iram-size           <nnnn> 内部RAM大小
+      --xstack-loc          <nnnn> 外部堆栈开始位置
+      --code-loc            <nnnn> 代码段位置
+      --code-size           <nnnn> 代码段大小
+      --stack-loc           <nnnn> 堆栈指针初始值
+      --data-loc            <nnnn> 直接数据起始位置
+      --idata-loc           
+      --no-optsdcc-in-asm   不要在 asm 中发出 .optsdcc
+
+mcs51 端口的特殊选项：
+      --model-small         使用内部数据空间（默认）
+      --model-medium        使用外部分页数据空间
+      --model-large         使用外部数据空间
+      --model-huge          功能存储，数据在外部空间
+      --stack-size          告知链接器为堆栈分配此空间
+      --parms-in-bank1      使用 Bank1 进行参数传递
+      --pack-iram           告诉链接器将变量打包在内部 ram 中（默认）
+      --no-pack-iram        已弃用：告诉链接器不要在内部 ram 中打包变量
+      --acall-ajmp          使用 acall/ajmp 而不是 lcall/ljmp
+      --no-ret-without-call  不要使用独立于 acall/lcall 的 ret
+
+z80 端口的特殊选项：
+      --callee-saves-bc     Force a called function to always save BC
+      --portmode=           Determine PORT I/O mode (z80/z180)
+      --asm=                Define assembler name (rgbds/asxxxx/isas/z80asm)
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+      --reserve-regs-iy     Do not use IY (incompatible with --fomit-frame-pointer)
+      --oldralloc           Use old register allocator
+      --fno-omit-frame-pointer  Do not omit frame pointer
+      --emit-externs        Emit externs list in generated asm
+
+z180 端口的特殊选项：
+      --callee-saves-bc     Force a called function to always save BC
+      --portmode=           Determine PORT I/O mode (z80/z180)
+      --asm=                Define assembler name (rgbds/asxxxx/isas/z80asm)
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+      --reserve-regs-iy     Do not use IY (incompatible with --fomit-frame-pointer)
+      --oldralloc           Use old register allocator
+      --fno-omit-frame-pointer  Do not omit frame pointer
+      --emit-externs        Emit externs list in generated asm
+
+r2k 端口的特殊选项：
+      --callee-saves-bc     Force a called function to always save BC
+      --portmode=           Determine PORT I/O mode (z80/z180)
+      --asm=                Define assembler name (rgbds/asxxxx/isas/z80asm)
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+      --reserve-regs-iy     Do not use IY (incompatible with --fomit-frame-pointer)
+      --oldralloc           Use old register allocator
+      --fno-omit-frame-pointer  Do not omit frame pointer
+      --emit-externs        Emit externs list in generated asm
+
+r3ka 端口的特殊选项：
+      --callee-saves-bc     Force a called function to always save BC
+      --portmode=           Determine PORT I/O mode (z80/z180)
+      --asm=                Define assembler name (rgbds/asxxxx/isas/z80asm)
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+      --reserve-regs-iy     Do not use IY (incompatible with --fomit-frame-pointer)
+      --oldralloc           Use old register allocator
+      --fno-omit-frame-pointer  Do not omit frame pointer
+      --emit-externs        Emit externs list in generated asm
+
+gbz80 端口的特殊选项：
+      -bo                   <num> use code bank <num>
+      -ba                   <num> use data bank <num>
+      --callee-saves-bc     Force a called function to always save BC
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+
+tlcs90 端口的特殊选项：
+      --callee-saves-bc     Force a called function to always save BC
+      --portmode=           Determine PORT I/O mode (z80/z180)
+      --asm=                Define assembler name (rgbds/asxxxx/isas/z80asm)
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+      --reserve-regs-iy     Do not use IY (incompatible with --fomit-frame-pointer)
+      --oldralloc           Use old register allocator
+      --fno-omit-frame-pointer  Do not omit frame pointer
+      --emit-externs        Emit externs list in generated asm
+
+ez80_z80端口的特殊选项：
+      --callee-saves-bc     Force a called function to always save BC
+      --portmode=           Determine PORT I/O mode (z80/z180)
+      --asm=                Define assembler name (rgbds/asxxxx/isas/z80asm)
+      --codeseg             <name> use this name for the code segment
+      --constseg            <name> use this name for the const segment
+      --dataseg             <name> use this name for the data segment
+      --no-std-crt0         For the z80/gbz80 do not link default crt0.rel
+      --reserve-regs-iy     Do not use IY (incompatible with --fomit-frame-pointer)
+      --oldralloc           Use old register allocator
+      --fno-omit-frame-pointer  Do not omit frame pointer
+      --emit-externs        Emit externs list in generated asm
+
+ds390 端口的特殊选项：
+      --model-flat24        use the flat24 model for the ds390 (default)
+      --stack-8bit          use the 8bit stack for the ds390 (not supported yet)
+      --stack-size          Tells the linker to allocate this space for stack
+      --pack-iram           Tells the linker to pack variables in internal ram (default)
+      --no-pack-iram        Deprecated: Tells the linker not to pack variables in internal ram
+      --stack-10bit         use the 10bit stack for ds390 (default)
+      --use-accelerator     generate code for ds390 arithmetic accelerator
+      --protect-sp-update   will disable interrupts during ESP:SP updates
+      --parms-in-bank1      use Bank1 for parameter passing
+
+TINative 端口的特殊选项：
+      --model-flat24        use the flat24 model for the ds390 (default)
+      --stack-8bit          use the 8bit stack for the ds390 (not supported yet)
+      --stack-size          Tells the linker to allocate this space for stack
+      --pack-iram           Tells the linker to pack variables in internal ram (default)
+      --no-pack-iram        Deprecated: Tells the linker not to pack variables in internal ram
+      --stack-10bit         use the 10bit stack for ds390 (default)
+      --use-accelerator     generate code for ds390 arithmetic accelerator
+      --protect-sp-update   will disable interrupts during ESP:SP updates
+      --parms-in-bank1      use Bank1 for parameter passing
+      --tini-libid          <nnnn> LibraryID used in -mTININative
+
+ds400 端口的特殊选项：
+      --model-flat24        use the flat24 model for the ds400 (default)
+      --stack-8bit          use the 8bit stack for the ds400 (not supported yet)
+      --stack-size          Tells the linker to allocate this space for stack
+      --pack-iram           Tells the linker to pack variables in internal ram (default)
+      --no-pack-iram        Deprecated: Tells the linker not to pack variables in internal ram
+      --stack-10bit         use the 10bit stack for ds400 (default)
+      --use-accelerator     generate code for ds400 arithmetic accelerator
+      --protect-sp-update   will disable interrupts during ESP:SP updates
+      --parms-in-bank1      use Bank1 for parameter passing
+
+hc08 端口的特殊选项：
+      --model-small         8-bit address space for data
+      --model-large         16-bit address space for data (default)
+      --out-fmt-elf         Output executable in ELF format
+      --oldralloc           Use old register allocator
+
+s08 端口的特殊选项：
+      --model-small         8-bit address space for data
+      --model-large         16-bit address space for data (default)
+      --out-fmt-elf         Output executable in ELF format
+      --oldralloc           Use old register allocator
+
+stm8 端口的特殊选项：
+      --model-medium        数据和代码的 16 位地址空间（默认）
+      --model-large         16 位地址空间用于数据，24 位地址空间用于代码
+      --codeseg             <name> 将此名称用于代码段
+      --constseg            <name> 将此名称用于常量段
+      --out-fmt-elf         ELF 格式的输出可执行文件

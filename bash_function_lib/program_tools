@@ -16,4 +16,130 @@ function C_formatter2
     return 0
 }
 
+function fm-sdcc_recognize_file_type
+{
+    local type_suffix=("asm" "bin" "hex" "ihx" "lk" "lst" "map" "mem" "rel" "rst" "sym")
+    local type_script=("汇编源文件" \
+    "二进制文件" \
+    "hex烧写文件" \
+    "英特尔十六进制格式的加载模" \
+    "链接脚本" \
+    "汇编程序列表文件" \
+    "加载模块的内存映射" \
+    "包含内存使用情况摘要的文件" \
+    "目标文件，输入到链接编辑器" \
+    "序列表文件，由链接编辑器创建" \
+    "源文件的符号列表")
+    local len=${#type_suffix[@]}
+    local file_list=""
+    len=$(expr $len - 1)
 
+    for index in $(seq 0 $len)
+    do
+        file_list=$(find . -maxdepth 1 -type f -name "*.${type_suffix[${index}]}")
+        if [ x"${file_list}" = "x" ];then continue;fi
+
+        for file in ${file_list}
+        do
+            echo "${file} --  ${type_script[index]}"
+        done
+    done
+    return 0
+}
+
+
+function fm-sdcc_burn_with_stcflash
+{
+    local burn_tool=stcflash.py
+    local tool_path=/root/stcflash
+    local com=/dev/ttyUSB0
+    local baud_rate=2400
+    local protocol=89
+    local hex_file=main.hex
+    local test_flag=no
+    #check param
+    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    then 
+        echo "$FUNCNAME  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
+        echo "$FUNCNAME hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"
+        echo "$FUNCNAME -t  hex_image   #test , not real to burn!!"
+        return 1
+    fi
+    #opt 
+#    while getopts "p:r:" opt
+#    do
+#        case $opt in
+#            p)
+#                com=$OPTARG
+#                ;;
+#            l)
+#                baud=$OPTARG
+#                ;;
+#            r)
+#                protocol=$OPTARG
+#                ;;
+#            \?)
+#                echo "Invalid option: -$OPTARG" >&2
+#                exit 1
+#                ;;
+#        esac
+#    done
+#    shift $((OPTIND-1))
+#    hex_file=${1}
+
+    while [[ $# -gt 0 ]]
+    do
+        case "$1" in
+            -p)
+                com="$2"
+                shift 2
+                ;;
+            -l)
+                baud_rate="$2"
+                shift 2
+                ;;
+            -r)
+                protocol="$2"
+                shift 2
+                ;;
+            -t)
+                test_flag=yes
+                shift 1
+                ;;
+            *)
+                hex_file="$1"
+                shift
+                ;;
+        esac
+    done
+    #check tool exist
+    if [ ! -f ${tool_path}/${burn_tool} ];then echo "burn tool not found!";return 1;fi
+    if [ ! -e  ${com} ];then echo "device not found!";return 2;fi
+    if [ ! -f ${hex_file} ];then echo "image:${hex_file} not found!";return 3;fi
+
+    if [ "${test_flag}" = "no" ]
+    then
+        echo "exec:python3 ${tool_path}/${burn_tool} -v -p ${com}  -l ${baud_rate} -r ${protocol} ${hex_file}"
+        python3 ${tool_path}/${burn_tool} -v -p ${com}  -l ${baud_rate} -r ${protocol} ${hex_file}
+        echo "done ....."
+    fi
+    if [ "${test_flag}" = "yes" ]
+    then
+        echo "test:python3 ${tool_path}/${burn_tool} -v -p ${com}  -l ${baud_rate} -r ${protocol} ${hex_file}"
+        echo "nothing to do ..."
+        echo "done ....."
+    fi
+    return 0
+}
+
+function fm-sdcc_programing_led_test1
+{
+    local tmp_dir=${fengming_top_dir}/documents/sub_doc_sdcc/programing_template
+    local target_file=led_test1.tar.gz
+
+    if [ ! -f ${tmp_dir}/${target_file} ];then echo "file:${tmp_dir}/${target_file} not found!";return 1;fi
+
+    tar -zxvf  ${tmp_dir}/${target_file} -C .
+
+    return 0
+}

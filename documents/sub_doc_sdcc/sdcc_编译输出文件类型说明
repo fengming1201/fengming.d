@@ -1,0 +1,22 @@
+对于单源文件 8051 项目，该过程非常简单。使用以下命令编译程序“sdcc sourcefile.c”。这将编译、汇编和链接您的源文件。
+输出文件如下：
+• sourcefile.asm - 编译器创建的汇编程序源文件
+• sourcefile.lk  - 链接脚本
+• sourcefile.lst - 汇编程序创建的汇编程序列表文件
+• sourcefile.rst - 汇编程序列表文件使用链接编辑信息更新，由链接编辑器创建
+• sourcefile.sym - 源文件的符号列表，由汇编程序创建
+• sourcefile.rel - 汇编程序创建的目标文件，输入到链接编辑器
+• sourcefile.map - 加载模块的内存映射，由链接器创建
+• sourcefile.mem - 包含内存使用情况摘要的文件
+• sourcefile.ihx - 英特尔十六进制格式的加载模块 (您可以选择摩托罗拉S19格式 --out-fmt-s19. 如果您需要其他格式，
+                   您可能希望使用 objdump 或 srecord - 另请参阅第 3.2.2 节). 这两种格式都记录在 srecord 的文档中
+• sourcefile.adb - 包含创建 .cdb 文件所需的调试信息的中间文件 (with --debug)
+• sourcefile.cdb - 可选文件 (with --debug) 包含调试信息。格式记录在 cdbfileformat.pdf
+• sourcefile.omf - 包含调试信息的可选 AOMF 或 AOMF51 文件 (使用选项生成 --debug). 
+                （英特尔）绝对对象模块 f ormat 是 OMF51 格式的子格式，通常由第三方工具使用 (debuggers, simulators, emulators).
+• sourcefile.dump* - 转储文件以自行调试编译器 (使用选项生成 --dumpall) (请参见第 3.3.12 节和第 9.1 节“编译器剖析”)
+
+对比GUN gcc编译流程和中间文件
+        C源文件   汇编       目标文件  
+SDCC编译：.c ----> .asm ----> .rel
+GCC 编译：.c ----> .S ------> .o 

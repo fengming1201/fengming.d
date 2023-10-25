@@ -1,0 +1,50 @@
+下面是对每个二进制文件的简要说明：
+
+1. `/usr/bin/as2gbmap`：这是一个用于将图像文件转换为Game Boy游戏机使用的图块地图格式的工具。
+
+2. `/usr/bin/makebin`：这是一个工具，用于将Intel Hex格式的文件转换为二进制格式。
+
+3. `/usr/bin/packihx`：这是一个工具，用于将Intel Hex格式的文件转换为更紧凑的格式，以减少文件大小。
+
+4. `/usr/bin/sdar`：这是SDCC的静态库归档工具，用于创建和管理静态库文件。
+
+5. `/usr/bin/sdas390`：这是SDCC的390系列处理器汇编器。
+
+6. `/usr/bin/sdas6808`：这是SDCC的6808系列处理器汇编器。
+
+7. `/usr/bin/sdas8051`：这是SDCC的8051系列处理器汇编器。
+
+8. `/usr/bin/sdasgb`：这是SDCC的Game Boy系列处理器汇编器。
+
+9. `/usr/bin/sdaspdk13`、`/usr/bin/sdaspdk14`、`/usr/bin/sdaspdk15`：这些是SDCC的支持不同版本的PDK（Peripheral Development Kit）的工具。
+
+10. `/usr/bin/sdasrab`：这是SDCC的Rabbit系列处理器汇编器。
+
+11. `/usr/bin/sdasstm8`：这是SDCC的STM8系列处理器汇编器。
+
+12. `/usr/bin/sdastlcs90`：这是SDCC的TLCs90系列处理器汇编器。
+
+13. `/usr/bin/sdasz80`：这是SDCC的Z80系列处理器汇编器。
+
+14. `/usr/bin/sdcc`：这是SDCC（Small Device C Compiler）的主要编译器，用于将C语言源代码编译为目标文件。
+
+15. `/usr/bin/sdcpp`：这是SDCC的预处理器，用于处理C语言源代码中的宏和条件编译指令。
+
+16. `/usr/bin/sdld`：这是SDCC的链接器，用于将多个目标文件链接在一起，生成最终的可执行文件。
+
+17. `/usr/bin/sdnm`：这是SDCC的符号表管理工具，用于查看和管理目标文件中的符号信息。
+
+18. `/usr/bin/sdobjcopy`：这是SDCC的目标文件复制工具，用于复制目标文件并进行格式转换。
+
+19. `/usr/bin/sdranlib`：这是SDCC的静态库索引生成工具，用于创建和管理静态库的索引信息。
+
+20. `/usr/bin/sdld6808`：这是SDCC的6808系列处理器的链接器。它用于将多个目标文件链接在一起，生成最终的可执行文件。
+
+21. `/usr/bin/sdldgb`：这是SDCC的Game Boy系列处理器的链接器。它用于将多个目标文件链接在一起，生成最终的可执行文件。
+
+22. `/usr/bin/sdldpdk`：这是SDCC的PDK（Peripheral Development Kit）链接器。它用于将使用不同版本PDK的目标文件链接在一起，生成最终的可执行文件。
+
+23. `/usr/bin/sdldstm8`：这是SDCC的STM8系列处理器的链接器。它用于将多个目标文件链接在一起，生成最终的可执行文件。
+
+24. `/usr/bin/sdldz80`：这是SDCC的Z80系列处理器的链接器。它用于将多个目标文件链接在一起，生成最终的可执行文件。
+

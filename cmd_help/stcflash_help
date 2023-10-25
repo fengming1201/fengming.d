@@ -1,0 +1,31 @@
+usage: stcflash.py [-h] [-p PORT] [-l LOWBAUD]
+                   [-r {89,12c5a,12c52,12cx052,auto}] [-a AISPBAUD]
+                   [-m AISPMAGIC] [-v] [-e] [-ne]
+                   [image]
+
+Stcflash，STC 8051微控制器的命令行编程器。Stcflash，STC 8051微控制器的命令行编程器。
+https://github.com/laborer/stcflash
+
+位置参数：
+  image                 代码镜像 (bin/hex)
+
+可选参数：
+  -h, --help            显示此帮助消息并退出
+  -p PORT, --port PORT  串口设备（默认：/dev/ttyUSB0）
+  -l LOWBAUD, --lowbaud LOWBAUD 初始波特率（默认值：2400）
+  -r {89,12c5a,12c52,12cx052,auto}, --protocol {89,12c5a,12c52,12cx052,auto}  用于编程的协议
+  -a AISPBAUD, --aispbaud AISPBAUD   AutoISP 的波特率（默认值：4800）
+  -m AISPMAGIC, --aispmagic AISPMAGIC  magic word for AutoISP
+  -v, --verbose         be verbose
+  -e, --erase_eeprom    下次下载时擦除数据EEPROM（实验性）
+  -ne, --not_erase_eeprom    不要擦除数据EEPROM下次下载（实验性）
+=======================================
+-h, --help 显示帮助信息并退出
+-p PORT, --port PORT 串口设备 (默认值: /dev/ttyUSB0)
+-l LOWBAUD, --lowbaud LOWBAUD  初始波特率 (默认值: 2400)
+-r {89,12c5a,12c52,12cx052,auto}, --protocol {89,12c5a,12c52,12cx052,auto} 编程使用的协议
+-a AISPBAUD, --aispbaud AISPBAUD    AutoISP的波特率 (默认值: 4800)
+-m AISPMAGIC, --aispmagic AISPMAGIC   AutoISP的魔术字
+-v, --verbose 显示详细信息
+-e, --erase_eeprom 在下一次下载期间擦除数据 EEPROM（实验性功能）
+-ne, --not_erase_eeprom  在下一次下载期间不擦除数据 EEPROM（实验性功能）
