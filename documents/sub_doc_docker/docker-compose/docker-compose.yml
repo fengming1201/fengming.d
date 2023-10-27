@@ -13,8 +13,23 @@ compose Yml文件编写
 该参数指定Dockerfile文件的路径，Docker Compose会通过Dockerfile构建并生成镜像，然后使用该镜像
 
 build: #构建的地址
-    context: /oldboyedu/dockerfile/docker-composedockerfile: Dockerfile
-
+    version: "3.9"
+    services:
+      webapp:
+        build:
+          context: ./dir
+          dockerfile: Dockerfile-alternate
+          args:
+            buildno: 1
+    context 上下文路径，可以是文件路径，也可以是到链接到 git 仓库的 url。当是相对路径时，它被解释为相对于 Compose 文件的位置。
+    dockerfile 指定构建镜像的 Dockerfile 文件名
+    args 构建参数，只能在构建过程中访问的环境变量
+    cache_from 缓存解析镜像列表
+    labels 设置构建镜像的元数据
+    network 设置网络容器连接，none 表示在构建期间禁用网络
+    shm_size 设置/dev/shm此构建容器的分区大小
+    target 多阶段构建，可以指定构建哪一层
+    
 （2）image
 指定启动容器的镜像，可以是镜像仓库/标签或者镜像id(或者id的前一部分)
 

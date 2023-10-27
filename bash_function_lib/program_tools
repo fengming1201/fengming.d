@@ -19,17 +19,17 @@ function C_formatter2
 function fm-sdcc_recognize_file_type
 {
     local type_suffix=("asm" "bin" "hex" "ihx" "lk" "lst" "map" "mem" "rel" "rst" "sym")
-    local type_script=("汇编源文件" \
+    local type_script=("由编译器创建的汇编文件" \
     "二进制文件" \
     "hex烧写文件" \
-    "英特尔十六进制格式的加载模" \
+    "以Intel hex forma格式的加载模块" \
     "链接脚本" \
-    "汇编程序列表文件" \
-    "加载模块的内存映射" \
-    "包含内存使用情况摘要的文件" \
-    "目标文件，输入到链接编辑器" \
-    "序列表文件，由链接编辑器创建" \
-    "源文件的符号列表")
+    "由汇编器创建的汇编链接文件" \
+    "由链接器创建的加载模块的内存映射" \
+    "带有内存使用情况的文件" \
+    "由汇编器产生的目标文件，可以作链接编辑器的输入" \
+    "由链接编辑器创建的具有链接信息更新的汇编链接文件" \
+    "由汇编器创建的源文件链接标识，符号列表")
     local len=${#type_suffix[@]}
     local file_list=""
     len=$(expr $len - 1)
@@ -63,6 +63,11 @@ function fm-sdcc_burn_with_stcflash
         echo "$FUNCNAME  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
         echo "$FUNCNAME hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"
         echo "$FUNCNAME -t  hex_image   #test , not real to burn!!"
+        echo ""
+        echo "89 	    STC89C52RC (v4.3C), STC89C54RD+ (v4.3C), STC90C52RC (v4.3C)"
+        echo "12cx052 	STC12C2052 (v5.8D)"
+        echo "12c52 	STC12C5608AD (v6.0G), STC12C5204AD (v6.0H)"
+        echo "12c5a 	STC10F04XE (v6.5J), STC12C5A16S2 (v6.2I), STC11F02E (v6.5K)"
         return 1
     fi
     #opt 

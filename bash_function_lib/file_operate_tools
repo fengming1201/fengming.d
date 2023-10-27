@@ -338,7 +338,9 @@ function fm-dockerfile_vim_dictionary_copy2current_dir
 		echo "vim dict file:$dic_file_path not exist"
 		return 1
 	fi
-	cp -v ${dic_file_path} ${target_file}
+
+	auto_sudo --cmd cp --arg '-vi' --src ${dic_file_path} --des ${target_file}
+
 	return 0
 }
 
@@ -352,7 +354,9 @@ function fm-docker_compose_vim_dictionary_copy2current_dir
 		echo "vim dict file:$dic_file_path not exist"
 		return 1
 	fi
-	cp -v ${dic_file_path} ${target_file}
+
+	auto_sudo --cmd cp --arg '-vi' --src ${dic_file_path} --des ${target_file}
+
 	return 0
 }
 
@@ -430,14 +434,14 @@ function fm-docker_compose_template
 		if [ "x${opt}" = "x" ];then opt="N";fi
 		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
 		then
-			cp -v ${template_file} ${target_file}
+			auto_sudo --cmd cp --arg '-vi' --src ${template_file} --des ${target_file}
 		fi
 	else
 		read -p "Copy docker-compose.yml template to here? [Y/n]"  opt
 		if [ "x${opt}" = "x" ];then opt="Y";fi
 		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
 		then
-			cp -v ${template_file} ${target_file}
+			auto_sudo --cmd cp --arg '-vi' --src ${template_file} --des ${target_file}
 		fi
 	fi
 	return 0
@@ -453,7 +457,9 @@ function fm-cmake_vim_dictionary_copy2current_dir
 		echo "vim dict file:$dic_file_path not exist"
 		return 1
 	fi
-	cp -v ${dic_file_path} ${target_file}
+
+	auto_sudo --cmd cp --arg '-vi' --src ${dic_file_path}  --des ${target_file}
+
 	return 0
 }
 
