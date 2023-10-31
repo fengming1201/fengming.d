@@ -3,56 +3,58 @@
 #comm value
 fengming_root_dir=/etc/fengming.d
 fengming_sorftware_pkg_dir=${fengming_root_dir}/sorftware_toolket/sorftware_pagke
-sorftware_pagke_url=http://139.9.186.120:8050/software_package/
-sorftware_pagke_path=none
-local_dir_for_download=sorftware_pkg
+sorftware_pagke_url=http://139.9.186.120:8050/software_package
 
-function __find_tool_package_path
+function prepare_sorftware_package
 {
 	local tool_pkg_name=none
+	local ret=1
 	#check para
-	if [ $# -ne 1 ]
-	then
-		echo ""
-		return 1
-	fi
+	if [ $# -ne 1 ];then echo "";return 1;fi
+	
 	tool_pkg_name="$1"
-	#check local first
 	#check tool package
-	if [ ! -f ${sorftware_pagke_path}/${tool_package} ] && [ ! -f ./${tool_package} ]
+	if [ ! -f ${fengming_sorftware_pkg_dir}/${tool_pkg_name} ]
 	then
 		#to download from server
+		if [ $(id -u) -eq 0]
+		then
+			wget -c -P ${fengming_sorftware_pkg_dir}/ ${sorftware_pagke_url}/${tool_pkg_name}
+			ret=$?
+		else
+			sudo wget -c -P ${fengming_sorftware_pkg_dir}/ ${sorftware_pagke_url}/${tool_pkg_name}
+			ret=$?
+		fi
+		if [ ${ret} -ne 0 ];then echo "ERROR:wget fail!!";return 2;fi
 	fi
-
-	#if local not have,then download from server
 	
-	sorftware_pagke_path=
-
 	return 0
 }
 
 function buildin_install_vim_config_pkg
 {
-	local tool_package=vim_cfg_dir.tar.gz
+	local package_name=vim_cfg_dir.tar.gz
+	local package_path=${fengming_sorftware_pkg_dir}/${package_name}
 	local config_file=/etc/vim/vimrc
-	local target_dir=${HOME}
+	local install_dir=${HOME}
 
 	#check 
 	which vim > /dev/null
 	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},vim not install yet.";return 1;fi
-
-
 	if [ -d ${target_dir}/.vim ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
-	tar -zxvf ${vim_comfig_pack} -C ${target_dir}/
-	if [ ! -d ${target_dir}/.vim ];then echo "ERROR:${FUNCNAME},tar fail...";return 2;fi
+	prepare_sorftware_package ${package_name}
+	if [ $? -ne 0 ];then echo "ERROR:prepare_sorftware_package fail";return 2;fi
 
-	grep -w "${target_dir}/.vim/myvimrc" ${config_file} > /dev/NULL
+	tar -zxvf ${fengming_sorftware_pkg_dir}/${package_name} -C ${install_dir}/
+	if [ ! -d ${install_dir}/.vim ];then echo "ERROR:${FUNCNAME},tar fail...";return 2;fi
+
+	grep -w "${install_dir}/.vim/myvimrc" ${config_file} > /dev/NULL
 	if [ $? -eq 0 ];then echo "WARNNING:${FUNCNAME},allready configed.";return 0;fi
 
 	#else write config to ${config_file}
 	cat >> ${config_file} << EOF
-if filereadable("${target_dir}/.vim/myvimrc")
-	source ${target_dir}/.vim/myvimrc
+if filereadable("${install_dir}/.vim/myvimrc")
+	source ${install_dir}/.vim/myvimrc
 endif
 EOF
 	return 0
@@ -60,34 +62,44 @@ EOF
 
 function buildin_install_z_pkg
 {
-	local z_pkg=${sorftware_pagke_path}/z.tar.gz
-	local target_path=/opt
-	local target_dir=z
+	local package_name=z.tar.gz
+	local package_path=${fengming_sorftware_pkg_dir}/${package_name}
+	local config_file=
+	local install_dir=/opt
 
-	if [ -d ${target_path}/${target_dir} ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
-	tar -zxvf ${z_pkg} -C ${target_path}
-	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 1;fi
+	if [ -d ${install_dir}/z ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
+	
+	prepare_sorftware_package ${package_name}
+	if [ $? -ne 0 ];then echo "ERROR:prepare_sorftware_package fail";return 2;fi
+
+	tar -zxvf package_path -C ${install_dir}
+	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 3;fi
 
 	return 0
 }
 
 function buildin_install_7zz_pkg
 {
-	local z7z_pkg=${sorftware_pagke_path}/7z2201-linux-x64.tar.xz
-	local target_path=/opt
+	local package_name=7z2201-linux-x64.tar.xz
+	local package_path=${fengming_sorftware_pkg_dir}/${package_name}
+	local config_file=
+	local install_dir=/opt
+
 	local target_dir=7z
 	local link_bin_dir=/usr/local/bin
 
 	which 7zz > /dev/null
 	if [ $? -eq 0 ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
 
-	if [ -d ${target_path}/${target_dir} ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
+	if [ -d ${install_dir}/${target_dir} ];then echo "WARNNING:${FUNCNAME},allready installed.";return 0;fi
 	#build dir
-	mkdir -p ${target_path}/${target_dir}
-	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},mkdir ${target_path}/${target_dir} fail";return 1;fi
+	mkdir -p ${install_dir}/${target_dir}
+	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},mkdir ${install_dir}/${target_dir} fail";return 1;fi
+
+	prepare_sorftware_package ${package_name}
+	if [ $? -ne 0 ];then echo "ERROR:prepare_sorftware_package fail";return 2;fi
 	#extra pack
-	if [ ! -f ${z7z_pkg} ];then echo "ERROR:${FUNCNAME},file:${z7z_pkg} no exist!";return 2;fi
-	tar -xJf ${z7z_pkg} -C ${target_path}/${target_dir}
+	tar -xJf package_path -C ${install_dir}/${target_dir}
 	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 3;fi
 	
 	#build link
@@ -110,7 +122,7 @@ function buildin_install_7zz_pkg
 
 function build_install_advcpmv_pkg
 {
-	local advcpmv_pkg=${sorftware_pagke_path}/advcpmv_pkg.tar.gz
+	local advcpmv_pkg=advcpmv_pkg.tar.gz
 	local target_path=/opt
 	local target_dir=advcpmv
 	local binaries_dir=off-the-shelf-binaries
@@ -122,7 +134,10 @@ function build_install_advcpmv_pkg
 	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},mkdir ${target_path}/${target_dir} fail";return 1;fi
 	#extra pack
 	if [ ! -f ${advcpmv_pkg} ];then echo "ERROR:${FUNCNAME},file:${advcpmv_pkg} no exist!";return 2;fi
-	tar -xzf ${advcpmv_pkg} -C ${target_path}/${target_dir}
+
+	prepare_sorftware_package ${advcpmv_pkg}
+
+	tar -xzf ${fengming_sorftware_pkg_dir}/${advcpmv_pkg} -C ${target_path}/${target_dir}
 	if [ $? -ne 0 ];then echo "ERROR:${FUNCNAME},tar fail...";return 3;fi
 
 	#check version 

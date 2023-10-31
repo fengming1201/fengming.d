@@ -137,14 +137,4 @@ function fm-sdcc_burn_with_stcflash
     return 0
 }
 
-function fm-sdcc_programing_led_test1
-{
-    local tmp_dir=${fengming_top_dir}/documents/sub_doc_sdcc/programing_template
-    local target_file=led_test1.tar.gz
 
-    if [ ! -f ${tmp_dir}/${target_file} ];then echo "file:${tmp_dir}/${target_file} not found!";return 1;fi
-
-    tar -zxvf  ${tmp_dir}/${target_file} -C .
-
-    return 0
-}
