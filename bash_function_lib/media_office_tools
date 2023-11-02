@@ -140,7 +140,7 @@ function fm-movie_stream_push_by_ffmpeg_to_mymedia_server
 {
 	local push_tool=ffmpeg
 
-	local server_ip=116.62.103.60
+	local server_ip=101.200.135.149
 	local server_port=1935
 
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
