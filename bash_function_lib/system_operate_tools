@@ -48,7 +48,7 @@ function fm-diff_dir
     local app=diff
     local default_opt="-d"
     #check param
-	if [ $# -eq 2 ]
+	if [ $# -ne 2 ]
 	then
 		echo "ERROR:parameter missing"
 		echo "discripttion:compare two directories"
@@ -64,7 +64,7 @@ function fm-diff_dir
 	which ${app} > /dev/null
 	if [ $? -ne 0   ];then echo "${app} not found!";return 2;fi
 
-    ${app} -u <(ls ${dir1} | short)  <(ls ${dir2})
+    ${app} -u <(ls "${dir1}" | short)  <(ls "${dir2}")
     if [ $? -ne 0 ];then echo "${app} exec error!";return 3;fi
 
     return 0
