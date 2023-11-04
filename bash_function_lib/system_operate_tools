@@ -157,3 +157,34 @@ function fm-script_putin
 	return 0
 }
 
+function fm-show_CPU
+{
+	which lscpu > /dev/null
+	if [ $? -ne 0 ];then echo "lscpu not found";return 1;fi
+	lscpu
+	echo "======== end lscpu =============="
+	cat /proc/cpuinfo
+	echo "======== end /proc/cpuinfo =============="
+	which inxi > /dev/null
+	if [ $? -ne 0 ];then echo "inxi not found";echo "you can \"apt install inxi\" to install it";return 1;fi
+	inxi -C
+	echo "======== end inxi -C =============="
+	return 0
+}
+
+function fm-show_GPU
+{
+	
+
+	return 0
+}
+function fm-show_Network_Card
+{
+
+	return 0
+}
+function fm-show_RAM
+{
+
+	return 0
+}

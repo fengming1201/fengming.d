@@ -314,4 +314,15 @@
     另外，还要注意，某些应用程序可能需要额外的配置和设置才能在 Docker 容器中正确使用 Intel GPU 加速。
     你可能需要查阅相应应用程序的文档，以了解如何在 Docker 容器中配置和使用 Intel GPU 加速。
     
+},
+{
+    遇到问题：
+    r8169 0000:03:00.0 enp3s0: rtl_rxtx_empty_cond == 0 (loop: 42, delay: 100).
+
+    安装网卡驱动
+    apt install firmware-realtek
+    如何没有找到firmware-realtek，那么在/etc/apt/sources.list 添加non-free
+    安装驱动，然后重启。
+    modprobe -r r8169
+    modprobe r8169
 }

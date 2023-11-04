@@ -18,7 +18,7 @@ function buildin_install_mybashrc
 	if [ ! -f ${mybash_file} ];then echo "${mybash_file} not exist";return 2;fi
 	echo "mybash_file:${mybash_file}"
 	#check is already installed
-	grep -w "${mybash_file}" ${home_bashrc}  > /dev/NULL
+	grep -w "${mybash_file}" ${home_bashrc}  > /dev/null
 	if [ $? -eq 0 ];then echo "WARNNING:${FUNCNAME},allready configed.";return 0;fi
 
 	#else write config to ${home_bashrc}
