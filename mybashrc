@@ -379,8 +379,8 @@ function fm-document_grep
 		echo "e.g $FUNCNAME  keyword"
 		return 1
 	fi
-	echo "grep -rn $@ ${doc_file_path}"
-	grep -rn $@ ${doc_file_path}
+	echo "grep -rn $* ${doc_file_path}"
+	grep -rn "$*" ${doc_file_path}
 
 	return 0
 }
@@ -606,6 +606,86 @@ function fm-download_whole_website
 	echo "${tool} -r -p -np -k $*"
 	${tool} -r -p -np -k $*
 
+	return 0
+}
+
+function fm-mount_iso
+{
+	if [ $# -lt 2 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "parameter wrong!"
+		echo "$FUNCNAME  iso_file/iso_dev  mount_dir"
+		echo "e.g. $FUNCNAME  file.iso  /media/cdrom0"
+		return 1
+	fi
+
+	local iso="$1"
+	local mount_dir="$2"
+	if [ ! -f ${iso} ];then echo "file:${iso} not found";return 2;fi
+	if [ ! -d ${mount_dir} ];then echo "mount dir not exit";return 2;fi
+
+	if [ $(id -u) -eq 0 ]
+	then
+		echo "mount -o loop -t iso9660 ${iso} ${mount_dir}"
+		mount -o loop -t iso9660 ${iso} ${mount_dir}
+	else
+		echo "mount -o loop -t iso9660 ${iso} ${mount_dir}"
+		sudo mount -o loop -t iso9660 ${iso} ${mount_dir}
+	fi
+	return 0
+}
+
+function fm-mount_nfs
+{
+	if [ $# -lt 3 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "parameter wrong!"
+		echo "$FUNCNAME  ip  src_dir  mount_dir"
+		echo "e.g. $FUNCNAME  192.168.254.3 /srv/nfs  /mnt/nfs"
+		return 1
+	fi
+
+	local ip="$1"
+	local src_dir="$2"
+	local mount_dir="$3"
+	if [ ! -d ${mount_dir} ];then echo "mount point not exit";return 1;fi
+
+	if [ $(id -u) -eq 0 ]
+	then
+		echo "mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
+		mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
+	else
+		echo "mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
+		sudo mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
+	fi
+	return 0
+}
+function fm-mount_samba
+{
+	if [ $# -lt 5 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "parameter wrong!"
+		echo "$FUNCNAME  ip  src_dir  mount_dir username password"
+		echo "e.g. $FUNCNAME  192.168.254.3  media_dir  samba1  user pass"
+		return 1
+	fi
+
+	local ip="$1"
+	local src_dir="$2"
+	local mount_dir="$3"
+	local username="$4"
+	local password="$5"
+
+	if [ ! -d ${mount_dir} ];then echo "mount point not exit";return 1;fi
+
+	if [ $(id -u) -eq 0 ]
+	then
+		echo "mount -t cifs-o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir} "
+		mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
+	else
+		echo "mount -t cifs-o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir} "
+		sudo mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
+	fi
 	return 0
 }
 

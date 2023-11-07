@@ -353,4 +353,9 @@
     
     (3)卸载NFS
     umount /mnt/nfs
+},
+{
+    挂载iso光盘文件方法
+    mount -o loop -t iso9660 file.iso /media/cdrom0
+    
 }

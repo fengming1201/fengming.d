@@ -27,3 +27,14 @@ scp [可选参数] file_source file_target
 -o ssh_option：    如果习惯于使用ssh_config(5)中的参数传递方式，
 -P port：          注意是大写的P, port是指定数据传输用到的端口号
 -S program：       指定加密传输时所使用的程序。此程序必须能够理解ssh(1)的选项。
+=========================================================================
+注意：当ssh可以连接登陆，但scp却不能传输时，可以使用下面方法传输文件
+上传：
+tar czf - ./* | ssh jf@otherserver.com tar xzf - -C ~/saved_tree
+例如：
+tar -zcf - vim_cfg_dir.tar.gz | ssh -p 1201 root@139.9.186.120 tar zxf - -C ~/
+
+下载：
+ssh jf@otherserver.com "tar czf - ~/saved_tree" | tar xzvf - -C ./
+例如：
+ssh -p 1201 root@139.9.186.120 "tar zcf - ~/vim_cfg_dir.tar.gz" | tar -zxf - -C ./
