@@ -37,9 +37,6 @@ fi
 
 alias bd=". bd -si"
 alias cman='man -M  /usr/share/man/zh_CN'
-alias svnls='svn st | grep -v ^?'
-alias svnst='svn st | grep -v ^?'
-alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias clr='clear'
 
 #source other files
@@ -54,6 +51,13 @@ do
 	done
 	source ${fengming_func_lib_dir}/${file}
 done
+
+alias svnls='svn st | grep -v ^?'
+alias svnst='svn st | grep -v ^?'
+alias mywifi='fm-wifi_qr_code fjk myap 12345678'
+alias gitst='fm-gitst'
+alias gitls='fm-gitls'
+alias gitlog='fm-gitlog'
 
 if [ -f /opt/z/z.sh ];then
 	source /opt/z/z.sh

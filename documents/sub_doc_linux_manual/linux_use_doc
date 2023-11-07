@@ -325,4 +325,32 @@
     安装驱动，然后重启。
     modprobe -r r8169
     modprobe r8169
+},
+{
+    linux挂载和卸载网络硬盘
+    （1）samba配置
+    cat /etc/samba/smb.conf
+    [media_dir]
+    comment=debian home
+    path = /media
+    browseable = yes
+    valid users =root lshm
+    writable = yes
+    guest ok=yes
+
+    (2)挂载samba
+    mount -t cifs -o username=root,password=samba,vers=2.0 //192.168.254.5/media_dir  /root/samba1
+
+    (3)卸载samba
+    umount /root/samba1
+
+    （1）配置NFS：
+    cat /etc/default/nfs-kernel-server
+    /srv/nfs *(rw,sync,no_root_squash)
+    
+    (2)挂载NFS
+    mount -t nfs -o nolock 192.168.254.5:/srv/nfs /mnt/nfs
+    
+    (3)卸载NFS
+    umount /mnt/nfs
 }

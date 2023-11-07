@@ -164,35 +164,59 @@ function fm-convert_url_to_qrcode
 	return 0
 }
 
+function fjk_sign_tool
+{
+	local tool_path=${HOME}/XBox/XBox
+	local app=bin/node
+	local arg=generate_sign.js
+
+	if [ $# -ne 1 ];then echo "parameter wrong!";echo "$FUNCNAME file";return 1;fi
+	local file="$1"
+
+	if [ ! -f "${file}" ];then echo "file:"${file}" not found";return 2;fi
+	if [ ! -x ${tool_path}/${app} ];then echo "${tool_path}/${app} not exec permission";return 3;fi
+	
+	echo "${tool_path}/${app} ${tool_path}/${arg} ${file}"
+	${tool_path}/${app} ${tool_path}/${arg} "${file}"
+
+	if [ -e "pack.sig.${file}" ]
+	then
+		echo "generate sign success"
+		echo "--->${file}"
+		echo "--->pack.sig.${file}"
+		return 0
+	else
+		echo "generate sign fail"
+		return 4
+	fi
+}
 function fm-fjk_sign_tool
 {
-	local sig_tool_path=/root/XBox/XBox
-	local curr_pwd=$PWD
-	local source_file=$curr_pwd/$1
-	local source_dir=$(dirname $curr_pwd/$1)
-	local source_name=$(basename $source_file)
-	local target_name=$(echo "pack.sig.$source_name")
-	echo "source_file=$source_file"
-	echo "soucre_dir=$source_dir"
-	echo "source_name=$source_name"
-	echo "target_name=$target_name"
-	if [ ! -d ${sig_tool_path} ];then echo "sign tool not exist";return 1;fi
-	
-	if [ -e $1  ]
+	#check arg
+	if [ $# -lt 1 ]
 	then
-		pushd $sig_tool_path
-		./bin/node  generate_sign.js $source_file
-
-		if [ -e $source_dir/$target_name  ]
-		then
-			echo "generate sign success"
-			echo "--->$source_name"
-			echo "--->$target_name"
-		fi
-		popd
-	else
-		echo "file is not exist:$source_file"
+		echo "parameter wrong!!"
+		echo "$FUNCNAME filename / dirname"
+		return 1
 	fi
+	
+	local arg_list=$@
+	for file in "${arg_list}"
+	do
+		if [ -f ${file} ]
+		then
+			fjk_sign_tool "${file}"
+		elif [ -d ${file} ]
+		then
+			for filelist in $(find ${file} -type f -printf "%P\n")
+			do
+				fjk_sign_tool "${filelist}"
+			done
+		else
+			echo "Unkown file type"
+		fi
+	done
+	
 	echo "done ......."
 	return 0
 }
@@ -258,5 +282,39 @@ function fm-svnst
 	if [ $? -ne 0 ];then echo ¨ERROR:${FUNCNAME},${app} not exist!¨;return 1;fi;
 
 	$app ${default_opt} $*
+	return 0
+}
+
+function fm-gitst
+{
+	git status > /dev/null  2>&1
+	if [ $? -ne 0 ]
+	then
+		sudo git status
+	else
+		git status
+	fi
+	return 0
+}
+function fm-gitls
+{
+	git status > /dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		sudo git status | grep -E 'new file:|modified:'
+	else
+		git status | grep -E 'new file:|modified:'
+	fi
+	return 0
+}
+function fm-gitlog
+{
+	git status > /dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		sudo git log --name-status
+	else
+		git log --name-status
+	fi
 	return 0
 }

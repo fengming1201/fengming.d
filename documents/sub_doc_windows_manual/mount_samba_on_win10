@@ -1,0 +1,26 @@
+（1）用命令行挂载samba
+挂载：
+net use <drive-letter> \\server\share /user:<username> <password>
+例如
+net use Z:\\192.168.254.5\media_dir /user:myuser mypassword
+
+卸载：
+net use <drive-letter> /delete
+例如
+net use Z: /delete
+
+查看挂载列表
+net use
+
+（2）用命令行挂载NFS
+挂载：
+mkdir <mount-point>
+mount <mount-point> \\nfs-server\nfs-share
+例如
+mount C:\NFSMount \\nfs-server\nfs-share
+
+卸载：
+umount <mount-point>
+例如
+umount C:\NFSMount
+
