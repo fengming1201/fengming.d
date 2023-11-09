@@ -284,7 +284,6 @@ function fm-svnst
 	$app ${default_opt} $*
 	return 0
 }
-
 function fm-gitst
 {
 	git status > /dev/null  2>&1
@@ -315,6 +314,37 @@ function fm-gitlog
 		sudo git log --name-status
 	else
 		git log --name-status
+	fi
+	return 0
+}
+function fm-gitinfo
+{
+	local tmp_file=$(mktemp)
+	local ret=128
+	git status > ${tmp_file}  2>&1
+	ret=$?
+	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
+	then 
+		echo "fatal: not a git repository"
+		rm -f ${tmp_file}
+		return 1
+	fi
+	rm -f ${tmp_file}
+	if [ ${ret} -ne 0 ]
+	then
+		echo "{"
+		sudo git remote -v
+		echo "},"
+		echo "{"
+		sudo git branch
+		echo "}"
+	else
+		echo "{"
+		git remote -v
+		echo "},"
+		echo "{"
+		git branch
+		echo "}"
 	fi
 	return 0
 }

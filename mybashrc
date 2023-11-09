@@ -58,6 +58,7 @@ alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias gitst='fm-gitst'
 alias gitls='fm-gitls'
 alias gitlog='fm-gitlog'
+alias gitinfo='fm-gitinfo'
 
 if [ -f /opt/z/z.sh ];then
 	source /opt/z/z.sh
@@ -662,28 +663,37 @@ function fm-mount_nfs
 }
 function fm-mount_samba
 {
-	if [ $# -lt 5 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 2 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "parameter wrong!"
-		echo "$FUNCNAME  ip  src_dir  mount_dir username password"
-		echo "e.g. $FUNCNAME  192.168.254.3  media_dir  samba1  user pass"
+		echo "$FUNCNAME  src_dir  mount_dir"
+		echo "e.g. $FUNCNAME  media_dir  samba1"
 		return 1
 	fi
 
-	local ip="$1"
-	local src_dir="$2"
-	local mount_dir="$3"
-	local username="$4"
-	local password="$5"
+	local src_dir="$1"
+	local mount_dir="$2"
 
-	if [ ! -d ${mount_dir} ];then echo "mount point not exit";return 1;fi
+	local ip="none"
+	local username="none"
+	local password="none"
+	read -p "smb server IP:"  ip
+	if [ "x${ip}" = x ];then echo "SMB server IP cannot be empty!";return 1;fi
+
+	read -p "username:[root]" username
+	if [ "x${username}" = x ];then username=root;fi
+
+	read -s -p "password:[samba]" password
+	if [ "x${password}" = x ];then password=samba;fi
+
+	if [ ! -d ${mount_dir} ];then echo "mount point not exist";return 2;fi
 
 	if [ $(id -u) -eq 0 ]
 	then
-		echo "mount -t cifs-o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir} "
+		echo "mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
 		mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
 	else
-		echo "mount -t cifs-o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir} "
+		echo "mount -t cifs-o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
 		sudo mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
 	fi
 	return 0
