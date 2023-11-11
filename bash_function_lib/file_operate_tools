@@ -288,26 +288,18 @@ function fm-json_format
 
 	return 0
 }
-function fm-upload_files_to_myfileserver
+function fm-upload_files_to_fileserver
 {
-	local fileserver_ip=139.9.186.120
-	local fileserver_port=1201
-	local target_path=/root/http_share/data/unclassified
-
-	if [ $# -lt 1 ]
+	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "paramter wrong!"
-		echo "you can -h or --help for help"
+		echo "$FUNCNAME  file1 file2 fileN ...  remote_dir"
+		echo "$FUNCNAME  file1 file2   /root/Pictures"
 		return 1
 	fi
-	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
-	then
-		echo "$FUNCNAME  file_list"
-		echo "e.g. $FUNCNAME  file1 file2 fileN ..."
-		return 2
-	fi
-	
+
 	local file_list
+    local target_dir
 	#check file stat
 	for file in "$@"
 	do
@@ -317,32 +309,42 @@ function fm-upload_files_to_myfileserver
 		else
 			file_list+=("${file}")
 		fi
+        target_dir=${file}
 	done
-	
+
 	if [ ${#file_list[@]} -ge 1 ]
 	then
-		echo "scp -P ${fileserver_port}  ${file_list[@]}   root@${fileserver_ip}:${target_path}"
-		scp -P ${fileserver_port}  ${file_list[@]}   root@${fileserver_ip}:${target_path}
+        local ip="none"
+        local port="22"
+        local username="none"
+        read -p "remote server IP:"  ip
+        if [ "x${ip}" = x ];then echo "remote server IP cannot be empty!";return 2;fi
+        read -p "remote server PORT:[22]:"  port
+        if [ "x${port}" = x ];then port=22;fi
+
+        read -p "username:[root]" username
+        if [ "x${username}" = x ];then username=root;fi
+
+		echo "scp -P ${port}  ${file_list[@]}   ${username}@${ip}:${target_dir}"
+		#scp -P ${port}  ${file_list[@]}   ${username}@${ip}:${target_dir}
 	fi
 	echo "all done ..."
-	return 0
+	return 0	
 }
 
-function fm-upload_files_to_myfileserver_ex
+function fm-upload_files_to_fileserver_tar
 {
-	local fileserver_ip=139.9.186.120
-	local fileserver_port=1201
-	local target_path=/root/http_share/data/unclassified
-
-	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "paramter wrong!"
-		echo "$FUNCNAME  file_list"
-		echo "e.g. $FUNCNAME  file1 file2 fileN ..."
+		echo "$FUNCNAME  file1 file2 fileN ...  remote_dir"
+		echo "$FUNCNAME  file1 file2   /root/Pictures"
 		return 1
 	fi
 
+
 	local file_list
+    local target_dir
 	#check file stat
 	for file in "$@"
 	do
@@ -352,13 +354,25 @@ function fm-upload_files_to_myfileserver_ex
 		else
 			file_list+=("${file}")
 		fi
+        target_dir=${file}
 	done
-	
+
 	if [ ${#file_list[@]} -ge 1 ]
 	then
-		echo "tar -zcf - ${file_list[@]} | ssh -p ${fileserver_port} root@root@${fileserver_ip} tar zxf - -C ${target_path}"
-		tar -zcf - ${file_list[@]} | ssh -p ${fileserver_port} root@${fileserver_ip} tar zxf - -C ${target_path}
-		#scp -P ${fileserver_port}  ${file_list[@]}   root@${fileserver_ip}:${target_path}
+        local ip="none"
+        local port="22"
+        local username="none"
+        read -p "remote server IP:"  ip
+        if [ "x${ip}" = x ];then echo "remote server IP cannot be empty!";return 2;fi
+        read -p "remote server PORT:[22]:"  port
+        if [ "x${port}" = x ];then port=22;fi
+
+        read -p "username:[root]" username
+        if [ "x${username}" = x ];then username=root;fi
+
+		echo "tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}"
+		tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}
+		#scp -P ${port}  ${file_list[@]}   ${username}@${fileserver_ip}:${target_path}
 	fi
 	echo "all done ..."
 	return 0
