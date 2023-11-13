@@ -86,7 +86,7 @@ function fm-video_mult_player
 	return 0
 }
 
-function fm-movie_stream_push_by_ffmpeg
+function fm-video_stream_push_by_ffmpeg
 {
 	local push_tool=ffmpeg
 
@@ -136,7 +136,7 @@ function fm-movie_stream_push_by_ffmpeg
 	return 0
 }
 
-function fm-movie_stream_push_by_ffmpeg_to_mymedia_server
+function fm-video_stream_push_by_ffmpeg_to_mymedia_server
 {
 	local push_tool=ffmpeg
 

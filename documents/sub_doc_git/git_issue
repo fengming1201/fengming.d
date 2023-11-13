@@ -11,5 +11,43 @@ git config --global http.sslVerify false
 git config --global http.postBuffer 1048576000
 
 (2)
+Total 25 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (7/7), done.
+remote: error: Trace: 68a4c2f76897cd2e82163bd1593042dd25842b5be93c95f307f28b98b7a28e38
+remote: error: See https://gh.io/lfs for more information.
+remote: error: File gcc-arm-none-eabi-10.3-2021.10-src.tar.bz2 is 191.83 MB; this exceeds GitHub's file size limit of 100.00 MB
+remote: error: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.
+To https://github.com/fengming1201/docker_cmx_soc_compiler_build.git
+ ! [remote rejected] main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/fengming1201/docker_cmx_soc_compiler_build.git'
 
+原因：
+使用Git进行git push操作时出现了错误。错误信息指出了两个问题：
+1：文件大小超过了GitHub的文件大小限制：您尝试推送的文件（gcc-arm-none-eabi-10.3-2021.10-src.tar.bz2）的大小为191.83 MB，而GitHub的文件大小限制是100.00 MB。因此，您无法直接将这个文件推送到GitHub上。
 
+2：大文件检测错误：GitHub检测到您的推送中存在大文件。为了解决此问题，GitHub建议您尝试使用Git Large File Storage（LFS）来管理大文件。Git LFS是一个扩展，可以帮助您更好地处理大文件，将其存储在单独的地方，并在Git仓库中保留引用。
+
+解决这个问题的方法是使用Git LFS来管理大文件。您可以按照GitHub提供的链接（https://git-lfs.github.com）了解有关Git LFS的更多信息，并按照指南设置和使用Git LFS。
+
+解决：
+1：安装Git LFS
+apt/deb: sudo apt-get install git-lfs
+yum/rpm: sudo yum install git-lfs
+2：在仓库中启用Git LFS：
+导航到您的Git仓库所在的目录启用Git LFS：
+git lfs install
+3：跟踪大文件：
+确定您要使用Git LFS跟踪的大文件
+git lfs track "path/to/large/file"
+将"path/to/large/file"替换为实际的大文件路径或通配符模式。例如，可以使用通配符*.zip跟踪所有扩展名为.zip的文件。
+4：提交和推送更改：
+git add  "path/to/large/file"  添加到暂存区
+git commit -m "Add large files using Git LFS"  提交更改
+git push origin <branch>   将更改推送到远程仓库
+
+请注意，由于Git LFS将大文件存储在单独的地方，因此在克隆或拉取仓库时，您需要确保正确安装和配置了Git LFS，以便正确获取和管理大文件。
+此外，还要注意，在使用Git LFS之前，您可能需要清除之前推送的大文件。您可以使用以下命令清除之前的提交：
+git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch path/to/large/file' --prune-empty --tag-name-filter cat -- --all
+将"path/to/large/file"替换为实际的大文件路径。运行此命令后，请确保在进行任何新的提交之前，先启用Git LFS并将大文件添加到Git LFS跟踪。
+
+(3)
