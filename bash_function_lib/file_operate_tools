@@ -379,7 +379,7 @@ function fm-upload_files_to_fileserver_tar
 }
 function fm-dockerfile_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_top_dir}/documents/sub_doc_docker/Dockerfile/work_dictionary
+	local dic_file_path=${fengming_documents_dir}/sub_doc_docker/Dockerfile/work_dictionary
 	local target_file=.work_dictionary
 	#check
 	if [ ! -f ${dic_file_path} ]
@@ -395,7 +395,7 @@ function fm-dockerfile_vim_dictionary_copy2current_dir
 
 function fm-docker_compose_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_top_dir}/documents/sub_doc_docker/docker-compose/work_dictionary
+	local dic_file_path=${fengming_documents_dir}/sub_doc_docker/docker-compose/work_dictionary
 	local target_file=.work_dictionary
 	#check
 	if [ ! -f ${dic_file_path} ]
@@ -466,7 +466,7 @@ function fm-docker_compose_check
 
 function fm-docker_compose_template
 {
-	local template_file=${fengming_top_dir}/documents/sub_doc_docker/docker-compose/docker-compose.yml.template
+	local template_file=${fengming_documents_dir}/sub_doc_docker/docker-compose/docker-compose.yml.template
 	local target_file=docker-compose.yml
 	if [ ! -f ${template_file} ]
 	then
@@ -498,7 +498,7 @@ function fm-docker_compose_template
 
 function fm-cmake_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_top_dir}/documents/sub_doc_cmake/work_dictionary
+	local dic_file_path=${fengming_documents_dir}/sub_doc_cmake/work_dictionary
 	local target_file=.work_dictionary
 	#check
 	if [ ! -f ${dic_file_path} ]

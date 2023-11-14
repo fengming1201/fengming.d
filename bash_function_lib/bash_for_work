@@ -284,6 +284,38 @@ function fm-svnst
 	$app ${default_opt} $*
 	return 0
 }
+function fm-gitcmd_help
+{
+	local cmd_help_path=${fengming_documents_dir}/sub_doc_git/git_cmd_help
+	if [ $# -lt 1 ];then tree -L 1 ${cmd_help_path};return 0;fi
+	if [ $# -gt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "parameter wrong!"
+		echo "$FUNCNAME cmd"
+		echo "e.g.:$FUNCNAME  log"
+		return 1
+	fi
+	if [ -f ${cmd_help_path}/${1} ]
+	then
+			echo "start >>>"
+			cat ${cmd_help_path}/${1}
+			echo "end <<<"
+			echo "file:${cmd_help_path}/${1}"
+			return 0;
+	fi
+	local cmd_file=$(find ${cmd_help_path} -type f -iname "git_*${1}*" -o -type l -iname "git_*${1}*")
+	if [ "x${cmd_file}" != x ]
+	then
+		for file_each in ${cmd_file}
+		do
+			echo "start >>>"
+			cat ${file_each}
+			echo "end <<<"
+			echo "file:${file_each}"
+		done
+	fi
+	return 0
+}
 function fm-gitst
 {
 	git status > /dev/null  2>&1
@@ -308,15 +340,145 @@ function fm-gitls
 }
 function fm-gitlog
 {
-	git status > /dev/null 2>&1
-	if [ $? -ne 0 ]
+	local tmp_file=$(mktemp)
+	local ret=128
+	git status > ${tmp_file}  2>&1
+	ret=$?
+	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
+	then 
+		echo "fatal: not a git repository"
+		rm -f ${tmp_file}
+		return 1
+	fi
+	rm -f ${tmp_file}
+
+	if [ $ret -ne 0 ]
 	then
+		echo "git log --name-status"
 		sudo git log --name-status
 	else
+		echo "git log --name-status"
 		git log --name-status
 	fi
 	return 0
 }
+function fm-gitshow
+{
+	local tmp_file=$(mktemp)
+	local ret=128
+	git status > ${tmp_file}  2>&1
+	ret=$?
+	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
+	then 
+		echo "fatal: not a git repository"
+		rm -f ${tmp_file}
+		return 1
+	fi
+	rm -f ${tmp_file}
+	if [ $ret -ne 0 ]
+	then
+		echo "git show"
+		sudo git show
+	else
+		echo "git show"
+		git show
+	fi
+	return 0
+}
+function fm-gitshow_file_diff
+{
+	if [ $# -ne 2 ]
+	then
+		echo ""
+		echo "$FUNCNAME  commit_id  file"
+		echo "$FUNCNAME  file   commit_id"
+		echo "git commit ID,you can :[git log --name-status]"
+		echo "e.g.:$FUNCNAME  fef3d5a1053480cb9ddccd05fbdc1426b57a1086 main.c"
+		echo "e.g.:$FUNCNAME  fef3d5a105 main.c"
+		return 0
+	fi
+	#regotn id
+	local commit_id=
+	local file=
+	git status > /dev/null 2>&1
+	if [ $? -ne 0 ]
+	then
+		echo "git show ${commit_id} -- ${file}"
+		sudo git show ${commit_id} -- ${file}
+	else
+		echo "git show ${commit_id} -- ${file}"
+		git show ${commit_id} -- ${file}
+	fi
+	return 0
+}
+function fm-gitdiff_work-cache
+{
+	local tmp_file=$(mktemp)
+	local ret=128
+	git status > ${tmp_file}  2>&1
+	ret=$?
+	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
+	then 
+		echo "fatal: not a git repository"
+		rm -f ${tmp_file}
+		return 1
+	fi
+	rm -f ${tmp_file}
+	local file_list
+	for file in "$@"
+    do
+        if [ ! -f ${file} ]; then
+            echo "WARNING:<${file}> not found,ignore it"
+        else
+            file_list+=("${file}")
+        fi
+    done
+	
+	if [ $ret -ne 0 ]
+	then
+		echo "git diff ${file_list}"
+		sudo git diff ${file_list}
+	else
+		echo "git diff ${file_list}"
+		git diff ${file_list}
+	fi
+	return 0
+}
+function fm-gitdiff_work-repository
+{
+	local tmp_file=$(mktemp)
+	local ret=128
+	git status > ${tmp_file}  2>&1
+	ret=$?
+	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
+	then 
+		echo "fatal: not a git repository"
+		rm -f ${tmp_file}
+		return 1
+	fi
+	rm -f ${tmp_file}
+
+	local file_list
+	for file in "$@"
+    do
+        if [ ! -f ${file} ]; then
+            echo "WARNING:<${file}> not found,ignore it"
+        else
+            file_list+=("${file}")
+        fi
+    done
+	
+	if [ $ret -ne 0 ]
+	then
+		echo "git diff --cached ${file_list}"
+		sudo git diff --cached ${file_list}
+	else
+		echo "git diff --cached ${file_list}"
+		git diff --cached ${file_list}
+	fi
+	return 0
+}
+
 function fm-gitinfo
 {
 	local tmp_file=$(mktemp)

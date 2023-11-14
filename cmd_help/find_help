@@ -1,0 +1,17 @@
+
+（1）结果去除 ./ 开头：
+find . -type f -printf "%P\n"
+-printf 选项来去除输出结果中的 ./ 开头：
+
+（2）排除搜索目录
+排除单个目录：
+    find /path/to/directory -name "filename" -o -path "/path/to/exclude" -prune
+    上述命令将在 /path/to/directory 目录及其子目录中查找名为 "filename" 的文件，同时排除 /path/to/exclude 目录。
+
+排除多个目录：
+    find /path/to/directory \( -name "filename" -o -path "/path/to/exclude1" -o -path "/path/to/exclude2" \) -prune
+    上述命令将在 /path/to/directory 目录及其子目录中查找名为 "filename" 的文件，同时排除 /path/to/exclude1 和 /path/to/exclude2 目录。
+
+请注意，在使用 -prune 选项时，需要将其放置在逻辑表达式的末尾，并使用括号将排除条件括起来。
+
+find命令常用

@@ -3,8 +3,9 @@
 #date:Thu 22 Dec 2022 11:22:52 AM CST
 #***************************************#
 fengming_top_dir=/etc/fengming.d
-fengming_tools_dir=/etc/fengming.d/linux_tools
+fengming_tools_dir=/etc/fengming.d/sorftware_toolket
 fengming_func_lib_dir=/etc/fengming.d/bash_function_lib
+fengming_documents_dir=/etc/fengming.d/documents
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -57,8 +58,10 @@ alias svnst='svn st | grep -v ^?'
 alias mywifi='fm-wifi_qr_code fjk myap 12345678'
 alias gitst='fm-gitst'
 alias gitls='fm-gitls'
+alias gitdiff='fm-gitdiff_work-cache'
+alias gitshow='fm-gitshow'
 alias gitlog='fm-gitlog'
-alias gitinfo='fm-gitinfo'
+alias gitinfo='fm-gitcinfo'
 
 if [ -f /opt/z/z.sh ];then
 	source /opt/z/z.sh
@@ -176,7 +179,7 @@ function fm-git_mytoken_manage
     return 0
 }
 
-function  fm-search_by_keyword
+function  fm-search_all_by_keyword
 {
 	if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
@@ -251,7 +254,7 @@ function fm-cmd_help
 
 function fm-shell_help
 {
-	local doc_file_path=${fengming_top_dir}/documents
+	local doc_file_path=${fengming_documents_dir}
 	local sub_doc_path=${doc_file_path}/sub_doc_shell
 	
 	#check paramter
@@ -303,9 +306,9 @@ function fm-shell_help
 	return 0
 }
 
-function fm-document_show
+function fm-document_cat
 {
-	local doc_file_path=${fengming_top_dir}/documents
+	local doc_file_path=${fengming_documents_dir}
 	
 	if [ $# -lt 1 ];then tree -L 1 ${doc_file_path};return 0;fi
 	if [ $1 = "-a" ] || [ $1 = "--all" ]
@@ -372,7 +375,7 @@ function fm-document_show
 
 function fm-document_grep
 {
-	local doc_file_path=${fengming_top_dir}/documents
+	local doc_file_path=${fengming_documents_dir}
 	
 	#check para
 	if [ $# -lt 1 ]
@@ -385,7 +388,24 @@ function fm-document_grep
 
 	return 0
 }
+function fm-docker_cmd_help
+{
+	local docker_path=${fengming_documents_dir}/sub_doc_docker
+	if [ $# -lt 1 ];then tree ${docker_path};return 0;fi
+	if [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "SYNOPSIS:"
+		echo "         ${FUNCNAME}  cmd_prefix / sub_dir_name_suffix"
+		echo "example:"
+		echo "        ${FUNCNAME}  images"
+		echo "        ${FUNCNAME}  volume"
+		return 1
+	fi
 
+	#no finish
+
+	return 0;
+}
 function fm-software_list
 {
 	local sorftware_tutorial_dir=${fengming_top_dir}/sorftware_toolket

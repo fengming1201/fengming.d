@@ -1,18 +1,1 @@
-{
-    git跨目录执行命令
-    格式：
-    git -C <PATH> <COMMAND>
-
-    例子：
-    git -C /Users/xxx/Desktop/点git父目录 remote -v
-
-    <PATH>其实就是.git这个隐藏文件夹的父目录
-
-    2、克隆到指定目录
-
-    git clone <URL> <PATH>
-}
-{
-
-    
-}
+fm-gitcmd_help   cmd
