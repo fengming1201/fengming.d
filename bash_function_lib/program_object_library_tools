@@ -168,8 +168,8 @@ function fm-grep_keyword_from_asm_or_dis_files
 
 	return 0
 }
-#function fm-grep_keyword_from_static_librarys
-function fm-grep_keyword_from_static_librarys
+#grep keyword from static librarys
+function fm-lib_static_keyword_grep
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -183,8 +183,8 @@ function fm-grep_keyword_from_static_librarys
 
 	return 0
 }
-#function fm-grep_obj_files_from_librarys
-function fm-grep_obj_files_from_librarys
+#grep keyword from librarys
+function fm-lib_objectfile_grep
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -305,8 +305,8 @@ function fm-ls_app_dependent
 
 	return 0
 }
-#alias fm-lib_obj_ls='fm-ls_obj_from_library'
-function fm-ls_obj_from_library
+#list object files from librarys
+function fm-lib_objectfile_ls
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -360,8 +360,8 @@ function fm-ls_obj_from_library
 	return 0
 }
 
-#alias fm-lib_func_ls='fm-ls_func_list_from_library'
-function fm-ls_func_list_from_library
+#list function from librarys
+function fm-lib_function_ls
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
@@ -410,8 +410,8 @@ function fm-ls_func_list_from_library
 
 	return 0
 }
-#alias fm-lib_func_ls='fm-ls_func_list_from_library2'
-function fm-ls_func_list_from_library2
+#list function from librarys
+function fm-lib_function_ls2
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 

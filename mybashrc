@@ -61,7 +61,7 @@ alias gitls='fm-gitls'
 alias gitdiff='fm-gitdiff_work-cache'
 alias gitshow='fm-gitshow'
 alias gitlog='fm-gitlog'
-alias gitinfo='fm-gitcinfo'
+alias gitinfo='fm-gitinfo'
 
 if [ -f /opt/z/z.sh ];then
 	source /opt/z/z.sh
@@ -401,10 +401,74 @@ function fm-docker_cmd_help
 		echo "        ${FUNCNAME}  volume"
 		return 1
 	fi
-
-	#no finish
-
-	return 0;
+	local parameter=$@
+	local txt_file="none"
+	local dir_file="none"
+	for file in ${parameter}
+	do
+		#check dir first
+		dir_file=$(find ${docker_path} -type d -iname "*${file}*")
+		if [ "x${dir_file}" != x ]
+		then
+			for dir in ${dir_file}
+			do
+				tree -sh ${dir}
+			done
+			continue
+		fi
+		#check text file
+		txt_file=$(find ${docker_path} -type f -iname "*${file}*" -o -type l -iname "*${file}*")
+		if [ "x${txt_file}" != x ]
+		then
+			for file_each in ${txt_file}
+			do
+				echo "start >>>"
+				cat ${file_each}
+				echo "end <<<"
+				echo "file:${file_each}"
+			done
+		fi
+	done
+	return 0
+}
+function fm-libcmd_help
+{
+	local lib_top_path=${fengming_documents_dir}/sub_doc_c_library
+	if [ $# -lt 1 ];then tree ${lib_top_path};return 0;fi
+	if [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "SYNOPSIS:"
+		echo "         ${FUNCNAME}  cmd_suffix"
+		echo "example:"
+		echo "        ${FUNCNAME}  nm"
+		return 1
+	fi
+	local parameter=$@
+	local txt_file="none"
+	for file in ${parameter}
+	do
+		if [ -f ${lib_top_path}/${file} ]
+		then
+				echo "start >>>"
+				cat ${lib_top_path}/${file}
+				echo "end <<<"
+				echo "file:${lib_top_path}/${file}"
+				return 0
+		fi
+		#check text file
+		txt_file=$(find ${lib_top_path} -type f -iname "clibrary_${file}*" -o -type l -iname "clibrary_${file}*")
+		if [ "x${txt_file}" != x ]
+		then
+			for file_each in ${txt_file}
+			do
+				echo "start >>>"
+				cat ${file_each}
+				echo "end <<<"
+				echo "file:${file_each}"
+			done
+		fi
+	done
+	return 0
 }
 function fm-software_list
 {
