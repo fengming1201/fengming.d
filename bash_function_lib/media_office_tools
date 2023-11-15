@@ -197,14 +197,14 @@ function fm-ffmpeg_save_video_stream_2file_from_camera
 	fi
 	device=$1
 	file=$2
-	if [ ! -f ${device} ];then echo "device:${} not found!!";return 3;fi
+	if [ ! -e ${device} ];then echo "device:${} not found!!";return 3;fi
 
 	echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}"
 	${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}
 
 	return 0
 }
-function fm-ffmpeg_push_video_stream_from_camera
+function fm-ffmpeg_push_video_stream_2rtmpserver_from_camera
 {
 	local push_tool=ffmpeg
 	local server_ip=localhost
@@ -227,7 +227,7 @@ function fm-ffmpeg_push_video_stream_from_camera
 	device=$1
 	server_ip=$2
 	server_port=$3
-	if [ ! -f ${device} ];then echo "device:${} not found!!";return 3;fi
+	if [ ! -e ${device} ];then echo "device:${device} not found!!";return 3;fi
 	if ! expr "${server_port}" : '^[0-9]\+$' >/dev/null
 	then
 		echo "para:${server_port} is not number"
