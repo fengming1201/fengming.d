@@ -32,9 +32,9 @@ function fm-video_player
 	#local default_opt=¨--player-operation-mode=pseudo-gui¨
 	local default_opt=
 
-	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "$FUNCNAME  a.mp4"
+		echo "$FUNCNAME  a.mp4   or"
 		echo "$FUNCNAME  rtmp://your-streaming-server:port/live/your-stream-key" 
 		return 1
 	fi
@@ -62,10 +62,9 @@ function fm-video_mult_player
 	#local default_opt=¨--player-operation-mode=pseudo-gui¨
 	local default_opt=
 
-	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "$FUNCNAME  a.mp4"
-		echo "$FUNCNAME  rtmp://your-streaming-server:port/live/your-stream-key" 
+		echo "$FUNCNAME  a.mp4 b.mp4 c.mp4  ...."
 		return 1
 	fi
 	which ${app} > /dev/null
