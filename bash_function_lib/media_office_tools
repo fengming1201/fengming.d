@@ -89,7 +89,7 @@ function fm-video_mult_player
 function fm-video_stream_push_by_ffmpeg
 {
 	local push_tool=ffmpeg
-
+	local loop_times=1
 	local server_ip=localhost
 	local server_port=1935
 
@@ -107,9 +107,9 @@ function fm-video_stream_push_by_ffmpeg
 		echo "apt install ${push_tool}"
 		return 2
 	fi
-	local loop_times=$1
-	local server_ip=$2
-	local server_port=$3
+	loop_times=$1
+	server_ip=$2
+	server_port=$3
 	if ! expr "${loop_times}" : '^[0-9]\+$' >/dev/null
 	then
 		echo "para:${loop_times} is not number"
@@ -135,7 +135,6 @@ function fm-video_stream_push_by_ffmpeg
 	
 	return 0
 }
-
 function fm-video_stream_push_by_ffmpeg_to_mymedia_server
 {
 	local push_tool=ffmpeg
@@ -177,6 +176,71 @@ function fm-video_stream_push_by_ffmpeg_to_mymedia_server
 
 	return 0
 }
+function fm-video_stream_save2file_by_ffmpeg_from_camera
+{
+	local push_tool=ffmpeg
+	local device=/dev/video
+	local file=output.mp4
+	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "ERROR:parameter wrong"
+		echo "$FUNCNAME dev filename"
+		echo "e.g:$FUNCNAME /dev/video0 output.mp4"
+		return 1
+	fi
+	which ${push_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${push_tool} not found,please install it first"
+		echo "apt install ${push_tool}"
+		return 2
+	fi
+	device=$1
+	file=$2
+	if [ ! -f ${device} ];then echo "device:${} not found!!";return 3;fi
+
+	echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}"
+	${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}
+
+	return 0
+}
+function fm-video_stream_push_by_ffmpeg_from_camera
+{
+	local push_tool=ffmpeg
+	local server_ip=localhost
+	local server_port=1935
+	local device=/dev/video0
+	if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "ERROR:parameter wrong"
+		echo "$FUNCNAME dev IP  port"
+		echo "e.g:$FUNCNAME /dev/video0 116.62.103.60 1935"
+		return 1
+	fi
+	which ${push_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${push_tool} not found,please install it first"
+		echo "apt install ${push_tool}"
+		return 2
+	fi
+	device=$1
+	server_ip=$2
+	server_port=$3
+	if [ ! -f ${device} ];then echo "device:${} not found!!";return 3;fi
+	if ! expr "${server_port}" : '^[0-9]\+$' >/dev/null
+	then
+		echo "para:${server_port} is not number"
+		echo "$FUNCNAME  loop_times  IP port  video_file_lsit"
+		return 3
+	fi	
+	
+	echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency -f flv rtmp://${server_ip}:${server_port}/live/movie1234"
+	${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency -f flv rtmp://${server_ip}:${server_port}/live/movie1234
+
+	return 0
+}
+
 function fm-picture_convert_quality
 {
 	local app=convert
