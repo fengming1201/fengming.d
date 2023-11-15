@@ -358,4 +358,43 @@
     挂载iso光盘文件方法
     mount -o loop -t iso9660 file.iso /media/cdrom0
     
+},
+{
+    查看当前连接的显示器和其相关信息
+    xrandr
+    Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 16384 x 16384
+    HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 598mm x 336mm
+    1920x1080     60.00*+  50.00    59.94
+    1680x1050     59.88
+    1600x900      60.00
+    ...
+
+},
+{
+    linux如何查看当前系统是否有连接的显示器
+    要查看当前系统是否连接有显示器，您可以检查 `/sys/class/drm` 目录下的内容。
+    这个目录包含了有关显示设备和显示连接的信息。
+    ```
+    ls /sys/class/drm
+    ```
+    示例输出可能如下所示：
+
+    ```
+    card0  card0-DP-1  card0-HDMI-A-1  card0-HDMI-A-2  card0-HDMI-A-3  card0-VGA-1  renderD128  version
+    ```
+
+    如果输出中至少有一个以 `card` 开头的文件或子目录，那么系统连接了至少一个显示器。例如，`card0` 表示系统上的一个显示设备。
+
+    如果输出为空，表示当前系统没有连接显示器。
+    以下是一些常见文件和子目录的解释：
+    cardX: 这些是显示设备的表示，其中 X 是一个数字，表示不同的显示设备。例如，card0 表示第一个显示设备。
+    cardX-DP-X: 这些是连接到显示设备的 DisplayPort (DP) 接口的显示器。
+    cardX-HDMI-X: 这些是连接到显示设备的 HDMI 接口的显示器。
+    cardX-VGA-X: 这些是连接到显示设备的 VGA 接口的显示器。
+    renderDXXX: 这些是渲染设备的表示，其中 XXX 是一个数字，表示不同的渲染设备。
+    version: 这个文件包含有关 DRM（Direct Rendering Manager）子系统的版本信息。
+},
+{
+
+
 }

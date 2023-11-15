@@ -86,7 +86,7 @@ function fm-video_mult_player
 	return 0
 }
 
-function fm-video_stream_push_by_ffmpeg
+function fm-ffmpeg_push_video_stream
 {
 	local push_tool=ffmpeg
 	local loop_times=1
@@ -135,7 +135,7 @@ function fm-video_stream_push_by_ffmpeg
 	
 	return 0
 }
-function fm-video_stream_push_by_ffmpeg_to_mymedia_server
+function fm-ffmpeg_push_video_stream_to_mymedia_server
 {
 	local push_tool=ffmpeg
 
@@ -176,7 +176,7 @@ function fm-video_stream_push_by_ffmpeg_to_mymedia_server
 
 	return 0
 }
-function fm-video_stream_save2file_by_ffmpeg_from_camera
+function fm-ffmpeg_save_video_stream_2file_from_camera
 {
 	local push_tool=ffmpeg
 	local device=/dev/video
@@ -204,7 +204,7 @@ function fm-video_stream_save2file_by_ffmpeg_from_camera
 
 	return 0
 }
-function fm-video_stream_push_by_ffmpeg_from_camera
+function fm-ffmpeg_push_video_stream_from_camera
 {
 	local push_tool=ffmpeg
 	local server_ip=localhost
@@ -240,7 +240,83 @@ function fm-video_stream_push_by_ffmpeg_from_camera
 
 	return 0
 }
+function fm-ffmpeg_record_screen_2file
+{
+	local push_tool=ffmpeg
+	local screenID=":0.0"
+	local resol="480x320"
+	local filename=./output.mp4
+	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "ERROR:parameter wrong"
+		echo "$FUNCNAME screenID   resolution  filename"
+		echo "e.g:$FUNCNAME :0.0  480x320  output.mp4"
+		echo "屏幕分辨率(resolution):"
+		echo "320x240   --常见于较早的移动电话和小型设备。"
+    	echo "480x320   --常见于早期智能手机和某些小型平板电脑。"
+    	echo "800x480   --常见于某些低成本智能手机和平板电脑。"
+    	echo "1024x600  --常见于某些小型平板电脑和便携式设备。"
+		echp "1280x720  --高清（HD）分辨率，也称为 720p。"
+    	echo "1280x800  --常见于较小的平板电脑和便携式设备。"
+		echo "1366x768  --广泛用于笔记本电脑和小型显示器的分辨率。"
+		echo "1600x900  --常见于较大的笔记本电脑和中等尺寸显示器的分辨率。"
+		echo "2560x1440 --2K 分辨率，也称为 Quad HD（QHD）或 1440p。"
+		return 1
+	fi
+	which ${push_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${push_tool} not found,please install it first"
+		echo "apt install ${push_tool}"
+		return 2
+	fi
 
+	screen="$1"
+	resol="$2"
+	filename="$3"
+	echo "ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}"
+	ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}
+	return 0
+}
+function fm-ffmpeg_record_screen_push_to_rtmpserver
+{
+	local push_tool=ffmpeg
+	local screenID=":0.0"
+	local resol="480x320"
+	local rtmp_url=rtmp://116.62.103.60:1935/live/movie1234
+	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "ERROR:parameter wrong"
+		echo "$FUNCNAME screenID  resolution  rtps_url"
+		echo "e.g:$FUNCNAME :0.0 480x320 rtmp://116.62.103.60:1935/live/movie1234"
+		echo "屏幕分辨率(resolution):"
+		echo "320x240   --常见于较早的移动电话和小型设备。"
+    	echo "480x320   --常见于早期智能手机和某些小型平板电脑。"
+    	echo "800x480   --常见于某些低成本智能手机和平板电脑。"
+    	echo "1024x600  --常见于某些小型平板电脑和便携式设备。"
+		echp "1280x720  --高清（HD）分辨率，也称为 720p。"
+    	echo "1280x800  --常见于较小的平板电脑和便携式设备。"
+		echo "1366x768  --广泛用于笔记本电脑和小型显示器的分辨率。"
+		echo "1600x900  --常见于较大的笔记本电脑和中等尺寸显示器的分辨率。"
+		echo "2560x1440 --2K 分辨率，也称为 Quad HD（QHD）或 1440p。"
+		return 1
+	fi
+	which ${push_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${push_tool} not found,please install it first"
+		echo "apt install ${push_tool}"
+		return 2
+	fi
+
+	screen="$1"
+	resol="$2"
+	rtmp_url="$3"
+
+	echo "ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}"
+	ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}
+	return 0
+}
 function fm-picture_convert_quality
 {
 	local app=convert
