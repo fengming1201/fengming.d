@@ -85,7 +85,7 @@ function fm-video_mult_player
 	return 0
 }
 
-function fm-ffmpeg_push_video_stream
+function fm-ffmpeg_videofile_stream_push_2rtmpserver
 {
 	local push_tool=ffmpeg
 	local loop_times=1
@@ -134,7 +134,7 @@ function fm-ffmpeg_push_video_stream
 	
 	return 0
 }
-function fm-ffmpeg_push_video_stream_to_mymedia_server
+function fm-ffmpeg_videofile_stream_push_2my_mediaserver
 {
 	local push_tool=ffmpeg
 
@@ -175,7 +175,7 @@ function fm-ffmpeg_push_video_stream_to_mymedia_server
 
 	return 0
 }
-function fm-ffmpeg_save_video_stream_2file_from_camera
+function fm-ffmpeg_camera_video_stream_save_2file
 {
 	local push_tool=ffmpeg
 	local device=/dev/video
@@ -203,7 +203,7 @@ function fm-ffmpeg_save_video_stream_2file_from_camera
 
 	return 0
 }
-function fm-ffmpeg_push_video_stream_2rtmpserver_from_camera
+function fm-ffmpeg_camera_video_stream_push_2rtmpserver
 {
 	local push_tool=ffmpeg
 	local server_ip=localhost
@@ -239,7 +239,7 @@ function fm-ffmpeg_push_video_stream_2rtmpserver_from_camera
 
 	return 0
 }
-function fm-ffmpeg_record_screen_2file
+function fm-ffmpeg_screen_record_2file
 {
 	local push_tool=ffmpeg
 	local screenID=":0.0"
@@ -277,7 +277,7 @@ function fm-ffmpeg_record_screen_2file
 	ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}
 	return 0
 }
-function fm-ffmpeg_record_screen_push_to_rtmpserver
+function fm-ffmpeg_screen_record_push_to_rtmpserver
 {
 	local push_tool=ffmpeg
 	local screenID=":0.0"
