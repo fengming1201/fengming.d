@@ -217,8 +217,8 @@ function fm-ffmpeg_camera_video_stream_save_2file
 	if [ ! -e ${device} ];then echo "device:${} not found!!";return 3;fi
 	if [ 1 -gt 2 ]
 	then
-		#echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}"
-		#${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}
+		echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}"
+		${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}
 	else
 		echo "${push_tool} -f v4l2 -s ${resol} -i ${device} ${file}"
 		${push_tool} -f v4l2 -s ${resol} -i ${device} ${file}
