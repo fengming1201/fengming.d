@@ -208,12 +208,23 @@ function fm-ffmpeg_camera_video_stream_push_2mpvplayer
 	local push_tool=ffmpeg
 	local player=mpv
 	local device=/dev/video
-	
-	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	local resol="480x320"
+
+	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$FUNCNAME dev "
-		echo "e.g:$FUNCNAME /dev/video0"
+		echo "$FUNCNAME  dev  resolution"
+		echo "e.g:$FUNCNAME  /dev/video0   480x320"
+	    echo "屏幕分辨率(resolution):"
+		echo "320x240   --常见于较早的移动电话和小型设备。"
+    	echo "480x320   --常见于早期智能手机和某些小型平板电脑。"
+    	echo "800x480   --常见于某些低成本智能手机和平板电脑。"
+    	echo "1024x600  --常见于某些小型平板电脑和便携式设备。"
+		echp "1280x720  --高清（HD）分辨率，也称为 720p。"
+    	echo "1280x800  --常见于较小的平板电脑和便携式设备。"
+		echo "1366x768  --广泛用于笔记本电脑和小型显示器的分辨率。"
+		echo "1600x900  --常见于较大的笔记本电脑和中等尺寸显示器的分辨率。"
+		echo "2560x1440 --2K 分辨率，也称为 Quad HD（QHD）或 1440p。"
 		return 1
 	fi
 	which ${push_tool} > /dev/null
@@ -231,10 +242,11 @@ function fm-ffmpeg_camera_video_stream_push_2mpvplayer
 		return 3
 	fi
 	device=$1
+	resol=$2
 	if [ ! -e ${device} ];then echo "device:${} not found!!";return 4;fi
 
-	echo "${push_tool} -f v4l2 -i ${device} -pix_fmt yuv420p -f rawvideo - | ${player} -"
-	${push_tool} -f v4l2 -i ${device} -pix_fmt yuv420p -f rawvideo - | ${player} -
+	echo "${push_tool} -f v4l2 -s ${resol} -i ${device} -c:v libx264 -preset ultrafast -tune zerolatency -f mpegts - | ${player} -"
+	${push_tool} -f v4l2 -s ${resol} -i ${device} -c:v libx264 -preset ultrafast -tune zerolatency -f mpegts - | mpv -
 
 	return 0
 }
