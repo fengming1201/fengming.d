@@ -714,7 +714,7 @@ function fm-mount_iso
 		echo "mount -o loop -t iso9660 ${iso} ${mount_dir}"
 		mount -o loop -t iso9660 ${iso} ${mount_dir}
 	else
-		echo "mount -o loop -t iso9660 ${iso} ${mount_dir}"
+		echo "sudo mount -o loop -t iso9660 ${iso} ${mount_dir}"
 		sudo mount -o loop -t iso9660 ${iso} ${mount_dir}
 	fi
 	return 0
@@ -740,7 +740,7 @@ function fm-mount_nfs
 		echo "mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
 		mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
 	else
-		echo "mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
+		echo "sudo mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
 		sudo mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
 	fi
 	return 0
@@ -769,7 +769,7 @@ function fm-mount_samba
 
 	read -s -p "password:[samba]" password
 	if [ "x${password}" = x ];then password=samba;fi
-
+	echo " "
 	if [ ! -d ${mount_dir} ];then echo "mount point not exist";return 2;fi
 
 	if [ $(id -u) -eq 0 ]
@@ -777,7 +777,7 @@ function fm-mount_samba
 		echo "mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
 		mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
 	else
-		echo "mount -t cifs-o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
+		echo "sudo mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
 		sudo mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
 	fi
 	return 0

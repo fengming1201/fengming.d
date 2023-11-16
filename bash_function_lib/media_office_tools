@@ -203,6 +203,41 @@ function fm-ffmpeg_camera_video_stream_save_2file
 
 	return 0
 }
+function fm-ffmpeg_camera_video_stream_push_2mpvplayer
+{
+	local push_tool=ffmpeg
+	local player=mpv
+	local device=/dev/video
+	
+	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "ERROR:parameter wrong"
+		echo "$FUNCNAME dev "
+		echo "e.g:$FUNCNAME /dev/video0"
+		return 1
+	fi
+	which ${push_tool} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${push_tool} not found,please install it first"
+		echo "apt install ${push_tool}"
+		return 2
+	fi
+	which ${player} > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR:${player} not found,please install it first"
+		echo "apt install ${player}"
+		return 3
+	fi
+	device=$1
+	if [ ! -e ${device} ];then echo "device:${} not found!!";return 4;fi
+
+	echo "${push_tool} -f v4l2 -i ${device} -pix_fmt yuv420p -f rawvideo - | ${player} -"
+	${push_tool} -f v4l2 -i ${device} -pix_fmt yuv420p -f rawvideo - | ${player} -
+
+	return 0
+}
 function fm-ffmpeg_camera_video_stream_push_2rtmpserver
 {
 	local push_tool=ffmpeg
@@ -277,7 +312,7 @@ function fm-ffmpeg_screen_record_2file
 	ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}
 	return 0
 }
-function fm-ffmpeg_screen_record_push_to_rtmpserver
+function fm-ffmpeg_screen_record_push_2rtmpserver
 {
 	local push_tool=ffmpeg
 	local screenID=":0.0"
