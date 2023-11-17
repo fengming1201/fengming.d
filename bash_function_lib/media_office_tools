@@ -215,7 +215,7 @@ function fm-ffmpeg_camera_video_stream_save_2file
 	resol=$2
 	file=$3
 	if [ ! -e ${device} ];then echo "device:${} not found!!";return 3;fi
-	if true
+	if false
 	then
 		echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}"
 		${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency ${file}
@@ -391,7 +391,7 @@ function fm-ffmpeg_screen_record_push_2rtmpserver
 	screen="$1"
 	resol="$2"
 	rtmp_url="$3"
-	if true
+	if false
 	then
 		echo "${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}"
 		${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}
