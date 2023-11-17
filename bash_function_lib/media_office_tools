@@ -89,14 +89,13 @@ function fm-ffmpeg_videofile_stream_push_2rtmpserver
 {
 	local push_tool=ffmpeg
 	local loop_times=1
-	local server_ip=localhost
-	local server_port=1935
+	local rtmp_url=localhost
 
-	if [ $# -lt 4 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$FUNCNAME  loop_times  IP port video_file_lsit"
-		echo "e.g:$FUNCNAME 10 116.62.103.60 1935 1.mp4 2.flv ..."
+		echo "$FUNCNAME  loop_times  rtmp_url video_file_lsit"
+		echo "e.g:$FUNCNAME 10 rtmp://116.62.103.60:1935/live/test 1.mp4 2.flv ..."
 		return 1
 	fi
 	which ${push_tool} > /dev/null
@@ -107,27 +106,22 @@ function fm-ffmpeg_videofile_stream_push_2rtmpserver
 		return 2
 	fi
 	loop_times=$1
-	server_ip=$2
-	server_port=$3
+	rtmp_url=$2
+
 	if ! expr "${loop_times}" : '^[0-9]\+$' >/dev/null
 	then
 		echo "para:${loop_times} is not number"
 		echo "$FUNCNAME  loop_times  video_file_lsit"
 		return 3
 	fi
-	if ! expr "${server_port}" : '^[0-9]\+$' >/dev/null
-	then
-		echo "para:${server_port} is not number"
-		echo "$FUNCNAME  loop_times  IP port  video_file_lsit"
-		return 3
-	fi	
+
 	shift 3
 	while [ ${loop_times} -gt 0 ]
 	do
 		for file in "$@"
 		do
-			echo "${push_tool} -re -i "$file" -c copy -f flv rtmp://${server_ip}:${server_port}/live/movie1234"
-			${push_tool} -re -i "$file" -c copy -f flv rtmp://${server_ip}:${server_port}/live/movie1234
+			echo "${push_tool} -re -i "$file" -c copy -f flv ${rtmp_url}"
+			${push_tool} -re -i "$file" -c copy -f flv ${rtmp_url}
 		done
 		loop_times=$(expr ${loop_times} - 1)
 	done
@@ -323,12 +317,7 @@ function fm-ffmpeg_camera_video_stream_push_2rtmpserver
 	resol=$2
 	rtmp_url=$3
 	if [ ! -e ${device} ];then echo "device:${device} not found!!";return 3;fi
-	if ! expr "${server_port}" : '^[0-9]\+$' >/dev/null
-	then
-		echo "para:${server_port} is not number"
-		echo "$FUNCNAME  loop_times  IP port  video_file_lsit"
-		return 3
-	fi	
+
 	if false
 	then
 		echo "${push_tool} -f v4l2 -i ${device} -c:v libx264 -preset veryfast -tune zerolatency -f flv ${rtmp_url}"
