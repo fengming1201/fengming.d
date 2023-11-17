@@ -319,7 +319,7 @@ function fm-ffmpeg_camera_video_stream_push_2rtmpserver
 
 	return 0
 }
-function fm-ffmpeg_screen_record_2file
+function fm-ffmpeg_screen_record_save_2file
 {
 	local push_tool=ffmpeg
 	local screenID=":0.0"
@@ -353,8 +353,8 @@ function fm-ffmpeg_screen_record_2file
 	screen="$1"
 	resol="$2"
 	filename="$3"
-	echo "ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}"
-	ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}
+	echo "${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}"
+	${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${filename}
 	return 0
 }
 function fm-ffmpeg_screen_record_push_2rtmpserver
@@ -391,9 +391,14 @@ function fm-ffmpeg_screen_record_push_2rtmpserver
 	screen="$1"
 	resol="$2"
 	rtmp_url="$3"
-
-	echo "ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}"
-	ffmpeg -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}
+	if true
+	then
+		echo "${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}"
+		${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast ${rtmp_url}
+	else
+		echo "${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast -f flv ${rtmp_url}"
+		${push_tool} -f x11grab -s ${resol} -i ${screen} -c:v libx264 -preset ultrafast -f flv ${rtmp_url}
+	fi
 	return 0
 }
 function fm-picture_convert_quality
