@@ -2,10 +2,10 @@
 #author:fengming
 #date:Tue 10 Jan 2023 04:56:27 PM CST
 #***************************************#
-#alias fm-obj_keyword_grep='fm-grep_keyword_from_object_files'
+#在《目标文件》中检索关键字，可以是“函数名”，“变量名”
 function fm-grep_keyword_from_object_files
 {
-	local ARM_NM=arm-fullhanv2-eabi-nm
+	local ARM_NM=nm
 	local NMFLAG="-a" #"--defined-only"
 
 	local current_dir=$PWD
@@ -13,20 +13,15 @@ function fm-grep_keyword_from_object_files
 
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
-		echo "ERROR:parameter missing"
-		echo "discripttion:grep keyword from object files"
+		echo "CN:在《目标文件》中检索关键字，可以是\“函数名\”，“变量名\”"
+		echo "discripttion:grep keyword from object files,e.g.:function_name or variable_ame"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
-		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
-		echo "$FUNCNAME  function_name  a.o b.o c.o"
-		echo "$FUNCNAME  --show"
+		echo "$FUNCNAME  function_name  keyword   #only keyword,then it will find all *.o file under current dir"
+		echo "$FUNCNAME  function_name  keyword  a.o b.o c.o"
 		return 1 
 	fi
-	if [ $1 = "--show" ]
-	then
-		help_example nm_symbol_type_help
-		return 0
-	fi	
+
 	which $ARM_NM > /dev/null
 	if [ $? -ne 0  ]
 	then
@@ -98,97 +93,12 @@ function fm-grep_keyword_from_object_files
 
 	return 0
 }
-
-#function fm-grep_keyword_from_asm_or_dis_files
-function fm-grep_keyword_from_asm_or_dis_files
-{
-	local current_dir=$PWD
-	#echo $current_dir
-	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
-	then
-		echo "ERROR:parameter missing"
-		echo "discripttion:grep keyword from asm or dis files"
-		echo "example:"
-		echo "$FUNCNAME    [-h or --help]"
-		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
-		echo "$FUNCNAME [-w i n] function_name"
-		return 1 
-	fi
-
-	local opt=
-	local func_name=
-	if [ $# -eq 1 ]
-	then
-		func_name=$1
-	elif [ $# -eq 2 ]
-	then
-		opt=$1
-		func_name=$2
-	else
-		echo "ERROR:format wrong"
-		return 1
-	fi
-	
-	local obj_file_list=$(find $current_dir -type f -name "*.dis" -o -name "*.asm")
-	if [ x"$obj_file_list" = "x"  ]
-	then
-		echo "no found object file"
-		return 3
-	fi
-	
-	local total_file_counts=
-	local found_in_file_counts=
-	let total_file_counts=0
-	let found_in_file_counts=0
-	
-	local tmp=
-	for file in $obj_file_list
-	do
-		if [ ! -f $file  ]
-		then
-			echo "file:$file not exist"
-			continue
-		fi
-
-		total_file_counts=$(($total_file_counts + 1))
-
-		tmp=$(cat  $file | grep $opt $func_name)
-		if [ x"$tmp"  != "x"  ] 
-		then
-			echo "$file --->>>"
-			echo "$tmp"
-			found_in_file_counts=$(($found_in_file_counts + 1))
-		fi
-	done
-
-	echo "-------------------------------------------------------------"
-	echo "            total check $total_file_counts object files"
-	echo "     found function interface in  $found_in_file_counts files"
-	echo "--------------------- done ----------------------------------"
-
-	return 0
-}
-#grep keyword from static librarys
-function fm-lib_static_keyword_grep
+#在《目标文件》中检索关键字，可以是“函数名”，“变量名”
+function fm-grep_keyword_from_objectfile
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
-		echo "ERROR:parameter missing"
-		echo "discripttion:grep keyword from static librarys"
-		echo "example:"
-		echo "$FUNCNAME    [-h or --help]"
-		echo "$FUNCNAME    exec_file"
-		return 1
-	fi
-
-	return 0
-}
-#grep keyword from librarys
-function fm-lib_objectfile_grep
-{
-	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
-	then 
-		echo "ERROR:parameter missing"
+		echo "CN:在《目标文件》中检索关键字，可以是\“函数名\”，\“变量名\”"
 		echo "discripttion:grep keyword from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
@@ -251,12 +161,106 @@ function fm-lib_objectfile_grep
     if [ -e ${tmp_file} ];then rm ${tmp_file};fi
 	return 0
 }
+#在《汇编或反汇编文件》中检索关键字，可以是“函数名”，“变量名”
+function fm-grep_keyword_from_asm_or_dis_files
+{
+	local current_dir=$PWD
+	#echo $current_dir
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then
+		echo "CN:在《汇编或反汇编文件》中检索关键字，可以是\“函数名\”，\“变量名\”"
+		echo "discripttion:grep keyword from asm or dis files"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME  function_name  #it will find all *.o file under current dir"
+		echo "$FUNCNAME [-w i n] function_name"
+		return 1 
+	fi
 
+	local opt=
+	local func_name=
+	if [ $# -eq 1 ]
+	then
+		func_name=$1
+	elif [ $# -eq 2 ]
+	then
+		opt=$1
+		func_name=$2
+	else
+		echo "ERROR:format wrong"
+		return 1
+	fi
+	
+	local obj_file_list=$(find $current_dir -type f -name "*.dis" -o -name "*.asm")
+	if [ x"$obj_file_list" = "x"  ]
+	then
+		echo "no found object file"
+		return 3
+	fi
+	
+	local total_file_counts=
+	local found_in_file_counts=
+	let total_file_counts=0
+	let found_in_file_counts=0
+	
+	local tmp=
+	for file in $obj_file_list
+	do
+		if [ ! -f $file  ]
+		then
+			echo "file:$file not exist"
+			continue
+		fi
+
+		total_file_counts=$(($total_file_counts + 1))
+
+		tmp=$(cat  $file | grep $opt $func_name)
+		if [ x"$tmp"  != "x"  ] 
+		then
+			echo "$file --->>>"
+			echo "$tmp"
+			found_in_file_counts=$(($found_in_file_counts + 1))
+		fi
+	done
+
+	echo "-------------------------------------------------------------"
+	echo "            total check $total_file_counts object files"
+	echo "     found function interface in  $found_in_file_counts files"
+	echo "--------------------- done ----------------------------------"
+
+	return 0
+}
+#在《静态库》中检索关键字，可以是“目录文件名”，“函数名”，“变量名”
+function fm-grep_keyword_from_static_library
+{
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "CN:在《静态库》中检索关键字，可以是\“目录文件名\”，\“函数名\”，\“变量名\”"
+		echo "discripttion:grep keyword from static librarys"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    exec_file"
+		return 1
+	fi
+
+	return 0
+}
+#在《动态库》中检索关键字，可以是“目录文件名”，“函数名”，“变量名”
+function fm-grep_keyword_from_dynamic_library
+{
+
+
+	return 0
+}
+
+#====================================================================================#
+#====================================================================================#
+#列出《可执行文件》所依赖的《库》
 function fm-ls_app_dependent
 {
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
-		echo "ERROR:parameter missing"
+		echo "CN:列出《可执行文件》所依赖的《库》"
 		echo "discripttion:"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
@@ -305,163 +309,260 @@ function fm-ls_app_dependent
 
 	return 0
 }
-#list object files from librarys
-function fm-lib_objectfile_ls
+
+#列出《静态库》中包含的《目标文件》
+function fm-ls_objectfile_from_static_library
 {
+	#check 
+	local tool=ar
+	local default_opt="-t"
+	which ${tool} > /dev/null
+	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
+
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
-		echo "ERROR:parameter missing"
+		echo "CN:列出《静态库》中包含的《目标文件》"
 		echo "discripttion:ls obj from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
-		echo "$FUNCNAME    xxx.a or *.a"
-		echo "$FUNCNAME    xxx.so or *.so"
-		return 1
+		echo "$FUNCNAME    library file list"
+		echo "$FUNCNAME    1.a 2.a 3.a or *.a [current dir]"
+		return 2
 	fi
-	file_list="$@"
-	if [ $# -eq 1 ]
-	then
-		if [ ! -f $1 ]
-		then
-			local base_name=$(echo $1 | xargs -n1 basename)
-			file_list=$(find ./ -type f -name "${base_name}*")
-		fi
-	fi
-	
-	#check 
-	local ar_toos=ar
-	which ${ar_toos} > /dev/null
-	if [ $? -ne 0   ];then echo "${ar_toos} not found!";return 2;fi
-	
-	local nm_toos=nm
-	which ${nm_toos} > /dev/null
-	if [ $? -ne 0   ];then echo "${nm_toos} not found!";return 3;fi
-
-	for file in $file_list
+	local file_list=()
+	#check file isn't exist
+	for file in "$@"
 	do
-		if [ "${file##*.}" = "a"  ]
+		if [ -f ${file} ]
 		then
-			echo "------------------------------------"
-			echo "${ar_toos} -t ${file}"
-			${ar_toos} -t ${file}
-			echo "------------------------------------"
-		elif [ "${file##*.}" = "so"  ]
-		then
-			echo "------------------------------------"
-			echo "${nm_toos} -D ${file}"
-			${nm_toos} -D ${file}
-			echo "------------------------------------"
+			file_list+=("${file}")
 		else
-			echo "ERROR:unknow library  type"
-			return 4
+			echo "file:${file} not exist"
 		fi
 	done
-
+	local file_counts=${#file_list[@]}
+	if [ ${file_counts} -lt 1 ];then return 3;fi
+	
+	for file in ${file_list[@]}
+	do
+		echo "${tool} ${default_opt} ${file}"
+		${tool} ${default_opt} ${file}
+		echo "------------------------------------"
+	done
 	return 0
 }
 
-#list function from librarys
-function fm-lib_function_ls
+#列出《动态库》中包含的《目标文件》
+function fm-ls_objectfile_from_dynamic_library
 {
+	#check 
+	local tool=nm
+	local default_opt="-D"
+	which ${tool} > /dev/null
+	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
+
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
-		echo "ERROR:parameter missing"
-		echo "discripttion:ls func from librarys"
+		echo "CN:列出《动态库》中包含的《目标文件》"
+		echo "discripttion:ls obj from librarys"
 		echo "example:"
 		echo "$FUNCNAME    [-h or --help]"
-		echo "$FUNCNAME    xxx.a or *.a"
-		echo "$FUNCNAME    xxx.so or *.so"
-		return 1
+		echo "$FUNCNAME    library file list"
+		echo "$FUNCNAME    1.so 2.so 3.so or *.so [current dir]"
+		return 2
 	fi
-	file_list="$@"
-	if [ $# -eq 1 ]
-	then
-		if [ ! -f $1 ]
-		then
-			local base_name=$(echo $1 | xargs -n1 basename)
-			file_list=$(find ./ -type f -name "${base_name}*")
-		fi
-	fi
-	
-	#check 
-	local readelf_tools=readelf
-	which ${readelf_tools} > /dev/null
-	if [ $? -ne 0   ];then echo "${readelf_tools} not found!";return 2;fi
-	
-	for file in $file_list
+	local file_list=()
+	#check file isn't exist
+	for file in "$@"
 	do
-		if [ "${file##*.}" = "a"  ]
+		if [ -f ${file} ]
 		then
-			echo "------------------------------------"
-			echo "${readelf_tools} -c ${file}"
-			${readelf_tools} -c ${file}
-			echo "------------------------------------"
-		elif [ "${file##*.}" = "so"  ]
-		then
-			echo "------------------------------------"
-			echo "${readelf_tools} -A ${file}"
-			${readelf_tools} -A ${file}
-			echo "------------------------------------"
+			file_list+=("${file}")
 		else
-			echo "ERROR:unknow library  type"
-			return 4
+			echo "file:${file} not exist"
 		fi
 	done
-
+	local file_counts=${#file_list[@]}
+	if [ ${file_counts} -lt 1 ];then return 3;fi
+	
+	for file in ${file_list[@]}
+	do
+		echo "${tool} ${default_opt} ${file}"
+		${tool} ${default_opt} ${file}
+		echo "------------------------------------"
+	done
 	return 0
 }
-#list function from librarys
-function fm-lib_function_ls2
+#列出《目标文件》中包含的《函数接口》
+function fm-ls_function_from_objectfile
 {
+	#check 
+	local tool=objdump
+	local default_opt="-t"
+	which ${tool} > /dev/null
+	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
+
 	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then 
-		echo "ERROR:parameter missing"
-		echo "discripttion:ls func from librarys"
+		echo "CN:列出《目标文件》中包含的《函数接口》"
+		echo "discripttion:ls obj from librarys"
 		echo "example:"
-		echo "$FUNCNAME    [-h or --help]  [--show]"
-		echo "$FUNCNAME    xxx.a or *.a"
-		echo "$FUNCNAME    xxx.so or *.so"
-		return 1
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    object file list"
+		echo "$FUNCNAME    1.o 2.o 3.o or *.so [current dir]"
+		return 2
 	fi
-	if [ $1 = "--show" ]
-	then
-		help_example nm_symbol_type_help	
-		return 0
-	fi	
-	file_list="$@"
-	if [ $# -eq 1 ]
-	then
-		if [ ! -f $1 ]
-		then
-			local base_name=$(echo $1 | xargs -n1 basename)
-			file_list=$(find ./ -type f -name "${base_name}*")
-		fi
-	fi
-
-	#check 
-	local nm_tools=nm
-	which ${nm_tools} > /dev/null
-	if [ $? -ne 0   ];then echo "${nm_tools} not found!";return 2;fi
-	
-	for file in $file_list
+	local file_list=()
+	#check file isn't exist
+	for file in "$@"
 	do
-		if [ "${file##*.}" = "a"  ]
+		if [ -f ${file} ]
 		then
-			echo "------------------------------------"
-			echo "${nm_tools} -o ${file}"
-			${nm_tools} -o ${file}
-			echo "------------------------------------"
-		elif [ "${file##*.}" = "so"  ]
-		then
-			echo "------------------------------------"
-			echo "${nm_tools} -o ${file}"
-			${nm_tools} -o ${file}
-			echo "------------------------------------"
+			file_list+=("${file}")
 		else
-			echo "ERROR:unknow library  type"
-			return 4
+			echo "file:${file} not exist"
 		fi
+	done
+	local file_counts=${#file_list[@]}
+	if [ ${file_counts} -lt 1 ];then return 3;fi
+	
+	for file in ${file_list[@]}
+	do
+		echo "${tool} ${default_opt} ${file}"
+		${tool} ${default_opt} ${file}
+		echo "------------------------------------"
+	done
+	return 0
+}
+#列出《目标文件》中定义的《变量》
+function fm-ls_variable_from_objectfile
+{
+
+	return 0
+}
+#列出《静态库》中包含的《函数接口》
+function fm-ls_function_from_static_library
+{
+	#check 
+	local tool=readelf
+	local default_opt="-c"
+	which ${tool} > /dev/null
+	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
+
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "CN:列出《静态库》中包含的《函数接口》"
+		echo "discripttion:ls function name from librarys"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    library file list"
+		echo "$FUNCNAME    1.a 2.a 3.a or *.a [current dir]"
+		return 2
+	fi
+	local file_list=()
+	#check file isn't exist
+	for file in "$@"
+	do
+		if [ -f ${file} ]
+		then
+			file_list+=("${file}")
+		else
+			echo "file:${file} not exist"
+		fi
+	done
+	local file_counts=${#file_list[@]}
+	if [ ${file_counts} -lt 1 ];then return 3;fi
+	
+	for file in ${file_list[@]}
+	do
+		echo "${tool} ${default_opt} ${file}"
+		${tool} ${default_opt} ${file}
+		echo "------------------------------------"
+	done
+	return 0
+}
+#列出《静态库》中包含的《函数接口》
+function fm-ls_function_from_library2
+{
+	#check 
+	local tool=nm
+	local default_opt="-o"
+	which ${tool} > /dev/null
+	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
+
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "CN:列出《静态库》中包含的《函数接口》"
+		echo "discripttion:ls function name from librarys"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    library file list"
+		echo "$FUNCNAME    1.a 2.a 3.a or *.a [current dir]"
+		return 2
+	fi
+	local file_list=()
+	#check file isn't exist
+	for file in "$@"
+	do
+		if [ -f ${file} ]
+		then
+			file_list+=("${file}")
+		else
+			echo "file:${file} not exist"
+		fi
+	done
+	local file_counts=${#file_list[@]}
+	if [ ${file_counts} -lt 1 ];then return 3;fi
+	
+	for file in ${file_list[@]}
+	do
+		echo "${tool} ${default_opt} ${file}"
+		${tool} ${default_opt} ${file}
+		echo "------------------------------------"
+	done
+	return 0
+}
+
+#列出《动态库》中包含的《函数接口》
+function fm-ls_function_from_dynamic_library
+{
+	#check 
+	local tool=readelf
+	local default_opt="-A"
+	which ${tool} > /dev/null
+	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
+
+	if [ $# -lt 1  ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	then 
+		echo "CN:列出《动态库》中包含的《函数接口》"
+		echo "discripttion:ls function name from librarys"
+		echo "example:"
+		echo "$FUNCNAME    [-h or --help]"
+		echo "$FUNCNAME    library file list"
+		echo "$FUNCNAME    1.so 2.so 3.so or *.so [current dir]"
+		return 2
+	fi
+	local file_list=()
+	#check file isn't exist
+	for file in "$@"
+	do
+		if [ -f ${file} ]
+		then
+			file_list+=("${file}")
+		else
+			echo "file:${file} not exist"
+		fi
+	done
+	local file_counts=${#file_list[@]}
+	if [ ${file_counts} -lt 1 ];then return 3;fi
+	
+	for file in ${file_list[@]}
+	do
+		echo "${tool} ${default_opt} ${file}"
+		${tool} ${default_opt} ${file}
+		echo "------------------------------------"
 	done
 
 	return 0
 }
+

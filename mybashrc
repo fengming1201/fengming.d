@@ -61,6 +61,8 @@ alias gitls='fm-gitls'
 alias gitdiff='fm-gitdiff_work-cache'
 alias gitshow='fm-gitshow'
 alias gitlog='fm-gitlog'
+alias gitlog_detail='fm-gitlog_detail_by_commit_id'
+alias gitcat='fm-gitcat_file_by_commit_id'
 alias gitinfo='fm-gitinfo'
 
 if [ -f /opt/z/z.sh ];then
