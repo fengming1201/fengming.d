@@ -242,3 +242,87 @@ function fm-show_RAM
 
 	return 0
 }
+function fm-net_check_url_respone_with_wget 
+{
+	local tool=wget
+	local default_opt="--spider"
+
+	which ${tool} > /dev/null
+	if [ $? -ne 0 ];then echo "${tool} not found,please install it first!";return 1;fi
+
+	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "CN:检测URL响应状态，也是URL是否可达。"
+		echo "$FUNCNAME  URL"
+		echo ".e.g:$FUNCNAME  http://ip:port"
+		echo ".e.g:$FUNCNAME  www.baidu.com"
+		return 2
+	fi
+	local  url_str=$1
+	echo "${tool} ${default_opt}  ${url_str}"
+	${tool} ${default_opt}  ${url_str}
+	return 0
+}
+function fm-net_check_url_respone_with_curl 
+{
+	local tool=curl
+	local default_opt="-I"
+
+	which ${tool} > /dev/null
+	if [ $? -ne 0 ];then echo "${tool} not found,please install it first!";return 1;fi
+
+	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "CN:检测URL响应状态，也是URL是否可达。"
+		echo "$FUNCNAME  URL"
+		echo ".e.g:$FUNCNAME  http://ip:port"
+		echo ".e.g:$FUNCNAME  www.baidu.com"
+		return 2
+	fi
+	local  url_str=$1
+	echo "${tool} ${default_opt}  ${url_str}"
+	${tool} ${default_opt}  ${url_str}
+	return 0
+}
+function fm-net_check_port_state_with_nc
+{
+	local tool=nc
+	local default_opt="-zv"
+
+	which ${tool} > /dev/null
+	if [ $? -ne 0 ];then echo "${tool} not found,please install it first!";return 1;fi
+
+	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "CN:检测远程主机端口号状态，也是端口号是否开放。"
+		echo "$FUNCNAME  IP PORT"
+		echo ".e.g:$FUNCNAME  116.62.103.60  1201"
+		return 2
+	fi
+	local  ip=$1
+	local port=$2
+	echo "${tool} ${default_opt}  ${ip} ${port}"
+	${tool} ${default_opt}  ${ip} ${port}
+	return 0
+}
+function fm-net_check_port_state_with_nmap
+{
+	local tool=nmap
+	local default_opt="-p"
+
+	which ${tool} > /dev/null
+	if [ $? -ne 0 ];then echo "${tool} not found,please install it first!";return 1;fi
+
+	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "CN:检测远程主机端口号状态，也是端口号是否开放。"
+		echo "$FUNCNAME  IP  PORT"
+		echo ".e.g:$FUNCNAME  116.62.103.60  1201"
+		return 2
+	fi
+	local  ip=$1
+	local port=$2
+	echo "${tool} ${default_opt} ${port} ${ip}"
+	${tool} ${default_opt} ${port}  ${ip} 
+	return 0
+}

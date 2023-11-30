@@ -379,8 +379,8 @@ function fm-upload_files_to_fileserver_tar
 }
 function fm-dockerfile_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_documents_dir}/sub_doc_docker/Dockerfile/work_dictionary
-	local target_file=.work_dictionary
+	local dic_file_path=${fengming_documents_dir}/sub_doc_docker/Dockerfile/dictionary_for_dockerfile
+	local target_file=.dictionary_for_dockerfile
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then
@@ -395,8 +395,8 @@ function fm-dockerfile_vim_dictionary_copy2current_dir
 
 function fm-docker_compose_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_documents_dir}/sub_doc_docker/docker-compose/work_dictionary
-	local target_file=.work_dictionary
+	local dic_file_path=${fengming_documents_dir}/sub_doc_docker/docker-compose/dictionary_for_docker_compose
+	local target_file=.dictionary_for_docker_compose
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then
@@ -498,8 +498,8 @@ function fm-docker_compose_template
 
 function fm-cmake_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_documents_dir}/sub_doc_cmake/work_dictionary
-	local target_file=.work_dictionary
+	local dic_file_path=${fengming_documents_dir}/sub_doc_cmake/dictionary_for_cmake
+	local target_file=.dictionary_for_cmake
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then

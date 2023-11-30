@@ -344,7 +344,7 @@ function fm-gitls
 	then
 		sudo git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
 	else
-		git status | grep -E 'new file:|modified:|deleted:'
+		git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
 	fi
 	return 0
 }
