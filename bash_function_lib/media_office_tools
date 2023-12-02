@@ -29,8 +29,7 @@ function fm-picture_viewer
 function fm-video_player
 {
 	local app=mpv
-	#local default_opt=¨--player-operation-mode=pseudo-gui¨
-	local default_opt=
+	local default_opt="--fs"
 
 	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
@@ -308,6 +307,7 @@ function fm-ffmpeg_camera_video_stream_push_2mpvplayer
 {
 	local push_tool=ffmpeg
 	local player=mpv
+	local default_opt="--fs"
 	local check_tool=v4l2-ctl
 	local device=/dev/video
 	local resol="480x320"
