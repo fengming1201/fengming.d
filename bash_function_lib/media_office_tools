@@ -42,6 +42,7 @@ function fm-video_player
 
 	if [ x"$SSH_CLIENT" = x ]
 	then
+		echo "$app ${default_opt} "$*""
 		$app ${default_opt} "$*"
 	else
 		local opt="N"
@@ -49,6 +50,7 @@ function fm-video_player
 		if [ "x${opt}" = "x"  ];then opt="N";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
+			echo "DISPLAY=:0 $app ${default_opt} --fs "$*""
 			DISPLAY=:0 $app ${default_opt} --fs "$*"
 		fi
 	fi
