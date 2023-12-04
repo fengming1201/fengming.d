@@ -648,40 +648,6 @@ function fm-find
 
 }
 
-function fm-time_zone_update
-{
-	local app=ntpdate
-	local zonefile=/usr/share/zoneinfo/Asia/Shanghai
-	local target_file=/etc/localtime 
-
-	which ${app} > /dev/null
-	if [ $? -ne 0 ]
-	then
-		echo "ERROR:${FUNCNAME},${app} not found"
-		echo "please install ${app}"
-		echo "sudo apt install ${app}"
-		return 1
-	fi
-	#copy zonefile
-	if [ ! -f ${zonefile} ];then echo "ERROR:${FUNCNAME},${zonefile} not exist!";return 2;fi
-
-	cp -vf ${zonefile} ${target_file}
-
-	#update time from servers
-	local time_server_array=("ntp.ntsc.ac.cn" "ntp1.aliyun.com" "ntp.fudan.edu.cn")
-	for server in $(echo ${time_server_array[*]})
-	do
-		echo "try to connecting time server:${server}"
-		ntpdate -u  ${server}
-		if [ $? -eq 0 ]
-		then
-			break
-		fi
-	done
-	
-	return 0
-}
-
 function fm-download_whole_website
 {
 	local tool=wget
