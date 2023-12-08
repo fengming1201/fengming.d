@@ -2,7 +2,7 @@
 
 if [ "x${fengming_root_dir}" = "x" ]
 then
-    fengming_root_dir=/etc/fengming.d
+    fengming_root_dir=/opt/fengming.d
 fi
 
 #username=$(whoami)

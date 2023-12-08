@@ -3,11 +3,11 @@ this dir save mybashrc and help file
 
 first time init linux envirence to mybash
 step 1:download fengming.d
-$cd /etc
+$cd /opt
 $sudo git clone https://github.com/fengming1201/fengming.d.git
 
 make sure download completed
-/etc/fengming.d/
+/opt/fengming.d/
 ├── bash_function_lib
 ├── cmd_help
 ├── documents
@@ -18,11 +18,11 @@ make sure download completed
 └── what_is_by_keyword
 
 step 2:install mybashrc
-$sudo bash /etc/fengming.d/install.sh
+$sudo bash /opt/fengming.d/install.sh
 
 check exec result:
-if [ -f /etc/fengming.d/mybashrc ];then
-        . /etc/fengming.d/mybashrc
+if [ -f /opt/fengming.d/mybashrc ];then
+        . /opt/fengming.d/mybashrc
 fi
 
 step 3:relogin
