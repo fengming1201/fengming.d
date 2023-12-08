@@ -1,7 +1,13 @@
 #!/bin/bash
-
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 function func_install_script_exec
 {
 	local sorftware_install_dir=${fengming_top_dir}/sorftware_install

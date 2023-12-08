@@ -1,6 +1,13 @@
 #!/bin/bash
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 function func_ffmpeg_videofile_merge_stream_push_2rtmpserver
 {
 	local push_tool=ffmpeg

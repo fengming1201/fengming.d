@@ -1,7 +1,13 @@
 #!/bin/bash
-
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 function func_realpath
 {
 	if [ $# -lt 1  ];then echo "ERROR:parmeter missing",echo "$scriptfilename file/dir";return 1;fi

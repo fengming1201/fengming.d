@@ -1,6 +1,13 @@
 #!/bin/bash
-
 scriptfilename=$0
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 
 target_dir=$fengming_cmd_dir
 
@@ -16,23 +23,32 @@ function func_create_fm_cmd
 
     for file in ${file_list}
     do 
-        if [ -e ${file} ];then echo "file:$file already exist!! skip it!";continue;fi
+        if [ -e ${target_dir}/${file} ];then echo "file:$file already exist!! skip it!";continue;fi
         if [ -w ${target_dir} ]
         then
-            touch ${file}
-            chmod 747 ${file}
+            touch ${target_dir}/${file}
+            chmod 747 ${target_dir}/${file}
         else
-            sudo touch ${file}
-            sudo  chmod 747 ${file}
+            sudo touch ${target_dir}/${file}
+            sudo  chmod 747 ${target_dir}/${file}
         fi
-        ls -lh ${file}
-        cat  <<-EOF >${file}
+        ls -lh ${target_dir}/${file}
+        cat  <<-EOF >${target_dir}/${file}
 #!/bin/bash
 scriptfilename=\$0
 
+if [ "\$1" = "info" ];then
+    echo "location:\${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "\$1" = "show" ];then
+    echo "location:\${scriptfilename}"
+    cat \${scriptfilename}
+fi
+
 function name
 {
-
+    return 0
 }
 
 name \$@

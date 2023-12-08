@@ -8,18 +8,18 @@ if [ "$1" = "show" ];then
     echo "location:${scriptfilename}"
     cat ${scriptfilename}
 fi
+function func_tree_aviv
+{
+	local app=tree
+	local default_opt="-sfh"
 
+	${app}  ${default_opt} $*
 
-
-
-
-
-
-
-func_script_putin $@
+	return 0
+}
+func_tree_aviv $@
 ret=$?
-if [ ${ret} -ne 0 ]
-then 
+if [ ${ret} -ne 0 ];then 
     exit 1
 fi
 exit 0

@@ -1,5 +1,6 @@
 #!/bin/bash
 scriptfilename=$0
+
 if [ "$1" = "info" ];then
     echo "location:${scriptfilename}"
     echo "abstract:"
@@ -9,17 +10,14 @@ if [ "$1" = "show" ];then
     cat ${scriptfilename}
 fi
 
+function name
+{
+    return 0
+}
 
-
-
-
-
-
-
-func_script_putin $@
+name $@
 ret=$?
-if [ ${ret} -ne 0 ]
-then 
+if [ ${ret} -ne 0 ];then 
     exit 1
 fi
 exit 0

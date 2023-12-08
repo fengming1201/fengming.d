@@ -1,7 +1,13 @@
 #!/bin/bash
-
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 function  func_search_all_by_keyword
 {
 	if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]

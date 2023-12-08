@@ -1,7 +1,13 @@
 #!/bin/bash
-
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 #Linux Sound volume control
 function func_linux_sound_volume_control
 {

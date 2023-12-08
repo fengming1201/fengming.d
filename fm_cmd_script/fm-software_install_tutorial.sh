@@ -1,7 +1,13 @@
 #!/bin/bash
-
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 function func_software_install_tutorial
 {
 	local sorftware_tutorial_dir=${fengming_top_dir}/sorftware_toolket

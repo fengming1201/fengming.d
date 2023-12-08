@@ -1,8 +1,14 @@
 
 #!/bin/bash
-
 scriptfilename=$0
-
+if [ "$1" = "info" ];then
+    echo "location:${scriptfilename}"
+    echo "abstract:"
+fi
+if [ "$1" = "show" ];then
+    echo "location:${scriptfilename}"
+    cat ${scriptfilename}
+fi
 function func_sdcc_recognize_file_type
 {
     local type_suffix=("asm" "bin" "hex" "ihx" "lk" "lst" "map" "mem" "rel" "rst" "sym")
