@@ -1,0 +1,17 @@
+NFS服务安装和配置
+安装：
+apt install nfs-kernel-server rpcbind
+配置：
+vi /etc/exports
+/srv/nfs 192.168.254.*(rw,sync,no_root_squash)
+
+或者
+/srv/nfs *(rw,sync,no_root_squash)
+
+重启服务：
+/etc/init.d/nfs-kernel-server start  或者 systemctl  restart nfs-kernel-server.service
+
+客户端挂载：
+mount -t nfs 192.168.1.100:/srv/nfs  /mnt
+注意：在target目标机中mount NFS时需要加选项-o nolock
+mount -t nfs -o nolock IP:/srv/nfs   /mnt/nfs

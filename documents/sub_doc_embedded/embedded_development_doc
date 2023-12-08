@@ -1,65 +1,11 @@
 {
-    TFTP服务安装和配置
-    安装：
-    apt install  tftp-hpa  tftpd-hpa
-    配置：
-    vi /etc/default/tftpd-hpa
 
-    TFTP_USERNAME="tftp"
-    TFTP_DIRECTORY="/srv/tftp"
-    TFTP_SDDRESS="0.0.0.0:69"      #ip地址和端口号
-    TFTP_OPTIONS="-l -c -s"    
-    
-    选项解释：
-    “-c”是可以上传文件的参数；
-    “-s”是指定的TFTP服务器的目录；
-    “-l”是在独立运行服务器（听）模式，而不是从inetd运行
-
-    启动服务：/etc/init.d/tftpd-hpa start/restart
-    或者：systemctl  start/restart  tftpd-hpa.service
 },
 {
-    samba服务安装和配置
-    安装：
-    apt install samba
-    配置：
-    vi /etc/samba/smb.conf
-    
-    [root_dir]
-    path = /
-    valid users = root
-    writeable = yes
-    guest ok = yes
-    browseable = yes
-    create mask = 0777
 
-    设置访问密码：（可以先创建专用samba的新用户）
-    smbpasswd -a root   #其他选项smbpasswd -h查看。
-
-    重启服务：
-    /etc/init.d/smbd restart   或  systemctl  restart smbd.service
-
-    客户端挂载：
-    windows端://192.168.254.5/root_dir
-    linux:mount -t cifs -o username=root,password=****,vers=2.0 //192.168.254.5/root_dir  local_samba_dir
-    
-    注意：如果cifs工具没有安装，则安装：apt install cifs-utils
 },
 {
-    NFS服务安装和配置
-    安装：
-    apt install nfs-kernel-server rpcbind
-    配置：
-    vi /etc/exports
-    /srv/nfs 192.168.254.*(rw,sync,no_root_squash)
 
-    重启服务：
-    /etc/init.d/nfs-kernel-server start  或者 systemctl  restart nfs-kernel-server.service
-
-    客户端挂载：
-    mount -t nfs 192.168.1.100:/srv/nfs  /mnt
-    注意：在target目标机中mount NFS时需要加选项-o nolock
-    mount -t nfs -o nolock IP:/srv/nfs   /mnt/nfs
 
 },
 {

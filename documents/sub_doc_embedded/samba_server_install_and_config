@@ -1,0 +1,25 @@
+samba服务安装和配置
+安装：
+apt install samba
+配置：
+vi /etc/samba/smb.conf
+
+[root_dir]
+path = /
+valid users = root
+writeable = yes
+guest ok = yes
+browseable = yes
+create mask = 0777
+
+设置访问密码：（可以先创建专用samba的新用户）
+smbpasswd -a root   #其他选项smbpasswd -h查看。
+
+重启服务：
+/etc/init.d/smbd restart   或  systemctl  restart smbd.service
+
+客户端挂载：
+windows端://192.168.254.5/root_dir
+linux:mount -t cifs -o username=root,password=****,vers=2.0 //192.168.254.5/root_dir  local_samba_dir
+
+注意：如果cifs工具没有安装，则安装：apt install cifs-utils
