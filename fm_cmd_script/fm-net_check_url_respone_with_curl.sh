@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_net_check_url_respone_with_curl 
@@ -21,9 +23,9 @@ function func_net_check_url_respone_with_curl
 	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "CN:检测URL响应状态，也是URL是否可达。"
-		echo "$scriptfilename  URL"
-		echo ".e.g:$scriptfilename  http://ip:port"
-		echo ".e.g:$scriptfilename  www.baidu.com"
+		echo "$scriptfile  URL"
+		echo ".e.g:$scriptfile  http://ip:port"
+		echo ".e.g:$scriptfile  www.baidu.com"
 		return 2
 	fi
 	local  url_str=$1

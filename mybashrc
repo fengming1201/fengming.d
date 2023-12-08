@@ -2,11 +2,7 @@
 #author:fengming
 #date:Thu 22 Dec 2022 11:22:52 AM CST
 #***************************************#
-export fengming_top_dir=/opt/fengming.d
-export fengming_cmd_dir=${fengming_top_dir}/fm_cmd_script
-export fengming_tools_dir=${fengming_top_dir}/sorftware_toolket
-export fengming_func_lib_dir=${fengming_top_dir}/bash_function_lib
-export fengming_documents_dir=${fengming_top_dir}/documents
+export FENGMING_DIR=/opt/fengming.d
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -43,20 +39,20 @@ alias clr='clear'
 
 #source other files
 #incude first
-source ${fengming_func_lib_dir}/env_variable
+source ${FENGMING_DIR}/bash_function_lib/env_variable
 except_do_source_list=("env_variable")
-for file in $(ls ${fengming_func_lib_dir})
+for file in $(ls ${FENGMING_DIR}/bash_function_lib)
 do
 	for except in "${except_do_source_list[@]}"
 	do
 		if [ ${file} = ${except} ];then  continue 1;fi
 	done
-	source ${fengming_func_lib_dir}/${file}
+	source ${FENGMING_DIR}/bash_function_lib/${file}
 done
 
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
-alias mywifi='fm-wifi_qr_code fjk myap 12345678'
+alias mywifi='fm-wifi_qr_code.sh fjk myap 12345678'
 alias gitst='fm-gitst'
 alias gitls='fm-gitls'
 alias gitdiff='fm-gitdiff_work-cache'
@@ -134,8 +130,6 @@ function auto_sudo
 	return 0
 }
 
-
-
 function fm-git_mytoken_manage
 {   
     local git_token_list=("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" "end")
@@ -158,8 +152,7 @@ function fm-git_mytoken_manage
     return 0
 }
 
-
-export PATH=$fengming_cmd_dir:$PATH
+export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
 echo "*******************************************"
 echo "****  fengming.d  environment  loaded  ****"
 echo "*******************************************"

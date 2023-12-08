@@ -1,24 +1,26 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 
-target_dir=$fengming_cmd_dir
+target_dir=${fengming_dir}/fm_cmd_script
 
 function func_create_fm_cmd
 {
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "$scriptfilename  file_list"
-        echo "$scriptfilename  file1 file2 ..."
+        echo "$scriptname  file_list"
+        echo "$scriptname  file1 file2 ..."
         return 1
     fi
     local file_list=$@
@@ -37,16 +39,17 @@ function func_create_fm_cmd
         ls -lh ${target_dir}/${file}
         cat  <<-EOF >${target_dir}/${file}
 #!/bin/bash
-scriptfilename=\$0
-
+scriptfile=\$0
+scriptname=\$(basename \${scriptfile})
+fengming_dir=\$FENGMING_DIR
 if [ "\$1" = "info" ];then
-    echo "location:\${scriptfilename}"
+    echo "location:\${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "\$1" = "show" ];then
-    echo "location:\${scriptfilename}"
-    cat \${scriptfilename}
+    echo "location:\${scriptfile}"
+    cat \${scriptfile}
     exit 0
 fi
 

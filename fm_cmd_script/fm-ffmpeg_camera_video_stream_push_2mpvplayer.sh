@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_ffmpeg_camera_video_stream_push_2mpvplayer
@@ -22,8 +24,8 @@ function func_ffmpeg_camera_video_stream_push_2mpvplayer
 	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$scriptfilename  dev  resolution"
-		echo "e.g:$scriptfilename  /dev/video0   480x320"
+		echo "$scriptfile  dev  resolution"
+		echo "e.g:$scriptfile  /dev/video0   480x320"
 	    echo "屏幕分辨率(resolution):"
 		which ${check_tool} > /dev/null
 		if [ $? -eq 0 ]

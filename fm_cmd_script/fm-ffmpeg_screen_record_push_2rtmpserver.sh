@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_ffmpeg_screen_record_push_2rtmpserver
@@ -19,8 +21,8 @@ function func_ffmpeg_screen_record_push_2rtmpserver
 	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$scriptfilename screenID  resolution  rtps_url"
-		echo "e.g:$scriptfilename :0.0 480x320 rtmp://116.62.103.60:1935/live/movie1234"
+		echo "$scriptfile screenID  resolution  rtps_url"
+		echo "e.g:$scriptfile :0.0 480x320 rtmp://116.62.103.60:1935/live/movie1234"
 		echo "屏幕分辨率(resolution):"
 		echo "320x240   --常见于较早的移动电话和小型设备。"
     	echo "480x320   --常见于早期智能手机和某些小型平板电脑。"

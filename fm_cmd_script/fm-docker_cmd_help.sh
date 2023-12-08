@@ -1,26 +1,28 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_docker_cmd_help
 {
-	local docker_path=${fengming_documents_dir}/sub_doc_docker
+	local docker_path=${fengming_dir}/documents/sub_doc_docker
 	if [ $# -lt 1 ];then tree ${docker_path};return 0;fi
 	if [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "         ${scriptfilename}  cmd_prefix / sub_dir_name_suffix"
+		echo "         ${scriptfile}  cmd_prefix / sub_dir_name_suffix"
 		echo "example:"
-		echo "        ${scriptfilename}  images"
-		echo "        ${scriptfilename}  volume"
+		echo "        ${scriptfile}  images"
+		echo "        ${scriptfile}  volume"
 		return 1
 	fi
 	local parameter=$@

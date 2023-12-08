@@ -1,14 +1,15 @@
 #!/bin/bash
-
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_video_player
@@ -18,12 +19,12 @@ function func_video_player
 
 	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "$scriptfilename  a.mp4   or"
-		echo "$scriptfilename  rtmp://your-streaming-server:port/live/your-stream-key" 
+		echo "$funcname  a.mp4   or"
+		echo "$funcname  rtmp://your-streaming-server:port/live/your-stream-key" 
 		return 1
 	fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfilename},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${funcname},${app} not exist!¨;return 1;fi;
 
 	if [ x"$SSH_CLIENT" = x ]
 	then

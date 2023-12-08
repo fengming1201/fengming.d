@@ -1,18 +1,20 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_shell_help
 {
-	local doc_file_path=${fengming_documents_dir}
+	local doc_file_path=${fengming_dir}/documents
 	local sub_doc_path=${doc_file_path}/sub_doc_shell
 	
 	#check paramter
@@ -23,15 +25,15 @@ function func_shell_help
 		echo "path=${sub_doc_path}"
 		echo ""
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  suffix  //功能或模块后缀"
+        echo "         ${scriptfile}  suffix  //功能或模块后缀"
 		return 1
 	fi
     if [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:shell语法和功能模块用法帮助文档"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  suffix  //功能或模块后缀"
-		echo "         ${scriptfilename}  show    //显示所有shell相关文件"
+        echo "         ${scriptfile}  suffix  //功能或模块后缀"
+		echo "         ${scriptfile}  show    //显示所有shell相关文件"
         return 1
     fi
 	

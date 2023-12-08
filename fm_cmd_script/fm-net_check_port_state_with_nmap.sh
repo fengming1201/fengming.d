@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_net_check_port_state_with_nmap
@@ -21,8 +23,8 @@ function func_net_check_port_state_with_nmap
 	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "CN:检测远程主机端口号状态，也是端口号是否开放。"
-		echo "$scriptfilename  IP  PORT"
-		echo ".e.g:$scriptfilename  116.62.103.60  1201"
+		echo "$scriptfile  IP  PORT"
+		echo ".e.g:$scriptfile  116.62.103.60  1201"
 		return 2
 	fi
 	local  ip=$1

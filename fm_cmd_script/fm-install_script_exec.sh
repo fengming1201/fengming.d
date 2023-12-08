@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_install_script_exec
@@ -23,14 +25,14 @@ function func_install_script_exec
 		echo "path=${install_script_dir}"
 		echo ""
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  [tool_name]  //软件名称"
+        echo "         ${scriptfile}  [tool_name]  //软件名称"
 		return 1
 	fi
     if [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:install tools by script"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  [tool_name]  //软件名称"
+        echo "         ${scriptfile}  [tool_name]  //软件名称"
         return 1
     fi
 

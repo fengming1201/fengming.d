@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_grep_aviv
@@ -21,13 +23,13 @@ function func_grep_aviv
     then
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  key-word"
+        echo "         ${scriptfile}  key-word"
         return 1
     fi	
 	#check exec file state
     which ${app} > /dev/null
     if [ $? -ne 0 ]; then
-        echo "ERROR:${scriptfilename},${app} not exist!"
+        echo "ERROR:${scriptfile},${app} not exist!"
         return 2
     fi
 	if [ $# -eq 1 ]

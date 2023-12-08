@@ -1,23 +1,25 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_document_grep
 {
-	local doc_file_path=${fengming_documents_dir}
+	local doc_file_path=${fengming_dir}/documents
 	
 	#check para
 	if [ $# -lt 1 ]
 	then
-		echo "e.g $scriptfilename  keyword"
+		echo "e.g $scriptfile  keyword"
 		return 1
 	fi
 	echo "grep -rn $* ${doc_file_path}"

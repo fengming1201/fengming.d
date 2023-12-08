@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_download_whole_website
@@ -16,7 +18,7 @@ function func_download_whole_website
 	which ${tool} > /dev/null
 	if [ $? != 0 ];then echo "ERROR:${tool} not found!!";return 1;fi
 	
-	if [ $# -lt 1 ];then echo "ERROR:paramter missing!!";echo "$scriptfilename URL";return 2;fi
+	if [ $# -lt 1 ];then echo "ERROR:paramter missing!!";echo "$scriptfile URL";return 2;fi
 	
 	echo "${tool} -r -p -np -k $*"
 	${tool} -r -p -np -k $*

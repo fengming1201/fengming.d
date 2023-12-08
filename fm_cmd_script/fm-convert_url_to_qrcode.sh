@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_convert_url_to_qrcode
@@ -18,7 +20,7 @@ function func_convert_url_to_qrcode
 	if [ $# -lt 1 ]
 	then
 		echo "ERROR:para wrong!!"
-		echo "$scriptfilename  URL"
+		echo "$scriptfile  URL"
 		return 1
 	fi
 	#check app

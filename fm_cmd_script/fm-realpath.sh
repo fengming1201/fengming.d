@@ -1,18 +1,20 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_realpath
 {
-	if [ $# -lt 1  ];then echo "ERROR:parmeter missing",echo "$scriptfilename file/dir";return 1;fi
+	if [ $# -lt 1  ];then echo "ERROR:parmeter missing",echo "$scriptfile file/dir";return 1;fi
 	local tool=realpath
 	which ${tool} > /dev/null
 	if [ $? -ne 0  ];then echo "ERROR:${tool} no found!!";return 2;fi

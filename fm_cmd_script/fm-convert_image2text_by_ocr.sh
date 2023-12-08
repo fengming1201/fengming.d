@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_convert_image2text_by_ocr
@@ -19,12 +21,12 @@ function func_convert_image2text_by_ocr
     then
         echo "DESCRIPTION:recognition  image"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  imagename output_filename   //default use chi_sim"
-		echo "example: ${scriptfilename}  test_org.jpg    outfilename"
+        echo "         ${scriptfile}  imagename output_filename   //default use chi_sim"
+		echo "example: ${scriptfile}  test_org.jpg    outfilename"
         return 1
     fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfilename},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
 
 	local src_image=$1
 	local output_file=$2

@@ -1,18 +1,20 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_document_cat
 {
-	local doc_file_path=${fengming_documents_dir}
+	local doc_file_path=${fengming_dir}/documents
 	
 	if [ $# -lt 1 ];then tree -L 1 ${doc_file_path};return 0;fi
 	if [ $1 = "-a" ] || [ $1 = "--all" ]
@@ -22,10 +24,10 @@ function func_document_cat
 	elif [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "         ${scriptfilename}  file_prefix / sub_dir_name_suffix"
+		echo "         ${scriptfile}  file_prefix / sub_dir_name_suffix"
 		echo "example:"
-		echo "        ${scriptfilename}  docker"
-		echo "        ${scriptfilename}  image_build"
+		echo "        ${scriptfile}  docker"
+		echo "        ${scriptfile}  image_build"
 		return 1
 	fi
 	#point to sub dir 

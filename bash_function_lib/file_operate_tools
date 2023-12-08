@@ -93,9 +93,6 @@ function fm-pdf_extract
 	return 0
 }
 
-
-
-
 function fm-json_parse
 {
 
@@ -113,11 +110,3 @@ function fm-json_format
 
 	return 0
 }
-
-
-
-
-
-
-
-

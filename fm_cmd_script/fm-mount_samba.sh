@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_mount_samba
@@ -15,8 +17,8 @@ function func_mount_samba
 	if [ $# -lt 2 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
 	then
 		echo "parameter wrong!"
-		echo "$scriptfilename  src_dir  mount_dir"
-		echo "e.g. $scriptfilename  media_dir  samba1"
+		echo "$scriptfile  src_dir  mount_dir"
+		echo "e.g. $scriptfile  media_dir  samba1"
 		return 1
 	fi
 

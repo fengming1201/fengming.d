@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_picture_convert_resize
@@ -18,8 +20,8 @@ function func_picture_convert_resize
 	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "$scriptfilename  input  output  resize"
-		echo "e.g.$scriptfilename  mypic.jpg  newmyjpg.jpg  800x600"
+		echo "$scriptfile  input  output  resize"
+		echo "e.g.$scriptfile  mypic.jpg  newmyjpg.jpg  800x600"
 		echo "resize format: "
 		echo "800   --只指定宽度，而不指定高度,高度会根据原始图像的纵横比自动调整。" 
 		echo "x600  --只指定高度，而不指定宽度,宽度会根据原始图像的纵横比自动调整。"

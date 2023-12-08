@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_diff_dir
@@ -20,9 +22,9 @@ function func_diff_dir
 		echo "ERROR:parameter missing"
 		echo "discripttion:compare two directories"
 		echo "example:"
-		echo "$scriptfilename    [-h or --help]"
-		echo "$scriptfilename    dir1  dir2"
-		echo "$scriptfilename    "
+		echo "$scriptfile    [-h or --help]"
+		echo "$scriptfile    dir1  dir2"
+		echo "$scriptfile    "
 		return 1
 	fi
 	local dir1=$1

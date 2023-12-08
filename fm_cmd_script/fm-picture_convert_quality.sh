@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_picture_convert_quality
@@ -18,8 +20,8 @@ function func_picture_convert_quality
 	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "$scriptfilename  input  output  quality"
-		echo "e.g.$scriptfilename  mypic.jpg  newmyjpg.jpg  80"
+		echo "$scriptfile  input  output  quality"
+		echo "e.g.$scriptfile  mypic.jpg  newmyjpg.jpg  80"
 		return 1
 	fi
 	local input=$1

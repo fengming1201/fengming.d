@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_cmd_help
@@ -22,7 +24,7 @@ function func_cmd_help
 		echo "path=${help_file_path}"
 		echo ""
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  prefix //命令或命令前缀"
+        echo "         ${scriptfile}  prefix //命令或命令前缀"
 		return 1
 	fi
     #check paramter
@@ -30,7 +32,7 @@ function func_cmd_help
     then
         echo "DESCRIPTION:命令的帮助文档和实例"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  prefix //命令或命令前缀"
+        echo "         ${scriptfile}  prefix //命令或命令前缀"
         return 1
     fi
 	

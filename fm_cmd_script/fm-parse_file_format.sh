@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_parse_file_format
@@ -17,8 +19,8 @@ function func_parse_file_format
     then
         echo "DESCRIPTION:解析常见的文件格式，即标记各个域的名称。"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  filepath"
-        echo "         ${scriptfilename}  /etc/fstab"
+        echo "         ${scriptfile}  filepath"
+        echo "         ${scriptfile}  /etc/fstab"
         return 1
     fi
 

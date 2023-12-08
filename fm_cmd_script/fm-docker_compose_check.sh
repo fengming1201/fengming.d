@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_docker_compose_check
@@ -17,7 +19,7 @@ function func_docker_compose_check
 	
 	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "$scriptfilename [filename],but default para is ./docker-compose.yml"
+		echo "$scriptfile [filename],but default para is ./docker-compose.yml"
 		return 1
 	fi
 	if [ $# -eq 1 ]

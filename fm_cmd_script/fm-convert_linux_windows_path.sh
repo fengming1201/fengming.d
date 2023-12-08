@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_convert_linux_windows_path
@@ -16,8 +18,8 @@ function func_convert_linux_windows_path
 	then
 		echo "ERROR:parameter wrong!!"
 		echo "e.p:"
-		echo "$scriptfilename  /root/test.txt    --> \\root\\test.txt"
-		echo "$scriptfilename 'D:\\root\\test.txt' --> /root/test.txt"
+		echo "$scriptfile  /root/test.txt    --> \\root\\test.txt"
+		echo "$scriptfile 'D:\\root\\test.txt' --> /root/test.txt"
 		return 1
 	fi
 

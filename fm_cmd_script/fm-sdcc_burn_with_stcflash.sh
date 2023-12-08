@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_sdcc_burn_with_stcflash
@@ -22,9 +24,9 @@ function func_sdcc_burn_with_stcflash
     #check param
     if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
     then 
-        echo "$scriptfilename  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
-        echo "$scriptfilename hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"
-        echo "$scriptfilename -t  hex_image   #test , not real to burn!!"
+        echo "$scriptfile  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
+        echo "$scriptfile hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"
+        echo "$scriptfile -t  hex_image   #test , not real to burn!!"
         echo ""
         echo "89 	    STC89C52RC (v4.3C), STC89C54RD+ (v4.3C), STC90C52RC (v4.3C)"
         echo "12cx052 	STC12C2052 (v5.8D)"

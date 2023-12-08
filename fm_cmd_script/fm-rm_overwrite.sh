@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_rm_overwrite
@@ -20,12 +22,12 @@ function func_rm_overwrite
     then
         echo "DESCRIPTION:安全删除文件--先用随机数覆盖文件最后再删除该文件"
         echo "SYNOPSIS:"
-        echo "         ${scriptfilename}  [file or dir] list"	
+        echo "         ${scriptfile}  [file or dir] list"	
         return 1
     fi
 
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfilename},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
 
 	local total_file_num=
 	local num=

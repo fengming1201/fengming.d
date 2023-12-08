@@ -1,13 +1,15 @@
 #!/bin/bash
-scriptfilename=$0
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ];then
-    echo "location:${scriptfilename}"
+    echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfilename}"
-    cat ${scriptfilename}
+    echo "location:${scriptfile}"
+    cat ${scriptfile}
     exit 0
 fi
 function func_upload_files_to_fileserver
@@ -15,8 +17,8 @@ function func_upload_files_to_fileserver
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "paramter wrong!"
-		echo "$scriptfilename  file1 file2 fileN ...  remote_dir"
-		echo "$scriptfilename  file1 file2   /root/Pictures"
+		echo "$scriptfile  file1 file2 fileN ...  remote_dir"
+		echo "$scriptfile  file1 file2   /root/Pictures"
 		return 1
 	fi
 
