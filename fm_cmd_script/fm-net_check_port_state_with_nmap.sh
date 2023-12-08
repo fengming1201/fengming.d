@@ -3,10 +3,12 @@ scriptfilename=$0
 if [ "$1" = "info" ];then
     echo "location:${scriptfilename}"
     echo "abstract:"
+    exit 0
 fi
 if [ "$1" = "show" ];then
     echo "location:${scriptfilename}"
     cat ${scriptfilename}
+    exit 0
 fi
 function func_net_check_port_state_with_nmap
 {

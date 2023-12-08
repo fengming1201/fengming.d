@@ -3,10 +3,12 @@ scriptfilename=$0
 if [ "$1" = "info" ];then
     echo "location:${scriptfilename}"
     echo "abstract:"
+    exit 0
 fi
 if [ "$1" = "show" ];then
     echo "location:${scriptfilename}"
     cat ${scriptfilename}
+    exit 0
 fi
 function func_ffmpeg_camera_video_stream_push_2rtmpserver
 {
