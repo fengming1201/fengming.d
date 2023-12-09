@@ -53,14 +53,14 @@ done
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
 alias mywifi='fm-wifi_qr_code.sh fjk myap 12345678'
-alias gitst='fm-gitst'
-alias gitls='fm-gitls'
-alias gitdiff='fm-gitdiff_work-cache'
-alias gitshow='fm-gitshow'
-alias gitlog='fm-gitlog'
-alias gitlog_detail='fm-gitlog_detail_by_commit_id'
-alias gitcat='fm-gitcat_file_by_commit_id'
-alias gitinfo='fm-gitinfo'
+alias gitst='fm-gitst.sh'
+alias gitls='fm-gitls.sh'
+alias gitdiff='fm-gitdiff_work-cache.sh'
+alias gitshow='fm-gitshow.sh'
+alias gitlog='fm-gitlog.sh'
+alias gitlog_detail='fm-gitlog_detail_by_commit_id.sh'
+alias gitcat='fm-gitcat_file_by_commit_id.sh'
+alias gitinfo='fm-gitinfo.sh'
 
 if [ -f /opt/z/z.sh ];then
 	source /opt/z/z.sh

@@ -12,12 +12,12 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-function func_git_show_mygitinfo
+function func_git_fengming_info
 {
 	local mygit_site="https://github.com/fengming1201/fengming.d.git"
-	local fengming_dir=("${fengming_top_dir}" "${fengming_top_dir}.bak" "${fengming_top_dir}.backup")
+	local target_dir=("${fengming_dir}" "${fengming_dir}.bak" "${fengming_dir}.backup")
 
-	for dir in ${fengming_dir[*]}
+	for dir in ${target_dir[*]}
 	do
 		if [ -d ${dir} ]
 		then
@@ -29,7 +29,7 @@ function func_git_show_mygitinfo
 	return 0;
 }
 
-func_git_show_mygitinfo $@
+func_git_fengming_info $@
 ret=$?
 if [ ${ret} -ne 0 ]
 then 
