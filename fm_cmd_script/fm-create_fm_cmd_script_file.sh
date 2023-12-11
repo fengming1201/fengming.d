@@ -53,12 +53,12 @@ if [ "\$1" = "show" ];then
     exit 0
 fi
 
-function name
+function func_
 {
     return 0
 }
 
-name \$@
+func_ \$@
 ret=\$?
 if [ \${ret} -ne 0 ];then 
     exit 1

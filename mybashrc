@@ -37,6 +37,19 @@ alias bd=". bd -si"
 alias cman='man -M  /usr/share/man/zh_CN'
 alias clr='clear'
 
+alias svnls='svn st | grep -v ^?'
+alias svnst='svn st | grep -v ^?'
+
+alias mywifi='fm-wifi_qr_code.sh fjk myap 12345678'
+alias gitst='fm-gitst.sh'
+alias gitls='fm-gitls.sh'
+alias gitdiff='fm-gitdiff_work-cache.sh'
+alias gitshow='fm-gitshow.sh'
+alias gitlog='fm-gitlog.sh'
+alias gitlog_detail='fm-gitlog_detail_by_commit_id.sh'
+alias gitcat='fm-gitcat_file_by_commit_id.sh'
+alias gitinfo='fm-gitinfo.sh'
+
 #source other files
 #incude first
 source ${FENGMING_DIR}/bash_function_lib/env_variable
@@ -50,18 +63,6 @@ do
 	source ${FENGMING_DIR}/bash_function_lib/${file}
 done
 
-alias svnls='svn st | grep -v ^?'
-alias svnst='svn st | grep -v ^?'
-alias mywifi='fm-wifi_qr_code.sh fjk myap 12345678'
-alias gitst='fm-gitst.sh'
-alias gitls='fm-gitls.sh'
-alias gitdiff='fm-gitdiff_work-cache.sh'
-alias gitshow='fm-gitshow.sh'
-alias gitlog='fm-gitlog.sh'
-alias gitlog_detail='fm-gitlog_detail_by_commit_id.sh'
-alias gitcat='fm-gitcat_file_by_commit_id.sh'
-alias gitinfo='fm-gitinfo.sh'
-
 if [ -f /opt/z/z.sh ];then
 	source /opt/z/z.sh
 fi
@@ -73,29 +74,6 @@ function clrall
 	echo "" > /${HOME}/.bash_history
 	echo "All bash data has deleted!!"
 	return 0
-}
-
-
-function fm-git_mytoken_manage
-{   
-    local git_token_list=("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" "end")
-	
-	echo "token:"
-	echo "${git_token_list[*]}"
-	echo "===================================="
-    echo "format:"
-    echo "git remote set-url origin  https://<your_token>@github.com/<USERNAME>/<REPO>.git"
-    echo "<your_token>：包括<>在内的全部字符替换成你的token"
-    echo "<USERNAME>：包括<>在内的全部字符替换成你的username"
-    echo "<REPO>：包括<>在内的全部字符替换成你要访问的仓库名称"
-	echo "e.g.:"
-    echo "git remote set-url origin  https://<your token>/fengming1201/fengming.d.git"
-	echo "or"
-	echo "git push origin main"
-	echo "username:"
-	echo "password:<your token>"
-
-    return 0
 }
 
 export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
