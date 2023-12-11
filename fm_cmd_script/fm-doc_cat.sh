@@ -17,11 +17,11 @@ function func_document_cat
 	local doc_file_path=${fengming_dir}/documents
 	
 	if [ $# -lt 1 ];then tree -L 1 ${doc_file_path};return 0;fi
-	if [ $1 = "-a" ] || [ $1 = "--all" ]
+	if [ "$1" = "-a" ] || [ "$1" = "--all" ]
 	then
 		tree -sh ${doc_file_path}
 		return 0
-	elif [ $1 = "-h" ] || [ $1 = "--help" ]
+	elif [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
 		echo "         ${scriptfile}  file_prefix / sub_dir_name_suffix"

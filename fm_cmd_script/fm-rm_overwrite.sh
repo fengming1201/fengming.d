@@ -18,7 +18,7 @@ function func_rm_overwrite
 	local default_opt="-n 1 -u --random-source=/dev/urandom -v"
 
 	#check parameter
-    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:安全删除文件--先用随机数覆盖文件最后再删除该文件"
         echo "SYNOPSIS:"

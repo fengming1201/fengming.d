@@ -15,7 +15,7 @@ fi
 
 function func_gitst
 {
-	if [ $1 = "-h" ] || [ $1 = "--help " ]
+	if [ "$1" = "-h" ] || [ "$1" = "--help " ]
 	then
 		echo "no args"
 		return 1

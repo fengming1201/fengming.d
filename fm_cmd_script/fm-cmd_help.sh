@@ -28,7 +28,7 @@ function func_cmd_help
 		return 1
 	fi
     #check paramter
-	if [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:命令的帮助文档和实例"
         echo "SYNOPSIS:"

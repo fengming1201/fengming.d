@@ -18,7 +18,7 @@ function func_software_install_tutorial
 	
 	#check paramter
 	if [ $# -lt 1 ];then tree  ${sorftware_tutorial_dir};return 1;fi
-    if [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:软件的安装教程"
         echo "SYNOPSIS:"

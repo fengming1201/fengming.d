@@ -28,7 +28,7 @@ function func_shell_help
         echo "         ${scriptfile}  suffix  //功能或模块后缀"
 		return 1
 	fi
-    if [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:shell语法和功能模块用法帮助文档"
         echo "SYNOPSIS:"

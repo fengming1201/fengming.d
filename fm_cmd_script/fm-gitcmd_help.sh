@@ -17,7 +17,7 @@ function func_gitcmd_help
 {
 	local cmd_help_path=${fengming_dir}/documents/sub_doc_git/git_cmd_help
 	if [ $# -lt 1 ];then tree -L 1 ${cmd_help_path};return 0;fi
-	if [ $# -gt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -gt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
 		echo "$scriptfile cmd"

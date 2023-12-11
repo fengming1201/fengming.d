@@ -18,7 +18,7 @@ function func_pdf_viewer_gui
 	# local app=xpdf
 	local default_opt=
 	#check parameter
-    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:pdf 阅读器"
         echo "SYNOPSIS:"

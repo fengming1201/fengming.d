@@ -15,7 +15,7 @@ fi
 function func_parse_file_format
 {
     #check paramter
-    if [ $# -ne 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:解析常见的文件格式，即标记各个域的名称。"
         echo "SYNOPSIS:"

@@ -22,7 +22,7 @@ function func_sdcc_burn_with_stcflash
     local hex_file=main.hex
     local test_flag=no
     #check param
-    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then 
         echo "$scriptfile  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
         echo "$scriptfile hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"

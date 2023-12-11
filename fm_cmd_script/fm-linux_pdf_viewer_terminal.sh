@@ -18,7 +18,7 @@ function func_pdf_viewer_terminal
 	local default_opt=
 
 	#check parameter
-    if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:终端"
         echo "SYNOPSIS:"

@@ -16,7 +16,7 @@ function func_libcmd_help
 {
 	local lib_top_path=${fengming_dir}/documents/sub_doc_c_library
 	if [ $# -lt 1 ];then tree ${lib_top_path};return 0;fi
-	if [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
 		echo "         ${scriptfile}  cmd_suffix"

@@ -14,7 +14,7 @@ if [ "$1" = "show" ];then
 fi
 function func_mount_nfs
 {
-	if [ $# -lt 3 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
 		echo "$scriptfile  ip  src_dir  mount_dir"

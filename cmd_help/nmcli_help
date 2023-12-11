@@ -1,0 +1,41 @@
+安装：
+ap install  network-manager
+
+一般用法：
+`nmcli`是NetworkManager的命令行接口，用于管理网络连接。它提供了许多命令和选项来配置和管理网络连接。
+以下是一些常用的`nmcli`命令及其用法：
+
+1. 显示网络设备列表：
+   nmcli device
+
+   这将列出系统上的所有网络设备，包括以太网接口、WiFi接口和其他网络接口。
+
+2. 显示网络连接列表：
+   nmcli connection show
+
+   这将列出系统上的所有网络连接，包括以太网连接、WiFi连接和VPN连接等。
+
+3. 连接到一个网络：
+   nmcli connection up <connection-name>
+
+   将 `<connection-name>` 替换为要连接的网络连接的名称。执行此命令后，系统将尝试连接到指定的网络。
+
+4. 断开一个网络连接：
+   nmcli connection down <connection-name>
+
+   将 `<connection-name>` 替换为要断开的网络连接的名称。执行此命令后，系统将断开指定的网络连接。
+
+5. 创建一个新的网络连接：
+   nmcli connection add type <connection-type> ifname <interface-name>
+
+   将 `<connection-type>` 替换为要创建的连接类型，例如`ethernet`、`wifi`或`vpn`等。将 `<interface-name>` 替换为要连接的网络接口的名称。执行此命令后，将创建一个新的网络连接，并可以进一步配置其属性。
+
+6. 删除一个网络连接：
+   nmcli connection delete <connection-name>
+
+   将 `<connection-name>` 替换为要删除的网络连接的名称。执行此命令后，将删除指定的网络连接。
+
+这些是`nmcli`命令的一些示例，用于配置和管理网络连接。`nmcli`还提供了许多其他命令和选项，用于更详细的网络配置和管理。您可以使用`nmcli`的`--help`选项或参考相关文档来获取更多信息和用法示例。
+
+希望这些信息对您有所帮助！如果您还有其他问题，请随时提问。
+

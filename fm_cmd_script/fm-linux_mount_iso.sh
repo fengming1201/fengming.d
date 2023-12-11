@@ -14,7 +14,7 @@ if [ "$1" = "show" ];then
 fi
 function func_mount_iso
 {
-	if [ $# -lt 2 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
 		echo "$scriptfile  iso_file/iso_dev  mount_dir"

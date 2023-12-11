@@ -14,7 +14,7 @@ if [ "$1" = "show" ];then
 fi
 function  func_search_all_by_keyword
 {
-	if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
         echo "DESCRIPTION:在目录:${fengming_top_dir}中搜索内容或文件"
         echo "SYNOPSIS:"

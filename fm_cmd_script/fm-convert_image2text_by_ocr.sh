@@ -17,7 +17,7 @@ function func_convert_image2text_by_ocr
 	local app=tesseract
 	local default_opt="-l chi_sim"
 	#check parameter
-    if [ $# -ne 2 ] || [ $1 = "-h" ] || [ $1 = "--help" ]
+    if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:recognition  image"
         echo "SYNOPSIS:"
