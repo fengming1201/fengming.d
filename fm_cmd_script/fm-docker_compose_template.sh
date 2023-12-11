@@ -24,7 +24,7 @@ function func_docker_compose_template
 	echo " "
 	cat -n ${template_file}
 	echo " "
-	fi
+	
 	local opt="N"
 	if [ -f ${target_file} ]
 	then
