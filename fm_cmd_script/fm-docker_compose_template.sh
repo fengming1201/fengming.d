@@ -24,6 +24,7 @@ function func_docker_compose_template
 	echo " "
 	cat -n ${template_file}
 	echo " "
+	fi
 	local opt="N"
 	if [ -f ${target_file} ]
 	then
@@ -31,14 +32,22 @@ function func_docker_compose_template
 		if [ "x${opt}" = "x" ];then opt="N";fi
 		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
 		then
-			auto_sudo --cmd cp --arg '-vi' --src ${template_file} --des ${target_file}
+			if [ -w ./ ];then
+				cp -vi ${template_file}  ./${target_file}
+			else
+				sudo cp -vi ${template_file}  ./${target_file} 
+			fi
 		fi
 	else
 		read -p "Copy docker-compose.yml template to here? [Y/n]"  opt
 		if [ "x${opt}" = "x" ];then opt="Y";fi
 		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
 		then
-			auto_sudo --cmd cp --arg '-vi' --src ${template_file} --des ${target_file}
+			if [ -w ./ ];then
+				cp -vi  ${template_file}  ./${target_file}
+			else
+				sudo cp -vi  ${template_file}  ./${target_file}
+			fi
 		fi
 	fi
 	return 0

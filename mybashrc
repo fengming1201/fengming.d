@@ -75,64 +75,10 @@ function clrall
 	return 0
 }
 
-function auto_sudo
-{
-	#check param
-	if [ $# -lt 3 ]
-	then 
-		echo "parameter wrong!"
-		echo "$FUNCNAME -c/--cmd  command  [-a/--arg \'arg_list\'] -s/--src  srcfile  -d/--des desfile" 
-		echo "e.g. $FUNCNAME  --cmd cp --arg \'-v\' --src srcfile --dec  desfile"
-		return 1
-	fi
-	local cmd=""
-	local arg=""
-	local src=""
-	local des=""
-	#opt
-    while [[ $# -gt 0 ]]
-    do
-        case "$1" in
-            -c|--cmd)
-                cmd="$2"
-                shift 2
-                ;;
-            -a|--arg)
-                arg="$2"
-                shift 2
-                ;;
-            -s|--src)
-                src="$2"
-                shift 2
-                ;;
-            -d|--des)
-                des="$2"
-                shift 2
-                ;;
-            *)
-				echo "unknow opt"
-				return 2
-                ;;
-        esac
-    done
-	which ${cmd} > /dev/null
-	if [ $? -ne 0 ];then echo "${cmd} not found!!";return 3;fi
-
-	local target_dir=$(dirname ${des})
-	if [ -w ${target_dir} ]
-	then
-		echo "cp ${arg} ${src} ${des}"
-		cp ${arg} ${src} ${des}
-	else
-		echo "sudo cp ${arg} ${src} ${des}"
-		sudo cp ${arg} ${src} ${des}
-	fi
-	return 0
-}
 
 function fm-git_mytoken_manage
 {   
-    local git_token_list=("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" "end")
+    local git_token_list=("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" "end")
 	
 	echo "token:"
 	echo "${git_token_list[*]}"

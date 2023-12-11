@@ -22,9 +22,11 @@ function func_cmake_vim_dictionary_copy2current_dir
 		echo "vim dict file:$dic_file_path not exist"
 		return 1
 	fi
-
-	auto_sudo --cmd cp --arg '-vi' --src ${dic_file_path}  --des ${target_file}
-
+	if [ -w ./ ];then
+		cp -vi ${dic_file_path}  ./${target_file}
+	else
+		sudo  cp -vi ${dic_file_path}  ./${target_file}
+	fi
 	return 0
 }
 
