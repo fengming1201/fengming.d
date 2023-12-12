@@ -15,7 +15,7 @@ fi
 function func_script_putout
 {
 	local tmp_dir=/tmp
-	local scriptfifo=($(ls ${tmp_dir}/scriptfifo*))
+	local scriptfifo=($(ls ${tmp_dir}/scriptfifo* 2> /dev/null))
 	local num=1
 	local array_len=${#scriptfifo[@]}
 
@@ -29,10 +29,10 @@ function func_script_putout
 			num=$(expr ${num} + 1)
 		done
 		echo "N/n - nothing to do"
-		read -p "Input number to select scriptfifo file:" opt
+		read -p "Input number to select scriptfifo file [N]:" opt
 	fi
 
-	if [ x"${opt}" = xN ] || [ x"${opt}" = xn ];then return 0;fi
+	if [ x"${opt}" = xN ] || [ x"${opt}" = xn ] || [ "x${opt}" = x ];then return 0;fi
 
 	local target_file="none"
 	if [ x"${opt}" = "x0" ] || [ ${array_len} -eq 0 ]

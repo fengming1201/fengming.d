@@ -14,7 +14,7 @@ if [ "$1" = "show" ];then
 fi
 function func_software_install_tutorial
 {
-	local sorftware_tutorial_dir=${fengming_top_dir}/sorftware_toolket
+	local sorftware_tutorial_dir=${fengming_dir}/sorftware_toolket
 	
 	#check paramter
 	if [ $# -lt 1 ];then tree  ${sorftware_tutorial_dir};return 1;fi

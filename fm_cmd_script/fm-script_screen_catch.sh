@@ -15,12 +15,12 @@ fi
 function func_script_putin
 {
 	local tmp_dir=/tmp
-	local scriptfifo=($(ls ${tmp_dir}/scriptfifo*))
+	local scriptfifo=($(ls ${tmp_dir}/scriptfifo* 2> /dev/null))
 	local num=1
 	local array_len=${#scriptfifo[@]}
 
 	#find out scriptfifo file
-	if [ ${array_len} -gt 0 ]
+	if [ ${array_len} -gt 0 ] || [ ${array_len} -eq 0 ]
 	then
 		echo "0 - create new file"
 		for file in ${scriptfifo[*]}
@@ -29,12 +29,12 @@ function func_script_putin
 			num=$(expr ${num} + 1)
 		done
 		echo "N/n - nothing to do"
-		read -p "Input number to select scriptfifo file:" opt
+		read -p "Input number to select scriptfifo file [N]:" opt
 	fi
 
-	if [ x"${opt}" = xN ] || [ x"${opt}" = xn ];then return 0;fi
+	if [ x"${opt}" = xN ] || [ x"${opt}" = xn ] || [ "x${opt}" = x ];then return 0;fi
 	local target_file="none"
-	if [ x"${opt}" = "x0" ] || [ ${array_len} -eq 0 ]
+	if [ x"${opt}" = "x0" ]
 	then
 		local scriptnum=$(head -c 2 /dev/random | od -A n -t u4)
 		local new_scriptfifo=${tmp_dir}/scriptfifo${scriptnum// /}
