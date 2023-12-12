@@ -40,24 +40,42 @@ function func_git_mytoken_manage
     then
         if [ $# -ne 2 ];then echo "ERROR:input at least two parameters";return 3;fi
         read -s -p "input [encrypt] pass:"  password
-        echo -n "ciphertext-->: "
-        if [ -w ${token_encrypt_file} ]
+        echo ""
+        if [ "x${password}" = "x" ];then echo -e "\nERROR:Password cannot be empty!";return 4;fi
+        local  ciphertext=$(echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:${password} | tr -d '\n')
+        echo "ciphertext-->: ${ciphertext}"
+        local  confirm=yes
+        if [ -s ${token_encrypt_file} ]
         then
-            #echo "echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:****** | tr -d '\n' | tee ${token_encrypt_file}"
-            echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:${password} | tr -d '\n' | tee ${token_encrypt_file}
-        else
-            #echo "echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:****** | tr -d '\n' |sudo tee ${token_encrypt_file}"
-            echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:${password} | tr -d '\n' |sudo tee ${token_encrypt_file}
+            read -p "sub_doc_git/git_my_github_token.txt already has ciphertext, do you want to overwrite it?[y/N]:" confirm
+            if [ "x${confirm}" = "x" ];then confirm=N;fi
         fi
-        echo " "
+        if [ "${confirm}" = "y" ] || [ "${confirm}" = "Y" ] || [ "${confirm}" = "yes" ] || [ "${confirm}" = "YES" ]
+        then
+            if [ -w ${token_encrypt_file} ]
+            then
+                echo -n "${ciphertext}" | tee ${token_encrypt_file} > /dev/null
+            else
+                echo -n "${ciphertext}" | sudo tee ${token_encrypt_file} > /dev/null
+            fi
+            cat ${token_encrypt_file}
+            echo ""
+            echo "Save Success!!"
+        else
+            echo "Discard Save!!"
+        fi
+        echo ""
     elif [ $1 -eq 2 ] || [ "$1" = "decrypt" ]
     then
         read -s -p "input [decrypt] pass:" password
+        if [ "x${password}" = "x" ];then echo -e "\nERROR:Password cannot be empty!";return 4;fi
         local ciphertext=$(cat ${token_encrypt_file})
         if [ "x${ciphertext}" = "x" ];then echo "ERROR:ciphertext file is empty.";return 4;fi
+        echo ""
         echo -n "plaintext-->: "
         echo "${ciphertext}" | openssl enc -d -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:${password}
-        echo " "
+        echo ""
+
     else
         echo "ERROR:unknow opt"
     fi
