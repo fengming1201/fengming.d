@@ -42,8 +42,9 @@ function func_linux_music_player
     #check param
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "${scriptname}  file1.mp3  file2.flac ..."
+        echo "${scriptname}  file1.mp3  file2.flac ... or music_dir"
         echo "${scriptname}  other"
+        echo "more detail:${app} --help"
         return 2
     fi
     if [ "$1" = "other" ]

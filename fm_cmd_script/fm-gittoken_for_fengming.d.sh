@@ -39,8 +39,8 @@ function func_git_mytoken_manage
     if [ $1 -eq 1 ] || [ "$1" = "encrypt" ]
     then
         if [ $# -ne 2 ];then echo "ERROR:input at least two parameters";return 3;fi
-        password=$(read -p "input [encrypt] pass:")
-        echo -n "ciphertext:"
+        read -s -p "input [encrypt] pass:"  password
+        echo -n "ciphertext-->: "
         if [ -w ${token_encrypt_file} ]
         then
             #echo "echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:****** | tr -d '\n' | tee ${token_encrypt_file}"
@@ -49,15 +49,15 @@ function func_git_mytoken_manage
             #echo "echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:****** | tr -d '\n' |sudo tee ${token_encrypt_file}"
             echo -n "$2" |${tool} enc -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:${password} | tr -d '\n' |sudo tee ${token_encrypt_file}
         fi
-        echo ""
+        echo " "
     elif [ $1 -eq 2 ] || [ "$1" = "decrypt" ]
     then
-        password=$(read -p "input [decrypt] pass:")
+        read -s -p "input [decrypt] pass:" password
         local ciphertext=$(cat ${token_encrypt_file})
         if [ "x${ciphertext}" = "x" ];then echo "ERROR:ciphertext file is empty.";return 4;fi
-        echo -n "plaintext:"
+        echo -n "plaintext-->: "
         echo "${ciphertext}" | openssl enc -d -aes-256-cbc -base64 -pbkdf2 -iter 100000 -pass pass:${password}
-        echo ""
+        echo " "
     else
         echo "ERROR:unknow opt"
     fi
