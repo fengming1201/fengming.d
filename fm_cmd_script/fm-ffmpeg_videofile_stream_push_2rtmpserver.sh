@@ -42,7 +42,7 @@ function func_ffmpeg_videofile_stream_push_2rtmpserver
 		return 3
 	fi
 
-	shift 3
+	shift 2
 	while [ ${loop_times} -gt 0 ]
 	do
 		for file in "$@"
