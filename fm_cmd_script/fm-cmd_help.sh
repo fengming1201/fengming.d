@@ -14,7 +14,7 @@ if [ "$1" = "show" ];then
 fi
 function func_cmd_help
 {
-	local help_file_path=${fengming_top_dir}/cmd_help
+	local help_file_path=${fengming_dir}/cmd_help
 
     #check paramter
 	if [ $# -lt 1 ]

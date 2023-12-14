@@ -1,0 +1,73 @@
+简介：
+Cryptsetup：Cryptsetup 是一个在 Linux 系统上设置和管理磁盘加密的工具，它使用 Linux 内核的设备映射功能来实现加密。
+它支持多种加密算法，如AES、Twofish、Serpent等，并提供了创建、打开、关闭和管理加密卷的功能。
+
+dm-crypt/LUKS：dm-crypt 是 Linux 内核的一个模块，用于提供磁盘加密功能。LUKS（Linux Unified Key Setup）是 dm-crypt 的一个扩展，
+它定义了一个加密卷格式和密钥管理方案。Cryptsetup 是与 dm-crypt/LUKS 配合使用的用户空间工具，用于创建、打开、关闭和管理 LUKS 加密卷。
+
+VeraCrypt：VeraCrypt 是一个跨平台的加密软件，它可以在 Linux、Windows 和 macOS 上使用。它基于 TrueCrypt 项目，
+提供了磁盘加密和容器加密的功能。VeraCrypt 支持多种加密算法，并提供了图形界面和命令行界面来管理加密卷。
+
+LUKSUS：LUKSUS 是一个基于 dm-crypt/LUKS 的加密卷管理工具，它提供了一个简化的界面来创建、打开、关闭和管理 LUKS 加密卷。
+它还提供了密钥管理、备份和恢复等功能。
+
+一、安装
+sudo apt install cryptsetup
+
+二、创建加密分区、格式化、挂载
+使用 Cryptsetup 加密整个硬盘 /dev/sda 之前，您需要先创建分区。Cryptsetup 加密的对象是分区或卷，而不是整个物理硬盘。
+1，创建分区:略
+2，加密分区：
+sudo cryptsetup luksFormat /dev/sda1
+或 使用密钥文件
+
+
+3，打开加密分区，按提示输入密码
+sudo cryptsetup luksOpen /dev/sda1 luks_sda1    #没有luksOpen就换用open
+或 使用密钥文件
+sudo cryptsetup open /dev/sda1 luks_sda1 -d /path/to/keyfile
+
+4，格式化文件系统
+sudo mkfs.ext4 /dev/mapper/luks_sda1
+
+5，挂载
+sudo mount /dev/mapper/luks_sda1 /mnt/
+
+6，卸载
+sudo umount /dev/mapper/luks_sda1
+
+7，关闭
+sudo cryptsetup close /dev/mapper/luks_sda1
+
+
+三、开机自动解锁并挂载
+1，编辑 /etc/crypttab 文件，格式如下：
+# <target name>   <source device>         <key file>      <options>
+
+第一个字段(必须)是加密卷的映射名称， 也就是映射在 /dev/mapper/ 目录下的设备名称。
+第二个字段(必须)是加密卷自身。可以是下列三者之一：
+(1)加密卷所在底层块设备的绝对路径，如/dev/sda1。
+(2)加密卷所在底层 loop 文件的绝对路径。 
+(3)以 "UUID=00112233-4455-6677-8899-aabbccddeeff" 格式表示的LUKS加密卷的UUID值(可以使用 cryptsetup luksUUID device 命令显示LUKS加密卷的UUID值)。
+第三个字段(可选)是加密卷的密码文件。 密码文件必须以绝对路径表示，并且其中仅包含用于解开加密卷的密码。
+第四个字段(可选)是逗号分隔的加密卷选项。
+
+luks_sda1 UUID=79fd0fc1-2876-45bf-93c9-b5971c796477 /opt/luks_keys/WorkNAS_lukskey luks
+
+2,编辑 /etc/fstab 文件,
+/dev/mapper/luks_sda1 /mnt  ext4 defaults 0 2
+
+四、使用密钥文件
+1，生成一个随机密钥文件。
+sudo dd if=/dev/urandom of=/opt/luks_keys/WorkNAS_lukskey bs=512 count=4
+
+2，确保生成的密钥文件的权限设置正确，并只允许根用户进行读取。
+sudo chmod 400 /opt/luks_keys/WorkNAS_lukskey
+
+3，使用 cryptsetup luksFormat 命令来加密硬盘分区，并指定密钥文件的路径。
+sudo cryptsetup luksFormat /dev/sda1 -d /opt/luks_keys/WorkNAS_lukskey
+
+
+
+
+

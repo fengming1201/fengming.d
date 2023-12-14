@@ -1,0 +1,29 @@
+一、安装
+sudo apt install cryptsetup
+
+二、创建加密分区、格式化、挂载
+使用 Cryptsetup 加密整个硬盘 /dev/sda 之前，您需要先创建分区。Cryptsetup 加密的对象是分区或卷，而不是整个物理硬盘。
+1，创建分区:略
+2，加密分区：
+sudo cryptsetup luksFormat /dev/sda1
+或 使用密钥文件
+
+
+3，打开加密分区，按提示输入密码
+sudo cryptsetup luksOpen /dev/sda1 luks_sda1    #没有luksOpen就换用open
+或 使用密钥文件
+sudo cryptsetup open /dev/sda1 luks_sda1 -d /path/to/keyfile
+
+4，格式化文件系统
+sudo mkfs.ext4 /dev/mapper/luks_sda1
+
+5，挂载
+sudo mount /dev/mapper/luks_sda1 /mnt/
+
+6，卸载
+sudo umount /dev/mapper/luks_sda1
+
+7，关闭
+sudo cryptsetup close /dev/mapper/luks_sda1
+
+详细内容请查看fm-doc_cat.sh  cryptsetup_luks_manual
