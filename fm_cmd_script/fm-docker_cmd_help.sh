@@ -19,10 +19,10 @@ function func_docker_cmd_help
 	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "         ${scriptfile}  cmd_prefix / sub_dir_name_suffix"
+		echo "         ${scriptname}  cmd_prefix / sub_dir_name_suffix"
 		echo "example:"
-		echo "        ${scriptfile}  images"
-		echo "        ${scriptfile}  volume"
+		echo "        ${scriptname}  images"
+		echo "        ${scriptname}  volume"
 		return 1
 	fi
 	local parameter=$@

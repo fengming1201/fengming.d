@@ -23,8 +23,8 @@ function func_net_check_port_state_with_nc
 	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "CN:检测远程主机端口号状态，也是端口号是否开放。"
-		echo "$scriptfile  IP PORT"
-		echo ".e.g:$scriptfile  116.62.103.60  1201"
+		echo "$scriptname  IP PORT"
+		echo ".e.g:$scriptname  116.62.103.60  1201"
 		return 2
 	fi
 	local  ip=$1

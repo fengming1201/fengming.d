@@ -18,11 +18,11 @@ function func_gitlog_detail_by_commit_id
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
-		echo "(1)$scriptfile  commit_id"
-		echo "(2)$scriptfile  commit_id  file or filelist"
+		echo "(1)$scriptname  commit_id"
+		echo "(2)$scriptname  commit_id  file or filelist"
 		echo "git commit ID,you can :[git log --name-status]"
-		echo "e.g.:$scriptfile  fef3d5a1053480cb9ddccd05fbdc1426b57a1086 main.c"
-		echo "e.g.:$scriptfile  fef3d5a105 main.c"
+		echo "e.g.:$scriptname  fef3d5a1053480cb9ddccd05fbdc1426b57a1086 main.c"
+		echo "e.g.:$scriptname  fef3d5a105 main.c"
 		echo "NOTE:pay attention to the file path!!"
 		return 0
 	fi

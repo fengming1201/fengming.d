@@ -21,8 +21,8 @@ function func_ffmpeg_screen_record_save_2file
 	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$scriptfile screenID   resolution  filename"
-		echo "e.g:$scriptfile :0.0  480x320  output.mp4"
+		echo "$scriptname screenID   resolution  filename"
+		echo "e.g:$scriptname :0.0  480x320  output.mp4"
 		echo "屏幕分辨率(resolution):"
 		echo "320x240   --常见于较早的移动电话和小型设备。"
     	echo "480x320   --常见于早期智能手机和某些小型平板电脑。"

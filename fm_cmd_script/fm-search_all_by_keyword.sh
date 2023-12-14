@@ -18,7 +18,7 @@ function  func_search_all_by_keyword
 	then
         echo "DESCRIPTION:在目录:${fengming_top_dir}中搜索内容或文件"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  keyword"
+        echo "         ${scriptname}  keyword"
 		echo ""
 		return 1
 	fi

@@ -25,14 +25,14 @@ function func_install_script_exec
 		echo "path=${install_script_dir}"
 		echo ""
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  [tool_name]  //软件名称"
+        echo "         ${scriptname}  [tool_name]  //软件名称"
 		return 1
 	fi
     if [ $1 = "-h" ] || [ $1 = "--help" ]
     then
         echo "DESCRIPTION:install tools by script"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  [tool_name]  //软件名称"
+        echo "         ${scriptname}  [tool_name]  //软件名称"
         return 1
     fi
 

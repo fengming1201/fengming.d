@@ -17,8 +17,8 @@ function func_upload_files_to_fileserver
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "paramter wrong!"
-		echo "$scriptfile  file1 file2 fileN ...  remote_dir"
-		echo "$scriptfile  file1 file2   /root/Pictures"
+		echo "$scriptname  file1 file2 fileN ...  remote_dir"
+		echo "$scriptname  file1 file2   /root/Pictures"
 		return 1
 	fi
 

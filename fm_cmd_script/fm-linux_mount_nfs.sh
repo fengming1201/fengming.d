@@ -17,8 +17,8 @@ function func_mount_nfs
 	if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
-		echo "$scriptfile  ip  src_dir  mount_dir"
-		echo "e.g. $scriptfile  192.168.254.3 /srv/nfs  /mnt/nfs"
+		echo "$scriptname  ip  src_dir  mount_dir"
+		echo "e.g. $scriptname  192.168.254.3 /srv/nfs  /mnt/nfs"
 		return 1
 	fi
 

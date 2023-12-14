@@ -21,12 +21,12 @@ function func_convert_image2text_by_ocr
     then
         echo "DESCRIPTION:recognition  image"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  imagename output_filename   //default use chi_sim"
-		echo "example: ${scriptfile}  test_org.jpg    outfilename"
+        echo "         ${scriptname}  imagename output_filename   //default use chi_sim"
+		echo "example: ${scriptname}  test_org.jpg    outfilename"
         return 1
     fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 
 	local src_image=$1
 	local output_file=$2

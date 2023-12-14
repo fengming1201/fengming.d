@@ -22,9 +22,9 @@ function func_diff_dir
 		echo "ERROR:parameter missing"
 		echo "discripttion:compare two directories"
 		echo "example:"
-		echo "$scriptfile    [-h or --help]"
-		echo "$scriptfile    dir1  dir2"
-		echo "$scriptfile    "
+		echo "$scriptname    [-h or --help]"
+		echo "$scriptname    dir1  dir2"
+		echo "$scriptname    "
 		return 1
 	fi
 	local dir1=$1

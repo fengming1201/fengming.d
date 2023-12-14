@@ -25,15 +25,15 @@ function func_shell_help
 		echo "path=${sub_doc_path}"
 		echo ""
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  suffix  //功能或模块后缀"
+        echo "         ${scriptname}  suffix  //功能或模块后缀"
 		return 1
 	fi
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "DESCRIPTION:shell语法和功能模块用法帮助文档"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  suffix  //功能或模块后缀"
-		echo "         ${scriptfile}  show    //显示所有shell相关文件"
+        echo "         ${scriptname}  suffix  //功能或模块后缀"
+		echo "         ${scriptname}  show    //显示所有shell相关文件"
         return 1
     fi
 	

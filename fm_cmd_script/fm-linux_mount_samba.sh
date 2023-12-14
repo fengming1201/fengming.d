@@ -17,8 +17,8 @@ function func_mount_samba
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
-		echo "$scriptfile  src_dir  mount_dir"
-		echo "e.g. $scriptfile  media_dir  samba1"
+		echo "$scriptname  src_dir  mount_dir"
+		echo "e.g. $scriptname  media_dir  samba1"
 		return 1
 	fi
 

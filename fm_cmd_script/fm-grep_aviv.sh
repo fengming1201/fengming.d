@@ -23,13 +23,13 @@ function func_grep_aviv
     then
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  key-word"
+        echo "         ${scriptname}  key-word"
         return 1
     fi	
 	#check exec file state
     which ${app} > /dev/null
     if [ $? -ne 0 ]; then
-        echo "ERROR:${scriptfile},${app} not exist!"
+        echo "ERROR:${scriptname},${app} not exist!"
         return 2
     fi
 	if [ $# -eq 1 ]

@@ -18,10 +18,10 @@ function func_gitcat_file_by_commit_id
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
-		echo "$scriptfile  commit_id  file or filelist"
+		echo "$scriptname  commit_id  file or filelist"
 		echo "git commit ID,you can :[git log --name-status]"
-		echo "e.g.:$scriptfile  fef3d5a1053480cb9ddccd05fbdc1426b57a1086 main.c"
-		echo "e.g.:$scriptfile  fef3d5a105 main.c"
+		echo "e.g.:$scriptname  fef3d5a1053480cb9ddccd05fbdc1426b57a1086 main.c"
+		echo "e.g.:$scriptname  fef3d5a105 main.c"
 		echo "NOTE:pay attention to the file path!!"
 		return 0
 	fi

@@ -18,7 +18,7 @@ function func_picture_viewer
 	local default_opt=
 
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 	
 	if [ x"$SSH_CLIENT" = x ]
 	then

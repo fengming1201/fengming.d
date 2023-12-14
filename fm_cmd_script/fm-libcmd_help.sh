@@ -19,9 +19,9 @@ function func_libcmd_help
 	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "         ${scriptfile}  cmd_suffix"
+		echo "         ${scriptname}  cmd_suffix"
 		echo "example:"
-		echo "        ${scriptfile}  nm"
+		echo "        ${scriptname}  nm"
 		return 1
 	fi
 	local parameter=$@

@@ -17,13 +17,13 @@ function func_linux_brightness_control
 	local app=xrandr
 	local default_opt=
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 2;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 2;fi;
 	
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "CN:"
-		echo "$scriptfile  monitor  brightness(0-1)" 
-		echo "$scriptfile  HDMI-2  0.5"
+		echo "$scriptname  monitor  brightness(0-1)" 
+		echo "$scriptname  HDMI-2  0.5"
 		${app} -q | grep -w connected
 		return 1
 	fi

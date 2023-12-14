@@ -24,7 +24,7 @@ function func_linux_sound_volume_control
 		return 1
 	fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 2;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 2;fi;
 
 	${app}
 	return 0

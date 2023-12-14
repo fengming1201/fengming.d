@@ -23,9 +23,9 @@ function func_net_check_url_respone_with_curl
 	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "CN:检测URL响应状态，也是URL是否可达。"
-		echo "$scriptfile  URL"
-		echo ".e.g:$scriptfile  http://ip:port"
-		echo ".e.g:$scriptfile  www.baidu.com"
+		echo "$scriptname  URL"
+		echo ".e.g:$scriptname  http://ip:port"
+		echo ".e.g:$scriptname  www.baidu.com"
 		return 2
 	fi
 	local  url_str=$1

@@ -31,7 +31,7 @@ function func_update_time_zone
 	fi
 	if [ ${ret} -ne 0 ]
 	then
-		echo "ERROR:${scriptfile},${app} not found"
+		echo "ERROR:${scriptname},${app} not found"
 		echo "please install ${app}"
 		echo "sudo apt install ${app}"
 		return 1
@@ -41,7 +41,7 @@ function func_update_time_zone
 	ret=$?
 	if [ ${ret} -ne 0 ]
 	then
-		echo "ERROR:${scriptfile},${app} not found"
+		echo "ERROR:${scriptname},${app} not found"
 		echo "please install ${app}"
 		return 2
 	fi

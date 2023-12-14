@@ -20,7 +20,7 @@ function func_convert_url_to_qrcode
 	if [ $# -lt 1 ]
 	then
 		echo "ERROR:para wrong!!"
-		echo "$scriptfile  URL"
+		echo "$scriptname  URL"
 		return 1
 	fi
 	#check app

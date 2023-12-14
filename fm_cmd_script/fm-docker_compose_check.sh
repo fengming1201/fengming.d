@@ -19,7 +19,7 @@ function func_docker_compose_check
 	
 	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "$scriptfile [filename],but default para is ./docker-compose.yml"
+		echo "$scriptname [filename],but default para is ./docker-compose.yml"
 		return 1
 	fi
 	if [ $# -eq 1 ]

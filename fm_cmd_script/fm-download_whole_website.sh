@@ -18,7 +18,7 @@ function func_download_whole_website
 	which ${tool} > /dev/null
 	if [ $? != 0 ];then echo "ERROR:${tool} not found!!";return 1;fi
 	
-	if [ $# -lt 1 ];then echo "ERROR:paramter missing!!";echo "$scriptfile URL";return 2;fi
+	if [ $# -lt 1 ];then echo "ERROR:paramter missing!!";echo "$scriptname URL";return 2;fi
 	
 	echo "${tool} -r -p -np -k $*"
 	${tool} -r -p -np -k $*

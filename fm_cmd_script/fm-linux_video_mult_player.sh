@@ -20,11 +20,11 @@ function func_video_mult_player
 
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "$scriptfile  a.mp4 b.mp4 c.mp4  ...."
+		echo "$scriptname  a.mp4 b.mp4 c.mp4  ...."
 		return 1
 	fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 
 	if [ x"$SSH_CLIENT" = x ]
 	then

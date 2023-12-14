@@ -20,8 +20,8 @@ function func_picture_convert_quality
 	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "$scriptfile  input  output  quality"
-		echo "e.g.$scriptfile  mypic.jpg  newmyjpg.jpg  80"
+		echo "$scriptname  input  output  quality"
+		echo "e.g.$scriptname  mypic.jpg  newmyjpg.jpg  80"
 		return 1
 	fi
 	local input=$1

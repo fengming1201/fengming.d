@@ -13,17 +13,27 @@ if [ "$1" = "show" ];then
     exit 0
 fi
 
-function func_gitcmd_help
+function func_luks_sub_cmd_help
 {
-	local cmd_help_path=${fengming_dir}/documents/sub_doc_git/git_cmd_help
-	if [ $# -lt 1 ];then tree -L 1 ${cmd_help_path};return 0;fi
+    local cmd_help_path=${fengming_dir}/documents/sub_doc_dm-crypt-LUKS/luks_subcmd_help
+
+    if [ $# -lt 1 ];then tree -L 1 ${cmd_help_path};return 0;fi
 	if [ $# -gt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
-		echo "$scriptname cmd"
-		echo "e.g.:$scriptname  log"
+        echo ""
+		echo "$scriptname cmd_suffix"
+		echo "e.g.:$scriptname  luksUUID"
+        echo "e.g.:$scriptname  uuid"
+        echo ""
+        echo "special opt:$scriptname  all"
 		return 1
 	fi
+    if [ "$1" = "all" ] || [ "$1" = "--all" ]
+    then
+        tree -sfh ${fengming_dir}/documents/sub_doc_dm-crypt-LUKS
+        return 0
+    fi
 	if [ -f ${cmd_help_path}/${1} ]
 	then
 			echo "start >>>"
@@ -32,7 +42,7 @@ function func_gitcmd_help
 			echo "file:${cmd_help_path}/${1}"
 			return 0;
 	fi
-	local cmd_file=$(find ${cmd_help_path} -type f -iname "git_*${1}*" -o -type l -iname "git_*${1}*")
+	local cmd_file=$(find ${cmd_help_path} -type f -iname "luks*${1}*" -o -type l -iname "luks*${1}*")
 	if [ "x${cmd_file}" != x ]
 	then
 		for file_each in ${cmd_file}
@@ -43,10 +53,11 @@ function func_gitcmd_help
 			echo "file:${file_each}"
 		done
 	fi
-	return 0
+
+    return 0
 }
 
-func_gitcmd_help $@
+func_luks_sub_cmd_help $@
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1

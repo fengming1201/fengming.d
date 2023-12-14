@@ -14,7 +14,7 @@ if [ "$1" = "show" ];then
 fi
 function func_realpath
 {
-	if [ $# -lt 1  ];then echo "ERROR:parmeter missing",echo "$scriptfile file/dir";return 1;fi
+	if [ $# -lt 1  ];then echo "ERROR:parmeter missing",echo "$scriptname file/dir";return 1;fi
 	local tool=realpath
 	which ${tool} > /dev/null
 	if [ $? -ne 0  ];then echo "ERROR:${tool} no found!!";return 2;fi

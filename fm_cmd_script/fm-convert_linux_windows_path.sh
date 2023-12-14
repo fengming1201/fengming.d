@@ -18,8 +18,8 @@ function func_convert_linux_windows_path
 	then
 		echo "ERROR:parameter wrong!!"
 		echo "e.p:"
-		echo "$scriptfile  /root/test.txt    --> \\root\\test.txt"
-		echo "$scriptfile 'D:\\root\\test.txt' --> /root/test.txt"
+		echo "$scriptname  /root/test.txt    --> \\root\\test.txt"
+		echo "$scriptname 'D:\\root\\test.txt' --> /root/test.txt"
 		return 1
 	fi
 

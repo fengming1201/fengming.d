@@ -24,7 +24,7 @@ function func_cmd_help
 		echo "path=${help_file_path}"
 		echo ""
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  prefix //命令或命令前缀"
+        echo "         ${scriptname}  prefix //命令或命令前缀"
 		return 1
 	fi
     #check paramter
@@ -32,7 +32,7 @@ function func_cmd_help
     then
         echo "DESCRIPTION:命令的帮助文档和实例"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  prefix //命令或命令前缀"
+        echo "         ${scriptname}  prefix //命令或命令前缀"
         return 1
     fi
 	

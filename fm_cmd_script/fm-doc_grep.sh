@@ -19,7 +19,7 @@ function func_document_grep
 	#check para
 	if [ $# -lt 1 ]
 	then
-		echo "e.g $scriptfile  keyword"
+		echo "e.g $scriptname  keyword"
 		return 1
 	fi
 	echo "grep -rn $* ${doc_file_path}"

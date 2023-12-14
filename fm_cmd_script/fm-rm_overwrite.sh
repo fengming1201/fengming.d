@@ -22,12 +22,12 @@ function func_rm_overwrite
     then
         echo "DESCRIPTION:安全删除文件--先用随机数覆盖文件最后再删除该文件"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  [file or dir] list"	
+        echo "         ${scriptname}  [file or dir] list"	
         return 1
     fi
 
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 
 	local total_file_num=
 	local num=

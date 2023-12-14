@@ -22,11 +22,11 @@ function func_pdf_viewer_terminal
     then
         echo "DESCRIPTION:终端"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  filename.pdf [file1.pdf file2.pdf ...]"
+        echo "         ${scriptname}  filename.pdf [file1.pdf file2.pdf ...]"
         return 1
     fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ] ; then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ] ; then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 	
 	$app ${default_opt} $*
 

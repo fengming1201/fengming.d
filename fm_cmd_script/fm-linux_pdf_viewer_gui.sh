@@ -22,11 +22,11 @@ function func_pdf_viewer_gui
     then
         echo "DESCRIPTION:pdf 阅读器"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  filename.pdf"
+        echo "         ${scriptname}  filename.pdf"
         return 1
     fi	
 	which ${app} > /dev/null
-	if [ $? -ne 0 ] ; then echo ¨ERROR:${scriptfile},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ] ; then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 
 	if [ x"$SSH_CLIENT" = x  ]
 	then

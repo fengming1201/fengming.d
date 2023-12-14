@@ -22,8 +22,8 @@ function func_ffmpeg_videofile_stream_push_2my_mediaserver
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$scriptfile  loop_times  video_file_lsit"
-		echo "e.g:$scriptfile 10 1.mp4 2.flv ..."
+		echo "$scriptname  loop_times  video_file_lsit"
+		echo "e.g:$scriptname 10 1.mp4 2.flv ..."
 		return 1
 	fi
 	which ${push_tool} > /dev/null
@@ -37,7 +37,7 @@ function func_ffmpeg_videofile_stream_push_2my_mediaserver
 	if ! expr "${loop_times}" : '^[0-9]\+$' >/dev/null
 	then
 		echo "first para is not number"
-		echo "$scriptfile  loop_times  video_file_lsit"
+		echo "$scriptname  loop_times  video_file_lsit"
 		return 3
 	fi	
 	shift 1

@@ -24,10 +24,10 @@ function func_document_cat
 	elif [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "SYNOPSIS:"
-		echo "         ${scriptfile}  file_prefix / sub_dir_name_suffix"
+		echo "         ${scriptname}  file_prefix / sub_dir_name_suffix"
 		echo "example:"
-		echo "        ${scriptfile}  docker"
-		echo "        ${scriptfile}  image_build"
+		echo "        ${scriptname}  docker"
+		echo "        ${scriptname}  image_build"
 		return 1
 	fi
 	#point to sub dir 

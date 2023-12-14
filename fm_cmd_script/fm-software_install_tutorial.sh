@@ -22,7 +22,7 @@ function func_software_install_tutorial
     then
         echo "DESCRIPTION:软件的安装教程"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  [name / keyword]  //关键字或软件名称"
+        echo "         ${scriptname}  [name / keyword]  //关键字或软件名称"
         return 0
     fi
 

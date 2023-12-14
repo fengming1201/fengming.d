@@ -24,9 +24,9 @@ function func_sdcc_burn_with_stcflash
     #check param
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then 
-        echo "$scriptfile  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
-        echo "$scriptfile hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"
-        echo "$scriptfile -t  hex_image   #test , not real to burn!!"
+        echo "$scriptname  [-p com] [-l baud][-r {89,12c5a,12c52,12cx052,auto}]  hex_image"
+        echo "$scriptname hex_image    #default:-v -p ${com} -l ${baud_rate} -r ${protocol}"
+        echo "$scriptname -t  hex_image   #test , not real to burn!!"
         echo ""
         echo "89 	    STC89C52RC (v4.3C), STC89C54RD+ (v4.3C), STC90C52RC (v4.3C)"
         echo "12cx052 	STC12C2052 (v5.8D)"

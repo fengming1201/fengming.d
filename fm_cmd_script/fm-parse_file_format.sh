@@ -19,8 +19,8 @@ function func_parse_file_format
     then
         echo "DESCRIPTION:解析常见的文件格式，即标记各个域的名称。"
         echo "SYNOPSIS:"
-        echo "         ${scriptfile}  filepath"
-        echo "         ${scriptfile}  /etc/fstab"
+        echo "         ${scriptname}  filepath"
+        echo "         ${scriptname}  /etc/fstab"
         return 1
     fi
 

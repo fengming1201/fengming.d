@@ -24,8 +24,8 @@ function func_ffmpeg_camera_video_stream_push_2mpvplayer
 	if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
-		echo "$scriptfile  dev  resolution"
-		echo "e.g:$scriptfile  /dev/video0   480x320"
+		echo "$scriptname  dev  resolution"
+		echo "e.g:$scriptname  /dev/video0   480x320"
 	    echo "屏幕分辨率(resolution):"
 		which ${check_tool} > /dev/null
 		if [ $? -eq 0 ]
