@@ -45,7 +45,12 @@ function func_libcmd_help
 				echo "start >>>"
 				cat ${file_each}
 				echo "end <<<"
-				echo "file:${file_each}"
+				echo "end file:${file_each}"
+			done
+			echo "====================================================="
+			for file_each in ${cmd_file}
+			do 
+				echo "file list:${file_each}"
 			done
 		fi
 	done

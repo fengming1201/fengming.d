@@ -23,7 +23,7 @@ function func_luks_sub_cmd_help
 		echo "parameter wrong!"
         echo ""
 		echo "$scriptname cmd_suffix"
-		echo "e.g.:$scriptname  luksUUID"
+		echo "e.g.:$scriptname  add"
         echo "e.g.:$scriptname  uuid"
         echo ""
         echo "special opt:$scriptname  all"
@@ -42,7 +42,7 @@ function func_luks_sub_cmd_help
 			echo "file:${cmd_help_path}/${1}"
 			return 0;
 	fi
-	local cmd_file=$(find ${cmd_help_path} -type f -iname "luks*${1}*" -o -type l -iname "luks*${1}*")
+	local cmd_file=$(find ${cmd_help_path} -type f -iname "cryptsetup-*${1}*" -o -type l -iname "cryptsetup-*${1}*")
 	if [ "x${cmd_file}" != x ]
 	then
 		for file_each in ${cmd_file}
@@ -50,7 +50,12 @@ function func_luks_sub_cmd_help
 			echo "start >>>"
 			cat ${file_each}
 			echo "end <<<"
-			echo "file:${file_each}"
+			echo "end file:${file_each}"
+		done
+		echo "================================================="
+		for file_each in ${cmd_file}
+		do 
+			echo "file list:${file_each}"
 		done
 	fi
 

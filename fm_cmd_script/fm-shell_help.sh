@@ -59,8 +59,12 @@ function func_shell_help
 			echo ""
 			cat ${file_each}
 			echo ""
-			echo "file:${file_each}"
-			echo "====================================================="
+			echo "end file:${file_each}"
+		done
+		echo "====================================================="
+		for file_each in ${cmd_file}
+		do 
+			echo "file list:${file_each}"
 		done
 	done	
 	return 0
