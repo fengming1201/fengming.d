@@ -1,0 +1,75 @@
+CRYPTSETUP-CONFIG(8)                                                        Maintenance Commands                                                       CRYPTSETUP-CONFIG(8)
+
+NAME
+       cryptsetup-config - set permanent configuration options (store to LUKS header)
+
+SYNOPSIS
+       cryptsetup config <options> <device>
+
+DESCRIPTION
+       Set permanent configuration options (store to LUKS header). The config command is supported only for LUKS2.
+
+       The permanent options can be --priority to set priority (normal, prefer, ignore) for keyslot (specified by --key-slot) or --label and --subsystem.
+
+       <options> can be [--priority, --label, --subsystem, --key-slot, --header, --disable-locks].
+
+OPTIONS
+       --key-slot, -S <0-N>
+           For LUKS operations that add key material, this option allows you to specify which key slot is selected for the new key.
+
+           The maximum number of key slots depends on the LUKS version. LUKS1 can have up to 8 key slots. LUKS2 can have up to 32 key slots based on key slot area size and
+           key size, but a valid key slot ID can always be between 0 and 31 for LUKS2.
+
+       --header <device or file storing the LUKS header>
+           Use a detached (separated) metadata device or file where the LUKS header is stored. This option allows one to store ciphertext and LUKS header on different
+           devices.
+
+           For commands that change the LUKS header (e.g. luksAddKey), specify the device or file with the LUKS header directly as the LUKS device.
+
+       --disable-locks
+           Disable lock protection for metadata on disk. This option is valid only for LUKS2 and ignored for other formats.
+
+           WARNING: Do not use this option unless you run cryptsetup in a restricted environment where locking is impossible to perform (where /run directory cannot be
+           used).
+
+       --priority <normal|prefer|ignore>
+           Set a priority for LUKS2 keyslot. The prefer priority marked slots are tried before normal priority. The ignored priority means, that slot is never used, if not
+           explicitly requested by --key-slot option.
+
+       --label <LABEL> --subsystem <SUBSYSTEM>
+           Set label and subsystem description for LUKS2 device. The label and subsystem are optional fields and can be later used in udev scripts for triggering user
+           actions once the device marked by these labels is detected.
+
+       --batch-mode, -q
+           Suppresses all confirmation questions. Use with care!
+
+           If the --verify-passphrase option is not specified, this option also switches off the passphrase verification.
+
+       --debug or --debug-json
+           Run in debug mode with full diagnostic logs. Debug output lines are always prefixed by #.
+
+           If --debug-json is used, additional LUKS2 JSON data structures are printed.
+
+       --version, -V
+           Show the program version.
+
+       --usage
+           Show short option help.
+
+       --help, -?
+           Show help text and default parameters.
+
+REPORTING BUGS
+       Report bugs at cryptsetup mailing list <cryptsetup@lists.linux.dev> or in Issues project section <https://gitlab.com/cryptsetup/cryptsetup/-/issues/new>.
+
+       Please attach output of the failed command with --debug option added.
+
+SEE ALSO
+       Cryptsetup FAQ <https://gitlab.com/cryptsetup/cryptsetup/wikis/FrequentlyAskedQuestions>
+
+       cryptsetup(8), integritysetup(8) and veritysetup(8)
+
+CRYPTSETUP
+       Part of cryptsetup project <https://gitlab.com/cryptsetup/cryptsetup/>.
+
+cryptsetup 2.6.1                                                                 2023-04-20                                                            CRYPTSETUP-CONFIG(8)
