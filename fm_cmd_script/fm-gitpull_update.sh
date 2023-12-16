@@ -18,9 +18,16 @@ function func_git_pull_update
     local target_dir=${fengming_dir}
 
     pushd ${target_dir}
+
     if [ $(id -u root) -eq 0 ]
     then
-        git pull origin main
+        for num in  1 2 3
+        do
+            git pull origin main  2>&1 /dev/null
+            if [ $? -eq 0 ];then
+                break
+            fi
+        done
     else
         sudo git pull origin main
     fi
