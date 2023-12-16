@@ -18,7 +18,12 @@ function func_git_pull_update
     local target_dir=${fengming_dir}
 
     pushd ${target_dir}
-    git pull origin main
+    if [ $(id -u root) -eq 0 ]
+    then
+        git pull origin main
+    else
+        sudo git pull origin main
+    fi
     popd
     return 0
 }
