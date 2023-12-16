@@ -2,7 +2,7 @@ CRYPTSETUP-OPEN(8)                                                          Main
 
 NAME
        cryptsetup-open, cryptsetup-create, cryptsetup-plainOpen, cryptsetup-luksOpen, cryptsetup-loopaesOpen, cryptsetup-tcryptOpen, cryptsetup-bitlkOpen, cryptsetup-
-       fvault2Open - open an encrypted device and create a mapping with a specified name
+       fvault2Open - 打开加密设备并创建具有指定名称的映射
 
 SYNOPSIS
        cryptsetup open --type <device_type> [<options>] <device> <name>
