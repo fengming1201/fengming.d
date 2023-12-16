@@ -1,0 +1,23 @@
+
+编译生成交叉工具链的步骤：
+
+（1）下载源码，并解压
+git clone https://github.com/crosstool-ng/crosstool-ng
+或者
+wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-VERSION.tar.xz
+tar -Jxf crosstool-ng-VERSION.tar.xz
+
+（2）
+在运行configure之前，您需要运行引导脚本：
+cd  crosstool-ng-1.25.0
+./bootstrap
+
+(3)
+
+./configure --prefix=/some/place
+make
+make install
+export PATH="${PATH}:/some/place/bin"
+
+
+(4)
