@@ -19,7 +19,7 @@ function func_git_pull_update
 
     pushd ${target_dir}
 
-    if [ $(id -u root) -eq 0 ]
+    if [ $(id -u) -eq 0 ]
     then
         for num in  1 2 3
         do
