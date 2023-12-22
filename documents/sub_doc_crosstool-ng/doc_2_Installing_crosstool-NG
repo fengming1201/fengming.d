@@ -73,7 +73,7 @@ ct-ng help
 然后，您运行 crosstool-NG 的本地执行：./configure
 ./configure --enable-local
 make
-
+make install
 现在，不要删除交叉工具NG源。它们需要运行 十字工具-NG！留在保存源的目录中，然后运行：
 
 ./ct-ng help

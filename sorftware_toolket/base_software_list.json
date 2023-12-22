@@ -67,6 +67,12 @@
             "describe":"screen manager with VT100/ANSI terminal emulation"
         }, 
         {
+            "app_name":"tmux",
+            "tool_level":1,
+            "install_methor":"apt install tmux",
+            "describe":"screen manager with VT100/ANSI terminal emulation"
+        },         
+        {
             "app_name":"flashbench",
             "tool_level":"BASE",
             "install_methor":"apt install flashbench",
@@ -187,7 +193,13 @@
             "describe":"The Network Mapper.nmap命令（网络映射器）是一个用于网络发现的免费开源工具。"
         },
         {
-            "app_name":"",
+            "app_name":"xclip",
+            "tool_level":"",
+            "install_methor":"",
+            "describe":""
+        },
+        {
+            "app_name":"xsel",
             "tool_level":"",
             "install_methor":"",
             "describe":""

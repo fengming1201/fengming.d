@@ -5,23 +5,36 @@ https://crosstool-ng.github.io/
 github：
 https://github.com/crosstool-ng/crosstool-ng
 
-download lastet version：Released 1.25.0
-wget -c  http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.25.0.tar.xz
+download lastet version：Released 1.26.0
+wget -c  http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.26.0.tar.bz2
 
 extrat pack:
 
-tar -Jxf crosstool-ng-1.25.0.tar.xz
-tree -d -L 1 crosstool-ng-1.25.0
-crosstool-ng-1.25.0
+tar -jxf crosstool-ng-1.26.0.tar.bz2
+tree -L 1 crosstool-ng-1.26.0 
+crosstool-ng-1.26.0
+├── aclocal.m4
 ├── bash-completion
+├── bootstrap
 ├── config
+├── config.h.in
+├── configure
+├── configure.ac
 ├── contrib
+├── COPYING
+├── ct-ng.in
 ├── docs
 ├── kconfig
+├── LICENSE
 ├── licenses.d
 ├── m4
 ├── maintainer
+├── Makefile.am
+├── Makefile.in
 ├── packages
+├── paths.sh.in
 ├── samples
 ├── scripts
-└── testing
+├── testing
+├── TODO
+└── verbatim-data.mk
