@@ -15,7 +15,7 @@ fi
 
 function func_install_myvim_config
 {
-    local target_pack_name=vim_pack_s.tar.gz
+    local vim_pack=vim.tar.gz
     local download_url='http://139.9.186.120:8050/software_package'
 
     # help paramater
@@ -24,30 +24,50 @@ function func_install_myvim_config
         echo "nothing ...."
         return 1
     fi
+    local reinstall=no
     #check  location vim dir
     if [ -f ~/.vim/myvimrc ]
     then
         tree -L 1 ~/.vim
         echo ""
         echo "already installed"
-        return 2
+        read -p "force to re install?[y/N]"  reinstall
+        if [ "x${reinstall}" = "x" ];then reinstall=no;fi
+        if [ ${reinstall} != "y" ] && [ ${reinstall} != "Y" ] && [ ${reinstall} != "yes" ] && [ ${reinstall} != "YES" ]
+        then
+            return 2
+        fi
+        rm -rf ~/.vim
     fi
-
-    local download_dir=~/vim_src_dir
     #download to home dir
-    mkdir ${download_dir}
-    pushd ${download_dir}
-    wget -c ${download_url}/${target_pack_name}
-    if [ ! -f ${target_pack_name} ];then echo "download fail.";return 3;fi
-    tar -zxf ${target_pack_name}  --strip-components=1
+    pushd ~/
+    if [ ! -f ${vim_pack} ]
+    then
+        echo "download vim cfg pack from myserver ..."
+        wget -c ${download_url}/${vim_pack}
+        if [ ! -f ${vim_pack} ];then echo "download fail.";popd;return 3;fi
+    fi
+    #tar -zxvf ${target_pack_name} --strip-components=1
+    tar -zxvf ${target_pack_name}
+
+    #write vim config to /etc/vim/vimrc
+    if [ "x$(grep "${HOME}/.vim/myvimrc" /etc/vim/vimrc)" != "x" ];then popd;return 4;fi
     if [ $(id -u) = 0 ]
     then
-        ./install.sh
+        cat <<EOF tee -a /etc/vim/vimrc
+if filereadable("${HOME}/.vim/myvimrc")
+    source ${HOME}/.vim/myvimrc
+endif
+EOF
     else
-        sudo ./install.sh
+        cat << EOF | sudo tee -a /etc/vim/vimrc
+if filereadable("${HOME}/.vim/myvimrc")
+        source ${HOME}/.vim/myvimrc
+endif
+EOF
     fi
+
     popd
-    rm -rf ${download_dir}
     return 0
 }
 
