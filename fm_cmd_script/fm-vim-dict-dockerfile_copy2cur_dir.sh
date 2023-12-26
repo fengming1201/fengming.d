@@ -15,7 +15,7 @@ fi
 function func_dockerfile_vim_dictionary_copy2current_dir
 {
 	local dic_file_path=${fengming_dir}/documents/sub_doc_docker/Dockerfile/dictionary_for_dockerfile
-	local target_file=.dictionary_for_dockerfile
+	local target_file=.vim_dictionary_for_dockerfile
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then

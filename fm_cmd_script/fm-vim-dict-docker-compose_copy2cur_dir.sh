@@ -15,7 +15,7 @@ fi
 function func_docker_compose_vim_dictionary_copy2current_dir
 {
 	local dic_file_path=${fengming_dir}/documents/sub_doc_docker/docker-compose/dictionary_for_docker_compose
-	local target_file=.dictionary_for_docker_compose
+	local target_file=.vim_dictionary_for_docker_compose
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then

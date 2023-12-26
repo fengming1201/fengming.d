@@ -15,7 +15,7 @@ fi
 function func_cmake_vim_dictionary_copy2current_dir
 {
 	local dic_file_path=${fengming_dir}/documents/sub_doc_cmake/dictionary_for_cmake
-	local target_file=.dictionary_for_cmake
+	local target_file=.vim_dictionary_for_cmake
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then
