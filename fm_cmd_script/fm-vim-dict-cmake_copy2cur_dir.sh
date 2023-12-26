@@ -27,6 +27,38 @@ function func_cmake_vim_dictionary_copy2current_dir
 	else
 		sudo  cp -vi ${dic_file_path}  ./${target_file}
 	fi
+	#check vim enviroment
+	local myvim_rc=~/.vim/myvimrc
+	if [ ! -f ${myvim_rc} ]
+	then
+		echo "ERROR: vim config pack not install yet"
+		echo "you can:fm-install_myvim_config_pack.sh"
+		echo ""
+		return 2
+	fi
+
+	if [ x$(cat ${myvim_rc} | grep ${target_file}) = "x" ]
+	then
+		echo "add the following content to ${myvim_rc}"
+		echo ""
+		cat <<-EOF
+let cur_work_dir = getcwd()
+let dict_file = cur_work_dir . '/.vim_dictionary_for_docker_compose'
+if filereadable(dict_file)
+    execute 'set dictionary+=' . dict_file
+endif
+let dict_file = cur_work_dir . '/.vim_dictionary_for_dockerfile'
+if filereadable(dict_file)
+    execute 'set dictionary+=' . dict_file
+endif
+let dict_file = cur_work_dir . '/.vim_dictionary_for_cmake'
+if filereadable(dict_file)
+    execute 'set dictionary+=' . dict_file
+endif
+EOF
+		return 3
+	fi
+
 	return 0
 }
 
