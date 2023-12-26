@@ -12,7 +12,7 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-function func_video_player
+function func_rtmp_stream_video_player
 {
 	local app=mpv
 	local default_opt=
@@ -20,8 +20,8 @@ function func_video_player
 	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
-		echo "$scriptname  video file list"
-		echo "$scriptname  a.mp4  b.mp4 ..." 
+		echo "$scriptname  rtmp_url"
+		echo "$scriptname  rtmp://your-streaming-server:port/live/your-stream-key" 
 		echo ""
 		return 1
 	fi
@@ -30,28 +30,22 @@ function func_video_player
 
 	if [ x"$SSH_CLIENT" = x ]
 	then
-		for vfile in "$@"
-		do
-			echo "${app} ${default_opt} ${vfile}"
-			${app} ${default_opt} "${vfile}"
-		done
+		echo "$app ${default_opt} "$1""
+		$app ${default_opt} "$1"
 	else
 		local opt="N"
 		read -p "Are you sure display to remote screen？ [y/N]"  opt
 		if [ "x${opt}" = "x"  ];then opt="N";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
-			for vfile in "$@"
-			do
-				echo "DISPLAY=:0 ${app} ${default_opt} --fs ${vfile}"
-				DISPLAY=:0 ${app} ${default_opt} --fs "${vfile}"
-			done
+			echo "DISPLAY=:0 $app ${default_opt} --fs "$1""
+			DISPLAY=:0 $app ${default_opt} --fs "$1"
 		fi
 	fi
 	return 0
 }
 
-func_video_player "$@"
+func_rtmp_stream_video_player $@
 ret=$?
 if [ ${ret} -ne 0 ]
 then 
