@@ -48,7 +48,7 @@ function func_install_myvim_config
         if [ ! -f ${vim_pack} ];then echo "download fail.";popd;return 3;fi
     fi
     #tar -zxvf ${target_pack_name} --strip-components=1
-    tar -zxvf ${target_pack_name}
+    tar -zxvf ${vim_pack}
 
     #write vim config to /etc/vim/vimrc
     if [ "x$(grep "${HOME}/.vim/myvimrc" /etc/vim/vimrc)" != "x" ];then popd;return 4;fi
@@ -56,17 +56,16 @@ function func_install_myvim_config
     then
         cat <<EOF tee -a /etc/vim/vimrc
 if filereadable("${HOME}/.vim/myvimrc")
-    source ${HOME}/.vim/myvimrc
+  source ${HOME}/.vim/myvimrc
 endif
 EOF
     else
         cat << EOF | sudo tee -a /etc/vim/vimrc
 if filereadable("${HOME}/.vim/myvimrc")
-        source ${HOME}/.vim/myvimrc
+  source ${HOME}/.vim/myvimrc
 endif
 EOF
     fi
-
     popd
     return 0
 }
