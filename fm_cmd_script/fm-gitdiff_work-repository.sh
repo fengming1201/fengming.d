@@ -18,7 +18,7 @@ function func_gitdiff_work-repository
 	local tmp_file=$(mktemp)
 	local ret=128
 
-	if [ $1 -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo " "
 		echo "$FUNCNAME  file or file list"

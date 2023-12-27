@@ -41,6 +41,21 @@ read 命令
 read -p "please input:" var
 -p 选项指定提示符。
 
+多行输入
+cat << EOF > file.txt 
+cmd1
+cmd2
+cmd3
+EOF
+等价于
+cat << EOF | tee file.txt 
+cmd1
+cmd2
+cmd3
+EOF
+
+
+
 （4）参数传递
 位置参数
 $0  #程序名

@@ -17,7 +17,7 @@ function func_video_player
 	local app=mpv
 	local default_opt=
 
-	if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
 		echo "$scriptname  video file list"
