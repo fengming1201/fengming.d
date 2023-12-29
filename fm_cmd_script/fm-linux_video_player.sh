@@ -54,7 +54,7 @@ function func_video_player
 			for vfile in "${play_list[@]}"
 			do
 				echo "DISPLAY=:0 ${app} ${default_opt} --fs ${vfile}"
-				#DISPLAY=:0 ${app} ${default_opt} --fs "${vfile}"
+				DISPLAY=:0 ${app} ${default_opt} --fs "${vfile}"
 			done
 		fi
 	fi
