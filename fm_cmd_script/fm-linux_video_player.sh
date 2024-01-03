@@ -17,7 +17,7 @@ function func_video_player
 	local app=mpv
 	local default_opt=
 
-	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
 		echo "$scriptname  video file list"
@@ -27,10 +27,20 @@ function func_video_player
 	fi
 	which ${app} > /dev/null
 	if [ $? -ne 0 ];then echo ¨ERROR:${funcname},${app} not exist!¨;return 1;fi;
-
+	local play_list=()
+	for file in "$@"
+	do
+		if [ -f "${file}"  ]
+		then 
+			play_list+=("${file}")
+		else
+			echo "file:${file} not exist!"
+		fi
+	done
+	if [ ${#play_list[@]} -eq 0 ];then echo "play_list is empty!";return 2;fi
 	if [ x"$SSH_CLIENT" = x ]
 	then
-		for vfile in "$@"
+		for vfile in "${play_list[@]}"
 		do
 			echo "${app} ${default_opt} ${vfile}"
 			${app} ${default_opt} "${vfile}"
@@ -41,7 +51,7 @@ function func_video_player
 		if [ "x${opt}" = "x"  ];then opt="N";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
-			for vfile in "$@"
+			for vfile in "${play_list[@]}"
 			do
 				echo "DISPLAY=:0 ${app} ${default_opt} --fs ${vfile}"
 				DISPLAY=:0 ${app} ${default_opt} --fs "${vfile}"
