@@ -1,5 +1,14 @@
 `tmux` 是一个功能强大的终端复用工具，允许您在一个终端窗口中创建多个会话，并在这些会话之间切换。以下是 `tmux` 的一些基本使用方法：
 
+0. **查看当前已经开启的 tmux 会话：**
+   tmux list-sessions
+
+   0: 2 windows (created Fri Dec 22 17:36:01 2023) (attached)
+   
+   要恢复一个已经存在的 tmux 会话
+   tmux attach-session -t <会话ID或会话名称>
+
+
 1. **启动 `tmux`：**
    在终端中输入以下命令启动一个新的 `tmux` 会话：
    ```

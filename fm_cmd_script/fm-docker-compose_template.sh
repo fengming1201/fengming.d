@@ -50,6 +50,15 @@ function func_docker_compose_template
 			fi
 		fi
 	fi
+	if [ -f ${target_file} ]
+	then
+		if [ $(id -u) -eq 0 ]
+		then
+			chmod a+w ${target_file}
+		else
+			sudo chmod a+w ${target_file}
+		fi
+	fi
 	return 0
 }
 

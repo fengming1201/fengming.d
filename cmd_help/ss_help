@@ -1,0 +1,47 @@
+`ss` 命令是一个用于查看套接字统计信息的强大工具，它可以显示网络连接、套接字状态、监听端口等信息。以下是一些 `ss` 命令的基本用法：
+
+1. 显示所有套接字连接：
+   ss
+显示格式如下：
+State    Recv-Q    Send-Q     Local Address:Port      Peer Address:Port    Process
+
+在 ss 命令的输出中，各字段的含义如下：
+State：套接字的状态，表示连接的当前状态，例如 ESTABLISHED（已建立）、LISTEN（监听中）、CLOSED（已关闭）等。
+Recv-Q：接收队列中的字节数，表示等待接收的数据量。
+Send-Q：发送队列中的字节数，表示等待发送的数据量。
+Local Address:Port：本地地址和端口号，表示本地计算机的 IP 地址和监听的端口号。
+Peer Address:Port：对方地址和端口号，表示与本地计算机建立连接的对方计算机的 IP 地址和端口号。
+Process：与套接字相关联的进程的 ID 和进程名称。
+
+
+2. 显示 TCP 连接：
+   ss -t
+
+3. 显示 UDP 连接：
+   ss -u
+
+4. 显示监听状态的套接字：
+   ss -l
+
+ss -l  # 显示所有监听状态的套接字
+ss -lt  # 显示监听的 TCP 套接字
+ss -lu  # 显示监听的 UDP 套接字
+
+5. 显示特定端口的连接：
+   ss -t -p -n 'sport = :<port>'
+
+ss -t -p -n 'sport = :<port>'  # 查看指定源端口的 TCP 连接
+ss -t -p -n 'dport = :<port>'  # 查看指定目标端口的 TCP 连接
+ss -u -p -n 'sport = :<port>'  # 查看指定源端口的 UDP 连接
+ss -u -p -n 'dport = :<port>'  # 查看指定目标端口的 UDP 连接
+   其中 `<port>` 是要查看的端口号。
+
+6. 显示进程 ID 和进程名称：
+   ss -t -p
+
+7. 显示详细的套接字信息：
+   ss -e
+
+8. 显示计时器信息：
+   ss -o
+

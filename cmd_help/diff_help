@@ -186,6 +186,9 @@ Report bugs to: bug-diffutils@gnu.org
 GNU diffutils home page: <https://www.gnu.org/software/diffutils/>
 General help using GNU software: <https://www.gnu.org/gethelp/>
 ===============================================================
+其他类似工具：
+colordiff：colordiff 是 diff 命令的一个变体，它在终端中以彩色显示差异，使差异更易于阅读。
 
+sdiff：sdiff 命令用于以并排的方式比较两个文件，并将差异以两列的形式显示出来。它可以方便地比较文件的差异，并显示差异的上下文。
 
-
+vimdiff：vimdiff 命令是 Vim 编辑器的一个功能，它可以以并排的方式比较两个或多个文件，并提供强大的编辑和合并功能。
