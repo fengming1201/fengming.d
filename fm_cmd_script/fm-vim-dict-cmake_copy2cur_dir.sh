@@ -37,11 +37,12 @@ function func_cmake_vim_dictionary_copy2current_dir
 		return 2
 	fi
 
-	if [ x$(cat ${myvim_rc} | grep ${target_file}) = "x" ]
+	local isinstalled=$(cat ${myvim_rc} | grep ${target_file})
+	if [ "x${isinstalled}" = "x" ]
 	then
 		echo "add the following content to ${myvim_rc}"
 		echo ""
-		cat <<-EOF
+		cat <<EOF | tee -a  ${myvim_rc}
 let cur_work_dir = getcwd()
 let dict_file = cur_work_dir . '/.vim_dictionary_for_docker_compose'
 if filereadable(dict_file)

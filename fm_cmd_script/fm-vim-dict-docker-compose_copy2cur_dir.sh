@@ -36,12 +36,12 @@ function func_docker_compose_vim_dictionary_copy2current_dir
 		echo ""
 		return 2
 	fi
-
-	if [ x$(cat ${myvim_rc} | grep ${target_file}) = "x" ]
+	local isinstalled=$(cat ${myvim_rc} | grep ${target_file})
+	if [ "x${isinstalled}" = "x" ]
 	then
 		echo "add the following content to ${myvim_rc}"
 		echo ""
-		cat <<-EOF
+		cat <<EOF | tee -a ${myvim_rc}
 let cur_work_dir = getcwd()
 let dict_file = cur_work_dir . '/.vim_dictionary_for_docker_compose'
 if filereadable(dict_file)
@@ -56,9 +56,8 @@ if filereadable(dict_file)
     execute 'set dictionary+=' . dict_file
 endif
 EOF
-		return 3
-	fi
 
+	fi
 	return 0
 }
 

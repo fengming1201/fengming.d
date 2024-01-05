@@ -48,7 +48,7 @@ cmd2
 cmd3
 EOF
 等价于
-cat << EOF | tee file.txt 
+cat << EOF | sudo tee -a file.txt 
 cmd1
 cmd2
 cmd3
