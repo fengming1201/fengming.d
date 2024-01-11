@@ -8,7 +8,7 @@ if [ "$1" = "info" ];then
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfile}"
+    echo "location:${scriptfile}"x
     cat ${scriptfile}
     exit 0
 fi
@@ -24,7 +24,7 @@ function func_docker_compose_template
 	echo " "
 	cat -n ${template_file}
 	echo " "
-	
+	echo "path=${template_file}"
 	local opt="N"
 	if [ -f ${target_file} ]
 	then
@@ -37,6 +37,10 @@ function func_docker_compose_template
 			else
 				sudo cp -vi ${template_file}  ./${target_file} 
 			fi
+		#fix
+		else
+			echo "Nothing to do!! End"
+			return 0
 		fi
 	else
 		read -p "Copy docker-compose.yml template to here? [Y/n]"  opt
@@ -48,6 +52,10 @@ function func_docker_compose_template
 			else
 				sudo cp -vi  ${template_file}  ./${target_file}
 			fi
+		#fix
+		else
+			echo "Nothing to do!! End"
+			return 0
 		fi
 	fi
 	if [ -f ${target_file} ]
