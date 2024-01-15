@@ -47,6 +47,7 @@ alias gitdiff='fm-gitdiff_work-cache.sh'
 alias gitshow='fm-gitshow.sh'
 alias gitlog='fm-gitlog.sh'
 alias gitlog_detail='fm-gitlog_detail_by_commit_id.sh'
+alias gitlog_allcommit_of_file='fm-gitlog_allcommit_of_file.sh'
 alias gitcat='fm-gitcat_file_by_commit_id.sh'
 alias gitinfo='fm-gitinfo.sh'
 

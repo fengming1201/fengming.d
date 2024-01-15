@@ -2,14 +2,33 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
+common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
+
+if [ -f ${common_share_function} ] && [ "include" = "enable" ]
+then
+    source ${common_share_function}
+fi
+
 if [ "$1" = "info" ];then
-    echo "location:${scriptfile}"
     echo "abstract:"
+    echo ""
+    if [ -L ${scriptfile} ]
+    then
+        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
+    else
+        echo "location:${scriptfile}"
+    fi
     exit 0
 fi
 if [ "$1" = "show" ];then
-    echo "location:${scriptfile}"
     cat ${scriptfile}
+    echo ""
+    if [ -L ${scriptfile} ]
+    then
+        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
+    else
+        echo "location:${scriptfile}"
+    fi
     exit 0
 fi
 
@@ -42,14 +61,33 @@ function func_create_fm_cmd
 scriptfile=\$0
 scriptname=\$(basename \${scriptfile})
 fengming_dir=\$FENGMING_DIR
+common_share_function=\${fengming_dir}/fm_cmd_script/common_share_function.sh
+
+if [ -f \${common_share_function} ] && [ "include" = "enable" ]
+then
+    source \${common_share_function}
+fi
+
 if [ "\$1" = "info" ];then
-    echo "location:\${scriptfile}"
     echo "abstract:"
+    echo ""
+    if [ -L \${scriptfile} ]
+    then
+        echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
+    else
+        echo "location:\${scriptfile}"
+    fi
     exit 0
 fi
 if [ "\$1" = "show" ];then
-    echo "location:\${scriptfile}"
     cat \${scriptfile}
+    echo ""
+    if [ -L \${scriptfile} ]
+    then
+        echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
+    else
+        echo "location:\${scriptfile}"
+    fi
     exit 0
 fi
 

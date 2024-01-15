@@ -1,0 +1,13 @@
+7-Zip和p7zip中有几个主要的可执行文件：
+    
+7zz  (7-Zip) - 支持所有格式的7-Zip独立完整版。 
+
+7zzs (7-Zip) - 7-Zip的独立完整版本，支持所有格式（静态库链接）。
+
+7z  (p7zip) - 7-Zip，它需要7z.so共享库，并且它支持通过7z.so的所有格式。
+
+7zr (p7zip) - 7-Zip的独立精简版，支持某些7-Zip格式：
+                7z, xz, lzma and split.
+
+7za (p7zip) - 7-Zip的独立版本，支持一些主要格式： 
+                7z, xz, lzma, zip, bzip2, gzip, tar, cab, ppmd and split.

@@ -23,7 +23,9 @@ function func_pdf_cut
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
         echo "         ${scriptname}  src_file  page_num1-page_num2  outfile_name"
-		echo "example: ${scriptname}  file.pdf  2-20  out.pdf"
+		echo "example: ${scriptname}  file.pdf  2-20   out.pdf"
+        echo "example: ${scriptname}  file.pdf  2-end  out.pdf"
+        echo "example: ${scriptname}  file.pdf  5-5    out.pdf"
         return 1
     fi
 	local src_pdf_file=$1
