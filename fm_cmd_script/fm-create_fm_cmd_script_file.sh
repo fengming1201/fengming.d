@@ -8,27 +8,26 @@ if [ -f ${common_share_function} ] && [ "include" = "enable" ]
 then
     source ${common_share_function}
 fi
-
-if [ "$1" = "info" ];then
-    echo "abstract:"
-    echo ""
+function func_location
+{
     if [ -L ${scriptfile} ]
     then
         echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
     else
         echo "location:${scriptfile}"
     fi
+    return 0
+}
+if [ "$1" = "info" ];then
+    echo "abstract:"
+    echo ""
+    func_location
     exit 0
 fi
 if [ "$1" = "show" ];then
     cat ${scriptfile}
     echo ""
-    if [ -L ${scriptfile} ]
-    then
-        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
-    else
-        echo "location:${scriptfile}"
-    fi
+    func_location
     exit 0
 fi
 
@@ -67,27 +66,26 @@ if [ -f \${common_share_function} ] && [ "include" = "enable" ]
 then
     source \${common_share_function}
 fi
-
-if [ "\$1" = "info" ];then
-    echo "abstract:"
-    echo ""
+function func_location
+{
     if [ -L \${scriptfile} ]
     then
         echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
     else
         echo "location:\${scriptfile}"
     fi
+    return 0
+}
+if [ "\$1" = "info" ];then
+    echo "abstract:"
+    echo ""
+    func_location
     exit 0
 fi
 if [ "\$1" = "show" ];then
     cat \${scriptfile}
     echo ""
-    if [ -L \${scriptfile} ]
-    then
-        echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
-    else
-        echo "location:\${scriptfile}"
-    fi
+    func_location
     exit 0
 fi
 
