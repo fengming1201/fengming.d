@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_docker_compose_template
 {
 	local template_file=${fengming_dir}/documents/sub_doc_docker/docker-compose/docker-compose.yml.template
@@ -60,12 +63,7 @@ function func_docker_compose_template
 	fi
 	if [ -f ${target_file} ]
 	then
-		if [ $(id -u) -eq 0 ]
-		then
-			chmod a+w ${target_file}
-		else
-			sudo chmod a+w ${target_file}
-		fi
+		${maybeSUDO} chmod a+w ${target_file}
 	fi
 	return 0
 }

@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_mount_samba
 {
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -39,14 +42,9 @@ function func_mount_samba
 	echo " "
 	if [ ! -d ${mount_dir} ];then echo "mount point not exist";return 2;fi
 
-	if [ $(id -u) -eq 0 ]
-	then
-		echo "mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
-		mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
-	else
-		echo "sudo mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
-		sudo mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
-	fi
+	echo "${maybeSUDO} mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
+	${maybeSUDO} mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
+
 	return 0
 }
 

@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_convert_githubURL_to_domesticURL
 {
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]

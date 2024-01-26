@@ -22,7 +22,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_linux_displayer_screen_on_off
 {
 	local tool=xset

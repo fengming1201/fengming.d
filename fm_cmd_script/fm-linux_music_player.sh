@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function see_other_info
 {
     echo ""

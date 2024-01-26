@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_mount_nfs
 {
 	if [ $# -lt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -27,14 +30,9 @@ function func_mount_nfs
 	local mount_dir="$3"
 	if [ ! -d ${mount_dir} ];then echo "mount point not exit";return 1;fi
 
-	if [ $(id -u) -eq 0 ]
-	then
-		echo "mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
-		mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
-	else
-		echo "sudo mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
-		sudo mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
-	fi
+	echo "${maybeSUDO} mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}"
+	${maybeSUDO} mount -t nfs -o nolock ${ip}:${src_dir} ${mount_dir}
+
 	return 0
 }
 

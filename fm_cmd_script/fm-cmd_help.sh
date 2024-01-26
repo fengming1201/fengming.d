@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_cmd_help
 {
 	local help_file_path=${fengming_dir}/cmd_help

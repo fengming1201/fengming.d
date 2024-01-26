@@ -1,0 +1,25 @@
+udevadm [--help] [--version] [--debug] COMMAND [COMMAND OPTIONS]
+
+Send control commands or test the device manager.
+
+子命令:
+  info          查询sysfs或udev数据库
+  trigger       从内核请求事件
+  settle        等待挂起的udev事件
+  control       控制udev守护进程
+  monitor       监听内核和udev事件
+  test          测试事件运行
+  test-builtin  测试内置命令
+
+See the udevadm(8) man page for details.
+==============================================================
+以下是一些常用的 udevadm 子命令及其功能：
+
+udevadm info：用于获取设备的属性和信息。你可以使用 udevadm info 命令加上设备路径来获取设备的详细信息，
+              例如：udevadm info --query=property --name=/dev/sdX
+
+udevadm monitor：用于监视 udev 事件。该命令将实时显示系统中发生的设备事件，如设备的插拔、属性更改等。
+
+udevadm control：用于控制 udev 的行为。例如，你可以使用 udevadm control --reload 命令重新加载 udev 规则，使其生效。
+
+udevadm trigger：用于手动触发 udev 规则。该命令会模拟设备的插拔事件，以便重新执行相关的 udev 规则。

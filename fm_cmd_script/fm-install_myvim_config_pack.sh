@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_install_myvim_config
 {
     local vim_pack=vim.tar.gz
@@ -52,20 +54,13 @@ function func_install_myvim_config
 
     #write vim config to /etc/vim/vimrc
     if [ "x$(grep "${HOME}/.vim/myvimrc" /etc/vim/vimrc)" != "x" ];then popd;return 4;fi
-    if [ $(id -u) = 0 ]
-    then
-        cat <<EOF tee -a /etc/vim/vimrc
+
+    cat << EOF | ${maybeSUDO} tee -a /etc/vim/vimrc
 if filereadable("${HOME}/.vim/myvimrc")
   source ${HOME}/.vim/myvimrc
 endif
 EOF
-    else
-        cat << EOF | sudo tee -a /etc/vim/vimrc
-if filereadable("${HOME}/.vim/myvimrc")
-  source ${HOME}/.vim/myvimrc
-endif
-EOF
-    fi
+
     popd
     return 0
 }

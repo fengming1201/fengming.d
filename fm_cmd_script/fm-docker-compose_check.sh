@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_docker_compose_check
 {
 	local docker_compose_check1=docker-compose

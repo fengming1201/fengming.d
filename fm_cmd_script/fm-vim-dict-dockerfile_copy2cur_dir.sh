@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_dockerfile_vim_dictionary_copy2current_dir
 {
 	local dic_file_path=${fengming_dir}/documents/sub_doc_docker/Dockerfile/dictionary_for_dockerfile

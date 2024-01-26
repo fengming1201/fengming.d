@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_gitlog_detail_by_commit_id
 {
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]

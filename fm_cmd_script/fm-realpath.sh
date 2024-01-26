@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_realpath
 {
 	if [ $# -lt 1  ];then echo "ERROR:parmeter missing",echo "$scriptname file/dir";return 1;fi

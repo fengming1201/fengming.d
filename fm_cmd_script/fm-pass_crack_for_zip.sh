@@ -32,7 +32,9 @@ if [ "$1" = "show" ];then
     fi
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_
 {
     return 0

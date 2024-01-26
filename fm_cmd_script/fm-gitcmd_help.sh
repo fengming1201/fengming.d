@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_gitcmd_help
 {
 	local cmd_help_path=${fengming_dir}/documents/sub_doc_git/git_cmd_help

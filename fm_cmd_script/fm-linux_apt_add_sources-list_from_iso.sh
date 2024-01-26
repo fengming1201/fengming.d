@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_add_apt-sources_from_iso
 {
     if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -36,18 +38,10 @@ function func_add_apt-sources_from_iso
     if [ ! -f ${iso} ];then echo "file:${iso} not found";return 2;fi
     if [ ! -d ${mount_dir} ];then echo "mount dir not exit";return 2;fi
 
-    if [ $(id -u) -eq 0 ]
-    then
-        echo "mount -o loop -t iso9660 ${iso} ${mount_dir}"
-        mount -o loop -t iso9660 ${iso} ${mount_dir}
+    echo "${maybeSUDO} mount -o loop -t iso9660 ${iso} ${mount_dir}"
+    ${maybeSUDO} mount -o loop -t iso9660 ${iso} ${mount_dir}
 
-        echo "deb [arch=$(dpkg --print-architecture)] file:${mount_dir} $(lsb_release -cs) main" | tee ${sources_dir}/iso.list
-    else
-        echo "sudo mount -o loop -t iso9660 ${iso} ${mount_dir}"
-        sudo mount -o loop -t iso9660 ${iso} ${mount_dir}
-
-        echo "deb [arch=$(dpkg --print-architecture)] file:${mount_dir} $(lsb_release -cs) main" | sudo tee ${sources_dir}/iso.list
-    fi
+    echo "deb [arch=$(dpkg --print-architecture)] file:${mount_dir} $(lsb_release -cs) main" | sudo tee ${sources_dir}/iso.list
 
     #if the above method failed
     #you can direct add iso path to /etc/apt/sources.list

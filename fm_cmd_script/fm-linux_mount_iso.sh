@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_mount_iso
 {
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -27,14 +30,9 @@ function func_mount_iso
 	if [ ! -f ${iso} ];then echo "file:${iso} not found";return 2;fi
 	if [ ! -d ${mount_dir} ];then echo "mount dir not exit";return 2;fi
 
-	if [ $(id -u) -eq 0 ]
-	then
-		echo "mount -o loop -t iso9660 ${iso} ${mount_dir}"
-		mount -o loop -t iso9660 ${iso} ${mount_dir}
-	else
-		echo "sudo mount -o loop -t iso9660 ${iso} ${mount_dir}"
-		sudo mount -o loop -t iso9660 ${iso} ${mount_dir}
-	fi
+	echo "${maybeSUDO} mount -o loop -t iso9660 ${iso} ${mount_dir}"
+	${maybeSUDO} mount -o loop -t iso9660 ${iso} ${mount_dir}
+	
 	return 0
 }
 

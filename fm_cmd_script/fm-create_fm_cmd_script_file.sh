@@ -30,7 +30,9 @@ if [ "$1" = "show" ];then
     func_location
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 target_dir=${fengming_dir}/fm_cmd_script
 
 function func_create_fm_cmd
@@ -88,13 +90,15 @@ if [ "\$1" = "show" ];then
     func_location
     exit 0
 fi
-
+if [ \$(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_
 {
     return 0
 }
 
-func_ \$@
+func_ "\$@"
 ret=\$?
 if [ \${ret} -ne 0 ];then 
     exit 1
@@ -106,7 +110,7 @@ EOF
 }
 
 
-func_create_fm_cmd $@
+func_create_fm_cmd "$@"
 ret=$?
 if [ ${ret} -ne 0 ]
 then 

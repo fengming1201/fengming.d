@@ -40,7 +40,9 @@ if [ "$1" = "show" ];then
     fi
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_pdf_password_scrack
 {
 	local app=pdfcrack

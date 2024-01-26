@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_libcmd_help
 {
 	local lib_top_path=${fengming_dir}/documents/sub_doc_c_library

@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 token_encrypt_file=${fengming_dir}/documents/sub_doc_git/git_my_github_token.txt
 
 function func_git_mytoken_manage

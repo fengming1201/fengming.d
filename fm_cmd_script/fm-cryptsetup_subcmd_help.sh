@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_luks_sub_cmd_help
 {
     local cmd_help_path=${fengming_dir}/documents/sub_doc_dm-crypt-LUKS/luks_subcmd_help

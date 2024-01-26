@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_update_time_zone
 {
 	local ret=0
@@ -31,15 +34,8 @@ function func_update_time_zone
 	then
 		local app=ntpdate
 		#1,check tool
-		if [ $(id -u) -eq 0 ]
-		then
-			which ${app} > /dev/null
-			ret=$?
-		else
-			sudo which ${app} > /dev/null
-			ret=$?
-		fi
-		if [ ${ret} -ne 0 ]
+		${maybeSUDO} which ${app} > /dev/null
+		if [ $? -ne 0 ]
 		then
 			echo "ERROR:${scriptname},${app} not found"
 			echo "please install ${app}"
@@ -51,18 +47,8 @@ function func_update_time_zone
 		for server in $(echo ${time_server_array[*]})
 		do
 			echo "try to connecting time server:${server}"
-			if [ $(id -u)  -eq 0 ]
-			then
-				${app} -u  ${server}
-				ret=$?
-			else
-				sudo ${app} -u  ${server}
-				ret=$?
-			fi
-			if [ ${ret} -eq 0 ]
-			then
-				break
-			fi
+			${maybeSUDO} ${app} -u  ${server}
+			if [ $? -eq 0 ];then break;fi
 		done
 	fi
 
@@ -86,20 +72,10 @@ function func_update_time_zone
 		if [ ${ret} -eq 0 ]
 		then
 			echo "set time zone to ${zone_default}"
-			if [ $(id -u) -eq 0 ]
-			then
-				${setzone} set-timezone  ${zone_default}
-			else
-				sudo ${setzone} set-timezone  ${zone_default}
-			fi
+			${maybeSUDO} ${setzone} set-timezone  ${zone_default}
 		else
 			echo "cp time zone file to ${target_file}"
-			if [ $(id -u) -eq 0 ]
-			then
-				cp -vf ${zonefile} ${target_file}
-			else
-				sudo cp -vf ${zonefile} ${target_file}
-			fi
+			${maybeSUDO} cp -vf ${zonefile} ${target_file}
 		fi
 	fi
 	return 0

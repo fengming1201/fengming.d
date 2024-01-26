@@ -12,14 +12,15 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_show_monitor_info
 {
 	local tool=xrandr
 	local tool2=xdpyinfo
 	local hw_info=hwinfo
 	local is_local=$(echo $SSH_TTY)
-	local is_root=$(id -u)
 
 	which ${tool} > /dev/null
 	if [ $? -ne 0 ]
@@ -51,19 +52,14 @@ function func_show_monitor_info
 		echo "============================================"
 	fi
 
-	which /usr/sbin/${hw_info} > /dev/null
+	${maybeSUDO} which ${hw_info} > /dev/null
 	if [ $? -ne 0 ]
 	then 
 		echo "${hw_info} not found!!"
 		echo "please install first:apt install hwinfo"
 		return 3
 	else
-		if [ ${is_root} -ne 0 ]
-		then
-				sudo hwinfo --monitor
-		else
-				hwinfo --monitor
-		fi
+		${maybeSUDO} hwinfo --monitor
 	fi
 	return 0
 }

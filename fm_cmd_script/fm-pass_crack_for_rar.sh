@@ -31,7 +31,9 @@ if [ "$1" = "show" ];then
     func_location
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_crack_rar_password
 {
     local app=rarcrack

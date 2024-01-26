@@ -12,6 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_ffmpeg_videofile_stream_push_2my_mediaserver
 {
 	local push_tool=ffmpeg

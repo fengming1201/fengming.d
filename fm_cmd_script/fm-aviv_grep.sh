@@ -12,7 +12,10 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-function func_grep_aviv
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
+function func_aviv_grep
 { 
     local app=grep
     local default_opt="-rin --exclude=*.torrent"
@@ -58,7 +61,7 @@ function func_grep_aviv
     return 0
 }
 
-func_grep_aviv $@
+func_aviv_grep $@
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1

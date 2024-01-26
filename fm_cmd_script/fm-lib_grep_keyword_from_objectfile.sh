@@ -12,7 +12,9 @@ if [ "$1" = "show" ];then
     cat ${scriptfile}
     exit 0
 fi
-
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 #在《目标文件》中检索关键字，可以是“函数名”，“变量名”
 function lib_grep_keyword_from_objectfile
 {

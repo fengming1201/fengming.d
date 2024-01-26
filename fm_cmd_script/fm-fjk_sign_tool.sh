@@ -39,6 +39,9 @@ function fjk_sign_tool
 		return 4
 	fi
 }
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
 function func_fjk_sign_tool
 {
 	#check arg
