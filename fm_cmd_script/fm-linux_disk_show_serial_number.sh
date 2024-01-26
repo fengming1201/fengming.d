@@ -62,6 +62,7 @@ function func_show_disk_serial_number
                 echo "${dev} is not a device file."
             fi
         done
+        echo "============================================"
     fi
 
     ${maybeSUDO}  which hdparm > /dev/null
@@ -82,6 +83,7 @@ function func_show_disk_serial_number
                 echo "${dev} is not a device file."
             fi
         done
+        echo "============================================"
     fi
 
     ${maybeSUDO}  which udevadm > /dev/null
@@ -101,6 +103,7 @@ function func_show_disk_serial_number
                 echo "${dev} is not a device file."
             fi
         done
+        echo "============================================"
     fi
     return 0
 }
