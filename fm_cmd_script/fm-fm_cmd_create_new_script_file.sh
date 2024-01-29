@@ -68,6 +68,7 @@ if [ -f \${common_share_function} ] && [ "include" = "enable" ]
 then
     source \${common_share_function}
 fi
+#if unnecessary, please do not modify this function
 function func_location
 {
     if [ -L \${scriptfile} ]
