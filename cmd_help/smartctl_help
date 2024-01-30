@@ -15,3 +15,32 @@
 
 =============================================================
 安装
+apt install smartmontools
+
+使用
+sudo smartctrl -a /dev/sda
+
+ID# ATTRIBUTE_NAME          
+  1 Raw_Read_Error_Rate     硬盘读取数据时发生的原始读取错误的数量。
+  3 Spin_Up_Time            硬盘启动时需要的时间。
+  4 Start_Stop_Count        硬盘启动和停止的次数。
+  5 Reallocated_Sector_Ct   已重新分配的扇区数量，表示硬盘上发现的坏扇区数量。
+  7 Seek_Error_Rate         寻道操作中发生的错误的数量。
+  9 Power_On_Hours          硬盘的累计通电时间，以小时为单位。
+ 10 Spin_Retry_Count        旋转重试计数。它表示硬盘在尝试启动或重新定位磁头时所需的旋转次数。
+ 12 Power_Cycle_Count       电源循环计数。它记录硬盘的电源循环次数，即硬盘被启动和关闭的次数。
+183 Runtime_Bad_Block       运行时坏块计数。它表示在硬盘运行期间检测到的坏块数量。
+184 End-to-End_Error        端到端错误。它指示硬盘在读取、校验或传输数据时发生的端到端错误数量。
+187 Reported_Uncorrect      报告的无法纠正错误。它表示硬盘在读取或写入数据时无法纠正的错误数量。
+188 Command_Timeout         命令超时。它记录硬盘在执行命令时发生的超时错误次数。
+189 High_Fly_Writes         高飞写入。它表示硬盘在磁头接触到盘片之前的飞行高度上发生的写入操作次数。
+190 Airflow_Temperature_Cel 空气流温度。它指示硬盘周围环境的温度，以摄氏度为单位。
+193 Load_Cycle_Count        加载循环计数。它记录硬盘的加载/卸载循环次数，即硬盘停止/启动磁头的次数。
+194 Temperature_Celsius     硬盘的温度，以摄氏度为单位。
+195 Hardware_ECC_Recovered  硬盘使用硬件错误校正码（ECC）纠正的错误数量。
+197 Current_Pending_Sector  当前等待重新分配的扇区数量。
+198 Offline_Uncorrectable   离线状态下无法纠正的错误数量。
+199 UDMA_CRC_Error_Count    在 Ultra DMA 传输中发生的 CRC 错误的数量。
+240 Head_Flying_Hours       磁头飞行小时数。它表示硬盘磁头在飞行状态下的累计时间，以小时为单位。
+241 Total_LBAs_Written      总写入逻辑块地址数。它记录硬盘上已写入的逻辑块地址总数。
+242 Total_LBAs_Read         总读取逻辑块地址数。它记录硬盘上已读取的逻辑块地址总数。

@@ -40,71 +40,94 @@ function func_show_disk_serial_number
     then
         echo ""
         echo "${scriptname}   /dev/sdX  or disk_list"
+        echo "${scriptname}   /dev/sda  /dev/nvmen1 ...."
         echo ""
         return 1
     fi
-    
+    #check dev file
+    local dev_list=()
+    for dev in "$@"
+    do
+        if [ -b ${dev} ] || [ -c ${dev} ]
+        then
+            dev_list+=("${dev}")
+        else
+            echo "${dev} is not a device file."
+            echo "============================================"
+        fi
+    done
+
+    #check tool
     ${maybeSUDO} which smartctl > /dev/null
     if [ $? -ne 0 ]
     then
         echo "tool:smartctl not found!"
         echo "please install it first!"
         echo "apt install smartmontools"
-    else
-        for dev in "$@"
-        do
-            #check
-            if [ -b ${dev} ] || [ -c ${dev} ]
-            then
-                echo "smartctl result: ${dev}  "
-                ${maybeSUDO}  smartctl -a  ${dev} | grep  "Serial Number"
-            else
-                echo "${dev} is not a device file."
-            fi
-        done
         echo "============================================"
+    else
+        local tool1=smartctl
     fi
-
+    ${maybeSUDO}  which udevadm > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "tool:udevadm not found!"
+        echo "please install it first!"
+        echo "============================================"
+    else
+        local tool2=udevadm
+    fi
     ${maybeSUDO}  which hdparm > /dev/null
     if [ $? -ne 0 ]
     then
         echo "tool:hdparm not found!"
         echo "please install it first!"
         echo "apt install hdparm"
-    else
-        for dev in "$@"
-        do
-            #check
-            if [ -b ${dev} ] || [ -c ${dev} ]
-            then
-                echo "hdparm result: ${dev}  "
-                ${maybeSUDO}  hdparm -I ${dev} | grep "Serial Number" 
-            else
-                echo "${dev} is not a device file."
-            fi
-        done
         echo "============================================"
+    else
+        local tool3=hdparm
     fi
-
-    ${maybeSUDO}  which udevadm > /dev/null
+    ${maybeSUDO}  which nvme > /dev/null
     if [ $? -ne 0 ]
     then
         echo "tool:udevadm not found!"
         echo "please install it first!"
-    else
-        for dev in "$@"
-        do
-            #check
-            if [ -b ${dev} ] || [ -c ${dev} ]
-            then
-                echo "udevadm result: ${dev}  "
-                ${maybeSUDO}  udevadm info --query=property --name=${dev} | grep ID_SERIAL_SHORT
-            else
-                echo "${dev} is not a device file."
-            fi
-        done
+        echo "apt install nvme-cli"
         echo "============================================"
+    else
+        local tool4=nvme
     fi
+
+
+    #show
+    for dev in "${dev_list[@]}"
+    do  
+        if [ "${tool1}" = "smartctl" ]
+        then
+            echo "smartctl result: ${dev}  "
+            ${maybeSUDO}  smartctl -a  ${dev} | grep  "Serial Number"
+            echo "============================================"
+        fi
+        if [ "${tool2}" = "udevadm" ]
+        then
+            echo "udevadm result: ${dev}  "
+            ${maybeSUDO}  udevadm info --query=property --name=${dev} | grep ID_SERIAL_SHORT
+            echo "============================================"
+        fi
+        if [ "${tool3}" = "hdparm" ] && [ "x$(echo ${dev} | grep "/dev/nvme*")" = x ]
+        then
+            echo "hdparm result: ${dev}  "
+            ${maybeSUDO}  hdparm -I ${dev} | grep "Serial Number" 
+            echo "============================================"
+        fi
+        if [ "${tool4}" = "nvme" ] && [ "x$(echo ${dev} | grep "/dev/nvme*")" != x ]
+        then
+            echo "nvme result: ${dev}  "
+            ${maybeSUDO}  nvme id-ctrl ${dev} | grep -w "sn*:*"
+            echo "============================================"
+        fi
+    done
+
     return 0
 }
 
