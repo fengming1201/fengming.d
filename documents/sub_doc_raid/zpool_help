@@ -1,6 +1,12 @@
-# zpool --help 
-usage: zpool command args ...
-where 'command' is one of the following:
+简介：
+zfsutils-linux
+
+安装：
+sudo apt install  zfsutils-linux
+
+帮助：
+用法: zpool command args ...
+其中“command”是以下内容之一：
 
         version
 

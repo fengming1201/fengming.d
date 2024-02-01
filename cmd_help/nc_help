@@ -1,0 +1,95 @@
+NC(1)                                                                     General Commands Manual                                                                     NC(1)
+
+NAME
+       nc - TCP/IP瑞士军刀
+
+格式
+       nc [-options] hostname port[s] [ports] ...
+       nc -l -p port [-options] [hostname] [port]
+
+说明
+netcat是一个简单的unix实用程序，它使用TCP或UDP协议通过网络连接读取和写入数据。它被设计成一个可靠的“后端”工具
+其可以直接使用或容易地由其他程序和脚本驱动。同时，它是一个功能丰富的网络调试和探索工具，因为它
+可以创建几乎任何您需要的连接，并具有几个有趣的内置功能。Netcat，或者实际程序的名称为“nc”，应该
+早就作为另一种神秘但标准的Unix工具提供了。
+
+在最简单的用法中，“nc主机端口”创建到给定目标主机上给定端口的TCP连接。然后，您的标准输入被发送到主机，通过连接返回的任何东西都被发送到您的标准输出。这种情况会无限期地持续下去，直到连接的网络端关闭为止。
+请注意，这种行为与大多数其他应用程序不同，后者关闭所有内容并在标准输入的文件结束后退出。
+
+Netcat还可以充当服务器，通过监听任意端口上的入站连接，然后进行相同的读写操作。有了一些小的限制，netcat并不真正关心它是在“客户端”还是“服务器”模式下运行——它仍然来回地挖掘数据，直到没有剩余的数据为止。在任何一种模式下，都可以在网络侧经过可配置的不活动时间后强制关闭。
+
+它也可以通过UDP实现这一点，所以netcat可能是您一直想要的测试UDP模式服务器的“类似UDP telnet”的应用程序。UDP作为“U”接口，提供的数据传输不如TCP连接可靠，一些系统可能无法以这种方式发送大量数据，但它仍然是一种有用的功能。
+
+您可能会问“为什么不直接使用telnet连接到任意端口？”这是一个有效的问题，以下是一些原因。Telnet存在“标准输入EOF”问题，
+因此必须在驱动脚本中引入经过计算的延迟，以允许完成网络输出。这是netcat一直运行到*网络*端的主要原因关闭。Telnet也不会传输任意二进制数据，因为某些字符被解释为Telnet选项，因此会从数据中删除流动Telnet还将一些诊断消息发送到标准输出，在标准输出中，netcat将这些消息与它的*输出*严格分离，并且永远不会，除非你真的想修改传输中的任何真实数据。当然，telnet不能监听入站连接，也不能使用UDP
+stead。Netcat没有任何这些限制，比telnet小得多，速度快得多，还有许多其他优点。
+
+选项
+       -c string    specify  shell  commands  to  exec after connect (use with caution).  The string is passed to /bin/sh -c for execution.  See the -e option if you don't
+                    have a working /bin/sh (Note that POSIX-conformant system must have one).
+
+       -e filename  在连接后指定要执行的文件名（请谨慎使用）。有关增强的功能，请参阅-c选项。
+
+       -g gateway   源路由跃点，最多8个
+
+       -G num       源路由指针：4、8、12。。。
+
+       -h           display help
+
+       -i secs      发送线路、扫描端口的延迟间隔
+
+       -l           侦听模式，用于入站连接
+
+       -n           仅数字IP地址，无DNS
+
+       -o file      十六进制流量转储
+
+       -p port      local port number (port numbers can be individual or ranges: lo-hi [inclusive])
+
+       -q seconds   after EOF on stdin, wait the specified number of seconds and then quit. If seconds is negative, wait forever.
+
+       -b           允许UDP广播
+
+       -r           随机化本地和远程端口
+
+       -s addr      local source address
+
+       -t           enable telnet negotiation
+
+       -u           UDP mode
+
+       -v           verbose [use twice to be more verbose]
+
+       -w secs      timeout for connects and final net reads
+
+       -C           Send CRLF as line-ending
+
+       -z           zero-I/O mode [used for scanning]
+
+       -T type      set TOS flag (type may be one of "Minimize-Delay", "Maximize-Throughput", "Maximize-Reliability", or "Minimize-Cost".)
+
+COPYRIGHT
+       Netcat is entirely my own creation, although plenty of other code was used as examples.  It is freely given away to the Internet community in the hope that it  will
+       be  useful,  with no restrictions except giving credit where it is due.  No GPLs, Berkeley copyrights or any of that nonsense.  The author assumes NO responsibility
+       for how anyone uses it.  If netcat makes you rich somehow and you're feeling generous, mail me a check.  If you are affiliated in any way  with  Microsoft  Network,
+       get a life.  Always ski in control.  Comments, questions, and patches to hobbit@avian.org.
+
+NOTES
+       Some port names in /etc/services contain hyphens -- netcat currently will not correctly parse those unless you escape the hyphens with backslashes (e.g. "netcat lo‐
+       calhost 'ftp\-data'").
+
+BUGS
+       Efforts have been made to have netcat "do the right thing" in all its various modes.  If you believe that it is doing the wrong thing under whatever  circumstances,
+       please  notify  me and tell me how you think it should behave.  If netcat is not able to do some task you think up, minor tweaks to the code will probably fix that.
+       It provides a basic and easily-modified template for writing other network applications, and I certainly encourage people to make custom mods and send  in  any  im‐
+       provements they make to it. Continued feedback from the Internet community is always welcome!
+
+EXAMPLES
+       For several netcat recipes, please see /usr/share/doc/netcat/README.gz and /usr/share/doc/netcat/README.Debian.gz.
+
+AUTHOR
+       This manual page was written by Joey Hess <joeyh@debian.org> and Robert Woodcock <rcw@debian.org>, cribbing heavily from Netcat's README file.
+
+       Netcat was written by a guy we know as the Hobbit <hobbit@avian.org>.
+
+                                                                                                                                                                      NC(1)
