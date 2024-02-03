@@ -1,182 +1,101 @@
-(1)
+（1）第一步，先创建池。===========================
 zpool命令使用
-
-
 `zpool` 命令用于创建、管理和操作 ZFS 存储池。以下是一些常用的 `zpool` 命令及其用法：
 
 1. 创建存储池：
+zpool create <pool_name> <vdev_type> <device>...
 
-   ```
-   zpool create <pool_name> <vdev_type> <device>...
-   ```
-
-   示例：创建一个名为 `mypool` 的存储池，使用 RAID 10 镜像设备，并指定两个硬盘 `/dev/sda` 和 `/dev/sdb`：
-
-   ```
-   zpool create mypool mirror /dev/sda /dev/sdb
-   ```
+示例：创建一个名为 `mypool` 的存储池，使用 RAID 10 镜像设备，并指定两个硬盘 `/dev/sda` 和 `/dev/sdb`：
+zpool create mypool mirror /dev/sda /dev/sdb
 
 2. 显示存储池状态：
+zpool status <pool_name>
 
-   ```
-   zpool status <pool_name>
-   ```
-
-   示例：显示名为 `mypool` 的存储池的状态：
-
-   ```
-   zpool status mypool
-   ```
+示例：显示名为 `mypool` 的存储池的状态：
+zpool status mypool
 
 3. 显示存储池列表：
+zpool list
 
-   ```
-   zpool list
-   ```
-
-   显示系统中所有存储池的列表及其相关信息。
+显示系统中所有存储池的列表及其相关信息。
 
 4. 添加设备到存储池：
+zpool add <pool_name> <vdev_type> <device>...
 
-   ```
-   zpool add <pool_name> <vdev_type> <device>...
-   ```
-
-   示例：向名为 `mypool` 的存储池添加一个镜像设备 `/dev/sdc`：
-
-   ```
-   zpool add mypool mirror /dev/sdc
-   ```
+示例：向名为 `mypool` 的存储池添加一个镜像设备 `/dev/sdc`：
+zpool add mypool mirror /dev/sdc
 
 5. 移除设备从存储池：
+zpool remove <pool_name> <device>...
 
-   ```
-   zpool remove <pool_name> <device>...
-   ```
-
-   示例：从名为 `mypool` 的存储池中移除一个设备 `/dev/sdc`：
-
-   ```
-   zpool remove mypool /dev/sdc
-   ```
+示例：从名为 `mypool` 的存储池中移除一个设备 `/dev/sdc`：
+zpool remove mypool /dev/sdc
 
 6. 销毁存储池：
+zpool destroy <pool_name>
 
-   ```
-   zpool destroy <pool_name>
-   ```
-
-   示例：销毁名为 `mypool` 的存储池（谨慎使用，将删除存储池及其数据）：
-
-   ```
-   zpool destroy mypool
-   ```
+示例：销毁名为 `mypool` 的存储池（谨慎使用，将删除存储池及其数据）：
+zpool destroy mypool
 
 这些命令只是 `zpool` 命令的一部分，还有其他命令和选项可用于更详细的存储池管理和配置。
 你可以使用 `zpool --help` 命令或参考 ZFS 的文档以获取更多关于 `zpool` 命令的信息和用法说明。
 
-(2)
+(2)在池上创建数据集。==========================================
 zfs命令使用
-
 `zfs` 命令用于在 ZFS 文件系统上进行管理和操作。以下是一些常用的 `zfs` 命令及其用法：
 
 1. 创建文件系统：
+zfs create <pool_name>/<filesystem_name>
 
-   ```
-   zfs create <pool_name>/<filesystem_name>
-   ```
-
-   示例：在名为 `mypool` 的存储池上创建一个名为 `myfs` 的文件系统：
-
-   ```
-   zfs create mypool/myfs
-   ```
+示例：在名为 `mypool` 的存储池上创建一个名为 `myfs` 的文件系统：
+zfs create mypool/myfs
 
 2. 显示文件系统列表：
+zfs list
 
-   ```
-   zfs list
-   ```
-
-   显示系统中所有文件系统的列表及其相关信息。
+显示系统中所有文件系统的列表及其相关信息。
 
 3. 显示文件系统属性：
+zfs get <property> <pool_name>/<filesystem_name>
 
-   ```
-   zfs get <property> <pool_name>/<filesystem_name>
-   ```
-
-   示例：显示名为 `myfs` 的文件系统的所有属性：
-
-   ```
-   zfs get all mypool/myfs
-   ```
+示例：显示名为 `myfs` 的文件系统的所有属性：
+zfs get all mypool/myfs
 
 4. 设置文件系统属性：
+zfs set <property>=<value> <pool_name>/<filesystem_name>
 
-   ```
-   zfs set <property>=<value> <pool_name>/<filesystem_name>
-   ```
-
-   示例：设置名为 `myfs` 的文件系统的压缩属性为 `on`：
-
-   ```
-   zfs set compression=on mypool/myfs
-   ```
+示例：设置名为 `myfs` 的文件系统的压缩属性为 `on`：
+zfs set compression=on mypool/myfs
 
 5. 显示文件系统使用情况：
+zfs list -o space
 
-   ```
-   zfs list -o space
-   ```
-
-   显示文件系统的空间使用情况，包括已用空间、可用空间等。
+显示文件系统的空间使用情况，包括已用空间、可用空间等。
 
 6. 快照操作：
 
-   - 创建快照：
+- 创建快照：
+zfs snapshot <pool_name>/<filesystem_name>@<snapshot_name>
 
-     ```
-     zfs snapshot <pool_name>/<filesystem_name>@<snapshot_name>
-     ```
+示例：在名为 `myfs` 的文件系统上创建一个名为 `snap1` 的快照：
+zfs snapshot mypool/myfs@snap1
 
-     示例：在名为 `myfs` 的文件系统上创建一个名为 `snap1` 的快照：
+- 显示快照列表：
+zfs list -t snapshot
 
-     ```
-     zfs snapshot mypool/myfs@snap1
-     ```
+显示系统中所有快照的列表及其相关信息。
 
-   - 显示快照列表：
+- 恢复文件系统到快照状态：
+zfs rollback <pool_name>/<filesystem_name>@<snapshot_name>
 
-     ```
-     zfs list -t snapshot
-     ```
+示例：将名为 `myfs` 的文件系统恢复到名为 `snap1` 的快照状态：
+zfs rollback mypool/myfs@snap1
 
-     显示系统中所有快照的列表及其相关信息。
+- 删除快照：
+zfs destroy <pool_name>/<filesystem_name>@<snapshot_name>
 
-   - 恢复文件系统到快照状态：
-
-     ```
-     zfs rollback <pool_name>/<filesystem_name>@<snapshot_name>
-     ```
-
-     示例：将名为 `myfs` 的文件系统恢复到名为 `snap1` 的快照状态：
-
-     ```
-     zfs rollback mypool/myfs@snap1
-     ```
-
-   - 删除快照：
-
-     ```
-     zfs destroy <pool_name>/<filesystem_name>@<snapshot_name>
-     ```
-
-     示例：删除名为 `snap1` 的快照：
-
-     ```
-     zfs destroy mypool/myfs@snap1
-     ```
+示例：删除名为 `snap1` 的快照：
+zfs destroy mypool/myfs@snap1
 
 这些命令只是 `zfs` 命令的一部分，还有其他命令和选项可用于更详细的文件系统管理和配置。
 你可以使用 `zfs --help` 命令或参考 ZFS 的文档以获取更多关于 `zfs` 命令的信息和用法说明。
@@ -187,46 +106,28 @@ zfs命令在存储池上创建文件系统并挂载
 要在存储池上创建文件系统并挂载，可以按照以下步骤使用 `zfs` 命令：
 
 1. 创建文件系统：
+zfs create <pool_name>/<filesystem_name>
 
-   ```
-   zfs create <pool_name>/<filesystem_name>
-   ```
-
-   示例：在名为 `mypool` 的存储池上创建一个名为 `myfs` 的文件系统：
-
-   ```
-   zfs create mypool/myfs
-   ```
+示例：在名为 `mypool` 的存储池上创建一个名为 `myfs` 的文件系统：
+zfs create mypool/myfs
 
 2. 确认文件系统创建成功：
+zfs list
 
-   ```
-   zfs list
-   ```
-
-   这将显示系统中所有文件系统的列表。确保名为 `mypool/myfs` 的文件系统在列表中。
+这将显示系统中所有文件系统的列表。确保名为 `mypool/myfs` 的文件系统在列表中。
 
 3. 挂载文件系统：
+zfs mount <pool_name>/<filesystem_name>
 
-   ```
-   zfs mount <pool_name>/<filesystem_name>
-   ```
+示例：挂载名为 `mypool/myfs` 的文件系统：
+zfs mount mypool/myfs
 
-   示例：挂载名为 `mypool/myfs` 的文件系统：
-
-   ```
-   zfs mount mypool/myfs
-   ```
-
-   文件系统将被挂载到默认挂载点（通常是 `/<pool_name>/<filesystem_name>`）。
+文件系统将被挂载到默认挂载点（通常是 `/<pool_name>/<filesystem_name>`）。
 
 4. 确认文件系统已挂载：
+zfs mount
 
-   ```
-   zfs mount
-   ```
-
-   这将显示系统中已挂载的文件系统列表。确保名为 `mypool/myfs` 的文件系统在列表中，并且其挂载点显示为实际的路径。
+这将显示系统中已挂载的文件系统列表。确保名为 `mypool/myfs` 的文件系统在列表中，并且其挂载点显示为实际的路径。
 
 现在，你已经成功在存储池上创建了一个文件系统并将其挂载到指定的挂载点。
 你可以在挂载点上进行文件操作，就像使用任何其他文件系统一样。请注意，在重新启动系统后，文件系统将自动挂载，无需手动执行挂载命令。
@@ -237,41 +138,29 @@ zfs命令在存储池上创建文件系统并挂载
 要在 `/etc/fstab` 中配置 ZFS 文件系统的挂载，可以按照以下步骤进行操作：
 
 1. 打开 `/etc/fstab` 文件以编辑：
+sudo nano /etc/fstab
 
-   ```
-   sudo nano /etc/fstab
-   ```
-
-   或使用你喜欢的文本编辑器打开该文件。
+或使用你喜欢的文本编辑器打开该文件。
 
 2. 在文件的末尾添加一行来描述要挂载的 ZFS 文件系统。行的格式如下：
+<pool_name>/<filesystem_name>  <mount_point>  zfs  defaults  0  0
 
-   ```
-   <pool_name>/<filesystem_name>  <mount_point>  zfs  defaults  0  0
-   ```
+其中：
+- `<pool_name>/<filesystem_name>` 是要挂载的 ZFS 文件系统的名称。
+- `<mount_point>` 是指定的挂载点，即文件系统将被挂载到的路径。
+- `zfs` 是文件系统类型。
+- `defaults` 是一组默认挂载选项。
+- `0 0` 是用于文件系统检查的选项。
 
-   其中：
-   - `<pool_name>/<filesystem_name>` 是要挂载的 ZFS 文件系统的名称。
-   - `<mount_point>` 是指定的挂载点，即文件系统将被挂载到的路径。
-   - `zfs` 是文件系统类型。
-   - `defaults` 是一组默认挂载选项。
-   - `0 0` 是用于文件系统检查的选项。
-
-   示例：假设要挂载名为 `mypool/myfs` 的 ZFS 文件系统到 `/mnt/zfs`：
-
-   ```
-   mypool/myfs  /mnt/zfs  zfs  defaults  0  0
-   ```
+示例：假设要挂载名为 `mypool/myfs` 的 ZFS 文件系统到 `/mnt/zfs`：
+mypool/myfs  /mnt/zfs  zfs  defaults  0  0
 
 3. 保存并关闭文件。
 
 4. 使用以下命令重新挂载 `/etc/fstab` 中的所有条目，以使更改生效：
+sudo mount -a
 
-   ```
-   sudo mount -a
-   ```
-
-   此命令将读取 `/etc/fstab` 中的条目，并尝试挂载每个文件系统。
+此命令将读取 `/etc/fstab` 中的条目，并尝试挂载每个文件系统。
 
 现在，ZFS 文件系统将在每次系统启动时自动挂载到指定的挂载点。你可以通过在挂载点上进行文件操作来访问该文件系统。
 请确保挂载点存在并具有正确的权限，以便文件系统能够成功挂载和访问。

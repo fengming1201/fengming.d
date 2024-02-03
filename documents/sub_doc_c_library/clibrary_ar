@@ -1,0 +1,48 @@
+用法: ar [emulation options] [-]{dmpqrstx}[abcDfilMNoOPsSTuvV]  archive-file file...
+       ar [--plugin <name>] [member-name] [count] archive-file file...
+       ar -M [<mri-script]
+命令:
+d            - 从存档中删除文件
+m[ab]        - 移动存档中的文件
+p            - 在存档中找到的打印文件
+q[f]         - 将文件快速追加到存档
+r[ab][f][u]  - 替换现有文件或将新文件插入存档
+s            - 作为Ranlib行动
+t[O][v]      - 显示存档的内容
+x[o]         - 从存档中提取文件
+特定于命令的修饰符:
+[a]          - put file(s) after [member-name]
+[b]          - put file(s) before [member-name] (same as [i])
+[D]          - 时间戳和uids/gid使用零（默认值）
+[U]          - 使用实际时间戳和uids/gid
+[N]          - 使用名称的实例[count]
+[f]          - 截断插入的文件名
+[P]          - 匹配时使用完整路径名
+[o]          - 保留原始日期
+[O]          - 显示存档中文件的偏移量
+[u]          - 仅替换比当前存档内容新的文件
+泛型修饰符:
+[c]          - 如果必须创建库，请不要发出警告
+[s]          - 创建存档索引 (cf. ranlib)
+[S]          - 不要生成符号表
+[T]          - 制作精简存档
+[v]          - be verbose
+[V]          - 显示版本号
+@<file>      - 从＜file＞读取选项
+--target=BFDNAME - 将目标对象格式指定为BFDNAME
+--output=DIRNAME - 指定提取操作的输出目录
+随意的:
+--plugin <p> - 加载指定的插件
+仿真选项: 
+没有特定于仿真的选项
+ar: supported targets: elf64-x86-64 elf32-i386 elf32-iamcu elf32-x86-64 pei-i386 pei-x86-64 
+elf64-l1om elf64-k1om elf64-little elf64-big elf32-little elf32-big pe-x86-64 pe-bigobj-x86-64 
+pe-i386 srec symbolsrec verilog tekhex binary ihex plugin
+Report bugs to <http://www.sourceware.org/bugzilla/>
+=========================================================
+实例
+
+
+
+
+
