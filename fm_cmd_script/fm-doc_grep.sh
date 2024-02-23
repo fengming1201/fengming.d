@@ -25,8 +25,8 @@ function func_document_grep
 		echo "e.g $scriptname  keyword"
 		return 1
 	fi
-	echo "grep -rn $* ${doc_file_path}"
-	grep -rn "$*" ${doc_file_path}
+	echo "grep --color=auto -rn $* ${doc_file_path}"
+	grep --color=auto -rn "$*" ${doc_file_path}
 
 	return 0
 }

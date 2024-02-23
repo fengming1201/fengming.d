@@ -21,34 +21,30 @@ Options:
 关键字：
 重要简述：
 实例：
-$ sudo docker search debian
-NAME                                  DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
-ubuntu                                Ubuntu is a Debian-based Linux operating sys…   16056     [OK]       
-debian                                Debian is a Linux distribution that's compos…   4695      [OK]       
-neurodebian                           NeuroDebian provides neuroscience research s…   100       [OK]       
-bitnami/debian-base-buildpack         Debian base compilation image                   2                    [OK]
-kasmweb/debian-bullseye-desktop       Debian Bullseye desktop for Kasm Workspaces     0                    
-mirantis/debian-build-ubuntu-xenial                                                   0                    
-rancher/debianconsole                                                                 1                    
-datadog/debian-i386                                                                   0                    
-mirantis/debian-build-ubuntu-trusty                                                   0                    
-osrf/debian_arm64                     Debian arm64 Base Images                        1                    
-dokken/debian-10                      Debian 10 image for use with kitchen-dokken     0                    
-dokken/debian-9                       EOL: Debian 9 image for kitchen-dokken          0                    
-pihole/debian-base                    Debian docker with a custom pam build           3                    
-dokken/debian-11                      Debian 11 image for use with kitchen-dokken     1                    
-ustclug/debian                        Official Debian Image with USTC Mirror          2                    
-dokken/debian-8                       EOL: Debian 8 image for kitchen-dokken          0                    
-dockette/debian                       My Debian Sid | Jessie | Wheezy Base Images     2                    [OK]
-jitesoft/debian                       Debian base image.                              0                    
-corpusops/debian-bare                 https://github.com/corpusops/docker-images/     0                    
-corpusops/debian                      debian corpusops baseimage                      0                    
-dokken/debian-12                      Debian 12 image for use with Test Kitchen's …   0                    
-pihole/debian-debootstrap             fork of multiarch/debian-debootstrap            0                    
-homebrew/debian7                      Homebrew maintainer image for building patch…   0                    
-osrf/debian_armhf                     Debian Armhf Base Images                        1                    
-treehouses/debian                                                                     2                    
-
-$ sudo docker search  johngong/calibre-web
-NAME                   DESCRIPTION                                    STARS     OFFICIAL   AUTOMATED
-johngong/calibre-web   calibre-web:0.6.20电子书管理带ebook-convert…   110                  [OK]
+$ sudo docker search --no-trunc debian
+NAME                                  DESCRIPTION                                                                                            STARS     OFFICIAL   AUTOMATED
+ubuntu                                Ubuntu is a Debian-based Linux operating system based on free software.                                16894     [OK]       
+debian                                Debian is a Linux distribution that's composed entirely of free and open-source software.              4948      [OK]       
+neurodebian                           NeuroDebian provides neuroscience research software for Debian, Ubuntu, and other derivatives.         106       [OK]       
+bitnami/debian-base-buildpack         Debian base compilation image                                                                          2                    [OK]
+kasmweb/debian-bullseye-desktop       Debian Bullseye desktop for Kasm Workspaces                                                            6                    
+kasmweb/debian-bookworm-desktop       Debian Bookworm desktop for Kasm Workspaces                                                            2                    
+mirantis/debian-build-ubuntu-xenial                                                                                                          0                    
+rancher/debianconsole                                                                                                                        1                    
+mirantis/debian-build-ubuntu-trusty                                                                                                          0                    
+osrf/debian_arm64                     Debian arm64 Base Images                                                                               1                    
+dokken/debian-10                      Debian 10 image for use with kitchen-dokken                                                            0                    
+dokken/debian-9                       EOL: Debian 9 image for kitchen-dokken                                                                 0                    
+pihole/debian-base                    Debian docker with a custom pam build                                                                  5                    
+dokken/debian-11                      Debian 11 image for use with kitchen-dokken                                                            1                    
+ustclug/debian                        Official Debian Image with USTC Mirror                                                                 2                    
+jitesoft/debian                       Debian base image.                                                                                     0                    
+dokken/debian-8                       EOL: Debian 8 image for kitchen-dokken                                                                 1                    
+dockette/debian                       My Debian Sid | Jessie | Wheezy Base Images                                                            2                    [OK]
+dokken/debian-12                      Debian 12 image for use with Test Kitchen's kitchen-dokken driver                                      0                    
+corpusops/debian-bare                 https://github.com/corpusops/docker-images/                                                            0                    
+corpusops/debian                      debian corpusops baseimage                                                                             0                    
+pihole/debian-debootstrap             fork of multiarch/debian-debootstrap                                                                   0                    
+homebrew/debian7                      Homebrew maintainer image for building patchelf and binutils. This is not intended for external use.   0                    
+osrf/debian_armhf                     Debian Armhf Base Images                                                                               1                    
+treehouses/debian 
