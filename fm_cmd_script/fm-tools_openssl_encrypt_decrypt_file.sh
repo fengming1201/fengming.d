@@ -44,7 +44,9 @@ function func_use_openssl_to_encrypt_decrypt_files
         echo "apt install openssl"
         return 1
     fi
-    if [ $# -lt 2 ] || [ $# -gt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+    local need_help=no
+    if [ "$1" != "1" ] && [ "$1" != "2" ] && [ "$1" != "encrypt" ] && [ "$1" != "decrypt" ];then need_help=yes;fi
+    if [ $# -lt 2 ] || [ $# -gt 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ ${need_help} = "yes" ]
     then
         echo ""
         echo "$scriptname   encrypt/decrypt  in-file  [out-file]"
@@ -68,7 +70,13 @@ function func_use_openssl_to_encrypt_decrypt_files
         if [ $# -ne 3 ];then out_file=${in_file}.enc;fi
 
         echo "${tool} enc -aes-256-cbc -salt -in ${in_file} -out ${out_file}"
-        ${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100000 -in ${in_file} -out ${out_file}
+        local out_dirname="$(dirname ${out_file})/"
+        if [ ! -w ${out_dirname} ]
+        then
+            sudo ${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
+        else
+            ${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
+        fi
         echo "encrypt/加密:${in_file} --> ${out_file}"
         echo ""
     elif [ $1 -eq 2 ] || [ "$1" = "decrypt" ]
@@ -76,7 +84,13 @@ function func_use_openssl_to_encrypt_decrypt_files
         if [ $# -ne 3 ];then out_file=${in_file}.dec;fi
 
         echo "${tool} enc -d -aes-256-cbc -salt -in ${in_file} -out ${out_file}"
-        ${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100000 -in ${in_file} -out ${out_file}
+        local out_dirname="$(dirname ${out_file})/"
+        if [ ! -w ${out_dirname} ]
+        then
+            sudo ${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
+        else
+            ${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
+        fi
         echo "encrypt/解密:${in_file} --> ${out_file}"
         echo ""
     else

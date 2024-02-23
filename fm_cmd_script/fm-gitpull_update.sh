@@ -15,26 +15,41 @@ fi
 if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
+
 function func_git_pull_update
 {
-    local target_dir=${fengming_dir}
+	local tmp_file=$(mktemp)
+	local ret=128
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo "no args"
+		return 1
+	fi
+	git status > ${tmp_file}  2>&1
+	ret=$?
+	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
+	then 
+		echo "fatal: not a git repository"
+		rm -f ${tmp_file}
+		return 1
+	fi
+	rm -f ${tmp_file}
+    local remote_name="origin"
+    local branch_name="main"
+	if [ ${ret} -ne 0 ]
+	then
+		remote_name=$(sudo git remote -v | awk '{print $1}' | uniq)
+        branch_name=$(sudo git branch | awk '{print $2}' | uniq)
+        echo "sudo git pull ${remote_name} ${branch_name}"
+        sudo git pull ${remote_name} ${branch_name}
+	else
+        remote_name=$(sudo git remote -v | awk '{print $1}' | uniq)
+        branch_name=$(sudo git branch | awk '{print $2}' | uniq)
+        echo "git pull ${remote_name} ${branch_name}"
+        git pull ${remote_name} ${branch_name}
+	fi
 
-    pushd ${target_dir}
-
-    if [ $(id -u) -eq 0 ]
-    then
-        for num in  1 2 3
-        do
-            git pull origin main  2>&1 /dev/null
-            if [ $? -eq 0 ];then
-                break
-            fi
-        done
-    else
-        sudo git pull origin main
-    fi
-    popd
-    return 0
+	return 0
 }
 
 func_git_pull_update $@

@@ -15,7 +15,7 @@ fi
 if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
-token_encrypt_file=${fengming_dir}/documents/sub_doc_git/git_my_github_token.txt
+token_encrypt_file=${fengming_dir}/encrypt_files/fengming_git_github_token_encrypt_file
 
 function func_git_mytoken_manage
 {   
