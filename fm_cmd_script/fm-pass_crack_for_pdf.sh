@@ -9,7 +9,7 @@ then
     source ${common_share_function}
 fi
 
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:暴力破解pdf密码"
     echo "格式："
     echo "     pdfcrack -f file.pdf  -n N -m M -c  密码字符集"
@@ -28,7 +28,7 @@ if [ "$1" = "info" ];then
     fi
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     echo "location:${scriptfile}"
     cat ${scriptfile}
     echo ""

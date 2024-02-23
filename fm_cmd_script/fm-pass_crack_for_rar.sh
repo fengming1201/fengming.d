@@ -18,14 +18,14 @@ function func_location
     fi
     return 0
 }
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:"
     echo "          rarcrack暴力破解RAR，ZIP，7Z压缩包"
     COMMOND_FUNC_file_password_cracking_tools_list
     func_location
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     echo ""
     func_location

@@ -2,12 +2,12 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
     echo "abstract:"
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     echo "location:${scriptfile}"x
     cat ${scriptfile}
     exit 0

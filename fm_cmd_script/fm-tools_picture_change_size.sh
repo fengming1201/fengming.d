@@ -2,14 +2,14 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
     echo "abstract:用来改变图片的尺寸或文件大小"
 	echo "         可以多次调整百分比值，以满足图片文件大小的需求。"
 	echo "         可以多次调整宽和高像素值，以满足图片尺寸的需求。"
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     echo "location:${scriptfile}"
     cat ${scriptfile}
     exit 0

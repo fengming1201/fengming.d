@@ -9,7 +9,7 @@ then
     source ${common_share_function}
 fi
 
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:"
     echo ""
     COMMOND_FUNC_file_password_cracking_tools_list
@@ -21,7 +21,7 @@ if [ "$1" = "info" ];then
     fi
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     echo ""
     if [ -L ${scriptfile} ]

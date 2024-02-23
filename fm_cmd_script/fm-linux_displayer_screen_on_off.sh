@@ -2,7 +2,7 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
     echo "abstract:"
 	echo "xset dpms force off：关闭显示器。这会立即关闭显示器，进入省电模式"
@@ -17,7 +17,7 @@ if [ "$1" = "info" ];then
 	echo "其他命令:xrandr --output <显示器标识> --off可以关闭指定的显示器"
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     echo "location:${scriptfile}"
     cat ${scriptfile}
     exit 0

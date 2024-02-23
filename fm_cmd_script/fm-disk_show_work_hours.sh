@@ -18,13 +18,13 @@ function func_location
     fi
     return 0
 }
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:CN:查看硬盘的工作时间。"
     echo ""
     func_location
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     echo ""
     func_location

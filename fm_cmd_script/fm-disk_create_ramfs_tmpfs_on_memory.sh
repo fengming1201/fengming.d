@@ -18,7 +18,7 @@ function func_location
     fi
     return 0
 }
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:CN:在Linux中提供了 tmpfs 和 ramfs 两种内存文件系统用于创建内存磁盘"
     echo "#1 使用 tmpfs 创建内存磁盘，创建的内存磁盘并不百分百保证是存储在RAM芯片上。"
     echo "mount -t tmpfs -o size=1G tmpfs /mnt"
@@ -30,7 +30,7 @@ if [ "$1" = "info" ];then
     func_location
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     echo ""
     func_location

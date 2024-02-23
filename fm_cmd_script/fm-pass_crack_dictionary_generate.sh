@@ -2,7 +2,7 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-if [ "$1" = "info" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
     echo "abstract:"
     echo "         crunch是一个密码生成器工具，它可以根据用户提供的参数生成自定义规则的密码字典"
@@ -13,7 +13,7 @@ if [ "$1" = "info" ];then
     echo ""
     exit 0
 fi
-if [ "$1" = "show" ];then
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     echo "location:${scriptfile}"
     cat ${scriptfile}
     exit 0
