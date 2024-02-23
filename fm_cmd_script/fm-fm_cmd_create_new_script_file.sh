@@ -94,8 +94,20 @@ fi
 if [ \$(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
+#start here add your code,you need to implement the following function.
 function func_
 {
+    #[optional]
+    #local need_help=no
+    #if [ "\$1" != "1" ] && [ "\$1" != "2" ] && [ "\$1" != "param1" ] && [ "\$1" != "param2" ];then need_help=yes;fi
+    #if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ] || [ \${need_help} = "yes" ]
+    
+    if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ]
+    then
+        echo "\$scriptname  param_list"
+        return 1
+    fi
+
     return 0
 }
 
