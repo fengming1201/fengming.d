@@ -23,14 +23,16 @@ function func_git_pull_update
 
     if [ $(id -u) -eq 0 ]
     then
+        echo "git pull origin main"
         for num in  1 2 3
         do
-            git pull origin main  2>&1 /dev/null
+            git pull origin main
             if [ $? -eq 0 ];then
                 break
             fi
         done
     else
+        echo "sudo git pull origin main"
         sudo git pull origin main
     fi
     popd
