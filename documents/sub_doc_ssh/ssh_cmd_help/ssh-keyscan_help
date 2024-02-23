@@ -1,0 +1,57 @@
+usage: 
+ssh-keyscan [-46cDHv] [-f file] [-p port] [-T timeout] [-t type]
+        [host | addrlist namelist]
+
+===============================================================
+ssh-keyscan 是一个用于收集 SSH 公钥的实用工具，它可以从一个或多个指定的主机上获取公共 SSH 主机密钥。
+这个命令通常用于扫描一组主机的 SSH 公钥，然后将它们添加到 ~/.ssh/known_hosts 文件中，
+这有助于在首次登录时自动接受新主机的密钥，也可以用于防止中间人攻击。
+
+### 作用
+- **收集主机公钥**：自动从一个或多个主机上获取 SSH 公钥。
+- **构建或更新 known_hosts 文件**：为自动化脚本或大规模部署准备 known_hosts 文件。
+- **防止中间人攻击**：通过提前获取和验证主机密钥，可以确认远程主机的身份。
+
+### 基本用法
+1. **收集单个主机的 SSH 公钥**：
+   ssh-keyscan hostname
+
+   这将打印出 hostname 的 SSH 公钥。hostname 可以是一个 IP 地址或是一个域名。
+
+2. **收集多个主机的 SSH 公钥**：
+   ssh-keyscan hostname1 hostname2 hostname3
+
+   你可以一次列出多个主机，ssh-keyscan 将会打印出所有列出主机的公钥。
+
+3. **指定端口号**：
+   ssh-keyscan -p port hostname
+
+   如果 SSH 服务不是运行在默认的 22 端口上，可以使用 -p 选项指定端口。
+
+4. **将公钥添加到 known_hosts 文件**：
+   ssh-keyscan hostname >> ~/.ssh/known_hosts
+
+   这样可以将 hostname 的公钥添加到当前用户的 known_hosts 文件中。
+
+### 高级用法
+- **收集特定类型的密钥**：
+  ssh-keyscan -t rsa,ecdsa hostname
+
+  使用 -t 选项可以指定想要收集的密钥类型。这里指定了 RSA 和 ECDSA 类型的密钥。
+
+- **并行扫描多个主机**：
+  ssh-keyscan -f hostfile
+
+  通过 -f 选项指定一个文件名，该文件包含了需要扫描的主机列表，每行一个主机名。这可以并行地扫描多个主机。
+
+- **使用超时**：
+  ssh-keyscan -T timeout hostname
+
+  -T 选项允许你设置超时时间（秒），这在网络连接不稳定或者主机响应慢时很有用。
+
+### 注意事项
+- **安全性**：在使用 ssh-keyscan 时，需要确保你信任那些主机，否则你可能会收集到不安全的主机密钥。
+- **自动化**：ssh-keyscan 对于自动化部署和配置管理非常有用，但是应当小心使用，确保不会引入安全风险。
+- **网络环境**：在网络受限或者过滤 SSH 连接的环境中，ssh-keyscan 可能无法正常工作。
+
+通过使用 ssh-keyscan，系统管理员可以大大简化首次连接到新主机时的工作流程，并且可以预先验证主机的身份，减少了遭受中间人攻击的风险。

@@ -1,0 +1,60 @@
+usage: 
+ssh-add [-cDdKkLlqvXx] [-E fingerprint_hash] [-S provider] [-t life] 
+        [file ...]
+ssh-add -s pkcs11
+ssh-add -e pkcs11
+ssh-add -T pubkey ...
+
+========================
+ssh-add 是一个命令行工具，用于向 SSH 认证代理 (ssh-agent) 添加私钥，这样在使用 SSH 客户端进行连接时，就不必每次都手动输入密钥的密码。
+ssh-agent是一个在后台运行的程序，它存储私钥并在需要时提供给 SSH 客户端。
+
+### 作用
+ssh-add 的主要作用包括：
+1. **添加密钥到认证代理**：将你的 SSH 私钥添加到 ssh-agent 的缓存中，这样你就可以在当前会话中进行多次 SSH 操作而不需要重复输入密钥密码。
+2. **管理密钥列表**：列出 ssh-agent 当前保存的密钥，删除某个或所有密钥。
+
+### 基本用法
+- **添加默认密钥**：
+  ssh-add
+
+  这将添加默认的 SSH 私钥（如 ~/.ssh/id_rsa、~/.ssh/id_dsa、~/.ssh/id_ecdsa、~/.ssh/id_ed25519 等）。
+
+- **添加特定密钥**：
+  ssh-add /path/to/your/key
+
+  如果你的私钥不在默认位置，或者你有多个密钥，你可以指定私钥文件的路径。
+
+- **列出已添加的密钥**：
+  ssh-add -l
+
+  列出所有已经加载到 ssh-agent 的密钥指纹。
+
+- **删除特定密钥**：
+  ssh-add -d /path/to/your/key
+
+  从 ssh-agent 中删除指定的私钥。
+
+- **删除所有密钥**：
+  ssh-add -D
+
+  从 ssh-agent 中删除所有私钥。
+
+### 高级用法
+- **添加具有超时的密钥**：
+  ssh-add -t [seconds] /path/to/your/key
+
+  添加密钥并设置一个超时时间（以秒为单位），在超时后，ssh-agent 将自动删除这个密钥。
+
+- **添加一个受保护的密钥，要求每次使用时都输入密码**：
+  ssh-add -c /path/to/your/key
+
+  添加一个“确认”的密钥，每次使用时都需要用户确认。
+
+### 注意事项
+- 确保 ssh-agent 正在运行，你可以用 eval $(ssh-agent) 来启动它。
+- 如果你的私钥设置了密码，第一次使用 ssh-add 添加密钥时，它会要求你输入密码。
+- ssh-agent 和 ssh-add 的会话通常是终端或图形会话相关的。当你注销或重启后，需要重新添加密钥。
+- 密钥添加到 ssh-agent 后，只要 ssh-agent 运行着，你就可以在任何新的终端会话中使用 SSH 连接而无需再次输入密钥密码。
+
+通过 ssh-add 管理 SSH 密钥，可以大大简化远程服务器的登录过程，特别是当你需要频繁登录多个服务器时。

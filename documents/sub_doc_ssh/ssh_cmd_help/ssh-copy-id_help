@@ -1,0 +1,44 @@
+Usage: 
+ssh-copy-id [-h|-?|-f|-n] [-i [identity_file]] [-p port] [-F alternative ssh_config file] [[-o <ssh -o options>] ...] [user@]hostname
+
+	-f: force mode -- copy keys without trying to check if they are already installed
+	-n: dry run    -- no keys are actually copied
+	-h|-?: print this help
+
+==========================================
+ssh-copy-id 是用于将本地主机的公钥复制到远程主机的 ~/.ssh/authorized_keys 文件中的脚本，从而允许无密码 SSH 登录。这个命令简化了配置 SSH 公钥认证的过程。
+
+### 作用
+使用 ssh-copy-id 的主要好处是自动化和简化了以下步骤：
+1. 将公钥复制到远程主机。
+2. 在远程主机上创建 ~/.ssh 目录（如果尚不存在）。
+3. 在远程主机上设置正确的文件权限，以确保 SSH 安全性。
+4. 将公钥添加到远程主机的 ~/.ssh/authorized_keys 文件中，如果文件不存在则创建它。
+
+### 基本用法
+1. **复制默认公钥**：
+   ssh-copy-id username@remote_host
+
+   这里，username 是远程主机上的用户，remote_host 是远程主机的地址或主机名。这个命令会尝试将你的默认公钥（例如 ~/.ssh/id_rsa.pub）复制到远程主机。
+
+2. **指定公钥文件**：
+   ssh-copy-id -i /path/to/public/key.pub username@remote_host
+
+   如果你的公钥不在默认位置，或者你有多个公钥，你可以使用 -i 选项指定公钥文件的路径。
+
+### 高级用法
+- **指定 SSH 端口**：
+  如果远程主机的 SSH 服务不是运行在默认的 22 端口上，你可以使用 -p 选项来指定端口：
+  ssh-copy-id -p port_number username@remote_host
+
+- **使用不同的身份文件**：
+  如果你需要使用特定的私钥来进行认证，可以使用 -i 选项，但是这个选项同时用于指定公钥路径，所以你可以这样做：
+  ssh-copy-id -i -p port_number -i /path/to/private/key username@remote_host
+
+  这里，第一个 -i 表示后面的参数是用于 SSH 连接的身份文件（私钥），第二个 -i 之后是公钥文件的路径。
+
+### 注意事项
+- 在使用 ssh-copy-id 之前，确保远程主机上的 SSH 服务已经启动，并且你有远程主机的登录权限。
+- 第一次使用 ssh-copy-id 时，你可能需要输入远程主机用户的密码。
+- 使用 ssh-copy-id 后，你应该能够无密码登录远程主机。如果无法做到，检查远程主机的 ~/.ssh/authorized_keys 文件和 ~/.ssh 目录的权限是否正确设置。
+- 有些系统可能没有预安装 ssh-copy-id，在这种情况下，你可能需要手动安装它，或者手动复制公钥到远程主机。

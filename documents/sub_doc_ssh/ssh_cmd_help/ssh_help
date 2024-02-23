@@ -1,0 +1,80 @@
+usage: 
+ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
+    [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+    [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+    [-i identity_file] [-J [user@]host[:port]] [-L address]
+    [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+    [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+    [-w local_tun[:remote_tun]] destination [command]
+
+=====================================================================
+ssh（Secure Shell）是一个用于安全地访问远程计算机的协议，也是实现该协议的客户端程序的名称。
+ssh 命令用于在本地计算机与远程计算机之间建立加密的网络连接。以下是 ssh 命令的一些常用用法和选项。
+
+### 基本连接
+ssh username@hostname
+
+这是最基本的用法，用于连接到远程主机。你需要替换 username 和 hostname 为实际的用户名和主机地址。
+
+### 指定端口
+ssh -p port username@hostname
+
+如果远程主机上的 SSH 服务不是运行在默认端口（22），你可以使用 -p 选项指定端口。
+
+### 使用密钥文件
+ssh -i /path/to/private_key username@hostname
+
+如果你使用 SSH 密钥进行身份验证，可以使用 -i 选项指定私钥的路径。
+
+### 执行远程命令
+ssh username@hostname "command"
+
+连接到远程主机后立即执行指定的命令，然后关闭连接。
+
+### X11 转发
+ssh -X username@hostname
+
+使用 -X 选项可以启用 X11 转发，允许远程图形界面程序的窗口显示在本地主机上。
+
+### 端口转发
+ssh -L local_port:remote_host:remote_port username@hostname
+
+将本地计算机上的一个端口转发到远程主机上的另一个端口。
+
+### 动态端口转发（SOCKS 代理）
+ssh -D local_port username@hostname
+
+将本地端口设置为 SOCKS 代理服务器，通过 SSH 连接动态转发。
+
+### 保持连接活跃
+ssh -o ServerAliveInterval=60 username@hostname
+
+使用 -o 选项可以设置 SSH 客户端发送保持活跃消息的间隔，以防止连接超时。
+
+### 启用压缩
+ssh -C username@hostname
+
+使用 -C 选项可以启用数据压缩，这在带宽有限的情况下有助于提升速度。
+
+### 传递环境变量
+ssh -o SendEnv=VARIABLE_NAME username@hostname
+
+传递一个环境变量到远程会话。
+
+### 配置文件
+ssh 命令可以使用配置文件 ~/.ssh/config 来简化连接到常用主机的过程。在配置文件中，你可以为每个远程主机设置别名和其他选项。
+
+### 更多选项
+ssh 命令有很多选项，可以通过 man ssh 或 ssh -h 查看完整的选项列表和更详细的描述。
+
+### 示例 .ssh/config 文件
+Host myserver
+    HostName server.example.com
+    User myusername
+    Port 2222
+    IdentityFile ~/.ssh/myserver_rsa
+
+使用配置文件后，你可以简单地通过 ssh myserver 来连接到 server.example.com。
+
+请注意，ssh 命令的用法和选项可能会根据不同的操作系统和 ssh 版本略有不同。
+以上用法和选项基于 OpenSSH，这是最常见的 SSH 实现之一。

@@ -41,6 +41,7 @@ function func_cmd_help
 	
 	local parameter=$@
 	local help_file="none"
+	local num=1
 	for file_list in ${parameter}
 	do
 		help_file=$(find ${help_file_path} -type f -iname "${file_list}*" -o -type l -iname "${file_list}*")
@@ -56,18 +57,23 @@ function func_cmd_help
 			fi
 			return 2
 		fi
+		local sub_num=1
 		for file_each in ${help_file}
 		do
 			echo ""
 			cat ${file_each}
 			echo ""
-			echo "end file:${file_each}"
-			echo "====================================================="
+			echo "end[$sub_num] file:${file_each}"
+			sub_num=$(expr $sub_num + 1)
+			echo "--------------------------------------------------------"
 		done
-		echo "====================================================="
-		for file_each in ${cmd_file}
+		echo "[$num]====================================================="
+		num=$(expr $num + 1)
+		sub_num=1
+		for file_each in ${help_file}
 		do 
-			echo "file list:${file_each}"
+			echo "file[$sub_num]: ${file_each}"
+			sub_num=$(expr $sub_num + 1)
 		done
 	done
 	return 0

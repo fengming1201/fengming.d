@@ -1,0 +1,99 @@
+usage: 
+ssh-keygen [-q] [-a rounds] [-b bits] [-C comment] [-f output_keyfile]
+          [-m format] [-N new_passphrase] [-O option]
+          [-t dsa | ecdsa | ecdsa-sk | ed25519 | ed25519-sk | rsa]
+          [-w provider]
+ssh-keygen -p [-a rounds] [-f keyfile] [-m format] [-N new_passphrase]
+            [-P old_passphrase]
+ssh-keygen -i [-f input_keyfile] [-m key_format]
+ssh-keygen -e [-f input_keyfile] [-m key_format]
+ssh-keygen -y [-f input_keyfile]
+ssh-keygen -c [-a rounds] [-C comment] [-f keyfile] [-P passphrase]
+ssh-keygen -l [-v] [-E fingerprint_hash] [-f input_keyfile]
+ssh-keygen -B [-f input_keyfile]
+ssh-keygen -D pkcs11
+ssh-keygen -F hostname [-lv] [-f known_hosts_file]
+ssh-keygen -H [-f known_hosts_file]
+ssh-keygen -K [-a rounds] [-w provider]
+ssh-keygen -R hostname [-f known_hosts_file]
+ssh-keygen -r hostname [-g] [-f input_keyfile]
+ssh-keygen -M generate [-O option] output_file
+ssh-keygen -M screen [-f input_file] [-O option] output_file
+ssh-keygen -I certificate_identity -s ca_key [-hU] [-D pkcs11_provider]
+          [-n principals] [-O option] [-V validity_interval]
+          [-z serial_number] file ...
+ssh-keygen -L [-f input_keyfile]
+ssh-keygen -A [-a rounds] [-f prefix_path]
+ssh-keygen -k -f krl_file [-u] [-s ca_public] [-z version_number]
+          file ...
+ssh-keygen -Q [-l] -f krl_file [file ...]
+ssh-keygen -Y find-principals -s signature_file -f allowed_signers_file
+ssh-keygen -Y check-novalidate -n namespace -s signature_file
+ssh-keygen -Y sign -f key_file -n namespace file ...
+ssh-keygen -Y verify -f allowed_signers_file -I signer_identity
+  -n namespace -s signature_file [-r revocation_file]
+==============================================================================
+ssh-keygen 是一个 SSH 密钥生成工具，用于创建新的 SSH 密钥对。SSH 密钥对包括一个公钥和一个私钥。公钥可以安全地分享给任何人，而私钥必须保密。
+使用 SSH 密钥对进行身份验证比传统的密码认证更加安全，因为它提供了基于非对称加密的双因素认证。
+
+### 作用
+- **生成新的密钥对**：创建一个新的 SSH 密钥对，用于服务器认证或其他加密通信。
+- **指定密钥类型和大小**：可以为不同的加密算法生成密钥，如 RSA、DSA、ECDSA、Ed25519 等，并指定密钥的大小（强度）。
+- **创建带有密码保护的密钥**：生成的私钥可以用密码加密，这样即使私钥文件被盗，没有密码也无法使用。
+- **生成 SSH 公钥指纹**：用于验证远程主机的身份。
+
+### 基本用法
+1. **生成新的密钥对**：
+   ssh-keygen
+
+   运行该命令后，它将提示你输入文件保存位置（默认是 ~/.ssh/id_rsa）和一个可选的密码。
+
+2. **指定密钥文件路径**：
+   ssh-keygen -f /path/to/key
+
+   使用 -f 选项指定密钥存储的路径和名称。
+
+3. **指定密钥类型**：
+   ssh-keygen -t rsa -b 4096
+
+   使用 -t 选项来指定密钥类型，-b 选项指定密钥长度。这里生成了一个 4096 位的 RSA 密钥。
+
+4. **使用密码保护密钥**：
+   ssh-keygen -t rsa -b 4096 -C "your_email@example.com" -N "your_password"
+
+   -C 选项用于添加一个注释（通常是邮箱地址），而 -N 选项后面跟的是你想要设置的密码。
+
+5. **生成公钥指纹**：
+   ssh-keygen -l -f /path/to/key.pub
+
+   -l 选项用于显示公钥的指纹，-f 指定公钥文件的路径。
+
+### 高级用法
+- **更改密钥的密码**：
+  ssh-keygen -p -f /path/to/key
+
+  使用 -p 选项来更改密钥的密码。
+
+- **生成 SSHv1 RSA 密钥**：
+  ssh-keygen -t rsa1
+
+  生成 SSH 版本 1 兼容的 RSA 密钥。
+
+- **生成证书**：
+  ssh-keygen -s ca_key -I certificate_identity -n user_name -V +52w /path/to/key.pub
+
+  -s 选项指定签名密钥（CA 密钥），-I 为证书指定一个身份标识，-n 指定用户名，-V 指定证书有效期。
+
+- **提取公钥**：
+  ssh-keygen -y -f /path/to/private/key
+
+  -y 选项将从指定的私钥文件中提取公钥。
+
+### 注意事项
+- 保护你的私钥：私钥是访问你的服务器的“钥匙”，不应该无保护地存储或传输。
+- 使用强密码：如果你给私钥设置了密码，确保它足够复杂，以防止被猜测或暴力破解。
+- 定期更新密钥：定期更换密钥对可以提高安全性。
+- 使用现代密钥类型和足够的长度：例如，使用至少 2048 位的 RSA 密钥，或更好的是使用 Ed25519 密钥类型。
+
+通过 `ssh-keygen` 生成的密钥对可以用于 SSH 服务器的无密码登录，也可以用于其他需要非对称密钥对的系统，
+比如 Git 服务器的身份认证、加密文件的签名等。

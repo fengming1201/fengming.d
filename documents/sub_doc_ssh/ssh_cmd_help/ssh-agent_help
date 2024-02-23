@@ -1,0 +1,60 @@
+usage: 
+ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash]
+            [-P allowed_providers] [-t life]
+ssh-agent [-a bind_address] [-E fingerprint_hash] [-P allowed_providers]
+            [-t life] command [arg ...]
+ssh-agent [-c | -s] -k
+
+===============================================================
+ssh-agent 是一个帮助处理私钥的程序，它可以记住你的 SSH 私钥的密码，并在需要时自动提供给 SSH 客户端程序。
+这样，你就不必在每次使用 SSH 或 SSH 基础的工具（如 Git）时重复输入密码。
+
+### 作用
+- **密钥管理**：ssh-agent 管理 SSH 私钥，并在需要时向客户端提供。
+- **安全性**：避免多次输入密钥密码，减少密码泄露的风险。
+- **便捷性**：一旦密钥被 ssh-agent 记住，之后的操作无需再次输入密码。
+
+### 基本用法
+1. **启动 ssh-agent**：
+   eval $(ssh-agent)
+
+   这条命令会启动 ssh-agent 进程，并设置好环境变量，以便 SSH 客户端可以连接到它。
+
+2. **添加 SSH 密钥到 ssh-agent**：
+   ssh-add ~/.ssh/id_rsa
+
+   这条命令会将指定的私钥添加到 ssh-agent。在添加密钥时，你需要输入该密钥的密码。
+
+3. **自动添加所有可用的密钥**：
+   ssh-add
+
+   如果不带参数运行 `ssh-add`，它会尝试添加 `~/.ssh` 目录下所有默认的私钥。
+
+### 高级用法
+- **设置密钥的生存时间**：
+  ssh-add -t [seconds] ~/.ssh/id_rsa
+
+  使用 -t 选项可以为添加到 ssh-agent 的密钥设置一个生存时间，时间到后密钥将自动从 ssh-agent 中移除。
+
+- **列出 ssh-agent 中的密钥**：
+  ssh-add -l
+
+  使用 -l 选项可以列出 ssh-agent 当前管理的所有密钥。
+
+- **删除 ssh-agent 中的某个密钥**：
+  ssh-add -d ~/.ssh/id_rsa
+
+  使用 -d 选项可以从 ssh-agent 中删除指定的密钥。
+
+- **删除 ssh-agent 中的所有密钥**：
+  ssh-add -D
+
+  使用 -D 选项可以从 ssh-agent 中删除所有密钥。
+
+### 注意事项
+- 当你注销或重启系统时，ssh-agent 进程通常会停止，你可能需要重新添加密钥。
+- 确保只在信任的环境中使用 ssh-agent，因为它会在内存中保留解锁的私钥。
+- 如果你使用的是 macOS，系统可能提供了一个集成的 SSH 密钥链管理功能，它可以自动存储和提供 SSH 密钥密码。
+
+ssh-agent 是一个非常有用的工具，可以简化需要多次使用 SSH 密钥的工作流程。
+通过合理配置和使用，它可以提高工作效率，同时保持一定的安全性。
