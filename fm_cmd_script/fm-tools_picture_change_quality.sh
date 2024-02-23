@@ -24,7 +24,7 @@ function func_picture_convert_quality
 	then
 		echo "SYNOPSIS:"
 		echo "$scriptname  input  output  quality"
-		echo "e.g.$scriptname  mypic.jpg  newmyjpg.jpg  80"
+		echo "e.g.$scriptname  mypic.jpg  newmyjpg.jpg  80[0-100]"
 		return 1
 	fi
 	local input=$1
