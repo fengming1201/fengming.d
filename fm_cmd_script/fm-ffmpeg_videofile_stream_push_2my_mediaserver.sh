@@ -2,9 +2,11 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
+if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
     echo "abstract:"
+	echo "rtmp_url:rtmp://101.200.135.149:1935/live/movie1234"
+	echo ""
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
@@ -24,9 +26,10 @@ function func_ffmpeg_videofile_stream_push_2my_mediaserver
 
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "ERROR:parameter wrong"
+		echo ""
 		echo "$scriptname  loop_times  video_file_lsit"
 		echo "e.g:$scriptname 10 1.mp4 2.flv ..."
+		echo ""
 		return 1
 	fi
 	which ${push_tool} > /dev/null
