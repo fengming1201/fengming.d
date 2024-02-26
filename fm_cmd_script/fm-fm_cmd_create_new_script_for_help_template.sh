@@ -133,13 +133,18 @@ function func_
         fi
 
         #check file
-        file_list=\$(find \${help_root_dir} -type f -iname "\${one_arg}*")  #前缀
-        #file_list=\$(find \${help_root_dir} -type f -iname "*\${one_arg}")  #后缀
-        file_list_size=\${#file_list[@]}
+        file_list=\${help_root_dir}/\${one_arg}
+        if [ ! -f \${file_list} ]
+        then
+            file_list=\$(find \${help_root_dir} -type f -iname "\${one_arg}*")  #前缀
+            #file_list=\$(find \${help_root_dir} -type f -iname "*\${one_arg}")  #后缀
+            #file_list=\$(find \${help_root_dir} -type f -iname "\${one_arg}*" -o -type l -iname "\${one_arg}*")  #包括链接文件
+        fi        
         if [ "x\${file_list}" = x ]
         then 
             echo "no found help file with prefix \${one_arg}"
             local maybe_file=\$(find \${help_root_dir} -type f -iname "*\${one_arg}*")
+            #local maybe_file=\$(find \${help_root_dir} -type f -iname "*\${one_arg}*" -o -type l -iname "*\${one_arg}*")  #包括链接文件
             if [ "x\${maybe_file}" != x ]
             then
                 echo "maybe you looking for: "
@@ -149,7 +154,7 @@ function func_
         fi
         readarray -t file_array <<< "\${file_list}"
         file_list_size=\${#file_array[@]}
-        echo "file_list_size:\${file_list_size}"
+        
         local sub_num=1
         for file_each in \${file_list}
         do

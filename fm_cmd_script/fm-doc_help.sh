@@ -37,7 +37,7 @@ fi
 #start here add your code,you need to implement the following function.
 function func_
 {
-    local help_root_dir=${fengming_dir}/documents/sub_doc_docker
+    local help_root_dir=${fengming_dir}/documents/
 
     #check paramter
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -59,7 +59,7 @@ function func_
     for one_arg in ${arg_list}
     do
         #[optional] check sub dir first
-        dir_list=$(find ${help_root_dir} -type d -iname "${one_arg}*")
+        dir_list=$(find ${help_root_dir} -type d -iname "sub_doc_*${one_arg}*")
         if [ "x${dir_list}" != x ]
         then
             for one_dir in ${dir_list}
@@ -75,12 +75,15 @@ function func_
         file_list=${help_root_dir}/${one_arg}
         if [ ! -f ${file_list} ]
         then
-            file_list=$(find ${help_root_dir} -type f -iname "*${one_arg}")  #后缀
+            #file_list=$(find ${help_root_dir} -type f -iname "${one_arg}*")  #前缀
+            #file_list=$(find ${help_root_dir} -type f -iname "*${one_arg}")  #后缀
+            file_list=$(find ${help_root_dir} -type f -iname "${one_arg}*" -o -type l -iname "${one_arg}*")  #包括链接文件
         fi        
         if [ "x${file_list}" = x ]
         then 
             echo "no found help file with prefix ${one_arg}"
-            local maybe_file=$(find ${help_root_dir} -type f -iname "*${one_arg}*")
+            #local maybe_file=$(find ${help_root_dir} -type f -iname "*${one_arg}*")
+            local maybe_file=$(find ${help_root_dir} -type f -iname "*${one_arg}*" -o -type l -iname "*${one_arg}*")  #包括链接文件
             if [ "x${maybe_file}" != x ]
             then
                 echo "maybe you looking for: "
