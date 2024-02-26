@@ -34,36 +34,65 @@ fi
 if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
+
 function func_upload_files_to_fileserver_tar_my
 {
+	local target_dir_list=(Andriod_Apk  docker-compose.yml  Docker_Hub_Webpage  Release_DebianX_Runtime_Image  software_exe  software_package  source_packages  unclassified)
+	local target_dir_list_size=${#target_dir_list[@]}
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "paramter wrong!"
-		echo "$scriptname  file1 file2 fileN ..."
-		echo "$scriptname  file1 file2"
+		echo ""
+		echo "$scriptname  file1 file2 fileN ... [target_dir num]"
+		echo "$scriptname  file1 file2                        #upload to /root/http_share/data"
+		echo "$scriptname  file1 file2   1                    #upload to /root/http_share/data/Andriod_Apk"
+		echo "$scriptname  file1 file2   8                    #upload to /root/http_share/data/unclassified"
+		echo ""
+		echo "target_dir list:"
+		local index=1
+		for str in ${target_dir_list[*]}
+		do
+			echo "                ${index} -- ${str}"
+			index=$(expr $index + 1)
+		done
+		echo ""
 		return 1
 	fi
-
+    local num_args=$#  # 获取参数个数
+    local last_arg="${!num_args}"  # 获取最后一个参数
 	local file_list
     local target_dir=/root/http_share/data/
 	#check file stat
 	for file in "$@"
 	do
 		if [ ! -f ${file} ]
-		then 
-			echo "WARNING:<${file}> not found,ignore it"
+		then
+			if [[ ${last_arg} =~ ^[0-9]+$ ]]; then
+				echo ""
+			else
+				echo "WARNING:file:${file} not found,ignore it"
+			fi
 		else
 			file_list+=("${file}")
 		fi
 	done
+	if [[ ${last_arg} =~ ^[0-9]+$ ]]; then
+		if [ ${last_arg} -le ${target_dir_list_size} ];then
+			target_dir=/root/http_share/data/${target_dir_list[$(expr ${last_arg} - 1)]}
+		fi
+	fi
     local ip="139.9.186.120"
     local port="1201"
     local username="root"
 	if [ ${#file_list[@]} -ge 1 ]
 	then
+		echo " file_list:${file_list[@]}"
+		echo "target_dir:${target_dir}"
+		echo ""
 		echo "tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}"
 		tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}
 		#scp -P ${port}  ${file_list[@]}   ${username}@${fileserver_ip}:${target_path}
+	else
+		echo "file list is empty,abort upload!!"
 	fi
 	echo "all done ..."
 	return 0
