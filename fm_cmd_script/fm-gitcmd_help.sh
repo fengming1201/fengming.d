@@ -18,12 +18,14 @@ fi
 function func_gitcmd_help
 {
 	local cmd_help_path=${fengming_dir}/documents/sub_doc_git/git_cmd_help
-	if [ $# -lt 1 ];then tree -L 1 ${cmd_help_path};return 0;fi
-	if [ $# -gt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo "parameter wrong!"
+		echo ""
+		tree -L 1 ${cmd_help_path}
 		echo "$scriptname cmd"
 		echo "e.g.:$scriptname  log"
+		echo ""
 		return 1
 	fi
 	if [ -f ${cmd_help_path}/${1} ]
