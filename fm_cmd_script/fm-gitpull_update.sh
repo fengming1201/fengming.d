@@ -43,8 +43,8 @@ function func_git_pull_update
         echo "sudo git pull ${remote_name} ${branch_name}"
         sudo git pull ${remote_name} ${branch_name}
 	else
-        remote_name=$(sudo git remote -v | awk '{print $1}' | uniq)
-        branch_name=$(sudo git branch | awk '{print $2}' | uniq)
+        remote_name=$(git remote -v | awk '{print $1}' | uniq)
+        branch_name=$(git branch | awk '{print $2}' | uniq)
         echo "git pull ${remote_name} ${branch_name}"
         git pull ${remote_name} ${branch_name}
 	fi
