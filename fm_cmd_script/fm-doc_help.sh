@@ -97,7 +97,7 @@ function func_
         local sub_num=1
         for file_each in ${file_list}
         do
-            echo "start[$sub_num] ..."
+            echo "start[$sub_num/$file_list_size] ..."
             echo ""
             cat ${file_each}
             echo ""
