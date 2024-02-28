@@ -69,26 +69,31 @@ function func_use_openssl_to_encrypt_decrypt_files
     then
         if [ $# -ne 3 ];then out_file=${in_file}.enc;fi
 
-        echo "${tool} enc -aes-256-cbc -salt -in ${in_file} -out ${out_file}"
         local out_dirname="$(dirname ${out_file})/"
         if [ ! -w ${out_dirname} ]
         then
+            if [ -f ${out_file} ];then sudo cp ${out_file} ${out_file}.old;fi
+            echo "sudo ${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}"
             sudo ${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
         else
+            if [ -f ${out_file} ];then cp ${out_file} ${out_file}.old;fi
+            echo "${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}"
             ${tool} enc -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
         fi
+        echo " backup/备份:${out_file} --> ${out_file}.old"
         echo "encrypt/加密:${in_file} --> ${out_file}"
         echo ""
     elif [ $1 -eq 2 ] || [ "$1" = "decrypt" ]
     then
         if [ $# -ne 3 ];then out_file=${in_file}.dec;fi
-
-        echo "${tool} enc -d -aes-256-cbc -salt -in ${in_file} -out ${out_file}"
+        
         local out_dirname="$(dirname ${out_file})/"
         if [ ! -w ${out_dirname} ]
         then
+            echo "sudo ${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}"
             sudo ${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
         else
+            echo "${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}"
             ${tool} enc -d -aes-256-cbc -salt -base64 -pbkdf2 -iter 100 -in ${in_file} -out ${out_file}
         fi
         echo "encrypt/解密:${in_file} --> ${out_file}"

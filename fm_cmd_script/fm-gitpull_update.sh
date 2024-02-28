@@ -34,19 +34,19 @@ function func_git_pull_update
 		return 1
 	fi
 	rm -f ${tmp_file}
-    local remote_name="origin"
-    local branch_name="main"
+	local remote_name="origin"
+	local branch_name="main"
 	if [ ${ret} -ne 0 ]
 	then
 		remote_name=$(sudo git remote -v | awk '{print $1}' | uniq)
-        branch_name=$(sudo git branch | awk '{print $2}' | uniq)
-        echo "sudo git pull ${remote_name} ${branch_name}"
-        sudo git pull ${remote_name} ${branch_name}
+		branch_name=$(sudo git branch | awk '{print $2}' | uniq)
+		echo "sudo git pull ${remote_name} ${branch_name}"
+		sudo git pull ${remote_name} ${branch_name}
 	else
-        remote_name=$(git remote -v | awk '{print $1}' | uniq)
-        branch_name=$(git branch | awk '{print $2}' | uniq)
-        echo "git pull ${remote_name} ${branch_name}"
-        git pull ${remote_name} ${branch_name}
+		remote_name=$(git remote -v | awk '{print $1}' | uniq)
+		branch_name=$(git branch | awk '{print $2}' | uniq)
+		echo "git pull ${remote_name} ${branch_name}"
+		git pull ${remote_name} ${branch_name}
 	fi
 
 	return 0
