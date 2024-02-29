@@ -1,0 +1,11 @@
+[Unit]
+Description=My Sample Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/path/to/executable
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
