@@ -52,5 +52,8 @@ endif
 EOF
         fi
 	fi
+    echo ""
+    echo "how to use dictionary :在vim插入模式下 Ctrl + x 然后再按下 Ctrl + k"
+    echo ""
     return 0
 }

@@ -4,7 +4,7 @@ scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
 
-if [ -f ${common_share_function} ]
+if [ -f ${common_share_function} ] && [ "include" = "enable" ]
 then
     source ${common_share_function}
 fi
@@ -37,26 +37,34 @@ fi
 #start here add your code,you need to implement the following function.
 function func_systemd_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_dir}/documents/sub_doc_systemd/dictionary_for_systemd
-	local target_file=.vim_dictionary_for_systemd
-	#check
+	local dic_file_path=${fengming_dir}/documents/sub_doc_systemd/vim_dictionary_for_systemd
+	local dictionary_file=.vim_dictionary
+	#check  .vim_dictionary
 	if [ ! -f ${dic_file_path} ]
 	then
 		echo "vim dict file:$dic_file_path not exist"
 		return 1
 	fi
 	if [ -w ./ ];then
-		cp  -vi  ${dic_file_path}  ./${target_file}
+		cp  -vi  ${dic_file_path}  ./${dictionary_file}
 	else
-		sudo cp -vi  ${dic_file_path}  ./${target_file}
+		sudo cp -vi  ${dic_file_path}  ./${dictionary_file}
 	fi
-	#check vim enviroment
-    COMMOND_FUNC_check_vim_dictionary_env_variable ${target_file}
-    if [ $? -ne 0 ]
-    then
-        echo "ERROR:COMMOND_FUNC_check_vim_dictionary_env_variable() fail,ret:${ret}"
-        return 2
-    fi
+
+	local snippet_file_path=${fengming_dir}/documents/sub_doc_systemd/vim_snippets_for_systemd
+	local snippets_file=.vim_snippets
+    #check .vim_snippets
+	if [ ! -f ${snippet_file_path} ]
+	then
+		echo "vim dict file:$snippet_file_path not exist"
+		return 1
+	fi
+	if [ -w ./ ];then
+		cp  -vi  ${snippet_file_path}  ./${snippets_file}
+	else
+		sudo cp -vi  ${snippet_file_path}  ./${snippets_file}
+	fi
+
 	return 0
 }
 

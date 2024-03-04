@@ -18,12 +18,17 @@ fi
 function func_install_myvim_config
 {
     local vim_pack=vim.tar.gz
-    local download_url='http://139.9.186.120:8050/software_package'
+    local download_url='http://139.9.186.120:8050/software_package/vim.tar.gz'
 
     # help paramater
     if [ "$1" = "-h" ] || [ "$1" = "--help " ]
     then
         echo "nothing ...."
+        echo "Ultisnips Plugin need python3 support,maybe you need install vim-gtk3"
+        echo "apt install  vim-gtk3"
+        echo "/usr/bin/vim -> /etc/alternatives/vim"
+        echo "/etc/alternatives/vim -> /usr/bin/vim.gtk3"
+        echo ""
         return 1
     fi
     local reinstall=no
@@ -46,7 +51,7 @@ function func_install_myvim_config
     if [ ! -f ${vim_pack} ]
     then
         echo "download vim cfg pack from myserver ..."
-        wget -c ${download_url}/${vim_pack}
+        wget -c ${download_url}
         if [ ! -f ${vim_pack} ];then echo "download fail.";popd;return 3;fi
     fi
     #tar -zxvf ${target_pack_name} --strip-components=1
