@@ -35,10 +35,10 @@ if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-function func_docker_compose_vim_dictionary_copy2current_dir
+function func_systemd_vim_dictionary_copy2current_dir
 {
-	local dic_file_path=${fengming_dir}/documents/sub_doc_docker/docker-compose/dictionary_for_docker_compose
-	local target_file=.vim_dictionary_for_docker_compose
+	local dic_file_path=${fengming_dir}/documents/sub_doc_systemd/dictionary_for_systemd
+	local target_file=.vim_dictionary_for_systemd
 	#check
 	if [ ! -f ${dic_file_path} ]
 	then
@@ -50,18 +50,17 @@ function func_docker_compose_vim_dictionary_copy2current_dir
 	else
 		sudo cp -vi  ${dic_file_path}  ./${target_file}
 	fi
-    #check vim enviroment
+	#check vim enviroment
     COMMOND_FUNC_check_vim_dictionary_env_variable ${target_file}
     if [ $? -ne 0 ]
     then
         echo "ERROR:COMMOND_FUNC_check_vim_dictionary_env_variable() fail,ret:${ret}"
         return 2
     fi
-
 	return 0
 }
 
-func_docker_compose_vim_dictionary_copy2current_dir $@
+func_systemd_vim_dictionary_copy2current_dir "$@"
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1

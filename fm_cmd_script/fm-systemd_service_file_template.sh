@@ -35,7 +35,7 @@ if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-function func_
+function func_template_for_systemd_service
 {
 	local template_file=${fengming_dir}/documents/sub_doc_systemd/template_x.service
     local target_dir=/etc/systemd/system
@@ -61,31 +61,46 @@ function func_
 	echo "path=${template_file}"
 
     target_file=$1
+	local cp2current_dir=no
 	local opt="N"
 	if [ -f ${target_dir}/${target_file} ]
 	then
-		read -p "Overwrite Current ${target_dir}/${target_file}? [y/N]"  opt
+		read -p "Overwrite Current ${target_dir}/${target_file}? current_dir=c[y/N,c]"  opt
 		if [ "x${opt}" = "x" ];then opt="N";fi
 		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
 		then
-			${maybeSUDO} cp -vi ${template_file}  ${target_dir}/${target_file} 
-		#fix
+			${maybeSUDO} cp -v ${template_file}  ${target_dir}/${target_file} 
+		elif [ "x${opt}" = "xc" ] || [ "x${opt}" = "xC" ]
+		then
+			cp2current_dir=yes
 		else
 			echo "Nothing to do!! End"
 			return 0
 		fi
 	else
-		read -p "Copy ${template_file}  to ${target_dir}/${target_file}? [Y/n]"  opt
+		read -p "Copy ${template_file}  to ${target_dir}/${target_file}? current_dir=c[Y/n,c]"  opt
 		if [ "x${opt}" = "x" ];then opt="Y";fi
 		if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
 		then
-			${maybeSUDO} cp -vi  ${template_file}  ${target_dir}/${target_file}
-		#fix
+			${maybeSUDO} cp -v  ${template_file}  ${target_dir}/${target_file}
+		elif [ "x${opt}" = "xc" ] || [ "x${opt}" = "xC" ]
+		then
+			cp2current_dir=yes
 		else
 			echo "Nothing to do!! End"
 			return 0
 		fi
 	fi
+	#copy to current dir
+	if [ "x${cp2current_dir}" = "xyes" ]
+	then
+		if [ -w ./ ];then
+			cp -vi ${template_file} ./${target_file}
+		else
+			${maybeSUDO} cp -vi ${template_file}  ./${target_file}
+		fi
+	fi
+	return 0
 	if [ -f ${target_dir}/${target_file} ]
 	then
 		${maybeSUDO} chmod a+w ${target_dir}/${target_file}
@@ -93,7 +108,7 @@ function func_
 	return 0
 }
 
-func_ "$@"
+func_template_for_systemd_service "$@"
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1

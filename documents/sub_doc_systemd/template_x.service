@@ -1,11 +1,34 @@
+#一个典型的systemd服务配置文件（.service文件）包含三个主要部分：[Unit]、[Service]和[Install]。
+#以下是一些常见的选项及其作用,有 ** 是必须的：
 [Unit]
-Description=My Sample Service
-After=network.target
+#Description=        #**描述服务的简短描述。
+#Documentation=      #  提供有关服务的文档链接。
+#Requires=           #  指定服务所依赖的其他单元。
+#Wants=              #  指定服务希望依赖的其他单元。
+#After=              #  指定服务应该在哪些其他单元之后启动。
+#Before=             #  指定服务应该在哪些其他单元之前启动。
+#Conflicts=          #  指定服务与哪些其他单元冲突。
+#BindsTo=            #  指定服务应该绑定到的其他单元。
+#PartOf=             #  指定服务是其他单元的一部分。
+#OnFailure=          #  指定在服务失败时应该启动的单元。
+#OnFailureJobMode=   #  指定在服务失败时应该采取的操作。
 
 [Service]
-Type=simple
-ExecStart=/path/to/executable
-Restart=always
+#Type=     #**指定服务的类型，可选 (simple 默认值，表示服务是简单的前台进程) ,(forking 表示服务会启动一个守护进程) ,(oneshot表示服务会在启动后执行一个任务，然后退出) ,(dbus表示服务通过 D-Bus 启动)。
+#ExecStart=   #**指定服务启动时执行的命令或程序的路径。
+#ExecStop=   # 指定服务停止时执行的命令。
+#ExecReload=   # 指定服务重载配置时执行的命令。
+#Restart=   # 指定服务在失败时的重启策略，可选no ,always ,on-success ,on-failure ,on-abnormal ,on-abort ,on-watchdog。
+#User=   # 指定服务运行的用户。
+#Group=   # 指定服务运行的用户组。
+#WorkingDirectory=   # 指定服务的工作目录。
+#Environment=   # 设置服务运行时的环境变量,格式为 KEY=VALUE。
+
+#RestartSec=   # 指定重启之间的延迟时间。
+#TimeoutStartSec=   # 指定启动服务的超时时间。
+#TimeoutStopSec=   # 指定停止服务的超时时间。
 
 [Install]
-WantedBy=multi-user.target
+#WantedBy=     #**指定服务应该由哪个目标（target）启动。
+#RequiredBy=   #  指定服务应该由哪个目标（target）强制启动。
+#Alias=        #  为服务指定一个别名。

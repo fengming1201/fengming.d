@@ -8,3 +8,49 @@ function COMMOND_FUNC_file_password_cracking_tools_list
     echo "fcrackzip --Fcrackzip是一款用于破解ZIP文件密码的工具。它可以尝试恢复被密码保护的ZIP压缩文件的密码。支持暴力破解和字典攻击两种破解模式，并提供了多种参数选项以进行密码破解的配置。"
     return 0
 }
+
+function COMMOND_FUNC_check_vim_dictionary_env_variable
+{
+    if [ $# -ne 1 ]
+    then
+        echo "parameter wrong!!"
+        return 1
+    fi
+    local target_file=$1
+	#check vim enviroment
+	local myvim_rc=~/.vim/myvimrc
+	if [ ! -f ${myvim_rc} ]
+	then
+		echo "ERROR: vim config pack not install yet"
+		echo "you can:fm-install_myvim_config_pack.sh"
+		echo ""
+		return 2
+	fi
+	local isinstalled=$(cat ${myvim_rc} | grep ${target_file})
+	if [ "x${isinstalled}" = "x" ]
+	then
+		echo "add the following content to ${myvim_rc}"
+		echo ""
+        local ishavecur_work_dir=$(cat ${myvim_rc} | grep -w "cur_work_dir")
+        if [ "x${ishavecur_work_dir}" = "x" ]
+        then
+		    cat <<EOF | tee -a ${myvim_rc}
+let cur_work_dir = getcwd()
+let dict_file = cur_work_dir . '/${target_file}'
+if filereadable(dict_file)
+    execute 'set dictionary+=' . dict_file
+endif
+
+EOF
+        else
+		    cat <<EOF | tee -a ${myvim_rc}
+let dict_file = cur_work_dir . '/${target_file}'
+if filereadable(dict_file)
+    execute 'set dictionary+=' . dict_file
+endif
+
+EOF
+        fi
+	fi
+    return 0
+}
