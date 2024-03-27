@@ -4,7 +4,26 @@ scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
-    echo "abstract:"
+    echo "abstract:moc（Music On Console）是一个简单的终端音乐播放器。"
+    echo "添加音乐文件:按 a 键，然后输入音乐文件或目录的路径并按 Enter。"
+    echo "控制播放:"
+    echo "        q：退出 moc。"
+    echo "        p：暂停/播放。"
+    echo "        n：下一首曲目。"
+    echo "        b：上一首曲目。"
+    echo "        >：快进。"
+    echo "        <：后退。"
+    echo "        u：停止。"
+    echo "        +：增加音量。"
+    echo "        -：减小音量。"
+    echo "其他操作："
+    echo "        按 Enter 键可以打开当前选择的曲目。"
+    echo "        按 d 键可以从播放列表中删除当前选择的曲目。"
+    echo "查看帮助：您可以在 moc 中按 h 键查看更多键盘快捷键和帮助信息。"
+    echo ""
+    echo "more detail to see:"
+    echo "                   fm-cmd_help.sh  mocp_help"
+    echo ""
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
@@ -44,9 +63,10 @@ function func_linux_music_player
     #check param
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "${scriptname}  file1.mp3  file2.flac ... or music_dir"
+        echo "usage:"
+        echo "${scriptname}  info"
         echo "${scriptname}  other"
-        echo "more detail:${app} --help"
+        echo ""
         return 2
     fi
     if [ "$1" = "other" ]
