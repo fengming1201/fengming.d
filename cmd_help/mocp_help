@@ -1,49 +1,51 @@
-快捷键：
-q              将主运行中心与服务器分离,退出。
-ENTER          开始播放此文件或转到此目录。
-DOWN           在菜单中下移。
-UP             在菜单中向上移动。
-PAGE_DOWN      向下移动一页。
-PAGE_UP        向上移动一页。
-HOME           移动到菜单中的第一个项目。
-END            移动到菜单中的最后一项。
-Q              退出。
-s              停止。
-n              播放下一个文件。
-b              播放上一个文件。
-p SPACE        暂停。
-f              切换ReadTags选项。
-S              切换无序播放。
-R              切换重复。
-X              切换自动下一个。
-TAB            在播放列表和文件列表之间切换。
-l              在布局之间切换。
-^p             开关播放时间百分比。
-a              将文件/目录添加到播放列表。
-C              清除播放列表。
-A              将目录递归添加到播放列表。
-Y              删除不存在文件的播放列表项。
-<              Decrease volume by 1% 
->              Increase volume by 1%
-,              Decrease volume by 5%
-.              Increase volume by 5%
-RIGHT          Seek forward by n-s
-LEFT           Seek backward by n-s
-h ?            显示帮助屏幕。
-M              隐藏错误/信息性消息。
-^r ^l          刷新屏幕。
-r              重新读取目录内容。
-H              切换隐藏文件的显示。
-m              转到音乐目录（需要配置选项）。
-d              从播放列表中删除项目。
-g /            搜索菜单。
-V              保存播放列表。
-^t             切换ShowTime选项。
-^f             切换ShowFormat选项。
-o              从URL播放。
-G              转到当前播放文件的目录。
-i              转到目录  
-U              Go to '..'
-^x ESCAPE      从条目中退出。
-]              无声寻道前进5秒.
-===============================================================
+Usage: mocp [OPTIONS] [FILE|DIR ...]
+
+常规选项:
+  -D, --debug                       打开对文件的日志记录。
+  -M, --moc-dir=DIR                 使用指定的MOC目录而不是默认目录。
+  -m, --music-dir                   在MusicDir中启动。
+  -C, --config=FILE                 使用指定的配置文件而不是默认配置文件（与“--no config”冲突）。
+      --no-config                   使用程序默认值而不是任何配置文件（与“--config”冲突）。
+  -O, --set-option='NAME=VALUE'     Override the configuration option NAME with VALUE
+  -F, --foreground                  Run the server in foreground (logging to stdout)
+  -S, --server                      Only run the server
+  -R, --sound-driver=DRIVERS        Use the first valid sound driver
+  -A, --ascii                       Use ASCII characters to draw lines
+  -T, --theme=FILE                  Use the selected theme file (read from ~/.moc/themes if the path is not absolute)
+  -y, --sync                        Synchronize the playlist with other clients
+  -n, --nosync                      Don't synchronize the playlist with other clients
+
+服务器命令:
+  -P, --pause                       Pause
+  -U, --unpause                     Unpause
+  -G, --toggle-pause                Toggle between playing and paused
+  -s, --stop                        Stop playing
+  -f, --next                        Play the next song
+  -r, --previous                    Play the previous song
+  -k, --seek=N                      Seek by N seconds (can be negative)
+  -j, --jump=N{%,s}                 Jump to some position in the current track
+  -v, --volume=[+,-]LEVEL           Adjust the PCM volume
+  -x, --exit                        Shutdown the server
+  -a, --append                      Append the files/directories/playlists passed in the command line to playlist
+  -e, --recursively                 Alias for --append
+  -q, --enqueue                     Add the files given on command line to the queue
+  -c, --clear                       Clear the playlist
+  -p, --play                        Start playing from the first item on the playlist
+  -l, --playit                      Play files given on command line without modifying the playlist
+  -t, --toggle=CONTROL              Toggle a control (shuffle, autonext, repeat)
+  -o, --on=CONTROL                  Turn on a control (shuffle, autonext, repeat)
+  -u, --off=CONTROL                 Turn off a control (shuffle, autonext, repeat)
+  -i, --info                        Print information about the file currently playing
+  -Q, --format=FORMAT               Print formatted information about the file currently playing
+
+其他选项:
+  -V, --version                     Print version information
+      --echo-args                   Print POPT-interpreted arguments
+      --usage                       Print brief usage
+  -h, --help                        Print extended usage
+
+环境变量:
+
+  MOCP_OPTS                         Additional command line options
+  MOCP_POPTRC                       List of POPT configuration files
+======================================================

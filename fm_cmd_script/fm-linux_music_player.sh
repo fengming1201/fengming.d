@@ -14,8 +14,8 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "        >：快进。"
     echo "        <：后退。"
     echo "        u：停止。"
-    echo "        +：增加音量。"
-    echo "        -：减小音量。"
+    echo "        .：增加音量。"
+    echo "        ,：减小音量。"
     echo "其他操作："
     echo "        按 Enter 键可以打开当前选择的曲目。"
     echo "        按 d 键可以从播放列表中删除当前选择的曲目。"
@@ -24,6 +24,13 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "more detail to see:"
     echo "                   fm-cmd_help.sh  mocp_help"
     echo ""
+    opt="N"
+    read -t 5 -p "more detail to see:[y/N]?" opt
+    if [ "x${opt}" = "x" ];then opt="N";fi
+    if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
+    then
+        fm-cmd_help.sh  mocp_help
+    fi
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
@@ -53,13 +60,6 @@ function func_linux_music_player
 {
     local app=mocp
     local default_opt=
-    which ${app} > /dev/null
-    if [ $? -ne 0 ]
-    then
-        echo "${app} not found!!,please install it first!"
-        echo "apt install moc"
-        return 1
-    fi
     #check param
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
@@ -67,6 +67,16 @@ function func_linux_music_player
         echo "${scriptname}  info"
         echo "${scriptname}  other"
         echo ""
+        echo "more detail to see:"
+        echo "                   fm-cmd_help.sh  mocp_help2"
+        echo ""
+        local opt="N"
+        read -t 5 -p "more detail to see:[y/N]?" opt
+        if [ "x${opt}" = "x" ];then opt="N";fi
+        if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ]
+        then
+            fm-cmd_help.sh  mocp_help2
+        fi
         return 2
     fi
     if [ "$1" = "other" ]
@@ -75,7 +85,15 @@ function func_linux_music_player
         return 3
     fi
 
-    ${app} ${default_opt} "$@"
+    which ${app} > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "${app} not found!!,please install it first!"
+        echo "apt install moc"
+        return 1
+    fi
+
+    ${app} ${default_opt}  "$@"
 
     return 0
 }
