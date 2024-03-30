@@ -49,9 +49,9 @@ function func_video_player
 			${app} ${default_opt} "${vfile}"
 		done
 	else
-		local opt="N"
-		read -p "Are you sure display to remote screen？ [y/N]"  opt
-		if [ "x${opt}" = "x"  ];then opt="N";fi
+		local opt="Y"
+		read -p "Are you sure display to remote screen？ [Y/n]"  opt
+		if [ "x${opt}" = "x"  ];then opt="Y";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
 			for vfile in "${play_list[@]}"
