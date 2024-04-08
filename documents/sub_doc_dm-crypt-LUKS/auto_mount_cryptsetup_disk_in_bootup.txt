@@ -1,0 +1,54 @@
+手动加密后，如果要设置自动开机挂载。
+下面是基于UUID的设置步骤：
+
+1. **获取加密设备的UUID**：
+
+    使用以下命令获取加密设备的UUID：
+    sudo blkid /dev/sdc1
+    /dev/sdc1: UUID="d3524f2a-b566-4731-9c67-c2c9bf682ee1" TYPE="crypto_LUKS" PARTUUID="abf462bf-87e5-1849-b27b-6f85fa5c7c9c"
+    或者
+    lsblk -f
+
+    记下输出中 `UUID` 的值。
+
+2. **创建一个命名的密钥文件**：
+
+    创建一个命名的密钥文件，该文件将包含您的LUKS密钥。
+    sudo mkdir -p /etc/luks-keys
+    sudo dd if=/dev/urandom of=/etc/luks-keys/my_encrypted_volume.key bs=512 count=4
+    sudo chmod 0400 /etc/luks-keys/my_encrypted_volume.key
+
+3. **添加密钥到LUKS设备**：
+
+    使用以下命令将密钥添加到LUKS设备：
+    sudo cryptsetup luksAddKey /dev/sdc1 /etc/luks-keys/my_encrypted_volume.key
+
+    确保将 `/dev/sdc1` 替换为您的加密设备的实际设备。
+
+4. **编辑 `/etc/crypttab` 文件**：
+
+    打开 `/etc/crypttab` 文件并添加以下行：
+
+    # <target name> <source device>         <key file>      <options>
+    crypt_disk_4T_1 UUID=d3524f2a-b566-4731-9c67-c2c9bf682ee1  /etc/luks-keys/my_encrypted_volume.key luks
+
+    请替换 `<加密设备的UUID>` 为步骤1中获得的UUID。
+
+5. **编辑 `/etc/fstab` 文件**：
+
+    打开 `/etc/fstab` 文件并添加以下行：
+
+    /dev/mapper/crypt_disk_4T_1  /media/hard_disk_4T ext4 defaults 0 2
+
+    请确保 `/media/hard_disk_4T` 目录已经存在。
+=============================================================================================
+其他操作：
+要管理密钥，
+可以使用 cryptsetup luksDump 命令来查看已经存在的密钥槽和密钥信息。
+sudo cryptsetup luksDump /dev/sdc1
+
+可以使用 cryptsetup luksAddKey 命令来添加新的密码或密钥文件。
+sudo cryptsetup luksAddKey /dev/sdc1 /etc/luks-keys/my_encrypted_volume.key
+
+可以使用 cryptsetup luksRemoveKey 命令来移除现有的密码或密钥文件。
+sudo cryptsetup luksRemoveKey /dev/sdc1 /etc/luks-keys/my_encrypted_volume.key
