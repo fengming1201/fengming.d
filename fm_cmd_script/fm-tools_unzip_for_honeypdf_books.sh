@@ -53,6 +53,8 @@ function func_unzip_for_honeypdf_with_passwd
     local pass=no
     local extract_dir=extract_dir
     if [ ! -d ${extract_dir} ];then mkdir ${extract_dir};fi
+    local org_zip_file_dir=already_extract_dir
+    if [ ! -d ${org_zip_file_dir} ];then mkdir ${org_zip_file_dir};fi
 
     old_ifs=$IFS
     IFS=$'\n'
@@ -60,12 +62,23 @@ function func_unzip_for_honeypdf_with_passwd
     do 
         if [ ! -f ${file} ]
         then
-            echo "file:$file not exist!"
+            echo "file:${file} not exist!"
             continue    
         fi
-        pass=$(echo $file|awk -F . '{print $(NF-1)}')
-        unzip -x -P $pass $file  -d ${extract_dir}
-        if [ $? -ne 0 ];then echo "unzip ${file} fail!!";fi
+        if [ "x$(echo ${file} | grep .com)" != "x" ]
+        then
+            pass=$(echo ${file}|awk -F . '{print $(NF-2)"."$(NF-1)}')
+        else
+            pass=$(echo ${file}|awk -F . '{print $(NF-1)}')    
+        fi
+
+        unzip -x -P $pass ${file}  -d ${extract_dir}
+        if [ $? -ne 0 ]
+        then 
+            echo "unzip ${file} fail!!"
+        else
+            mv -v ${file} ${org_zip_file_dir}
+        fi
         #echo "file:${file}  === pass:${pass}"
     done
     
