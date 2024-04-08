@@ -37,22 +37,23 @@ function func_gitdiff_work-cache
 	rm -f ${tmp_file}
 	local file_list
 	for file in "$@"
-    do
+	do
         if [ ! -f ${file} ]; then
             echo "WARNING:<${file}> not found,ignore it"
         else
             file_list+=("${file}")
         fi
-    done
-	
+	done
+
 	if [ $ret -ne 0 ]
 	then
-		echo "git diff ${file_list}"
-		sudo git diff ${file_list}
+		echo "sudo git diff ${file_list[*]}"
+		sudo git diff ${file_list[*]}
 	else
-		echo "git diff ${file_list}"
-		git diff ${file_list}
+		echo "git diff ${file_list[*]}"
+		git diff ${file_list[*]}
 	fi
+
 	return 0
 }
 

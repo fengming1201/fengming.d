@@ -18,13 +18,17 @@ fi
 function func_document_grep
 {
 	local doc_file_path=${fengming_dir}/documents
-	
-	#check para
-	if [ $# -lt 1 ]
-	then
-		echo "e.g $scriptname  keyword"
-		return 1
-	fi
+	#check paramter
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+    then
+        tree -L 1 ${doc_file_path}
+        echo ""
+        echo "DESCRIPTION:"
+        echo "SYNOPSIS:"
+        echo "         ${scriptname}  keyword  //关键词"
+        echo ""
+        return 1
+    fi
 	echo "grep --color=auto -rn $* ${doc_file_path}"
 	grep --color=auto -rn "$*" ${doc_file_path}
 

@@ -49,11 +49,11 @@ function func_gitdiff_work-repository
 	
 	if [ $ret -ne 0 ]
 	then
-		echo "git diff --cached ${file_list}"
-		sudo git diff --cached ${file_list}
+		echo "git diff --cached ${file_list[*]}"
+		sudo git diff --cached ${file_list[*]}
 	else
-		echo "git diff --cached ${file_list}"
-		git diff --cached ${file_list}
+		echo "git diff --cached ${file_list[*]}"
+		git diff --cached ${file_list[*]}
 	fi
 	return 0
 }

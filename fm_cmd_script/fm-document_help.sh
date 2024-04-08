@@ -59,7 +59,7 @@ function func_
     for one_arg in ${arg_list}
     do
         #[optional] check sub dir first
-        dir_list=$(find ${help_root_dir} -type d -iname "sub_doc_*${one_arg}*")
+        dir_list=$(find ${help_root_dir} -type d -iname "sub_doc_*${one_arg}*" -o  -type d -iname ${one_arg})
         if [ "x${dir_list}" != x ]
         then
             for one_dir in ${dir_list}
