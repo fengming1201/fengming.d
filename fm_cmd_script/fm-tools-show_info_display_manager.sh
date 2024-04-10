@@ -21,7 +21,12 @@ function func_location
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo "abstract:"
-    echo "常见的显示管理器包括GDM（GNOME Display Manager）、LightDM、SDDM（Simple Desktop Display Manager）等。"
+    echo "常见的显示管理器包括"
+    echo "1,kGDM（GNOME Display Manager）:GDM是GNOME桌面环境使用的默认显示管理器。它提供了一个图形登录界面，允许用户选择并登录到不同的桌面会话。"
+    echo "2,LightDM：LightDM是一个跨桌面环境的显示管理器，设计简单、轻量且易于定制。它支持多个桌面环境，如XFCE、LXDE等。"
+    echo "3,SDDM（Simple Desktop Display Manager）：SDDM是KDE桌面环境使用的默认显示管理器。它设计简单、现代化，并具有良好的可扩展性。"
+    echo "4,XDM（X Display Manager）：XDM是最古老的显示管理器之一，用于X Window系统。它提供了一个简单的登录界面，允许用户登录到X会话。"
+    echo "5,KDM（KDE Display Manager）：KDM曾是KDE桌面环境使用的默认显示管理器，但在KDE Plasma 5之后被SDDM取代。"
     func_location
     exit 0
 fi

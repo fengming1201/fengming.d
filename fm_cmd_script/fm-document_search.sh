@@ -29,12 +29,12 @@ function func_document_grep
         echo ""
         return 1
     fi
-	echo "grep --color=auto -rn $* ${doc_file_path}"
-	grep --color=auto -rn "$*" ${doc_file_path}
+	echo "grep --color=auto -rin $* ${doc_file_path}"
+	grep --color=auto -rin "$*" ${doc_file_path}
 
 	return 0
 }
-func_document_grep $@
+func_document_grep "$@"
 ret=$?
 if [ ${ret} -ne 0 ]
 then 
