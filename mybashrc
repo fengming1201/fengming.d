@@ -40,7 +40,7 @@ alias clr='clear'
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
 
-alias mywifi='fm-wifi_qr_code.sh fjk myap 12345678'
+alias mywifi='fm-wifi_qr_code.sh fjk luoshengming_ap 12345678'
 alias gitst='fm-gitst.sh'
 alias gitls='fm-gitls.sh'
 alias gitdiff='fm-gitdiff_work-cache.sh'
