@@ -38,7 +38,7 @@ fi
 function func_copy_calibre_books_from_usb
 {
     local tools=rsync
-    local default_opt="-av --delete --ignore-existing --quiet"
+    local default_opt="-av --delete --ignore-existing --quiet --info=progress2"
     local usb_mount_dir_root=/mnt
     local calibre_docker_dir_root=/opt/calibre_web
 
