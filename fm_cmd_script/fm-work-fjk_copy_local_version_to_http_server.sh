@@ -79,17 +79,18 @@ function func_copy_local_version_to_http_server
     local absolute_path=${current_path}
     local dir_level=$(echo ${current_path} | tr -cd '/' | wc -c)
     local found_dir=""
+    echo "search ..."
     for dir in $(seq 1 "${dir_level}")
     do
         search_dir="${current_path}/$(printf "../%.0s" $(seq 1 ${dir}))"
         absolute_path=$(realpath ${search_dir})
 
-        found_dir=$(find ${absolute_path} -type d -iname ${version})
-        if [ "x${found_dir}" != "x" ];then break;fi
+        found_dir=$(find ${absolute_path} -type d -iname ${version} 2>/dev/null)
+        if [ "x${found_dir}" != "x" ];then echo "found it !!";break;fi
     done
     
     if [ "x${found_dir}" = "x" ];then return 2;fi
-   
+    echo "jump dir:"
     pushd ${absolute_path}
     for sub_dir in ${found_dir}
     do
@@ -127,6 +128,7 @@ function func_copy_local_version_to_http_server
             break
         fi
     done
+    echo "jump back !!"
     popd
     
     return ${ret}
