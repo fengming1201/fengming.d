@@ -62,3 +62,11 @@ NAME
        中文 man 手册页计划：https://github.com/man-pages-zh/manpages-zh
 
 GNU textutils 2.0a                                                             December 1999                                                                       SPLIT(1)
+================================================================
+将一个名为largefile.txt的文件分割成大小为10MB的小文件，并以数字作为生成的小文件的后缀，后缀的长度为3
+$ split -b 10m -d -a 3 largefile.txt output
+这将生成名为output000、output001、output002等的小文件，每个小文件的大小为10MB，直到将原始文件分割完毕。
+
+注意：使用split命令分割文件后，需要使用cat命令将小文件合并成原始文件。
+例如，如果要将名为outputaa、outputab、outputac等的小文件合并成一个名为largefile.txt的文件，可以使用以下命令：
+$ cat output* > largefile.txt

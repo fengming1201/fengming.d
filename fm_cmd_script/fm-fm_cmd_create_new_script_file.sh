@@ -2,11 +2,11 @@
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-common_share_lib=${fengming_dir}/bash_function_lib
+common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
 
-if [ -d ${common_share_lib} ] && [ "include" = "enable" ]
+if [ -f ${common_share_function} ] && [ "include" = "enable" ]
 then
-    source ${common_share_lib}/*
+    source ${common_share_function}
 fi
 function func_location
 {
@@ -62,11 +62,11 @@ function func_create_fm_cmd
 scriptfile=\$0
 scriptname=\$(basename \${scriptfile})
 fengming_dir=\$FENGMING_DIR
-common_share_lib=\${fengming_dir}/bash_function_lib
+common_share_function=\${fengming_dir}/fm_cmd_script/common_share_function.sh
 
-if [ -d \${common_share_lib} ] && [ "include" = "enable" ]
+if [ -f \${common_share_function} ] && [ "include" = "enable" ]
 then
-    source \${common_share_lib}/*
+    source \${common_share_function}
 fi
 #if unnecessary, please do not modify this function
 function func_location

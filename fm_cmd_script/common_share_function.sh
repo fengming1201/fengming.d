@@ -57,3 +57,8 @@ EOF
     echo ""
     return 0
 }
+function COMMOND_FUNC_get_host_ip
+{
+    hostname -I | awk '{print$1}'
+    return 0
+}
