@@ -38,7 +38,8 @@ fi
 function func_copy_calibre_books_from_usb
 {
     local tools=rsync
-    local default_opt="-av --delete --ignore-existing --quiet --info=progress2"
+    #local default_opt="-av --delete --ignore-existing --quiet --info=progress2"
+    local default_opt="-av --delete --quiet --info=progress2"
     local usb_mount_dir_root=/mnt
     local calibre_docker_dir_root=/opt/calibre_web
 
@@ -98,7 +99,7 @@ function func_copy_calibre_books_from_usb
     do
         if [ -d "${usb_mount_dir_root}/Calibre Portable/${usb_sub_dir_list[$n]}" ] && [ -d "${calibre_docker_dir_root}/${docker_sub_dir_list[$n]}/books" ]
         then
-            echo "$n:src_dir:${usb_mount_dir_root}/Calibre Portable/${usb_sub_dir_list[$n]} --> $n:des_dir:${calibre_docker_dir_root}/${docker_sub_dir_list[$n]}/books"
+            echo "$n:src_dir:${usb_mount_dir_root}/Calibre Portable/${usb_sub_dir_list[$n]}/ --> $n:des_dir:${calibre_docker_dir_root}/${docker_sub_dir_list[$n]}/books/"
             ${maybeSUDO} ${tools} ${default_opt} "${usb_mount_dir_root}/Calibre Portable/${usb_sub_dir_list[$n]}/" "${calibre_docker_dir_root}/${docker_sub_dir_list[$n]}/books/"
             if [ $? -ne 0 ];then echo "ERROR: ${tools} do fail";fi
         fi
