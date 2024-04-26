@@ -85,7 +85,7 @@ function func_copy_local_version_to_http_server
         search_dir="${current_path}/$(printf "../%.0s" $(seq 1 ${dir}))"
         absolute_path=$(realpath ${search_dir})
 
-        found_dir=$(find ${absolute_path} -type d -iname ${version} 2>/dev/null)
+        found_dir=$(find ${absolute_path} -type d -path "*${version}/upload_file" 2>/dev/null)
         if [ "x${found_dir}" != "x" ];then echo "found it !!";break;fi
     done
     
@@ -94,10 +94,10 @@ function func_copy_local_version_to_http_server
     pushd ${absolute_path}
     for sub_dir in ${found_dir}
     do
-        if [ -d ${sub_dir}/upload_file/${version} ]
+        if [ -d ${sub_dir}/${version} ]
         then
             #get platform
-            local platform=$(realpath ${sub_dir}/../ | xargs basename)
+            local platform=$(realpath ${sub_dir}/../../ | xargs basename)
             local target_dir=${http_server_root_dir}/dcm/ipc/${platform}
 
             if [ ! -w ${http_server_root_dir}/dcm/ipc ];then
@@ -110,7 +110,7 @@ function func_copy_local_version_to_http_server
             else
                 ${maybeSUDO} mkdir -p ${target_dir}/${version}
             fi
-            ${maybeSUDO} cp -r ${sub_dir}/upload_file/${version}/*  ${target_dir}/${version}/
+            ${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/
             if [ $? -ne 0 ]
             then 
                 echo "copy fail..."
