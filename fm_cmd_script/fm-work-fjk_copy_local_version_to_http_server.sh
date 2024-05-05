@@ -20,7 +20,10 @@ function func_location
     return 0
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
-    echo "abstract:"
+    echo "描述:"
+    echo "为方便进行‘本地在线升级’，拷贝升级所需文件到本地http服务器。该脚本可以在任意路径下执行。"
+    echo "本脚唯一参数是版本号，脚本会根据所给的‘版本号’，自动从当前目录逐级向上查找到该版本号的路径。"
+    echo "然后拷贝该本版的升级文件到http服务器相应目录。"
     echo ""
     func_location
     exit 0
@@ -35,7 +38,9 @@ fi
 #start here add your code,you need to implement the following function.
 #file server info
 http_server_ip=$(hostname -I | awk '{print$1}')
+#根据你的服务器自行配置，端口号
 http_server_port=8080
+#根据你的服务器自行配置，http文件服务器的根目录。
 http_server_root_dir=/opt/http_share/data
 
 function func_upgrade_step_help 

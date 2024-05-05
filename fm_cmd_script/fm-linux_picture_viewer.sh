@@ -17,11 +17,25 @@ if [ $(id -u) -ne 0 ];then
 fi
 function func_picture_viewer
 {
-	local app=gpicview
+	local app=eog
 	local default_opt=
 
+	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	then
+		echo ""
+		echo "$scriptname  picture file list"
+		echo "$scriptname  a.jpg  b.png c.gif ..."
+		echo ""
+	fi
+
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ]
+	then 
+		echo "ERROR:${scriptname},${app} not exist!"
+		echo "apt install eog"
+		echo ""
+		return 1
+	fi
 	
 	if [ x"$SSH_CLIENT" = x ]
 	then

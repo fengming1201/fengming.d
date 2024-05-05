@@ -21,6 +21,7 @@ function func_location
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo "abstract:"
+    echo "自动找到最新编译出的app.img，并拷贝到http文件服务器下。"
     echo ""
     func_location
     exit 0
@@ -37,14 +38,17 @@ fi
 #start here add your code,you need to implement the following function.
 #file server info
 http_server_ip=$(hostname -I | awk '{print$1}')
+#根据你的服务器自行配置，端口号
 http_server_port=8080
+#根据你的服务器自行配置，http文件服务器的根目录。
 http_server_root_dir=/opt/http_share/data
+
 function func_OTA_appimg_step_help 
 {
     echo "===================================================="
     echo "OTA appimg using local server:"
     echo ""
-    echo "http_ota http://${http_server_ip}:${http_server_port}app.img soc 1"
+    echo "http_ota http://${http_server_ip}:${http_server_port}/app.img soc 1"
     echo ""
     return 0
 }
@@ -54,9 +58,18 @@ function func_copy_latest_appimg_to_http_server
     local filename=app.img
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "$scriptname  no parameter"
+        echo "$scriptname                or"
+        echo "$scriptname  [search_path]"
         echo "auto find latest app.img and copy to http server"
         return 1
+    fi
+    local search_path=/
+    if [ $# -eq 1 ]
+    then
+        if [ -d $1 ]
+        then
+            search_path=$1
+        fi
     fi
     local found_it=$(find ~/ -type f -name "${filename}"  -exec ls -lt {} + 2>/dev/null | head -n 1 | awk '{print$(NF)}')
     if [ "x${found_it}" != "x" ]
