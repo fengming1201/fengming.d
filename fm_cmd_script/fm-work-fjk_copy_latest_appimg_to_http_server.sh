@@ -58,38 +58,41 @@ function func_copy_latest_appimg_to_http_server
     local filename=app.img
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "$scriptname                or"
+        echo ""
         echo "$scriptname  [search_path]"
+        echo "$scriptname  no parameter #default path is ~/"
         echo "auto find latest app.img and copy to http server"
+        echo ""
         return 1
     fi
-    local search_path=/
-    if [ $# -eq 1 ]
+    echo ">>>searching ..."
+    local search_path=~/
+    if [ $# -eq 1 ] && [ -d $1 ]
     then
-        if [ -d $1 ]
-        then
-            search_path=$1
-        fi
+        search_path=$1
     fi
-    local found_it=$(find ~/ -type f -name "${filename}"  -exec ls -lt {} + 2>/dev/null | head -n 1 | awk '{print$(NF)}')
+    echo ">>>find ${search_path} -type f -name ${filename}  -exec ls -lt {} + 2>/dev/null | head -n 1 | awk '{print\$(NF)}'"
+    local found_it=$(find ${search_path} -type f -name "${filename}"  -exec ls -lt {} + 2>/dev/null | head -n 1 | awk '{print$(NF)}')
     if [ "x${found_it}" != "x" ]
     then
-        echo "found it !!"
+        echo ">>>found it !!"
         ls -lh ${found_it}
     else
-        echo "No found it !!!"
+        echo ">>>No found it !!!"
         return 2
     fi
 
     if [ ! -w ${http_server_root_dir} ];then
         maybeSUDO=sudo
     fi
+    echo ">>>${maybeSUDO} cp -v ${found_it}  ${http_server_root_dir}"
     ${maybeSUDO} cp -v ${found_it}  ${http_server_root_dir}
     if [ $? -ne 0 ]
     then
-        echo "copy fail..."
+        echo ">>>copy fail..."
         return 3
     else
+        echo ">>>copy done !!"
         func_OTA_appimg_step_help
     fi
     return 0

@@ -84,18 +84,19 @@ function func_copy_local_version_to_http_server
     local absolute_path=${current_path}
     local dir_level=$(echo ${current_path} | tr -cd '/' | wc -c)
     local found_dir=""
-    echo "search ..."
+    echo ">>>searching ..."
     for dir in $(seq 1 "${dir_level}")
     do
-        search_dir="${current_path}/$(printf "../%.0s" $(seq 1 ${dir}))"
         absolute_path=$(realpath ${search_dir})
-
+        echo ">>>find ${absolute_path} -type d -path \"*${version}/upload_file\" 2>/dev/null"
         found_dir=$(find ${absolute_path} -type d -path "*${version}/upload_file" 2>/dev/null)
-        if [ "x${found_dir}" != "x" ];then echo "found it !!";break;fi
+        if [ "x${found_dir}" != "x" ];then echo ">>>found it !!";tree -sh ${found_dir};break;fi
+        #go to previous level directory
+        search_dir="${current_path}/$(printf "../%.0s" $(seq 1 ${dir}))"
     done
     
     if [ "x${found_dir}" = "x" ];then return 2;fi
-    echo "jump dir:"
+    echo ">>>jump dir:"
     pushd ${absolute_path}
     for sub_dir in ${found_dir}
     do
@@ -108,24 +109,25 @@ function func_copy_local_version_to_http_server
             if [ ! -w ${http_server_root_dir}/dcm/ipc ];then
                 maybeSUDO=sudo
             fi
-
             if [ -d ${target_dir}/${version} ];
             then 
                 ${maybeSUDO} rm -r ${target_dir}/${version}/*
             else
                 ${maybeSUDO} mkdir -p ${target_dir}/${version}
             fi
+            echo "===================================================="
+            echo "src_dir:${sub_dir}/upload_file/${version}"
+            echo "des_dir:${target_dir}/${version}"
+            echo ">>>${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/"
             ${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/
             if [ $? -ne 0 ]
             then 
-                echo "copy fail..."
+                echo ">>>copy fail..."
                 ret=3
             else
-                echo "copy done !!"
-                echo "===================================================="
-                echo "src_dir:${sub_dir}/upload_file/${version}"
-                echo "des_dir:${target_dir}/${version}"
-                tree -sfh ${target_dir}/${version}
+                echo ">>>copy done !!"
+                
+                #tree -sfh ${target_dir}/${version}
                 echo ""
                 echo "===================================================="
                 func_upgrade_step_help  ${platform} ${version}
@@ -133,7 +135,7 @@ function func_copy_local_version_to_http_server
             break
         fi
     done
-    echo "jump back !!"
+    echo ">>>jump back !!"
     popd
     
     return ${ret}
