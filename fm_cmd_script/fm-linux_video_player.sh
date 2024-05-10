@@ -23,8 +23,9 @@ function func_video_player
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
-		echo "$scriptname  video file list"
+		echo "$scriptname  video file list or  rtmp_url"
 		echo "$scriptname  a.mp4  b.mp4 ..." 
+		echo "$scriptname  rtmp://IP:PORT/live/movie123"
 		echo ""
 		return 1
 	fi
