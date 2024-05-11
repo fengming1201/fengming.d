@@ -36,9 +36,9 @@ function func_rtmp_stream_video_player
 		echo "$app ${default_opt} "$1""
 		$app ${default_opt} "$1"
 	else
-		local opt="N"
-		read -p "Are you sure display to remote screen？ [y/N]"  opt
-		if [ "x${opt}" = "x"  ];then opt="N";fi
+		local opt="Y"
+		read -p "Are you sure display to remote screen? [Y/n]"  opt
+		if [ "x${opt}" = "x"  ];then opt="Y";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
 			echo "DISPLAY=:0 $app ${default_opt} --fs "$1""
@@ -48,7 +48,7 @@ function func_rtmp_stream_video_player
 	return 0
 }
 
-func_rtmp_stream_video_player $@
+func_rtmp_stream_video_player "$@"
 ret=$?
 if [ ${ret} -ne 0 ]
 then 

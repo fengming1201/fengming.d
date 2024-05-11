@@ -93,6 +93,7 @@ function func_copy_latest_appimg_to_http_server
         return 3
     else
         echo ">>>copy done !!"
+        date
         func_OTA_appimg_step_help
     fi
     return 0

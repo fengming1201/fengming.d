@@ -34,7 +34,7 @@ function func_video_player
 	local play_list=()
 	for file in "$@"
 	do
-		if [ -f "${file}"  ]
+		if [ -f "${file}"  ] || [ "x$(echo "${file}" | grep -w "rtmp:")" != "x" ]
 		then 
 			play_list+=("${file}")
 		else
@@ -42,6 +42,7 @@ function func_video_player
 		fi
 	done
 	if [ ${#play_list[@]} -eq 0 ];then echo "play_list is empty!";return 2;fi
+
 	if [ x"$SSH_CLIENT" = x ]
 	then
 		for vfile in "${play_list[@]}"
@@ -51,7 +52,7 @@ function func_video_player
 		done
 	else
 		local opt="Y"
-		read -p "Are you sure display to remote screen？ [Y/n]"  opt
+		read -p "Are you sure display to remote screen? [Y/n]"  opt
 		if [ "x${opt}" = "x"  ];then opt="Y";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
