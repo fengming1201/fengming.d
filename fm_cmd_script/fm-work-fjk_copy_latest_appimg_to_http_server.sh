@@ -65,12 +65,29 @@ function func_copy_latest_appimg_to_http_server
         echo ""
         return 1
     fi
-    echo ">>>searching ..."
+    
     local search_path=~/
+    local opt="Y"
+    if [ $# -lt 1 ]
+    then
+		read -p "search from ${HOME}? [Y/n]"  opt
+		if [ "x${opt}" = "x"  ];then opt="Y";fi
+		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
+		then
+            search_path=${HOME}
+        else
+            echo "usage:"
+            echo "$scriptname  [search_path]"
+            echo "$scriptname  no parameter #default path is $HOME"
+            echo ""        
+            return 0
+        fi
+    fi
     if [ $# -eq 1 ] && [ -d $1 ]
     then
         search_path=$1
     fi
+    echo ">>>searching ..."
     echo ">>>find ${search_path} -type f -name ${filename}  -exec ls -lt {} + 2>/dev/null | head -n 1 | awk '{print\$(NF)}'"
     local found_it=$(find ${search_path} -type f -name "${filename}"  -exec ls -lt {} + 2>/dev/null | head -n 1 | awk '{print$(NF)}')
     if [ "x${found_it}" != "x" ]
