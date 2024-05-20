@@ -42,7 +42,7 @@ function func_aviv_rename
         echo "$scriptname  no param"
         return 1
     fi
-    local delete_str_list=( "hhd800.com@" "-nyap2p.com")
+    local delete_str_list=( "hhd800.com@" "-nyap2p.com" "~nyap2p.com" "fun2048.com@" "gg5.co@" "4k2.com@" )
     local OLD_IFS=$IFS
     IFS=$'\n'
     #hhd800.com@
