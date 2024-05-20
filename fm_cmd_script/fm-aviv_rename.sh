@@ -42,23 +42,21 @@ function func_aviv_rename
         echo "$scriptname  no param"
         return 1
     fi
-    local delete_str_list=( "hhd800.com@" "-nyap2p.com" "~nyap2p.com" "fun2048.com@" "gg5.co@" "4k2.com@" )
-    local OLD_IFS=$IFS
-    IFS=$'\n'
-    #hhd800.com@
-    for file in $(ls hhd800.com@*)
-    do 
-        new=$(echo $file | sed 's/hhd800.com@//g')
-        mv -vi $file $new
+    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" )
+
+    for pattern in "${delete_str_list[@]}"
+    do
+        new_pat=$(echo "${pattern}" | tr -d '*')
+        for file in $(ls ${pattern})
+        do 
+            new=$(echo $file | sed "s/${new_pat}//g")
+            if [ ! -w ${file} ];then
+                maybeSUDO=sudo
+            fi
+            ${maybeSUDO} mv -vi "${file}"  "${new}"
+        done
     done
-    #-nyap2p.com
-    for file in $(ls *-nyap2p.com.mp4)
-    do 
-        new=$(echo $file | sed 's/-nyap2p.com//g')
-        mv -vi $file $new
-    done
-    IFS=$OLD_IFS
-    
+        
     return 0
 }
 
