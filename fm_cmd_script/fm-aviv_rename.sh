@@ -47,13 +47,15 @@ function func_aviv_rename
     for pattern in "${delete_str_list[@]}"
     do
         new_pat=$(echo "${pattern}" | tr -d '*')
-        for file in $(ls ${pattern})
-        do 
+        for file in $(ls ${pattern} 2> /dev/null)
+        do
             new=$(echo $file | sed "s/${new_pat}//g")
             if [ ! -w ${file} ];then
                 maybeSUDO=sudo
             fi
-            ${maybeSUDO} mv -vi "${file}"  "${new}"
+            if [ -f "${file}" ];then
+                ${maybeSUDO} mv -vi "${file}"  "${new}"
+            fi
         done
     done
         
