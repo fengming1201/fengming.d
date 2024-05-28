@@ -1,0 +1,71 @@
+
+HTTrack 是一个用于下载和离线浏览网站的工具。它允许用户将网站的整个结构（包括 HTML、图像、链接等）下载到本地硬盘，
+从而可以在没有互联网连接的情况下访问和浏览这些网站。以下是HTTrack的介绍、安装和基本使用方法。
+HTTrack 介绍
+
+HTTrack 是一个免费、开源的工具，支持多种操作系统，包括 Windows、Linux 和 macOS。
+它的主要功能是通过下载网站的内容来创建网站的本地副本。HTTrack 能够递归下载网站的所有层级链接，并维护原有的链接结构，
+使得本地副本与在线版本尽可能一致。
+
+
+安装 HTTrack
+基于Debian的系统（如Ubuntu）:
+
+    打开终端。
+    更新包列表：
+
+    sudo apt-get update
+
+    安装 HTTrack：
+
+    sudo apt-get install httrack
+
+基于Red Hat的系统（如Fedora或CentOS）:
+
+    打开终端。
+    安装 HTTrack：
+        对于Fedora或类似系统，使用 dnf：
+
+        sudo dnf install httrack
+
+        对于CentOS或类似系统，使用 yum：
+
+        sudo yum install httrack
+
+使用 HTTrack
+
+安装完成后，你可以通过终端使用HTTrack。以下是一些基本的使用示例：
+基本用法：
+
+    打开终端。
+    使用以下命令开始下载网站：
+
+    httrack http://example.com/ -O "/path/to/local/directory"
+
+    其中 http://example.com/ 是你想要下载的网站地址，"/path/to/local/directory" 是你想要保存网站的本地目录。
+
+高级用法：
+
+    你可以使用 -% 选项来指定下载的深度：
+
+    httrack http://example.com/ -O "/path/to/local/directory" -% 2
+
+    这将限制下载深度为2。
+
+    使用 -N 选项来设置项目名称：
+
+    httrack http://example.com/ -O "/path/to/local/directory" -N "MyWebsite"
+
+    使用 -v 选项来启用详细输出：
+
+    httrack http://example.com/ -O "/path/to/local/directory" -v
+
+    使用 --stay_on_same_server 选项来限制下载只在同一服务器上：
+
+    httrack http://example.com/ -O "/path/to/local/directory" --stay_on_same_server
+
+完成下载后：
+
+下载完成后，你可以在指定的本地目录中找到网站的副本。你可以使用任何网页浏览器打开该目录中的 index.html 文件来离线浏览网站。
+
+请记住，下载网站时应遵守网站的服务条款，并尊重版权和其他法律限制。不要使用HTTrack下载受版权保护的内容或进行非法活动。
