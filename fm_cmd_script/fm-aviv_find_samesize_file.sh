@@ -52,7 +52,18 @@ function func_find_maybe_samefile
         then
             dir_list+=("${dir}")
         else
-            echo "dir:${dir} not exist!"
+            if [ "${dir}" = "step1" ]
+            then
+                local step1=${dir}
+            elif [ "${dir}" = "step2" ]
+            then
+                local step2=${dir}
+            elif [ "${dir}" = "step3" ]
+            then
+                local step3=${dir}
+            else
+                echo "dir:${dir} not exist!"
+            fi
         fi
     done
     
@@ -62,7 +73,14 @@ function func_find_maybe_samefile
         #${maybeSUDO} find ${target_dir} -type f  -exec ls -il {} \; >> ${all_file_size_list}
         ${maybeSUDO} find ${target_dir} -type f -size +100M -exec ls -il {} \; >> ${all_file_size_list}
     done
-    
+    //debug
+    if [ ${step1} = "step1" ]
+    then
+        cat ${all_file_size_list}
+        rm ${all_file_size_list}
+        return 0
+    fi
+
     local all_file_size_sort_uniq=$(mktemp)
     cat ${all_file_size_list} | awk '{print$6}' | sort -n | uniq -d > ${all_file_size_sort_uniq}
     if [ $(stat -c%s ${all_file_size_sort_uniq}) -eq 0 ]
@@ -71,14 +89,26 @@ function func_find_maybe_samefile
         rm ${all_file_size_list} ${all_file_size_sort_uniq}
         return 2
     fi
-
+    //debug
+    if [ ${step1} = "step2" ]
+    then
+        cat ${all_file_size_sort_uniq}
+        rm  ${all_file_size_list} ${all_file_size_sort_uniq}
+        return 0
+    fi
     local all_same_size_file=$(mktemp)
     for size in $(cat ${all_file_size_sort_uniq})
     do
         grep -w ${size}  ${all_file_size_list} | awk '{print$6" "$1" "$10$11$12}' >> ${all_same_size_file}
         #grep -w ${size}  ${all_file_size_list} | awk '{print$9$10}' >> ${all_same_size_file}
     done
-
+    //debug
+    if [ ${step1} = "step3" ]
+    then
+        cat ${all_file_size_sort_uniq}
+        rm  ${all_file_size_list} ${all_file_size_sort_uniq} ${all_same_size_file}
+        return 0
+    fi
     cat  ${all_same_size_file} > ~/all_same_size_file
 
     rm ${all_file_size_list} ${all_file_size_sort_uniq} ${all_same_size_file}
