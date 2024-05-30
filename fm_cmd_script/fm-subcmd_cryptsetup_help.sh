@@ -35,10 +35,9 @@ if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-function func_
+function func_subcmd_crypt
 {
-    local help_root_dir=${fengming_dir}/documents/sub_doc_systemd/systemd_cmd_help
-    #local help_root_dir=${fengming_dir}/documents/sub_doc_shell
+    local help_root_dir=${fengming_dir}/documents/sub_doc_dm-crypt-LUKS/luks_subcmd_help
 
     #check paramter
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -47,7 +46,9 @@ function func_
         echo ""
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
-        echo "         ${scriptname}  suffix  //功能,模块前缀,后缀"
+        echo "         ${scriptname}  suffix  //后缀"
+		echo "e.g.:    ${scriptname}   add"
+        echo "e.g.:    ${scriptname}   uuid"
         echo ""
         return 1
     fi
@@ -60,31 +61,28 @@ function func_
     for one_arg in ${arg_list}
     do
         #[optional] check sub dir first
-        dir_list=$(find ${help_root_dir} -type d -iname "${one_arg}*")
-        if [ "x${dir_list}" != x ]
-        then
-            for one_dir in ${dir_list}
-            do
-                if [ -d ${one_dir} ];then
-                    tree -sh ${one_dir}
-                fi
-            done
-            continue
-        fi
+        #dir_list=$(find ${help_root_dir} -type d -iname "*${one_arg}*")
+        #if [ "x${dir_list}" != x ]
+        #then
+        #    for one_dir in ${dir_list}
+        #    do
+        #        if [ -d ${one_dir} ];then
+        #            tree -sh ${one_dir}
+        #        fi
+        #    done
+        #    continue
+        #fi
 
         #check file
         file_list=${help_root_dir}/${one_arg}
         if [ ! -f ${file_list} ]
         then
-            file_list=$(find ${help_root_dir} -type f -iname "${one_arg}*")  #前缀
-            #file_list=$(find ${help_root_dir} -type f -iname "*${one_arg}")  #后缀
-            #file_list=$(find ${help_root_dir} -type f -iname "${one_arg}*" -o -type l -iname "${one_arg}*")  #包括链接文件
+            file_list=$(find ${help_root_dir} -type f -iname "cryptsetup-*${one_arg}")  #后缀
         fi        
         if [ "x${file_list}" = x ]
         then 
             echo "no found help file with prefix ${one_arg}"
-            local maybe_file=$(find ${help_root_dir} -type f -iname "${one_arg}*")
-            #local maybe_file=$(find ${help_root_dir} -type f -iname "*${one_arg}*" -o -type l -iname "*${one_arg}*")  #包括链接文件
+            local maybe_file=$(find ${help_root_dir} -type f -iname "*${one_arg}*")
             if [ "x${maybe_file}" != x ]
             then
                 echo "maybe you looking for: "
@@ -119,7 +117,7 @@ function func_
     return 0
 }
 
-func_ "$@"
+func_subcmd_crypt "$@"
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1

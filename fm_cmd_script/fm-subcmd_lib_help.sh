@@ -35,9 +35,9 @@ if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-function func_
+function func_subcmd_lib
 {
-    local help_root_dir=${fengming_dir}/documents/sub_doc_git/git_cmd_help
+    local help_root_dir=${fengming_dir}/documents/sub_doc_c_library
 
     #check paramter
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -46,8 +46,8 @@ function func_
         echo ""
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
-        echo "     ${scriptname}  suffix  //功能,模块前缀,后缀"
-        echo "e.g.:${scriptname}  log"
+        echo "         ${scriptname}  suffix  //功能,模块前缀,后缀"
+        echo "e.g.     ${scriptname}  nm"
         echo ""
         return 1
     fi
@@ -76,7 +76,7 @@ function func_
         file_list=${help_root_dir}/${one_arg}
         if [ ! -f ${file_list} ]
         then
-            file_list=$(find ${help_root_dir} -type f -iname "git_*${one_arg}")  #后缀
+            file_list=$(find ${help_root_dir} -type f -iname "clibrary_*${one_arg}")  #后缀
         fi        
         if [ "x${file_list}" = x ]
         then 
@@ -116,7 +116,7 @@ function func_
     return 0
 }
 
-func_ "$@"
+func_subcmd_lib "$@"
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1

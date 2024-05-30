@@ -35,7 +35,7 @@ if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-function func_
+function func_subcmd_docker
 {
     local help_root_dir=${fengming_dir}/documents/sub_doc_docker
 
@@ -115,7 +115,7 @@ function func_
     return 0
 }
 
-func_ "$@"
+func_subcmd_docker "$@"
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1
