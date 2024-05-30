@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
@@ -35,7 +35,7 @@ if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-function func_find_maybe_samefile
+function func_find_samesize_file
 {
     local result_file=~/all_same_size_file
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -75,8 +75,8 @@ function func_find_maybe_samefile
     local all_file_size_list=$(mktemp)
     for target_dir in "${dir_list[@]}"
     do
-        #${maybeSUDO} find ${target_dir} -type f  -exec ls -il {} \; >> ${all_file_size_list}
-        ${maybeSUDO} find ${target_dir} -type f -size +100M -exec ls -il {} \; >> ${all_file_size_list}
+        ${maybeSUDO} find ${target_dir} -type f  -exec ls -il {} \; >> ${all_file_size_list}
+        #${maybeSUDO} find ${target_dir} -type f -size +100M -exec ls -il {} \; >> ${all_file_size_list}
     done
     #debug step1
     if [ "x${step1}" = "xstep1" ]
@@ -121,7 +121,7 @@ function func_find_maybe_samefile
     return 0
 }
 
-func_find_maybe_samefile "$@"
+func_find_samesize_file "$@"
 ret=$?
 if [ ${ret} -ne 0 ];then 
     exit 1
