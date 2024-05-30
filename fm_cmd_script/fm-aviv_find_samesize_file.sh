@@ -105,7 +105,7 @@ function func_find_maybe_samefile
     #debug
     if [ "x${step3}" = "xstep3" ]
     then
-        cat ${all_file_size_sort_uniq}
+        cat ${all_same_size_file}
         rm  ${all_file_size_list} ${all_file_size_sort_uniq} ${all_same_size_file}
         return 0
     fi
