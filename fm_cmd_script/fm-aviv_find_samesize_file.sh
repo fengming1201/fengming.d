@@ -37,6 +37,7 @@ fi
 #start here add your code,you need to implement the following function.
 function func_find_maybe_samefile
 {
+    local result_file=~/all_same_size_file
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "$scriptname  param_list"
@@ -70,8 +71,8 @@ function func_find_maybe_samefile
     local all_file_size_list=$(mktemp)
     for target_dir in "${dir_list[@]}"
     do
-        #${maybeSUDO} find ${target_dir} -type f  -exec ls -il {} \; >> ${all_file_size_list}
-        ${maybeSUDO} find ${target_dir} -type f -size +100M -exec ls -il {} \; >> ${all_file_size_list}
+        ${maybeSUDO} find ${target_dir} -type f  -exec ls -il {} \; >> ${all_file_size_list}
+        #${maybeSUDO} find ${target_dir} -type f -size +100M -exec ls -il {} \; >> ${all_file_size_list}
     done
     #debug
     if [ "x${step1}" = "xstep1" ]
@@ -109,7 +110,7 @@ function func_find_maybe_samefile
         rm  ${all_file_size_list} ${all_file_size_sort_uniq} ${all_same_size_file}
         return 0
     fi
-    cat  ${all_same_size_file} > ~/all_same_size_file
+    cat  ${all_same_size_file} > ${result_file}
 
     rm ${all_file_size_list} ${all_file_size_sort_uniq} ${all_same_size_file}
     return 0

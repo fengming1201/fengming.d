@@ -1,0 +1,93 @@
+#!/bin/bash
+scriptfile=$0
+scriptname=$(basename ${scriptfile})
+fengming_dir=$FENGMING_DIR
+common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
+
+if [ -f ${common_share_function} ] && [ "include" = "enable" ]
+then
+    source ${common_share_function}
+fi
+#if unnecessary, please do not modify this function
+function func_location
+{
+    if [ -L ${scriptfile} ]
+    then
+        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
+    else
+        echo "location:${scriptfile}"
+    fi
+    return 0
+}
+if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
+    echo "abstract:"
+    echo ""
+    func_location
+    exit 0
+fi
+if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
+    cat ${scriptfile}
+    echo ""
+    func_location
+    exit 0
+fi
+if [ $(id -u) -ne 0 ];then
+    maybeSUDO=sudo
+fi
+#start here add your code,you need to implement the following function.
+function func_b3sum_file
+{
+    local tool=md5sum   
+    local result_file=~/b3sum_all_samesize_file
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+    then
+        echo "$scriptname  samesize_file_within_inode"
+        echo "$scriptname  ~/all_same_size_file "
+        return 1
+    fi
+    #check tool status
+    which ${tool} > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "${tool} not found!!"
+        echo "please install ${tool} first."
+        return 0
+    fi
+    #check parameter
+    local samesize_file=$1
+    #file format must be:
+    #size   inode    filename
+    if [ ! -f ${samesize_file} ]
+    then
+        echo "file:${samesize_file} not exist!!"
+        return 2
+    fi
+    #extra search dir from  ~/all_same_size_file 
+    local dir_list=()
+    for dir in $(cat  ${samesize_file} | awk '{print$3}' | awk -F'/' '{print$1}' | sort | uniq)
+    do 
+        if [ -d ${dir} ]
+        then
+            dir_list+=("${dir}")
+        fi
+    done
+    
+    #remove pre result file
+    if [ -f ${result_file} ];then rm ${result_file};fi
+    #extra inode list from  ~/all_same_size_file 
+    local file_inode=$(cat $samesize_file|awk '{print$2}')
+    for node in $(echo ${file_inode})
+    do
+        #find fullpath_filename by inode and do b3sum calc
+        find ${dir_list[@]} -inum ${node} -exec ${tool}  {} \+ >> ${result_file}
+    done
+
+    return 0
+}
+
+func_b3sum_file "$@"
+ret=$?
+if [ ${ret} -ne 0 ];then 
+    exit 1
+fi
+exit 0
