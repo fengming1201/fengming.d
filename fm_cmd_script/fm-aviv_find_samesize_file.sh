@@ -74,7 +74,7 @@ function func_find_maybe_samefile
         ${maybeSUDO} find ${target_dir} -type f -size +100M -exec ls -il {} \; >> ${all_file_size_list}
     done
     #debug
-    if [ ${step1} = "step1" ]
+    if [ "x${step1}" = "xstep1" ]
     then
         cat ${all_file_size_list}
         rm ${all_file_size_list}
@@ -90,7 +90,7 @@ function func_find_maybe_samefile
         return 2
     fi
     #debug
-    if [ ${step1} = "step2" ]
+    if [ "x${step2}" = "xstep2" ]
     then
         cat ${all_file_size_sort_uniq}
         rm  ${all_file_size_list} ${all_file_size_sort_uniq}
@@ -103,7 +103,7 @@ function func_find_maybe_samefile
         #grep -w ${size}  ${all_file_size_list} | awk '{print$9$10}' >> ${all_same_size_file}
     done
     #debug
-    if [ ${step1} = "step3" ]
+    if [ "x${step3}" = "xstep3" ]
     then
         cat ${all_file_size_sort_uniq}
         rm  ${all_file_size_list} ${all_file_size_sort_uniq} ${all_same_size_file}
