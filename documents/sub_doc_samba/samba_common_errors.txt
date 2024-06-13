@@ -13,3 +13,30 @@ mount error: cifs filesystem not supported by the system
 mount error(19): No such device
 Refer to the mount.cifs(8) manual page (e.g. man mount.cifs)
 
+
+遇到问题：
+windows不能访问符号连接的目录。
+
+解决：
+在 Windows 系统中，通过 Samba 访问 Linux 系统上的符号链接（symbolic links）时，可能会遇到无法访问或不正确处理符号链接的问题。
+这通常是由于 Windows 和 Linux 处理符号链接的方式不同所导致的。
+
+方法一：修改 Samba 配置：
+你可以尝试修改 Samba 配置文件（通常是 /etc/samba/smb.conf），添加或修改以下选项：
+
+[global]
+unix extensions = no
+follow symlinks = yes
+wide links = yes
+
+    unix extensions = no：禁用 Unix 扩展，这可能会影响符号链接的处理。
+    follow symlinks = yes：允许 Samba 跟随符号链接。
+    wide links = yes：允许链接指向不在共享目录树中的文件或目录。
+
+修改后，重启 Samba 服务：
+sudo service smbd restart
+
+方法二：使用硬链接代替：
+如果符号链接仍然无法正常工作，你可以考虑在 Linux 上使用硬链接代替。硬链接在 Windows 下通常可以正常工作，
+但请注意，硬链接不能跨越文件系统，且不能用于目录。
+
