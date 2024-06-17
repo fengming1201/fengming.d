@@ -84,5 +84,5 @@ then
 	echo "*******************************************"
 	echo "****  fengming.d  environment  loaded  ****"
 	echo "*******************************************"
-	cat ${FENGMING_DIR}/documents/sub_doc_unclassified/How_to_quickly_learn_new_technologies.txt
+	cat ${FENGMING_DIR}/documents/sub_doc_embedded_engineer/How_to_quickly_learn_new_technologies.txt
 fi

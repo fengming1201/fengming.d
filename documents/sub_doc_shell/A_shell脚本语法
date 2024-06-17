@@ -54,6 +54,14 @@ cmd2
 cmd3
 EOF
 
+重定向
+1，要把命令的输出和错误都重定向到/dev/null，可以使用下面的语法：
+
+command > /dev/null 2>&1
+
+2，只把错误（stderr）重定向到 /dev/null，而保留标准输出（stdout），可以使用以下命令格式：
+
+command 2> /dev/null
 
 
 （4）参数传递
