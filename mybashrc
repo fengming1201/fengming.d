@@ -78,11 +78,11 @@ function clrall
 }
 
 export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
-echo "*******************************************"
-echo "****  fengming.d  environment  loaded  ****"
-echo "*******************************************"
-id -u lshm > /dev/null
+id -u lshm > /dev/null 2>&1
 if [ $? -eq 0 ]
 then
+	echo "*******************************************"
+	echo "****  fengming.d  environment  loaded  ****"
+	echo "*******************************************"
 	cat ${FENGMING_DIR}/documents/sub_doc_unclassified/How_to_quickly_learn_new_technologies.txt
 fi
