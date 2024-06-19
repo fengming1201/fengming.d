@@ -33,7 +33,7 @@ function func_git_mytoken_manage
         echo "$scriptname    encrypt/decrypt type"
         echo "$scriptname   [ 1 or encrypt ] type \'token stream\'"
         echo "$scriptname   [ 2 or decrypt ] type"
-        echo "type: github | gitlab | gitee, dedault is github"
+        echo "type: github | gitlab | mygit | gitee, dedault is github"
         echo ""
         return 2
     fi
