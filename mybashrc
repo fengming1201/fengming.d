@@ -76,13 +76,18 @@ function clrall
 	echo "All bash data has deleted!!"
 	return 0
 }
-
-export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
+#no source again when start screen ot tmux!
+#if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ];then
+if [ "x$STY" = "x" ];then
+	export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
+fi
 id -u lshm > /dev/null 2>&1
 if [ $? -eq 0 ]
 then
 	echo "*******************************************"
 	echo "****  fengming.d  environment  loaded  ****"
 	echo "*******************************************"
-	cat ${FENGMING_DIR}/documents/sub_doc_embedded_engineer/How_to_quickly_learn_new_technologies.txt
+	if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ];then
+		cat ${FENGMING_DIR}/documents/sub_doc_embedded_engineer/How_to_quickly_learn_new_technologies.txt
+	fi
 fi
