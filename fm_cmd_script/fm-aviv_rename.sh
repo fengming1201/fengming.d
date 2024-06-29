@@ -42,7 +42,7 @@ function func_aviv_rename
         echo "$scriptname  no param"
         return 1
     fi
-    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" "rh2048.com@*" "www.freedl.org@*" )
+    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" )
 
     for pattern in "${delete_str_list[@]}"
     do
