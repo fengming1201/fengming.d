@@ -68,7 +68,7 @@ function do_search_and_rename
         if [ ! -d ${target_dir} ];then echo "ERROR:dir:${target_dir} not exist!";return 2;fi
         if [ -f ${tmp_dir}/${step1_result_file} ];then rm -v ${tmp_dir}/${step1_result_file};fi
         #add head
-        echo "##info={hostname:${$HOSTNAME},dir:${target_dir}}" > ${tmp_dir}/${step1_result_file}
+        echo "##info={hostname:${HOSTNAME},dir:${target_dir}}" > ${tmp_dir}/${step1_result_file}
         #get org info
         echo "ls ${target_dir} | grep \"-\" >> ${tmp_dir}/${step1_result_file}"
         ls ${target_dir} | grep "-" > ${tmp_dir}/${step1_result_file}
@@ -80,7 +80,7 @@ function do_search_and_rename
         if [ ! -f ${tmp_dir}/${step1_result_file} ];then echo "ERROR:please run step 1 first!";return 3;fi
         if [ -f ${tmp_dir}/${step2_result_file} ];then rm -v ${tmp_dir}/${step2_result_file};fi
         #head 
-        echo "##info={hostname:${$HOSTNAME},dir:${target_dir}}" > ${tmp_dir}/${step2_result_file}
+        echo "##info={hostname:${HOSTNAME},dir:${target_dir}}" > ${tmp_dir}/${step2_result_file}
 
         for org in $(cat ${tmp_dir}/${step1_result_file})
         do
@@ -105,7 +105,7 @@ function do_search_and_rename
         if [ ! -f ${tmp_dir}/${step2_result_file} ];then echo "ERROR:please run step 2 first!";return 3;fi
         if [ -f ${tmp_dir}/${step3_result_file} ];then rm -v ${tmp_dir}/${step3_result_file};fi
         #head
-        echo "##info={hostname:${$HOSTNAME},dir:${target_dir}}" > ${tmp_dir}/${step3_result_file}
+        echo "##info={hostname:${HOSTNAME},dir:${target_dir}}" > ${tmp_dir}/${step3_result_file}
 
         oldIFS="$IFS"
         IFS=$'\n'
