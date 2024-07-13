@@ -71,7 +71,7 @@ function do_search_and_rename
         echo "##info={\"hostname\":\"${HOSTNAME}\",\"dir\":\"${target_dir}\"}" > ${tmp_dir}/${step1_result_file}
         #get org info
         echo "ls ${target_dir} | grep \"-\" >> ${tmp_dir}/${step1_result_file}"
-        ls ${target_dir} | grep "-" > ${tmp_dir}/${step1_result_file}
+        ls ${target_dir} | grep "-" >> ${tmp_dir}/${step1_result_file}
         echo ""
         echo "done:${tmp_dir}/${step1_result_file}"
     elif [ "x${opt_step}" = "x2" ]
@@ -79,13 +79,15 @@ function do_search_and_rename
         #check 
         if [ ! -f ${tmp_dir}/${step1_result_file} ];then echo "ERROR:please run step 1 first!";return 3;fi
         if [ -f ${tmp_dir}/${step2_result_file} ];then rm -v ${tmp_dir}/${step2_result_file};fi
-        #head 
-        echo "##info={\"hostname\":\"${HOSTNAME}\",\"dir\":\"${target_dir}\"}" > ${tmp_dir}/${step2_result_file}
 
         for org in $(cat ${tmp_dir}/${step1_result_file})
         do
             local flag="FC2-PPV-"
-            if [ "x$(echo "${org}" | grep -i ${flag})" != "x" ]
+            if [ "x$(echo ${org}"" | grep "##info=")" != "x" ]
+            then
+                echo "${org}" > ${tmp_dir}/${step2_result_file}
+                continue
+            elif [ "x$(echo "${org}" | grep -i ${flag})" != "x" ]
             then
                 local new=$(echo "${org}" | awk -F . '{print$1}' | awk -F - '{print$3}')
             else
@@ -104,13 +106,16 @@ function do_search_and_rename
         #check
         if [ ! -f ${tmp_dir}/${step2_result_file} ];then echo "ERROR:please run step 2 first!";return 3;fi
         if [ -f ${tmp_dir}/${step3_result_file} ];then rm -v ${tmp_dir}/${step3_result_file};fi
-        #head
-        echo "##info={\"hostname\":\"${HOSTNAME}\",\"dir\":\"${target_dir}\"}" > ${tmp_dir}/${step3_result_file}
 
         oldIFS="$IFS"
         IFS=$'\n'
         for line in $(cat ${tmp_dir}/${step2_result_file})
         do
+            if [ "x$(echo ${line}"" | grep "##info=")" != "x" ]
+            then
+                echo "${line}" > ${tmp_dir}/${step3_result_file}
+                continue
+            fi
             echo "line=${line}"
             local org_name=$(echo "${line}" | awk -F " " '{print$1}')
             local num=$(echo "${line}" | awk -F " " '{print$2}')
