@@ -42,27 +42,27 @@ function do_search_and_rename
     local step3_result_file=search_resault_list.txt
     local tmp_dir=tmp
 
-    echo "argc:$# ,argv[$@]"
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "Usage:"
-        echo "${script_file_name}  [step] [dir]"
-        echo "${script_file_name}  1      org_dir      #get org file name with \"-\""
-        echo "${script_file_name}  2                   #extra aviv_num from org"
-        echo "${script_file_name}  3      search_dir   #"
-        echo "${script_file_name}  4                   #check new  name"
-        echo "${script_file_name}  5   rename_file   target_dir  [real_do]   #default test reame,only give "exe_rename" will be real do rename"
-        echo "${script_file_name}  6         #clean tmp/* file"
+        echo "${scriptname}  [step] [dir]"
+        echo "${scriptname}  1      org_dir      #get org file name with \"-\""
+        echo "${scriptname}  2                   #extra aviv_num from org"
+        echo "${scriptname}  3      search_dir   #"
+        echo "${scriptname}  4                   #check new  name"
+        echo "${scriptname}  5   rename_file   target_dir  [real_do]   #default test reame,only give "exe_rename" will be real do rename"
+        echo "${scriptname}  6         #clean tmp/* file"
         echo ""
         return 1
-    fi
-
+    fi  
+    # create tmp dir
     if [ ! -d ${tmp_dir} ];then mkdir ${tmp_dir};fi
 
     local opt_step=$1
-    #step 1
+    
     if [ "x${opt_step}" = "x1" ] && [ $# -eq 2 ]
     then
+        #step 1:
         #check
         local target_dir=$2
         if [ ! -d ${target_dir} ];then echo "ERROR:dir:${target_dir} not exist!";return 2;fi
