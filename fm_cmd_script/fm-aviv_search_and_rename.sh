@@ -49,7 +49,7 @@ function do_search_and_rename
         echo "${scriptname}  1      org_dir      #get org file name with \"-\""
         echo "${scriptname}  2                   #extra aviv_num from org"
         echo "${scriptname}  3      search_dir   #"
-        echo "${scriptname}  4                   #check new  name"
+        echo "${scriptname}  4      [checkfile]     #check new  name,default:${step3_result_file}"
         echo "${scriptname}  5   rename_file   target_dir  [real_do]   #default test reame,only give "exe_rename" will be real do rename"
         echo "${scriptname}  6         #clean tmp/* file"
         echo ""
@@ -135,8 +135,11 @@ function do_search_and_rename
     elif [ "x${opt_step}" = "x4" ]
     then
         #check 
-        if [ ! -f ${tmp_dir}/${step3_result_file} ];then echo "ERROR:please run step 3 first!";return 3;fi
-        cat search_resault_list.txt  | awk '{print$2}' | grep -v "\."
+        local default_check_file=${tmp_dir}/${step3_result_file}
+        if [ $# -eq 2 ];then default_check_file=$2;fi
+
+        if [ ! -f ${default_check_file} ];then echo "ERROR:please run step 3 first!";return 3;fi
+        cat ${default_check_file}   | awk '{print$2}' | grep -v "\."
 
     elif [ "x${opt_step}" = "x5" ] && [ $# -ge 3 ]
     then
@@ -169,6 +172,7 @@ function do_search_and_rename
         rm -v ${tmp_dir}/$step1_result_file
         rm -v ${tmp_dir}/$step2_result_file
         rm -v ${tmp_dir}/$step3_result_file
+        rmdir ${tmp_dir}
     else
         echo "Unknow opt !!"
     fi
