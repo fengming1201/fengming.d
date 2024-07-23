@@ -53,7 +53,7 @@ function func_upload_files_to_fileserver
         if [ "x${username}" = x ];then username=root;fi
 
 		echo "scp -P ${port}  ${file_list[@]}   ${username}@${ip}:${target_dir}"
-		#scp -P ${port}  ${file_list[@]}   ${username}@${ip}:${target_dir}
+		scp -P ${port}  "${file_list[@]}"   ${username}@${ip}:${target_dir}
 	fi
 	echo "all done ..."
 	return 0	

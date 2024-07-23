@@ -64,7 +64,7 @@ function func_upload_files_to_fileserver_tar_my
 	#check file stat
 	for file in "$@"
 	do
-		if [ ! -f ${file} ]
+		if [ ! -f "${file}" ]
 		then
 			echo "WARNING:file:${file} not found,ignore it"
 			if [ "${1}" -eq "${1}" ] 2>/dev/null; then
@@ -75,6 +75,7 @@ function func_upload_files_to_fileserver_tar_my
 			file_list+=("${file}")
 		fi
 	done
+	
 	if [ "${last_arg}" -eq "${last_arg}" ] 2>/dev/null; then
 		if [ ${last_arg} -le ${target_dir_list_size} ];then
 			target_dir=/root/http_share/data/${target_dir_list[$(expr ${last_arg} - 1)]}
@@ -94,7 +95,7 @@ function func_upload_files_to_fileserver_tar_my
 		echo "target_dir:${target_dir}"
 		echo ""
 		echo "tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}"
-		tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}
+		tar -zcf - "${file_list[@]}" | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}
 		#scp -P ${port}  ${file_list[@]}   ${username}@${fileserver_ip}:${target_path}
 	else
 		echo "file list is empty,abort upload!!"

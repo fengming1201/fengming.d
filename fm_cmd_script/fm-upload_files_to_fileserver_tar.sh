@@ -54,7 +54,7 @@ function func_upload_files_to_fileserver_tar
         if [ "x${username}" = x ];then username=root;fi
 
 		echo "tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}"
-		tar -zcf - ${file_list[@]} | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}
+		tar -zcf - "${file_list[@]}" | ssh -p ${port} ${username}@${ip} tar zxf - -C ${target_dir}
 		#scp -P ${port}  ${file_list[@]}   ${username}@${fileserver_ip}:${target_path}
 	fi
 	echo "all done ..."
