@@ -1,20 +1,83 @@
-U2FsdGVkX1+z4OXSYY4/RZW/ph7w2yAiyFU+BV/Ej8JQMd2pdfGHKpEvK6n9yb3E
-s3m0duGXVqJDE3FWsaXXg6YkL+OoySqetP61l/PyrVFxAUITe7ycGB0VV90qmAai
-NIN30y/BdZhpy4JLkCHtQYOlQmeYn0bCtY2M46w2GMOxCNa5XGknsL7yNjpyV1P5
-hhIVousBTqLq/HP6ESAvD+OKbMNyDApEPGFrJUd+YWTrk7WOpkRHeGg33706HGuE
-rx/OAGbABFki6mqYnD0c4IN1AJiuu66VdooLBkCFQ+xBHjinaMyJB6JWWNoTovQo
-dJd/B4VDjin5JkiGUL1NV/3HDsTKtp7JkJdaNNLZZqzEO699Mnt2B/PzR+mpB96+
-tDD4L0p4L+ROitjRXW/fEt3A6mJ5DND7ypeMqVi8TqZsCQWg2P9Mp0Af6yOXL694
-ub5na2OLS8R4mZS5DOeJXT4PedSBboPdJv2+XzSHQEVnoOuLFNi443yKzaGEQM0r
-sF6AnneJHxpGJFlEJKvnD3pfiomGqPNiRaqrSrQw9d/EuVHXYuapqxmObo65D8Fx
-Ubn1zR3TI9KufZPFQ6KFjy82Pb4GXWPzrclSAVU5PdySWLl8FCQfKdzsBjO5v//M
-ZRgx8CHW8zIG82V+uq26l3DGm0S4BZO6xUBfxdBvgTASPk7DXWlnGWqXws5hvFC4
-xOZscw9DS+SYBnN3n/GktdQMsIKCkvetSlbTgHBFA0eyBA56OG3bgEVxxGZwQa3l
-tx052g+zSeNcSMQvY4GBINzvE0JuNKpR+yeJom/eovDW4tQWeCdoCrRVFIxgU8kC
-blhPJn3V3CC25NdMmrGS3XZ2rlpqG6hyjRmvmuZP9E4yIiI6wNtr0ZqsZxBJLdz2
-PJ6a41ILvzqC/ZFhldvVFp/ZG6/LIkcw3UABO4HXBJkB/0zl52ZLn+Iu2La+US7K
-3WbCqHpY+F8HSROnFINUg65707G+z/jJPD8g4zcBLw/+C+me1Sj3EpfnZJBDSXZ8
-SJ1M7IfEE1ojq/HdMNtgkeofHTa0ak5K6telPFnEWPYvlhNrsiH5opO6xpD7O8jC
-HfbiSKM1j9a9goIWG0BgpuNG/PmFeFcXoxJj7lrdCTPlhZND1Dyg3/lkvymcI9hu
-4Gdk+cYW4jmB4wfl/XtWApzz+2HLgfBMPrncj9Q84D0CnjRA+GTank0dGBl5Ew12
-H22pETzVb8zAhwwFke4FPn1r/o0IKqNjCe0JOopL28MqSwS2MG17Hg34Sf0i9KBS
+#
+#this file need cp and rename to ~/.ssh/config
+#
+Host MyCloud139
+	HostName 139.9.186.120
+	Port 1201
+	User root
+
+Host MyCloud101
+	HostName 101.200.135.149
+	Port 1201
+	User root
+
+Host MyWorkNAS
+	HostName 101.200.135.149
+	Port 6000
+	User lshm
+
+Host myworknas
+	HostName 192.168.254.121
+	Port 1201
+	User lshm
+
+Host MyWorkHost
+	HostName 101.200.135.149
+	Port 6010
+	User lshm
+
+Host myworkhost
+	HostName 192.168.254.101
+	Port 22
+	User lshm
+
+Host myGPDP3
+	HostName 101.200.135.149
+	Port 6020
+	User lshm
+
+Host MyHomeNAS81
+	HostName 101.200.135.149
+	Port 6051
+	User lshm
+
+Host MyHomeNAS82
+	HostName 101.200.135.149
+	Port 6050
+	User lshm
+
+Host myhomenas81
+	HostName 192.168.8.141
+	Port 1201
+	User lshm
+
+Host myhomenas82
+	HostName 192.168.8.108
+	Port 1201
+	User lshm
+
+Host MyHomeDesk
+	HostName 101.200.135.149
+	Port 6060
+	User lshm
+
+Host myhomedesk
+	HostName 192.168.8.109
+	Port 22
+	User lshm
+
+Host MyDadNAS
+	HostName 101.200.135.149
+	Port 6070
+	User lshm
+
+
+Host myhomemovie
+	HostName 192.168.8.107
+	Port 1201
+	User lshm
+
+Host myhomepi
+	HostName 192.168.8.118
+	Port 22
+	User pi
