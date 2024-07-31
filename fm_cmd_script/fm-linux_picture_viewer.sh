@@ -26,6 +26,7 @@ function func_picture_viewer
 		echo "$scriptname  picture file list"
 		echo "$scriptname  a.jpg  b.png c.gif ..."
 		echo ""
+		return 1
 	fi
 
 	which ${app} > /dev/null
@@ -34,7 +35,7 @@ function func_picture_viewer
 		echo "ERROR:${scriptname},${app} not exist!"
 		echo "apt install eog"
 		echo ""
-		return 1
+		return 2
 	fi
 	
 	if [ x"$SSH_CLIENT" = x ]

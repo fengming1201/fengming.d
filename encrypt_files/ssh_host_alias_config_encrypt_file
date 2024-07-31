@@ -1,83 +1,23 @@
-#
-#this file need cp and rename to ~/.ssh/config
-#
-Host MyCloud139
-	HostName 139.9.186.120
-	Port 1201
-	User root
-
-Host MyCloud101
-	HostName 101.200.135.149
-	Port 1201
-	User root
-
-Host MyWorkNAS
-	HostName 101.200.135.149
-	Port 6000
-	User lshm
-
-Host myworknas
-	HostName 192.168.254.121
-	Port 1201
-	User lshm
-
-Host MyWorkHost
-	HostName 101.200.135.149
-	Port 6010
-	User lshm
-
-Host myworkhost
-	HostName 192.168.254.101
-	Port 22
-	User lshm
-
-Host myGPDP3
-	HostName 101.200.135.149
-	Port 6020
-	User lshm
-
-Host MyHomeNAS81
-	HostName 101.200.135.149
-	Port 6051
-	User lshm
-
-Host MyHomeNAS82
-	HostName 101.200.135.149
-	Port 6050
-	User lshm
-
-Host myhomenas81
-	HostName 192.168.8.141
-	Port 1201
-	User lshm
-
-Host myhomenas82
-	HostName 192.168.8.108
-	Port 1201
-	User lshm
-
-Host MyHomeDesk
-	HostName 101.200.135.149
-	Port 6060
-	User lshm
-
-Host myhomedesk
-	HostName 192.168.8.109
-	Port 22
-	User lshm
-
-Host MyDadNAS
-	HostName 101.200.135.149
-	Port 6070
-	User lshm
-
-
-Host myhomemovie
-	HostName 192.168.8.107
-	Port 1201
-	User lshm
-
-Host myhomepi
-	HostName 192.168.8.118
-	Port 22
-	User pi
+U2FsdGVkX1+mkeF2TNLsI7qljoEOiCcDZvgXO7loziz9IOqx2aCb3bsw8jrfr521
+3/cIEPGOTvWQIu29wChHGVPjXwzJCBN5wl9Xjk7UP4j6I6OG8/G35PCZA+syFZ72
+QAMYAlV5GcyxnO3mYBoqtg4usgNSh7MBhrr3qrsVUfIWtmR815JgvpUinh0PRKgu
+Qt48bzio1jbayHoytv4/9AS7OvKGQ6NJXmCjATiagapFd+subty6DjxQrahLe1/z
+2WZNc/yNFRAANUt4LZ8YptzyYCc7zE11VzbceJcB8UgB6DBy5CziYeIfSbTA5D+N
+s5xKbPJZkczla9uk5Q1MqFPGFSVXxUo+TlvPSwW48nzhjf46soMDPPG7VRK4s9ig
+hq8fPMoGxR8IkNGR2iz5AWvzMmf0efzvWuHZeSOylPBg1VJQypz0In4QLEQBRdfj
+pFaOR4Upu8P0nsSrtQ7rmDxiGlgEljkiXs2d/ilG9eSBWpr5LEh5vcZkSkUH+ruS
+MLJLfXz3WfefdKqPy7d7y7leHKlZLRnYfz9A/rQhoNTt+uAJ1ZjvlrLTgemPxifK
+uHzb1AhLtrXGsY8jXneSUbeMwGWb3Vv1qjtsESXe2uBXtfv5k5oqBHwAw0O50pxY
+rX4678mw3DKzIQNGrFAopEUE8A1sD9+kZft4/wE/ecXMU+TBC7EvUOGysL0yjHvm
+eG5NxpjjwoksHe24wGDQB+pYTiVCTABK9fgoi6IayM/U/oKLW344682ecGVxB2E5
+Lc2IwG+DRUk0/xR/KhvM3lZP69r5IQiJvvkGMdfRdBZKZIfhsPfyjC6v5L+dXmVO
+lLA1q7Nid+K1tBtlonVNAq3mouCB2BWJp2rCzlG4vsuKN8SIgON+/9ppOIRLCfww
+OyDg8iIEH48j8E4q6Kqs3qzyzW7o0t3wHnrNzhzoagjFBhNJ+VE0n1wASSYfJvHl
+J/rfKeibWRhLFJYQOas6Lq1YxkG/bf4gp9EStHvmxS+JDDZ0We9tdD3ztoxTfMkM
+CTVQhA8vGZ417HsQQJoQz1X/73BxRO9bBkYSbP7xDExr8yoZshQbeveEwrwKGJrU
+aFVxIcF7gwrOez+jlF9OJdHwVf043Fy3Zj4T24ftj9FQQkPr5ZCWWkyJTNL7HN4a
+jtE3i+czXl9f5zxoU/Vl+m6HNyg0cQbwC5sgjeNF0r8mUUcdEl85rQkuPTvumSJk
+KvH10YQw8Lbl8IL8UfltwEBwIO+5Z7g1xtTb41SI4np8bPTscE/BydPaTcvImT2+
+3q07fDAIF06MbmyuaFCNbGlI0hRfeeraem7h3KcY+LFsZSFrD2mJlhHTPyDVkmWV
+Zah7CvRWn+nY9vSy475P4JJMYFgJkabCDMQAO7oNP3IwZd1WUpCrIkvub6Ok2z9l
+5rwBL3ACt6SxSFgNWuDZKiYopYYq8Bt2umGOE+HXwSQ=

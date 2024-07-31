@@ -1,0 +1,117 @@
+`patchelf` 是一个用于修改ELF（Executable and Linkable Format，可执行和可链接格式）程序的动态链接器和rpath的工具。
+ELF是UNIX系统（如Linux）上常用的二进制文件格式。`patchelf`允许用户更改程序的动态链接器（通常是`ld-linux.so`或`ld64.so`），
+以及程序运行时搜索库的路径。
+
+以下是一些常见的`patchelf`使用场景：
+
+1. **更改动态链接器**：如果需要运行一个程序，而默认的动态链接器不可用或不兼容，可以使用`patchelf`来指定一个不同的链接器。
+
+2. **修改rpath**：程序可能包含一个rpath（运行时搜索路径），指向程序需要的共享库的位置。使用`patchelf`可以添加、修改或删除这些路径。
+
+3. **设置interpreter**：在某些情况下，你可能需要指定程序使用特定的解释器来运行，`patchelf`可以用来设置这个解释器路径。
+
+4. **调试和分析**：在调试程序时，可能需要检查或修改程序的动态链接特性，`patchelf`提供了一种方法来做到这一点。
+
+==============================================================
+$ patchelf 
+syntax: patchelf
+  [--set-interpreter FILENAME]
+  [--page-size SIZE]
+  [--print-interpreter]
+  [--print-soname]              Prints 'DT_SONAME' entry of .dynamic section. Raises an error if DT_SONAME doesn't exist
+  [--set-soname SONAME]         Sets 'DT_SONAME' entry to SONAME.
+  [--set-rpath RPATH]
+  [--remove-rpath]
+  [--shrink-rpath]
+  [--allowed-rpath-prefixes PREFIXES]           With '--shrink-rpath', reject rpath entries not starting with the allowed prefix
+  [--print-rpath]
+  [--force-rpath]
+  [--add-needed LIBRARY]
+  [--remove-needed LIBRARY]
+  [--replace-needed LIBRARY NEW_LIBRARY]
+  [--print-needed]
+  [--no-default-lib]
+  [--clear-symbol-version SYMBOL]
+  [--output FILE]
+  [--debug]
+  [--version]
+  FILENAME...
+详细解释该命令的各个选项的作用和用法。
+======================================================================
+`patchelf` 命令用于修改 ELF 程序的属性。下面是对您提供的 `patchelf` 命令选项的详细解释：
+
+- `--set-interpreter FILENAME`: 设置程序的动态链接器（interpreter）。这是程序在运行时用来解析动态库的链接器。
+
+- `--page-size SIZE`: 设置程序的内存页大小。这个选项不常用，因为它通常由系统决定。
+
+- `--print-interpreter`: 打印程序当前使用的动态链接器的路径。
+
+- `--print-soname`: 打印程序的 `DT_SONAME` 入口，这是动态链接库的正式名称。如果不存在 `DT_SONAME`，则会报错。
+
+- `--set-soname SONAME`: 设置程序的 `DT_SONAME` 入口为指定的 `SONAME`。
+
+- `--set-rpath RPATH`: 设置程序的运行时搜索路径（rpath），用于在运行时查找动态库。
+
+- `--remove-rpath`: 移除程序的 rpath 信息。
+
+- `--shrink-rpath`: 缩减 rpath 信息，只保留符合特定前缀的路径。
+
+- `--allowed-rpath-prefixes PREFIXES`: 与 `--shrink-rpath` 一起使用，指定允许的 rpath 前缀。
+
+- `--print-rpath`: 打印程序的当前 rpath。
+
+- `--force-rpath`: 在设置 rpath 时忽略一些安全检查。
+
+- `--add-needed LIBRARY`: 向程序添加一个需要的动态库。
+
+- `--remove-needed LIBRARY`: 从程序中移除一个需要的动态库。
+
+- `--replace-needed LIBRARY NEW_LIBRARY`: 将程序中的一个需要的动态库替换为另一个库。
+
+- `--print-needed`: 打印程序所需的所有动态库。
+
+- `--no-default-lib`: 禁止程序使用默认的库搜索路径。
+
+- `--clear-symbol-version SYMBOL`: 清除符号的版本信息。
+
+- `--output FILE`: 将修改后的程序写入到指定的文件中，而不是覆盖原始文件。
+
+- `--debug`: 打印调试信息。
+
+- `--version`: 打印 `patchelf` 的版本信息。
+
+`FILENAME...`: 指定要修改的一个或多个 ELF 文件的名称。
+
+### 使用示例：
+
+1. **设置动态链接器**：
+   ```sh
+   patchelf --set-interpreter /lib/ld-linux.so.2 my_program
+   ```
+
+2. **打印当前动态链接器**：
+   ```sh
+   patchelf --print-interpreter my_program
+   ```
+
+3. **设置 rpath**：
+   ```sh
+   patchelf --set-rpath /usr/local/lib my_program
+   ```
+
+4. **打印 rpath**：
+   ```sh
+   patchelf --print-rpath my_program
+   ```
+
+5. **添加所需的库**：
+   ```sh
+   patchelf --add-needed libmylib.so my_program
+   ```
+
+6. **输出修改后的程序到新文件**：
+   ```sh
+   patchelf --set-soname mylib.so --output my_program_modified my_program
+   ```
+
+使用 `patchelf` 时，应该确保你对正在修改的程序有足够的了解，因为错误的修改可能会导致程序无法运行。
