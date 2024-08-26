@@ -17,14 +17,16 @@ create mask = 0777
 smbpasswd  -a root
 
 
-启动服务：/etc/init.d/smbd  start
+启动服务：/etc/init.d/smbd  start  或者 systemctl restart smbd
 
-Windows挂载linux的samba服务器
-
+Windows挂载linux的samba服务器方法：
+1，“打开运行”输入如下，会有账户输入提示。。
+\\192.168.254.104\samba
+2，右击“此电脑”选择“映射网络驱动器”，输入如下，会有账户输入提示。
 \\192.168.254.104\samba
 
-linux下挂载samba服务器：
-#mount -t cifs -o username=root,password=samba,vers=2.0 //192.168.254.3/root_dir  mount_point
+linux下挂载samba服务器方法：
+#mount -t cifs -o username=root,password=samba,vers=3.0 //192.168.254.3/root_dir  mount_point
 或者
-#mount -t cifs -o username=root,vers=2.0 //192.168.254.3/root_dir  mount_point
+#mount -t cifs -o username=root,vers=3.0 //192.168.254.3/root_dir  mount_point
 //提示密码输入

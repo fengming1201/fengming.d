@@ -46,3 +46,103 @@ frp安全配置
 通过以上的安全配置措施，可以增强frp的安全性，保护数据传输的机密性和完整性，并限制访问权限以减少潜在的风险。
 请根据实际需求和安全要求选择适合的配置选项。
 
+在 `frpc.ini` 配置文件中，`type` 字段用于指定代理类型。以下是常用的 `type` 取值及其含义：
+
+1. **tcp**:
+   - 用于映射 TCP 协议。
+   - 示例配置：
+     ```ini
+     [tcp_example]
+     type = tcp
+     local_ip = 127.0.0.1
+     local_port = 8080
+     remote_port = 18080
+     ```
+
+2. **udp**:
+   - 用于映射 UDP 协议。
+   - 示例配置：
+     ```ini
+     [udp_example]
+     type = udp
+     local_ip = 127.0.0.1
+     local_port = 8053
+     remote_port = 18053
+     ```
+
+3. **tcp_udp**:
+   - 用于同时映射 TCP 和 UDP 协议。
+   - 示例配置：
+     ```ini
+     [tcp_udp_example]
+     type = tcp_udp
+     local_ip = 127.0.0.1
+     local_port = 65530
+     remote_port = 18065
+     ```
+
+4. **http**:
+   - 用于映射 HTTP 协议，通常用于将 HTTP 服务暴露到公网。
+   - 示例配置：
+     ```ini
+     [http_example]
+     type = http
+     local_ip = 127.0.0.1
+     local_port = 80
+     custom_domains = www.example.com
+     ```
+
+5. **https**:
+   - 用于映射 HTTPS 协议，通常用于将 HTTPS 服务暴露到公网。
+   - 示例配置：
+     ```ini
+     [https_example]
+     type = https
+     local_ip = 127.0.0.1
+     local_port = 443
+     custom_domains = secure.example.com
+     ```
+
+6. **stcp**:
+   - 用于安全的 TCP 隧道，主要用于内网穿透场景。
+   - 示例配置（客户端）：
+     ```ini
+     [stcp_client]
+     type = stcp
+     role = client
+     sk = abc123
+     local_ip = 127.0.0.1
+     local_port = 22
+     server_name = stcp_server
+     ```
+   - 示例配置（服务端）：
+     ```ini
+     [stcp_server]
+     type = stcp
+     role = server
+     sk = abc123
+     local_port = 6000
+     ```
+
+7. **xtcp**:
+   - 用于 P2P 传输，适用于点对点的文件传输或其它应用场景。
+   - 示例配置（客户端）：
+     ```ini
+     [xtcp_client]
+     type = xtcp
+     role = client
+     sk = abc123
+     local_ip = 127.0.0.1
+     local_port = 22
+     server_name = xtcp_server
+     ```
+   - 示例配置（服务端）：
+     ```ini
+     [xtcp_server]
+     type = xtcp
+     role = server
+     sk = abc123
+     local_port = 6000
+     ```
+
+通过上述配置示例，你可以根据实际需求选择合适的 `type` 值来配置 `frpc.ini` 文件。

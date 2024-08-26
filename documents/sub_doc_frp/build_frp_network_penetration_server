@@ -48,28 +48,24 @@ frp工作原理
 公网主机(云服务器主机)
 SSH连接上外网主机后，使用wget指令下载frp。
 
-wget https://github.com/fatedier/frp/releases/download/v0.24.1/frp_0.24.1_linux_amd64.tar.gz
+wget https://github.com/fatedier/frp/releases/download/v0.58.1/frp_0.58.1_linux_amd64.tar.gz
 
 使用tar指令解压tar.gz文件
-tar -zxvf frp_0.24.1_linux_amd64.tar.gz
+tar -zxvf frp_0.58.1_linux_amd64.tar.gz
 
 包内容：
-[4.0K]  frp_0.51.2_linux_amd64
-├── [ 14M]  frpc            ------客户端执行程序
-├── [ 12K]  frpc_full.ini   ------客户端完整配置文件
-├── [ 126]  frpc.ini        --------客户端简易配置文件
-├── [ 16M]  frps            ------ 服务器执行程序
-├── [5.8K]  frps_full.ini   --------服务器完整配置文件
-├── [  26]  frps.ini        --------服务器简易配置文件
+frp_0.58.1_linux_amd64
+├── [ 14M]  frpc
+├── [ 142]  frpc.toml
+├── [ 17M]  frps
+├── [  16]  frps.toml
 └── [ 11K]  LICENSE
 
-外网主机作为服务端，可以删掉不必要的客户端文件，使用rm指令删除文件。
-rm -f frpc
-rm -f frpc.ini
 
-接下来要修改服务器配置文件，即frps.ini文件。使用vi指令对目标文件进行编辑。
 
-打开frps.ini后可以看到默认已经有很多详细的配置和示范样例，该文章仅以达到内网穿透为目的，所以这里选择删掉或注释掉里面的所有内容，
+接下来要修改服务器配置文件，即frps.toml文件。使用vi指令对目标文件进行编辑。
+
+打开frps.toml后可以看到默认已经有很多详细的配置和示范样例，该文章仅以达到内网穿透为目的，所以这里选择删掉或注释掉里面的所有内容，
 然后根据群晖的情况，按照官方的中文文档添加以下配置。（这里的操作都使用vi命令，关于vi命令的使用方式这里不作详细介绍，
 可以自行搜索相关使用方法。）
 
