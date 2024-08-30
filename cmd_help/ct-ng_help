@@ -1,0 +1,54 @@
+ct-ng  help 
+This is crosstool-NG version 1.26.0
+
+Copyright (C) 2008  Yann E. MORIN <yann.morin.1998@free.fr>
+这是免费软件；请参阅复制条件的来源。没有保修；甚至不考虑适销性或适用性特定目的。
+
+请参阅下面的可用操作列表（按类别列出）：
+
+配置动作：
+  show-config        - 显示当前配置的简要概述
+  saveconfig         - 将当前配置保存为预配置目标
+  menuconfig         - 使用基于菜单的程序更新当前配置
+  nconfig            - 使用基于菜单的程序更新当前配置
+  oldconfig          - 使用提供的 .config 作为基础更新当前配置
+  upgradeconfig      - 将配置文件升级到当前的 crosstool-NG
+  extractconfig      - 从通过管道传输到 stdin 的 build.log 文件中将配置项提取到 stdout
+  savedefconfig      - 将当前配置保存为迷你 defconfig 到 ${DEFCONFIG}
+  defconfig          - 从迷你 defconfig ${DEFCONFIG} 更新配置(default: ${DEFCONFIG}=./defconfig)
+  show-tuple         - 打印当前配置的工具链的元组
+
+预配置工具链 (#: force number of // jobs):
+  list-samples       - 打印所有样本的列表（用于脚本编写）
+  show-<sample>      - 显示 <sample> 的简要概述（带有 list-samples 的列表）
+  <sample>           - 使用 <sample> 预配置 crosstool-NG（包含 list-samples 的列表）
+  build-all[.#]      - 构建 *所有* 示例（包含列表示例的列表）并安装在 ${CT_PREFIX} 中 (set to ~/x-tools by default)
+
+构建行动 (#: force number of // jobs):
+  list-steps         - 列出所有构建步骤
+  source             - 下载当前配置的工具链的源代码
+  build[.#]          - 构建当前配置的工具链
+
+清洁行动：
+  clean              - 删除生成的文件
+  distclean          - 删除生成的文件、配置和构建目录
+
+分配动作：
+  check-samples      - 验证示例是否因 Kconfig 更改而需要更新
+  update-samples     - 使用当前的 Kconfig 重新生成示例配置
+  updatetools        - 更新配置工具
+
+Environment variables (see http://crosstool-ng.github.io/docs/build/)
+  STOP=step          - 在此步骤之后停止构建（带有列表步骤的列表）
+  RESTART=step       - 在此步骤之前重新启动构建（包含列表步骤的列表）
+  CT_PREFIX=dir      - 在目录中安装示例（请参阅上面的“build-all”操作）。
+  V=0|1|2|<unset>    - <unset> 仅显示人类可读的消息（默认）
+                       0 => 不显示命令或人类可读的消息
+                       1 => 只显示正在执行的命令
+                       2 => 显示两者
+
+使用操作“menuconfig”来配置您的工具链
+使用“build”操作来构建您的工具链
+使用操作“version”查看版本
+另请参阅“man 1 ct-ng”以获得一些帮助
+===========================================

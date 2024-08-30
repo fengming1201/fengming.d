@@ -1,0 +1,29 @@
+格式：man [章节号] [命令名称]
+
+
+1. **用户命令（User Commands）**：常用的用户命令和程序。
+   - 例如：`ls`, `cp`, `man`
+
+2. **系统调用（System Calls）**：由内核提供的系统调用。
+   - 例如：`open`, `read`, `write`
+
+3. **库函数（Library Functions）**：C 库函数（包括库子程序）。
+   - 例如：`printf`, `malloc`
+
+4. **特殊文件（Special Files）和设备（Devices）**：通常位于 `/dev` 目录中的设备文件。
+   - 例如：`tty`, `null`
+
+5. **文件格式（File Formats）和约定（Conventions）**：文件格式和各种协议、约定。
+   - 例如：`passwd`, `fstab`
+
+6. **游戏（Games）**：游戏和屏幕保护程序。
+   - 例如：`fortune`, `robots`
+
+7. **杂项（Miscellaneous）**：杂项，包括宏包、惯例等。
+   - 例如：`man`, `groff`
+
+8. **系统管理命令（System Administration Commands）**：通常仅供系统管理员使用的命令。
+   - 例如：`ifconfig`, `mount`
+
+9. **内核例程（Kernel Routines）**：与内核相关的例程和函数（不常见）。
+   - 例如：`nfs`, `tty`

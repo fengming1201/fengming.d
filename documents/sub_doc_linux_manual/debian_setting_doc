@@ -115,3 +115,19 @@
 	echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen;\
 	locale-gen
 },
+{
+    LXDE UI自动登陆
+    在使用 LXDE 桌面环境的系统中设置自动登录（免密登录），可以通过修改 LightDM 的配置文件来实现。
+    LightDM 是一个常用的显示管理器，支持多种桌面环境，包括 LXDE。
+    编辑 LightDM 配置文件
+    LightDM 的主要配置文件是 /etc/lightdm/lightdm.conf。你需要编辑这个文件来启用自动登录。
+    sudo vi /etc/lightdm/lightdm.conf
+
+    在文件中找到 [Seat:*] 部分，并添加或修改以下行：
+    [Seat:*]
+    autologin-user=your_username
+    autologin-user-timeout=0
+
+    将 your_username 替换为你希望自动登录的用户名后。
+    备注：如何查看是哪种显示管理器，参考fm-tools-show_info_display_manager.sh 
+}

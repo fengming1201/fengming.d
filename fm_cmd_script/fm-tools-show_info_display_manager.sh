@@ -58,6 +58,7 @@ function func_show_display_manager
     ps -ef | grep -i dm
     echo ""
     echo "================================"
+    
     #methor 2
     echo "systemctl status display-manager"
     ${maybeSUDO} systemctl status display-manager
@@ -69,8 +70,24 @@ function func_show_display_manager
     if [ -f /etc/lightdm/lightdm.conf ];then echo "display manager is LightDM";fi
     if [ -f /etc/sddm.conf ];then echo "display manager is SDDM";fi
     echo ""
-    #echo "================================"
+    echo "================================"
 
+    #methor4 
+    if [ -f /etc/X11/default-display-manager ];then
+        cat /etc/X11/default-display-manager
+        #The result is one of the following
+        #/usr/sbin/lightdm
+        #/usr/sbin/gdm3
+        #/usr/bin/sddm
+        #/usr/sbin/lxdm
+    fi
+    echo ""
+    echo "================================"
+
+    #methor5
+    ps -e | grep -E 'lightdm|gdm|sddm|lxdm'
+    echo ""
+    echo "================================"
     return 0
 }
 

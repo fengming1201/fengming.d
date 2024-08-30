@@ -48,7 +48,7 @@ git clone https://github.com/crosstool-ng/crosstool-ng
 ./bootstrap
 
 安装方法
-首先解压缩压缩包并进入目录。cdcrosstool-ng-VERSION
+首先解压缩压缩包并进入目录。cd crosstool-ng-VERSION
     注意
     由于发布脚本中的错误，crosstool-ng 的 1.22.0 版本是 打包时不带版本后缀。
 
