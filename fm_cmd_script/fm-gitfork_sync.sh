@@ -49,47 +49,51 @@ function func_git_sync_fork
     local forked_URL=$1
     local origin_URL=$2
     local dir_name=$(basename ${forked_URL} .git)
-    # 克隆你的 fork 到本地
-    git clone $forked_URL
-    if [ $? -eq 0 ];then
-        echo "[done!!] git clone $forked_URL"
+    if [ -d ${dir_name} ];then
+        rm -rf ${dir_name}
     fi
 
+    # 克隆你的 fork 到本地
+    echo "[1]: git clone $forked_URL"
+    git clone $forked_URL
+    if [ $? -ne 0 ];then echo "[1]: fail!!";return 2;fi
+    echo "[1]: done!!"
+
     # 进入仓库目录
-    cd $dir_name
-    if [ $? -eq 0 ];then
-        echo "[done!!] cd $dir_name"
-    fi
+    pushd $dir_name
+
 	local remote_name="origin"
 	local branch_name="main"
     remote_name=$(git remote -v | awk '{print $1}' | uniq)
 	branch_name=$(git branch | awk '{print $2}' | uniq)
 
     # 添加上游仓库
+    echo "[2]: git remote add upstream $origin_URL"
     git remote add upstream $origin_URL
-    if [ $? -eq 0 ];then
-        echo "[done!!] git remote add upstream $origin_URL"
-    fi
+    if [ $? -ne 0 ];then echo "[2]: fail!!";return 3;fi
+    echo "[2]: done!!"
+
     # 获取上游仓库的更新
+    echo "[3]: git fetch upstream"
     git fetch upstream
-    if [ $? -eq 0 ];then
-        echo "[done!!] git fetch upstream"
-    fi
+    if [ $? -ne 0 ];then echo "[3]: fail!!";return 4;fi
+    echo "[3]: done!!"
     # 切换到主分支
     #git checkout main
 
     # 合并上游仓库的更改
+    echo "[4]: git merge upstream/${branch_name}"
     git merge upstream/${branch_name}
-    if [ $? -eq 0 ];then
-        echo "[done!!] git merge upstream/${branch_name}"
-    fi
+    if [ $? -ne 0 ];then echo "[4]: fail!!";return 5;fi
+    echo "[4]: done!!"
     # 解决冲突（如果有）
 
     # 推送更新到你的 fork
+    echo "[5]: git push ${remote_name} ${branch_name}"
     git push ${remote_name} ${branch_name}
-    if [ $? -eq 0 ];then
-        echo "[done!!] git push ${remote_name} ${branch_name}"
-    fi
+    if [ $? -ne 0 ];then echo "[5]: fail!!";return 6;fi
+    echo "[5]: done!!"
+    popd
     return 0
 }
 
