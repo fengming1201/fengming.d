@@ -56,9 +56,9 @@ function func_git_sync_fork
 		if [ "x${opt}" = "x"  ];then opt="N";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
-            echo "$${dir_name}"
-            rm -rf ${dir_name}N
-        fiN
+            echo "${dir_name}"
+            rm -rf ${dir_name}
+        fi
     fi
 
     # 克隆你的 fork 到本地
