@@ -49,8 +49,16 @@ function func_git_sync_fork
     local forked_URL=$1
     local origin_URL=$2
     local dir_name=$(basename ${forked_URL} .git)
-    if [ -d ${dir_name} ];then
-        rm -rf ${dir_name}
+    if [ -d ${dir_name} ]
+    then
+		local opt="N"
+		read -p "dir:$dir_name already exist! do you want to force to sync fork? [y/N]"  opt
+		if [ "x${opt}" = "x"  ];then opt="N";fi
+		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
+		then
+            echo "$${dir_name}"
+            rm -rf ${dir_name}N
+        fiN
     fi
 
     # 克隆你的 fork 到本地
