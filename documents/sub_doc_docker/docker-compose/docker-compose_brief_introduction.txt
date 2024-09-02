@@ -49,15 +49,34 @@ compose Yml文件编写
 同时你可以使用类似Bash的$ {VARIABLE} 语法在配置值中使用环境变量
 
 （1） build
-该参数指定Dockerfile文件的路径，Docker Compose会通过Dockerfile构建并生成镜像，然后使用该镜像
-
+该参数指定Dockerfile文件的路径，Docker Compose会通过Dockerfile构建并生成镜像，然后使用该镜像.
+选项可以接受不同的参数，其中最常用的是 context 和 dockerfile。
+概念：构建上下文是一个目录，包含了用于构建镜像的所有文件。
+当使用 build 选项时，Docker 会将该目录下的所有文件和子目录复制到 Docker 守护进程中，并在那里构建镜像。
 build: #构建的地址
-    context: /oldboyedu/dockerfile/docker-composedockerfile: Dockerfile
+    context: .    #当前目录（.）被用作构建上下文。这意味着 Docker 将复制当前目录下的所有文件和子目录到 Docker 守护进程中，并在那里构建镜像。
+    dockerfile: ./path/to/Dockerfile  #用于指定 Dockerfile 的位置。
+
+args（用于传递构建参数），target（用于指定 Dockerfile 中的目标）,args 定义构建参数，即 Dockerfile 中的 ARG 值。
+build:
+  context: .
+  args:
+    GIT_COMMIT: cdc3b19
+
+使用自定义生成的镜像名称:。默认情况下，镜像名称与服务的名称相同，但你可以通过设置 image 参数来覆盖默认名称。
+image: example/database
+build:
+    context: .
+    dockerfile: Dockerfile
 
 （2）image
 指定启动容器的镜像，可以是镜像仓库/标签或者镜像id(或者id的前一部分)
-
-image: centos
+image: redis
+image: redis:5
+image: redis@sha256:0ed5d5928d4737458944eb604cc8509e245c3e19d02ad83935398bc4b991aac7
+image: library/redis
+image: docker.io/library/redis
+image: my_private.registry:5000/redis
 
 如果镜像不存在，Compose将尝试从官方镜像仓库将其pull下来，如果你还指定了build，在这种情况下，它将使用指定的build选项构建它，
 并使用image指定的名字和标记对其进行标记

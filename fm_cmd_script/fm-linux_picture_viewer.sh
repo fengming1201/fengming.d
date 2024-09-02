@@ -18,6 +18,7 @@ fi
 function func_picture_viewer
 {
 	local app=eog
+	local app2=gpicview
 	local default_opt=
 
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
