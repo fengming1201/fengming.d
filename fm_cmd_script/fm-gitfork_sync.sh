@@ -58,6 +58,9 @@ function func_git_sync_fork
 		then
             echo "${dir_name}"
             rm -rf ${dir_name}
+        else
+            echo "nothing to do!!"
+            return 2
         fi
     fi
 
