@@ -21,6 +21,23 @@ function func_location
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo "abstract:"
+    echo "要让 GitHub 上你 fork 的项目自动保持与原始仓库同步，你需要设置一个“远程跟踪分支”来定期从上游（原始）仓库拉取更新。"
+    echo "以下是详细步骤："
+    echo "1,# 克隆你的 fork 到本地"
+    echo "      git clone https://github.com/your-username/example-repo.git"
+    echo "2,# 进入仓库目录"
+    echo "      cd example-repo"
+    echo "3,# 添加上游仓库:"
+    echo "      git remote add upstream https://github.com/original-owner/example-repo.git"
+    echo "4,# 获取上游仓库的更新"
+    echo "      git fetch upstream"
+    echo "5,# 切换到主分支"
+    echo "      git checkout main"
+    echo "6,# 合并上游仓库的更改"
+    echo "      git merge upstream/main"
+    echo "      解决冲突（如果有）"
+    echo "7,# 推送更新到你的 fork"
+    echo "      git push origin main"
     echo ""
     func_location
     exit 0

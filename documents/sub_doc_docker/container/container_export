@@ -10,7 +10,7 @@ Aliases:
 Options:
   -o, --output string   Write to a file, instead of STDOUT
 ===================================================
-将容器的文件系统导出为 tar 归档
+导出容器,将容器的文件系统导出为一个 tar 文件。
 
 别名：
   docker container export, docker export
@@ -26,6 +26,8 @@ Options:
 （1）导出容器
 如果要导出本地某个容器，可以使用 docker export 命令。
 docker export 1e560fca3906 > ubuntu.tar
+或
+docker export -o ubuntu.tar my-container
 导出容器 1e560fca3906 快照到本地文件 ubuntu.tar。
 
 （2）导入容器快照

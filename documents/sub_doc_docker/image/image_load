@@ -25,3 +25,5 @@ Options:
 加载本地镜像。
 
 实例：
+sudo docker load  -i adlered_tomcat.tar
+

@@ -20,6 +20,9 @@ Install using the repository
 	$ sudo mkdir -p /etc/apt/keyrings
 [1] on debian    
     $ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+改用国内：
+    $ curl -fsSL https://mirrors.163.com/docker-ce/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
 [2] on ubuntu
     $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
@@ -39,6 +42,11 @@ Note: tree https://download.docker.com/linux/ ,on which os you need confirm.
     $ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+改用国内：
+    $ echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.163.com/docker-ce/linux/debian \
+  $(lsb_release -cs | awk 'NR==1 {print}') stable" | sudo tee /etc/apt/sources.list.d/docker-163.list > /dev/null
 
 [2] on ubuntu
     $ echo \

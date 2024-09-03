@@ -24,3 +24,11 @@ Options:
 导出镜像到本地存储。
 
 实例：
+sudo docker images | grep tomcat
+adlered/tomcat                                                latest          2d980c2b9462   7 years ago     215MB
+
+sudo docker save -o adlered_tomcat.tar  adlered/tomcat:latest
+
+ls -lh adlered_tomcat.tar 
+-rwxr-xr-x 1 root root 210M Sep  3 10:55 adlered_tomcat.tar
+
