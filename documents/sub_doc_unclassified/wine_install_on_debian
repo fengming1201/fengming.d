@@ -1,0 +1,77 @@
+Debian/Ubuntu
+
+安装 WineHQ 安装包
+
+WineHQ 安装包安装于 Debian 10 或更新的版本时，会要求安装 libfaudio0依赖。由于发行版尚未提供该包，您可以从 OBS 下载 libfaudio0安装包。
+详情请看：https://forum.winehq.org/viewtopic.php?f=8&t=32192。
+
+Raspbian 用户: WineHQ 提供的安装包只能用于 x86架构；它们不能被安装于 ARM 架构系统。
+
+首先，开启 32 位支持：
+sudo dpkg --add-architecture i386
+
+然后安装被用于签发安装包的密钥：
+sudo mkdir -pm755 /etc/apt/keyrings
+sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+
+下载和安装 WineHQ 源文件：
+noble
+Ubuntu 24.04
+Linux Mint 22
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+
+
+jammy
+Ubuntu 22.04
+Linux Mint 21.x
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+
+
+focal
+Ubuntu 20.04
+Linux Mint 20.x
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
+
+
+trixie
+Debian Testing
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources
+
+
+bookworm
+Debian 12
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+
+
+bullseye
+Debian 11
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources
+
+更新软件仓库：
+sudo apt update
+
+然后安装 以下其中一个安装包：
+稳定分支
+sudo apt install --install-recommends winehq-stable
+
+开发分支
+sudo apt install --install-recommends winehq-devel
+
+Staging 分支
+sudo apt install --install-recommends winehq-staging
+
+
+用法：
+For example, to run Notepad:
+wine notepad            (using the search Path as specified in
+wine notepad.exe         the registry to locate the file)
+
+
+
+
+
+
+
+
+
+
