@@ -1,0 +1,42 @@
+
+在shell中，处理此事的是getopts和getopt。getopts和getopt功能相似但又不完全相同，
+其中getopt是独立的可执行文件,
+而getopts是由Bash内置的。
+
+getopts 是一个内置的 Bash 命令，用于解析命令行选项。它处理短选项（如 -a）以及带参数的短选项（如 -f <filename>）。
+getopts 不直接支持长选项（如 --help），但可以通过手动解析剩余参数来处理。
+
+语法格式：
+getopts optstring variable
+
+    optstring：一个字符串，包含脚本接受的选项字符。如果某个选项需要参数，在该选项字符后加一个冒号（:）。
+    variable：一个变量名，getopts 将当前解析的选项存储在这个变量中。
+
+
+模板———— 需要一步
+
+#Step（1）: 使用 getopts 解析选项
+#注意：需要参数的后来加一个冒号':'
+while getopts "abf:h" opt; do
+  case $opt in
+    a)
+      flag_a=true
+      ;;
+    b)
+      flag_b=true
+      ;;
+    f)
+      filename=$OPTARG
+      ;;
+    h)
+      show_help=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      ;;
+  esac
+done
+

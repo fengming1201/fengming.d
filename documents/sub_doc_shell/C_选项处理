@@ -1,5 +1,22 @@
-
 getopts/getopt
+
+在 Bash 脚本中，与 getopts 命令相关的内部变量主要有以下几个：
+    OPTARG：
+        用于存储当前处理的选项的参数值。如果选项不需要参数，则 OPTARG 为空。
+    OPTIND：
+        表示下一个要检查的位置参数的索引。getopts 会自动更新 OPTIND 的值，使其指向下一个尚未处理的位置参数。
+    OPTERR：
+        如果设置为非零值，当遇到非法选项时，getopts 会打印一个错误消息。默认情况下，OPTERR 是非零的，这意味着默认会打印错误消息。
+    OPTOPT：
+        存储非法选项的字符。当 getopts 遇到一个非法选项时，它会将该选项存储在 OPTOPT 变量中。
+    BASH_ARGV 和 BASH_ARGC（在 getopts 外部使用）：
+        BASH_ARGV 是一个关联数组，包含 $0、$1、$2 等所有位置参数。
+        BASH_ARGC 存储位置参数的总数。
+    BASH_SOURCE：
+        包含当前正在执行的脚本的文件名。在 getopts 循环中，它可以用来区分哪个脚本文件正在处理选项。
+这些变量在处理命令行选项时非常有用。例如，OPTARG 和 OPTIND 通常在 getopts 的 case 语句中使用，
+而 OPTERR 可以用来控制错误消息的打印行为。
+
 
 由于shell命令行的灵活性，自己编写代码判断时，复杂度会比较高。为此，
 C提供了getopt/getopt_long等函数，
@@ -42,39 +59,61 @@ C++的boost提供了Options库，
 处理命令行参数是一个相似而又复杂的事情，为此，C提供了getopt/getopt_long等函数，
 C++的boost提供了Options库，在shell中，处理此事的是getopts和getopt.getopts和getopt功能相似但又不完全相同，其中getopt是独立的可执行文件，而getopts是由Bash内置的。
 
-#获取选项
-for opt do
-    optarg="${opt#*=}"
-    case "$opt" in
-            --project-root=*)
-                    project_root="$optarg"
-                    ;;
-            --which-project=*)
-                    which_project="$optarg"
-                    ;;
-            --which-part=*)
-                    which_part="$optarg"
-                    ;;
-            --platform=*)
-                    platform="$optarg"
-                    ;;
-            *)
-                    echo "Unknown option $opt, ignored"
-                    help_func
-                    exit 1
-                    ;;
-    esac
+# 帮助信息函数
+usage() {
+  echo "Usage: \$0 [-a] [-b] [-f filename] [-h|--help]" 1>&2
+  echo
+  echo "Options:"
+  echo "  -a          Set flag_a to true"
+  echo "  -b          Set flag_b to true"
+  echo "  -f FILE     Specify a filename"
+  echo "  -h, --help  Show this help message"
+  exit 1
+}
+
+# 使用 getopts 解析短选项
+while getopts "abf:h" opt; do
+  case $opt in
+    a)
+      flag_a=true
+      ;;
+    b)
+      flag_b=true
+      ;;
+    f)
+      filename=$OPTARG
+      ;;
+    h)
+      show_help=true
+      ;;
+    \?)
+      usage
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      usage
+      ;;
+  esac
 done
 
-
-
-
-
-
-
-
-
-
-
-
+# 处理长选项
+#注意：OPTIND：这是一个 Bash 内置变量，用于跟踪 getopts 命令处理的下一个位置参数的索引。
+#默认情况下，OPTIND 的值是 1，表示第一个位置参数（$1）。
+#你使用 getopts 处理选项时，OPTIND 会自动更新，指向下一个尚未处理的位置参数。
+#在 Bash 脚本中，OPTARG 是一个内置变量，当你使用 getopts 或 getopt 命令来解析命令行选项时，
+#如果某个选项后面紧跟着一个参数（例如 -a value），那么这个参数的值将被存储在 OPTARG 变量中。
+shift $((OPTIND -1))
+for arg in "$@"; do
+  case $arg in
+    --help)
+      show_help=true
+      shift
+      ;;
+    *)
+      # 处理未知选项
+      echo "Unknown option: $arg" >&2
+      usage
+      ;;
+  esac
+done
 

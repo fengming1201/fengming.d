@@ -1,0 +1,70 @@
+getopt 是另一个用于解析命令行选项的工具，比 getopts 更强大，
+支持长选项（如 --help）。然而，getopt 的语法和用法比 getopts 更复杂一些。
+
+语法格式：
+ getopt <optstring> <parameters>
+ getopt [options] [--] <optstring> <parameters>
+ getopt [options] -o|--options <optstring> [options] [--] <parameters>
+
+Options:
+ -a, --alternative             允许从单个开始的长选项-
+ -l, --longoptions <longopts>  待确认的长期期权
+ -n, --name <progname>         报告错误时使用的名称
+ -o, --options <optstring>     待确认的短期期权
+ -q, --quiet                   禁用错误报告 getopt(3)
+ -Q, --quiet-output            无正常输出
+ -s, --shell <shell>           将引用约定设置为<shell>的引用约定
+ -T, --test                    test for getopt(1) version
+ -u, --unquoted                不要引用输出
+
+ -h, --help                    display this help
+ -V, --version                 display version
+
+    optstring：一个字符串，包含脚本接受的选项字符。如果某个选项需要参数，在该选项字符后加一个冒号（:）。
+    parameters：要解析的命令行参数。
+
+
+模板———— 需要三步
+
+#Step（1）: 解析选项和参数
+# -o abf:h 定义了短选项 -a、-b、-f 和 -h。
+# --long help 定义了长选项 --help。
+# 如果 getopt 返回非零值，则表示解析失败，调用 usage 函数。
+PARSED_OPTIONS=$(getopt -o abf:h --long help -- "$@")
+if [ $? -ne 0 ]; then
+  echo "error into"
+fi
+
+##Step（2）: 将解析结果设置为位置参数。
+eval set -- "$PARSED_OPTIONS"
+
+#Step（3）: 处理选项
+# 使用 while true; do case "\$1" in ...) 处理每个选项。
+while true; do
+  case "$1" in
+    -a)
+      flag_a=true
+      shift
+      ;;
+    -b)
+      flag_b=true
+      shift
+      ;;
+    -f)
+      filename="$2"
+      shift 2
+      ;;
+    -h|--help)
+      show_help=true
+      shift
+      ;;
+    --)
+      shift
+      break
+      # -- 表示选项解析结束，shift 后退出循环。
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done

@@ -65,16 +65,16 @@ function func_copy_latest_appimg_to_http_server
         echo ""
         return 1
     fi
-    
-    local search_path=~/
+    #local search_path=${HOME}
+    local search_path=./
     local opt="Y"
     if [ $# -lt 1 ]
     then
-		read -p "search from ${HOME}? [Y/n]"  opt
+		read -p "search from ${search_path}? [Y/n]"  opt
 		if [ "x${opt}" = "x"  ];then opt="Y";fi
 		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
 		then
-            search_path=${HOME}
+            echo " "
         else
             echo "usage:"
             echo "$scriptname  [search_path]"
