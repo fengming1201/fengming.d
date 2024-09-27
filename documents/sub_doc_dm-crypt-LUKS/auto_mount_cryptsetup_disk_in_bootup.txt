@@ -22,8 +22,11 @@
 
     使用以下命令将密钥添加到LUKS设备：
     sudo cryptsetup luksAddKey /dev/sdc1 /etc/luks-keys/my_encrypted_volume.key
-
     确保将 `/dev/sdc1` 替换为您的加密设备的实际设备。
+    或用UUID
+    sudo cryptsetup luksAddKey /dev/disk/by-uuid/uuid-of-disk1 /etc/luks-keys/my_encrypted_volume.key
+    用lsblk -f 查看
+    
 
 4. **编辑 `/etc/crypttab` 文件**：
 
@@ -41,6 +44,13 @@
     /dev/mapper/crypt_disk_4T_1  /media/hard_disk_4T ext4 defaults 0 2
 
     请确保 `/media/hard_disk_4T` 目录已经存在。
+
+6. **重新挂载
+    重新加载 crypttab 和 fstab 文件，然后尝试挂载：
+
+    sudo systemctl daemon-reload
+    sudo systemctl restart cryptsetup.target
+    sudo systemctl restart local-fs.target
 =============================================================================================
 其他操作：
 要管理密钥，
