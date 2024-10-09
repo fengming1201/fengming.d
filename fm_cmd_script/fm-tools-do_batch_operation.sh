@@ -117,6 +117,19 @@ function func_batch_operation
     echo "file=$file"
     echo "cmd=$cmd"
 
+    if [ ${opt} = "cmd" ]
+    then
+        local complete_cmd=
+
+    elif [ ${opt} = "exe" ]
+    then 
+
+
+    else
+        echo "ERROR:Unknown option"
+    fi
+
+
     return 0
 }
 
