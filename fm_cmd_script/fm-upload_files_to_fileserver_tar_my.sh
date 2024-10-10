@@ -86,7 +86,7 @@ function func_upload_files_to_fileserver_tar_my
 
 	fi
 
-    local ip="139.9.186.120"
+    local ip="101.200.135.149"
     local port="1201"
     local username="root"
 	if [ ${#file_list[@]} -ge 1 ]

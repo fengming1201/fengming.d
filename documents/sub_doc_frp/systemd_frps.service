@@ -1,10 +1,10 @@
 [Unit]
-Description=frps Service
+Description=frpc Service
 After=network.target
 
 [Service]
-ExecStart=/root/frp/frp_0.51.2_linux_amd64/frps -c /root/frp/frp_0.51.2_linux_amd64/frps.ini
-WorkingDirectory=/root/frp/frp_0.51.2_linux_amd64
+ExecStart=/root/frp/frp_0.60.0_linux_amd64/frps -c /root/frp/frp_0.60.0_linux_amd64/frps.toml
+WorkingDirectory=/root/frp/frp_0.60.0_linux_amd64
 Restart=always
 RestartSec=3
 

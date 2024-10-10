@@ -1,0 +1,16 @@
+serverAddr = "101.200.135.149"
+serverPort = 7000
+auth.token = "d0597eaf862b2fb1b5ea570492aba736"
+
+[[proxies]]
+name = "ssh_WorkNAS"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1201
+remotePort = 6020
+transport.useEncryption = true
+transport.useCompression = true
+
+#includes = ["./confd/*.toml"]
+
+也可以将每个代理作成单独配置，只要包含confd目录下的文件即可。

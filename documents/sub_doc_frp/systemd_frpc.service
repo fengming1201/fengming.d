@@ -3,8 +3,8 @@ Description=frpc Service
 After=network.target
 
 [Service]
-ExecStart=/opt/frp/frp_0.51.2_linux_amd64/frpc -c /opt/frp/frp_0.51.2_linux_amd64/frpc.ini
-WorkingDirectory=/opt/frp/frp_0.51.2_linux_amd64
+ExecStart=/opt/frp/frp_0.60.0_linux_amd64/frpc -c /opt/frp/frp_0.60.0_linux_amd64/frpc.toml
+WorkingDirectory=/opt/frp/frp_0.60.0_linux_amd64
 Restart=always
 RestartSec=3
 

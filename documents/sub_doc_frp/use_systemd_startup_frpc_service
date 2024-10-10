@@ -1,40 +1,50 @@
 
 步骤一: 
-下载frp 程序,设置客户端配置文件frpc.ini 
-可以直接拷贝模板并修改: cp fengming.d/documents/sub_doc_frp/template_frpc.ini  ./frpc.ini
+下载frp 程序,设置客户端配置文件frpc.toml
+可以直接拷贝模板并修改: cp fengming.d/documents/sub_doc_frp/template_frpc.toml  ./frpc.toml
+文件：frpc.toml
+serverAddr = "101.200.135.149"
+serverPort = 7000
+auth.token = "d0597eaf862b2fb1b5ea570492aba736"
 
-[common]
-server_addr = 101.200.135.149
-server_port = 7000
+includes = ["./confd/*.toml"]
 
-authenticate_heartbeats = true
-authentication_method = token
-token = d0597eaf862b2fb1b5ea570492aba736
+confd目录下可以单独为每个代理配置，要保证name:字段唯一，如：
+confd/
+├── myarchivebox.toml
+├── mygitlab.toml
+├── myimmich.toml
+├── mytrilium-cn.toml
+├── mywallabag.toml
+├── mywordpress.toml
+└── ssh_WorkNAS_6020.toml
 
-[ssh_workHost]
-type = tcp
-local_ip = 127.0.0.1
-local_port = 22
-remote_port = 6010
+例如文件：ssh_WorkNAS_6020.toml
+[[proxies]]
+name = "ssh_WorkNAS"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 1201
+remotePort = 6020
+transport.useEncryption = true
+transport.useCompression = true
 
 
 步骤二：
-创建并配置系统服务配置文件 frpc.service
+创建并配置系统服务配置文件 frpc.service ,服务器端同样适用frps.service
 可以直接拷贝模板并修改: cp fengming.d/documents/sub_doc_frp/systemd_frpc.service   ./frpc.service
 
-vi /etc/systemd/system/frpc.service 
+文件：/etc/systemd/system/frpc.service 
 
 [Unit]
 Description=frpc Service
-After = network.target syslog.target
-Wants = network.target
+After = network.target
 
 [Service]
-Type = simple
-ExecStart=/opt/frp/frp_0.51.2_linux_amd64/frpc -c /opt/frp/frp_0.51.2_linux_amd64/frpc.ini
-#WorkingDirectory=/opt/frp/frp_0.51.2_linux_amd64
-#Restart=always
-#RestartSec=3
+ExecStart=/opt/frp/frp_0.60.0_linux_amd64/frpc -c /opt/frp/frp_0.60.0_linux_amd64/frpc.toml
+WorkingDirectory=/opt/frp/frp_0.60.0_linux_amd64
+Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
@@ -43,6 +53,10 @@ WantedBy=multi-user.target
 
 步骤三: 
 使能并启动服务
+
+如果是停止后修改，首先需要重载配置：
+sudo systemctl daemon-reload
+
 开机随系统启：
 sudo systemctl enable frpc
 
@@ -51,3 +65,4 @@ sudo systemctl start frpc
 
 查看服务状态：
 sudo systemctl status  frpc
+
