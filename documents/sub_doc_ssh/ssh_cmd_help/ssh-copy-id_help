@@ -1,5 +1,9 @@
 Usage: 
-ssh-copy-id [-h|-?|-f|-n] [-i [identity_file]] [-p port] [-F alternative ssh_config file] [[-o <ssh -o options>] ...] [user@]hostname
+ssh-copy-id [-h|-?|-f|-n] 
+  [-i [identity_file]]  ##如果公钥不在默认位置，-i 选项指定公钥文件的路径。
+  [-p port]  ##使用 -p 选项来指定端口
+  [-F alternative ssh_config file]  ##指定.ssh/config路径，主机别名。
+  [[-o <ssh -o options>] ...] [user@]hostname
 
 	-f: force mode -- copy keys without trying to check if they are already installed
 	-n: dry run    -- no keys are actually copied

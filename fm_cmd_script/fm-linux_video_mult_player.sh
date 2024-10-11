@@ -27,7 +27,16 @@ function func_video_mult_player
 		return 1
 	fi
 	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
+	if [ $? -ne 0 ]
+	then 
+	    echo "ERROR:"
+        echo "${app} is not exist!, please install it first by follow"
+        echo "mkdir -p /opt/GridPlayer && wget -P /opt/GridPlayer http://101.200.135.149:8060/software_exe/GridPlayer-0.5.3-x86_64.AppImage"
+        echo "ln -s /opt/GridPlayer/GridPlayer-0.5.3-x86_64.AppImage  /usr/local/bin/gridplayer"
+        echo ""
+        echo "info:https://github.com/vzhd1701/gridplayer"
+        return 2	
+	fi;
 
 	if [ x"$SSH_CLIENT" = x ]
 	then

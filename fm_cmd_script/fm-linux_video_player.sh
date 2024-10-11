@@ -23,14 +23,28 @@ function func_video_player
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo ""
-		echo "$scriptname  video file list or  rtmp_url"
+		echo "$scriptname  video file list or  rtmp_url #参数支持三种模式"
 		echo "$scriptname  a.mp4  b.mp4 ..." 
 		echo "$scriptname  rtmp://IP:PORT/live/movie123"
+		echo "$scriptname  player_list.txt"  
+		echo "  cat player_list.txt"
+		echo "    /pathto/video1.mp4"
+		echo "    ./pathto/video2.mp4"
+		echo "    ...."
 		echo ""
 		return 1
 	fi
-	which ${app} > /dev/null
-	if [ $? -ne 0 ];then echo ¨ERROR:${funcname},${app} not exist!¨;return 1;fi;
+	#which ${app} > /dev/null
+	#if [ $? -ne 0 ];then echo ¨ERROR:${funcname},${app} not exist!¨;return 1;fi;
+	
+	if [ $# -eq 1 ] && [ -f $1 ] && [ "x$(file "$1" | grep -w "text")" != "x" ]
+	then
+		# 使用 set 命令将文件内容作为参数列表
+		set -- $(cat $1)
+	fi
+	echo "$#"
+	echo "$@"
+	return 0
 	local play_list=()
 	for file in "$@"
 	do
@@ -42,7 +56,7 @@ function func_video_player
 		fi
 	done
 	if [ ${#play_list[@]} -eq 0 ];then echo "play_list is empty!";return 2;fi
-
+	
 	if [ x"$SSH_CLIENT" = x ]
 	then
 		for vfile in "${play_list[@]}"
