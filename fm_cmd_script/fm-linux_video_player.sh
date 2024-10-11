@@ -42,9 +42,7 @@ function func_video_player
 		# 使用 set 命令将文件内容作为参数列表
 		set -- $(cat $1)
 	fi
-	echo "$#"
-	echo "$@"
-	return 0
+
 	local play_list=()
 	for file in "$@"
 	do
