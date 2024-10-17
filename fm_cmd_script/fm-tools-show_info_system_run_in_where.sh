@@ -38,6 +38,7 @@ fi
 function func_detected_system_run_in_where
 {
     local tool=none
+    local noMore=no
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
         echo "$scriptname  no_param"
@@ -50,11 +51,21 @@ function func_detected_system_run_in_where
         echo "result:"
         echo "Running in Docker"
         echo "=========== end /.dockerenv =============="
+        noMore=yes
+    fi
+    #isn't windows WLS
+    if grep -qEi "(Microsoft|WSL)" /proc/version || uname -r | grep -qEi "(microsoft|WSL)"; then
+        echo "============= /proc/version ================"
+        echo "   cmd: grep -qEi "(Microsoft|WSL)" /proc/version || uname -r | grep -qEi "(microsoft|WSL)""
+        echo "result:"
+        echo "Running inside WSL"
+        echo "=========== end /.dockerenv =============="
+        noMore=yes
     fi
     #use dmesg
     tool=dmesg
     which ${tool} > /dev/null
-    if [ $? -eq 0 ];then
+    if [ $? -eq 0 ] && [ ${noMore} = no ];then
         echo "=============== dmesg ===================="
         echo "   cmd: ${maybeSUDO} dmesg | grep -i 'hypervisor'"
         echo "result:"
@@ -64,7 +75,7 @@ function func_detected_system_run_in_where
     #use /usr/bin/systemd-detect-virt
     tool=systemd-detect-virt
     which ${tool} > /dev/null
-    if [ $? -eq 0 ];then
+    if [ $? -eq 0 ] && [ ${noMore} = no ];then
         echo "======= systemd-detect-virt =============="
         echo "   cmd: ${tool}"
         echo "result:"        
@@ -74,7 +85,7 @@ function func_detected_system_run_in_where
     #use lscpu
     tool=lscpu
     which ${tool} > /dev/null
-    if [ $? -eq 0 ];then
+    if [ $? -eq 0 ] && [ ${noMore} = no ];then
         echo "=============== lscpu ===================="
         echo "   cmd: ${tool} | grep 'Hypervisor vendor'"
         echo "result:"           
@@ -84,7 +95,7 @@ function func_detected_system_run_in_where
     #use dmidecode
     tool=dmidecode
     ${maybeSUDO} which ${tool} > /dev/null
-    if [ $? -eq 0 ];then
+    if [ $? -eq 0 ] && [ ${noMore} = no ];then
         echo "============ dmidecode ==================="
         echo "   cmd: ${maybeSUDO} dmidecode -s system-manufacturer"
         echo "result:"           
