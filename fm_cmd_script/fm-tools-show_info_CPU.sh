@@ -17,17 +17,26 @@ if [ $(id -u) -ne 0 ];then
 fi
 function func_show_CPU
 {
-	which lscpu > /dev/null
-	if [ $? -ne 0 ];then echo "lscpu not found";return 1;fi
-	lscpu
-	echo "======== end lscpu =============="
-	cat /proc/cpuinfo
-	echo "======== end /proc/cpuinfo =============="
-	which inxi > /dev/null
-	if [ $? -ne 0 ];then echo "inxi not found";echo "you can \"apt install inxi\" to install it";return 1;fi
-	inxi -C
-	echo "======== end inxi -C =============="
-	return 0
+    which lscpu > /dev/null
+    if [ $? -eq 0 ];then
+        lscpu
+        echo "======== end lscpu =============="
+    fi
+    cat /proc/cpuinfo
+    echo "======== end /proc/cpuinfo =============="
+    which inxi > /dev/null
+    if [ $? -eq 0 ];then
+	 	#you can "apt install inxi" to install it
+        inxi -C
+        echo "======== end inxi -C =============="
+    fi
+	which dmidecode > /dev/null
+	if [ $? -eq 0 ];then
+		#apt install dmidecode
+		sudo dmidecode --type  processor
+		echo "======== end dmidecode =============="
+	fi
+    return 0
 }
 
 func_show_CPU $@

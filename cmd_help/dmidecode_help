@@ -1,0 +1,34 @@
+dmidecode 是一个命令行工具，用于从系统的 DMI 表中提取硬件信息。以下是一些常用的用法和选项：
+DMI（Desktop Management Interface）信息是一种标准化的数据格式，用于描述计算机的硬件组件。
+它由 SMBIOS（System Management BIOS）提供，允许操作系统和应用程序访问硬件信息。
+DMI 的用途
+    硬件管理：帮助系统管理员和管理工具获取硬件配置。
+    故障排除：提供详细的硬件信息以协助排查问题。
+    资产管理：用于跟踪和管理硬件资产。
+
+Usage: dmidecode [OPTIONS]
+Options are:
+ -d, --dev-mem FILE     Read memory from device FILE (default: /dev/mem)
+ -h, --help             Display this help text and exit
+ -q, --quiet            Less verbose output
+ -s, --string KEYWORD   Only display the value of the given DMI string
+ -t, --type TYPE        Only display the entries of given type
+ -H, --handle HANDLE    Only display the entry of given handle
+ -u, --dump             Do not decode the entries
+     --dump-bin FILE    Dump the DMI data to a binary file
+     --from-dump FILE   Read the DMI data from a binary file
+     --no-sysfs         Do not attempt to read DMI data from sysfs files
+     --oem-string N     Only display the value of the given OEM string
+ -V, --version          Display the version and exit
+
+==============================================
+--type 参数可以指定要查询的特定硬件类型
+    bios：        BIOS 信息,BIOS 版本、发布日期等。
+    system：      系统信息,制造商、产品名称、序列号等。
+    baseboard：   主板信息,主板型号、制造商等。
+    chassis：     机箱信息
+    processor：   处理器信息,CPU 类型、速度、核心数量等。
+    memory：      内存信息,内存类型、大小、速度等。
+    cache：       缓存信息,缓存大小、类型等。
+    connector：   连接器信息
+    slot：        插槽信息,扩展插槽的类型和状态等。

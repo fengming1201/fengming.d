@@ -39,10 +39,25 @@ function func_aviv_rename
 {
     if [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "$scriptname  no param"
+        echo "$scriptname  [debug]"
         return 1
     fi
-    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@" )
+    local isdebug=no
+    if [ $# -eq 1 ] && [ "x$1" = "xdebug" ]
+    then
+	isdebug=yes
+    fi
+
+    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" )
+
+    #debug
+    if [ "${isdebug}" = "yes" ]
+    then
+        for ter in "${delete_str_list[@]}"
+	do
+	    echo "debug:${ter}"
+	done
+    fi
 
     for pattern in "${delete_str_list[@]}"
     do

@@ -1,19 +1,80 @@
-$ sudo docker  volume  create --help 
+docker volume create
+Description:	Create a volume
+      Usage:	docker volume create [OPTIONS] [VOLUME]
 
-Usage:  docker volume create [OPTIONS] [VOLUME]
 
-Create a volume
+Description
+创建容器可以使用并存储数据的新卷。如果未指定名称，Docker将生成随机名称。
 
-Options:
-  -d, --driver string   Specify volume driver name (default "local")
-      --label list      Set metadata for a volume
-  -o, --opt map         Set driver specific options (default map[])
-=========================================
-创建卷
+Options
+Option	        Default	      Description
+--availability	active	      API 1.42+ Swarm Cluster Volume availability (active, pause, drain)
+-d, --driver	  local	Specify volume driver name
+--group		API 1.42+ Swarm Cluster Volume group (cluster volumes)
+--label		Set metadata for a volume
+--limit-bytes		API 1.42+ Swarm Minimum size of the Cluster Volume in bytes
+-o, --opt		Set driver specific options
+--required-bytes		API 1.42+ Swarm Maximum size of the Cluster Volume in bytes
+--scope	single	API 1.42+ Swarm Cluster Volume access scope (single, multi)
+--secret		API 1.42+ Swarm Cluster Volume secrets
+--sharing	none	API 1.42+ Swarm Cluster Volume access sharing (none, readonly, onewriter, all)
+--topology-preferred		    API 1.42+ Swarm A topology that the Cluster Volume would be preferred in
+--topology-required		      API 1.42+ Swarm A topology that the Cluster Volume must be accessible from
+--type	       block	      API 1.42+ Swarm Cluster Volume access type (mount, block)
 
-选项：
-  -d, --driver string   指定卷驱动程序名称（默认 "local")
-      --label list      设置卷的元数据
-  -o, --opt map         设置特定于驱动程序的选项（默认 map[])
+例子
 
-=========================================
+创建卷，然后配置容器以使用它：
+
+  $docker volume create hello
+
+  hello
+
+  $docker run -d -v hello:/world busybox ls /world
+
+挂载载是在容器的/world目录中创建的。Docker不支持容器内挂载点的相对路径。
+
+多个容器可以使用相同的卷。如果两个容器需要访问共享数据，则这很有用。例如，如果一个容器写入数据，另一个容器读取数据。
+
+卷名在驱动程序中必须唯一。这意味着您不能对两个不同的驱动程序使用相同的卷名。尝试创建两个同名的卷会导致错误：
+
+A volume named  "hello"  already exists with the "some-other" driver. Choose a different volume name.
+
+如果指定当前驱动程序上已在使用的卷名，Docker会假设您希望重用现有卷，并且不会返回错误。
+
+Driver-specific options (-o, --opt)
+驱动程序特定选项（-o，--opt）
+
+一些卷驱动程序可能会选择自定义卷创建。使用-o或--opt标志传递驱动程序选项：
+  $docker volume create --driver fake \
+      --opt tardis=blue \
+      --opt timey=wimey \
+      foo
+
+这些选项直接传递给卷驱动程序。不同卷驱动程序的选项可能会执行不同的操作（或根本不执行任何操作）。
+
+内置local驱动程序在Windows上不接受任何选项。在Linux和Docker Desktop上，local驱动程序接受类似于Linux mount命令的选项。
+通过多次传递--opt标志，可以提供多个选项。某些挂载选项（如o选项）可以采用以逗号分隔的选项列表。可以在此处找到可用挂载选项的完整列表。
+
+
+例如，下面创建了一个名为foo的tmpfs卷，大小为100 MB，uid为1000。
+  $docker volume create --driver local \
+      --opt type=tmpfs \
+      --opt device=tmpfs \
+      --opt o=size=100m,uid=1000 \
+      foo
+
+使用btrfs的另一个示例：
+
+  $docker volume create --driver local \
+      --opt type=btrfs \
+      --opt device=/dev/sda2 \
+      foo
+
+使用nfs以rw模式从192.168.1.1装载/path/to/dir的另一个示例：
+
+  $docker volume create --driver local \
+      --opt type=nfs \
+      --opt o=addr=192.168.1.1,rw \
+      --opt device=:/path/to/dir \
+      foo

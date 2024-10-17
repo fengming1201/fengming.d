@@ -42,8 +42,8 @@ function func_samba_mount
 	echo " "
 	if [ ! -d ${mount_dir} ];then echo "mount point not exist";return 2;fi
 
-	echo "${maybeSUDO} mount -t cifs -o username=${username},password=********,vers=2.0 //${ip}/${src_dir}  ${mount_dir}"
-	${maybeSUDO} mount -t cifs -o username=${username},password=${password},vers=2.0 //${ip}/${src_dir}  ${mount_dir}
+	echo "${maybeSUDO} mount -t cifs -o username=${username},password=********,vers=3.1.1,uid=$(id -u),gid=$(id -g) //${ip}/${src_dir}  ${mount_dir}"
+	${maybeSUDO} mount -t cifs -o username=${username},password=${password},vers=3.1.1,uid=$(id -u),gid=$(id -g) //${ip}/${src_dir}  ${mount_dir}
 
 	return 0
 }
