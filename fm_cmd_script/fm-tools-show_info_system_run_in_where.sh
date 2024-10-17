@@ -56,12 +56,13 @@ function func_detected_system_run_in_where
     #isn't windows WLS
     if grep -qEi "(Microsoft|WSL)" /proc/version || uname -r | grep -qEi "(microsoft|WSL)"; then
         echo "============= /proc/version ================"
-        echo "   cmd: grep -qEi "(Microsoft|WSL)" /proc/version || uname -r | grep -qEi "(microsoft|WSL)""
+        echo "   cmd: grep -qEi \"(Microsoft|WSL)\" /proc/version || uname -r | grep -qEi \"(microsoft|WSL)\""
         echo "result:"
         echo "Running inside WSL"
         echo "=========== end /.dockerenv =============="
         noMore=yes
     fi
+    
     #use dmesg
     tool=dmesg
     which ${tool} > /dev/null
