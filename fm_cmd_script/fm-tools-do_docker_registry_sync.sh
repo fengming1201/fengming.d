@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
@@ -41,12 +41,18 @@ function func_sync_images
     #check param
     if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
     then
-        echo "$scriptname  source_registry         target_registry"
+        echo ""
+        echo "$scriptname  source_registry                target_registry / list / check"
         echo ".e.g:"
         echo "$scriptname  http://luoshengming.top:8080   http://localhost:8040"
         echo ""
+        echo "$scriptname  http://luoshengming.top:8080   list                       #list remote repository item"
+        echo ""
+        echo "$scriptname  http://luoshengming.top:8080   check                      #use curl to check URL validity"
+        echo ""
         return 1
     fi
+
     #check tool
     which ${tool} > /dev/null
     if [ $? -ne 0 ]
@@ -57,6 +63,14 @@ function func_sync_images
     fi
     local ORG_SOURCE_REGISTRY="$1"
     local ORG_TARGET_REGISTRY="$2"
+
+    if [ "x${ORG_TARGET_REGISTRY}" = "xlist" ];then
+        curl -s ${ORG_SOURCE_REGISTRY}/v2/_catalog | jq -r '.repositories[]?'
+        return 0
+    elif [ "x${ORG_TARGET_REGISTRY}" = "xcheck" ];then
+        curl -I ${ORG_SOURCE_REGISTRY}
+        return 0
+    fi
 
     local SOURCE_REGISTRY=$(echo ${ORG_SOURCE_REGISTRY} | sed 's/http:\/\///')
     local TARGET_REGISTRY=$(echo ${ORG_TARGET_REGISTRY} | sed 's/http:\/\///')

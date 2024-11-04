@@ -26,10 +26,10 @@ function func_pdf_cut
         echo "DESCRIPTION:"
         echo "SYNOPSIS:"
         echo "         ${scriptname}  src_file  page_num1-page_num2  outfile_name"
-		echo "example: ${scriptname}  file.pdf  2-20   out.pdf"
-        echo "example: ${scriptname}  file.pdf  2-end  out.pdf"
-        echo "example: ${scriptname}  file.pdf  5-5    out.pdf"
-        echo "example: ${scriptname}  file.pdf //only pdf file,then other parameters default to [2-end  out.pdf]"
+		echo "example: ${scriptname}  file.pdf  2-20   file.pdf.out"
+        echo "example: ${scriptname}  file.pdf  2-end  file.pdf.out"
+        echo "example: ${scriptname}  file.pdf  5-5    file.pdf.out"
+        echo "example: ${scriptname}  file.pdf //only pdf file,then other parameters default to [2-end  file.pdf.out]"
         return 1
     fi
 	local src_pdf_file="$1"
@@ -40,13 +40,17 @@ function func_pdf_cut
         return 2
     fi
     local extract_range="2-end"
-	local outfile_name="out.pdf"
+	local outfile_name="${src_pdf_file}.out"
     if [ $# -eq 3 ]
     then
         extract_range="$2"
 	    outfile_name="$3"
     fi
-    if [ -f ${outfile_name} ];then rm ${outfile_name};fi
+    if [ "${outfile_name}" = "${src_pdf_file}" ];then outfile_name="${outfile_name}.out";fi
+    echo ""
+    echo "${src_pdf_file} ---->${extract_range} ---->${outfile_name}"
+    echo ""
+    if [ -f "${outfile_name}" ];then rm -v ${outfile_name};fi
 	which ${app} > /dev/null
 	if [ $? -ne 0 ];then echo ¨ERROR:${scriptname},${app} not exist!¨;return 1;fi;
 	#example:pdftk a.pdf cat 1-end output b.pdf
