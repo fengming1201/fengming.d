@@ -4,15 +4,13 @@ scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
 
-if [ -f ${common_share_function} ] && [ "include" = "enable" ]
-then
+if [ -f ${common_share_function} ] && [ "include" = "enable" ];then
     source ${common_share_function}
 fi
 #if unnecessary, please do not modify this function
 function func_location
 {
-    if [ -L ${scriptfile} ]
-    then
+    if [ -L ${scriptfile} ];then
         echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
     else
         echo "location:${scriptfile}"
@@ -41,8 +39,7 @@ fi
 function func_gitrevert
 {
     local opt=soft
-    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
-    then
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];then
         echo "$scriptname  [sorft|1] [hard|2] [msg|3]"
         echo ""
         echo "$scriptname  sorft or 1    --保留更改，撤销提交。"
@@ -52,23 +49,23 @@ function func_gitrevert
         return 1
     fi
     git status > /dev/null 2>&1
-	if [ $? -ne 0 ]
-	then
+	if [ $? -ne 0 ];then
         maybeSUDO=sudo
     else
         maybeSUDO=
     fi
-    if [ "x${opt}" = "xsorft" ] || [ ${opt} -eq 1 ]
-    then
+    opt=$1
+    if [ "x${opt}" = "x1" ] || [ "x${opt}" = "xsorft" ];then
+        echo " ${maybeSUDO} git reset --soft HEAD~1"
+        echo ""
         ${maybeSUDO} git reset --soft HEAD~1
-    elif [ "x${opt}" = "xhard" ] || [ ${opt} -eq 2 ]
-    then
+    elif [ "x${opt}" = "x2" ] || [ "x${opt}" = "xhard" ];then
+        echo "${maybeSUDO} git reset --hard HEAD~1"
+        echo ""
         ${maybeSUDO} git reset --hard HEAD~1
-    elif [ "x${opt}" = "xmixed" ] || [ ${opt} -eq 2 ]
-    then
-        ${maybeSUDO} git reset --mixed HEAD~1        
-    elif [ "x${opt}" = "xmsg" ] || [ ${opt} -eq 3 ]
-    then
+    elif [ "x${opt}" = "x3" ] || [ "x${opt}" = "xmsg" ];then
+        echo "${maybeSUDO} git commit --amend"
+        echo ""
         ${maybeSUDO} git commit --amend
     else
         echo "unknown opt:${opt}"

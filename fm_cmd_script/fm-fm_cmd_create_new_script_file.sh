@@ -64,15 +64,13 @@ scriptname=\$(basename \${scriptfile})
 fengming_dir=\$FENGMING_DIR
 common_share_function=\${fengming_dir}/fm_cmd_script/common_share_function.sh
 
-if [ -f \${common_share_function} ] && [ "include" = "enable" ]
-then
+if [ -f \${common_share_function} ] && [ "include" = "enable" ];then
     source \${common_share_function}
 fi
 #if unnecessary, please do not modify this function
 function func_location
 {
-    if [ -L \${scriptfile} ]
-    then
+    if [ -L \${scriptfile} ];then
         echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
     else
         echo "location:\${scriptfile}"
@@ -102,8 +100,7 @@ function func_
     #if [ "\$1" != "1" ] && [ "\$1" != "2" ] && [ "\$1" != "param1" ] && [ "\$1" != "param2" ];then need_help=yes;fi
     #if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ] || [ \${need_help} = "yes" ]
     
-    if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ]
-    then
+    if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ];then
         echo "\$scriptname  param_list"
         return 1
     fi
@@ -125,8 +122,7 @@ EOF
 
 func_create_fm_cmd "$@"
 ret=$?
-if [ ${ret} -ne 0 ]
-then 
+if [ ${ret} -ne 0 ];then 
     exit 1
 fi
 exit 0
