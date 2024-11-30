@@ -22,6 +22,7 @@ Ctrl + a  \     :终止所有会话并终止 Screen
 
 screen -ls  : 查看当前已有的screen会话.
 
+终止指定的 screen 会话：
 screen -S your_screen_name -X quit  : 删除某个会话.
 
 ====================================================
@@ -64,3 +65,6 @@ Options:
 -wipe [match] 什么都不做，只需清理SockDir（关于可能的匹配）.
 -x            连接到未分离的屏幕。（多显示模式）.
 -X            在指定的会话中作为屏幕命令执行＜cmd＞.
+
+终止指定的 screen 会话：
+screen -S your_screen_name -X quit  : 删除某个会话.
