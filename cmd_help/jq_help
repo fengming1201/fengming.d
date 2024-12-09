@@ -1,0 +1,43 @@
+jq - 命令行 JSON 处理器 [version 1.6]
+
+用法：	
+	jq [options] <jq filter> [file...]
+	jq [options] --args <jq filter> [strings...]
+	jq [options] --jsonargs <jq filter> [JSON_TEXTS...]
+
+jq 是一个处理 JSON 输入的工具，将给定的过滤器应用于它的 JSON 文本输入并以 JSON 形式生成过滤器的结果标准输出。
+
+最简单的过滤器是 .，它将 jq 的输入复制到其输出未修改（格式化除外，但注意使用的是IEEE754
+用于内部数字表示，以及所有这些含义）。
+
+有关更高级的过滤器，请参阅 jq(1) 联机帮助页 ("man jq")
+and/or https://stedolan.github.io/jq
+
+例子：
+$ echo '{"foo": 0}' | jq .
+{
+	"foo": 0
+}
+
+一些选项包括：
+  -c               紧凑而不是漂亮的打印输出；
+  -n               使用“null”作为单个输入值；
+  -e               根据输出设置退出状态代码；
+  -s               将所有输入读取（slurp）到数组中；对其应用过滤器；
+  -r               输出原始字符串，而不是 JSON 文本；
+  -R               读取原始字符串，而不是 JSON 文本；
+  -C               对 JSON 进行着色；
+  -M               monochrome (don't colorize JSON);
+  -S               对输出中对象的键进行排序；
+  --tab            使用制表符进行缩进；
+  --arg a v        将变量 $a 设置为值 <v>；
+  --argjson a v    将变量 $a 设置为 JSON 值 <v>;
+  --slurpfile a f  将变量 $a 设置为从 <f> 读取的 JSON 文本数组；
+  --rawfile a f    将变量 $a 设置为由 <f> 的内容组成的字符串；
+  --args           其余参数是字符串参数，而不是文件；
+  --jsonargs       其余参数是 JSON 参数，而不是文件；
+  --               终止参数处理；
+
+命名参数也可用作 $ARGS.named[]，而位置参数可用作 $ARGS.positional[]。
+
+有关更多选项，请参阅联机帮助页。

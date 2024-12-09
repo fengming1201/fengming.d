@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ "x${fengming_root_dir}" = "x" ]
-then
+if [ "x${fengming_root_dir}" = "x" ];then
+	#default
     fengming_root_dir=/opt/fengming.d
 fi
 
@@ -13,18 +13,27 @@ function buildin_install_mybashrc
 	local home_bashrc=${HOME}/.bashrc
 
 	#check file state
-	if [ ! -f ${home_bashrc} ];then echo "${home_bashrc} not exist";return 1;fi
-	echo "home_bashrc:${home_bashrc}"
-	if [ ! -f ${mybash_file} ];then echo "${mybash_file} not exist";return 2;fi
-	echo "mybash_file:${mybash_file}"
+	if [ ! -f ${home_bashrc} ];then 
+		echo "${home_bashrc} not exist"
+		return 1
+	fi
+
+	if [ ! -f ${mybash_file} ];then
+		echo "${mybash_file} not exist"
+		return 2
+	fi
+
 	#check is already installed
 	grep -w "${mybash_file}" ${home_bashrc}  > /dev/null
-	if [ $? -eq 0 ];then echo "WARNNING:${FUNCNAME},allready configed.";return 0;fi
+	if [ $? -eq 0 ];then
+		echo "WARNNING:${FUNCNAME},allready configed."
+		return 0
+	fi
 
 	#else write config to ${home_bashrc}
-	cat >> ${home_bashrc} << EOF
+	tee -a ${home_bashrc} <<EOF
 if [ -f ${mybash_file} ];then
-	. ${mybash_file}
+    . ${mybash_file}
 fi
 EOF
 	return 0

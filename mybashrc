@@ -82,8 +82,7 @@ if [ "x$STY" = "x" ];then
 	export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
 fi
 id -u lshm > /dev/null 2>&1
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ];then
 	echo "*******************************************"
 	echo "****  fengming.d  environment  loaded  ****"
 	echo "*******************************************"
