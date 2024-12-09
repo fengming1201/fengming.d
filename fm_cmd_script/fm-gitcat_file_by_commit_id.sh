@@ -31,6 +31,10 @@ function func_gitcat_file_by_commit_id
 	local commit_id=$1
 	shift 1
 	local file_list=$@
+	if [ ! -d .git/ ];then
+		echo "ERROR:No git repository found in current directory !!"
+		return 2
+	fi	
 	git status > /dev/null 2>&1
 	if [ $? -ne 0 ]
 	then
