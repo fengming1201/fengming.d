@@ -28,10 +28,7 @@ function func_gitlog_detail_by_commit_id
 		echo "NOTE:pay attention to the file path!!"
 		return 0
 	fi
-	if [ ! -d .git/ ];then
-		echo "ERROR:No git repository found in current directory !!"
-		return 2
-	fi	
+
 	git status > /dev/null 2>&1
 	local ret=$?
 	local commit_id=$1

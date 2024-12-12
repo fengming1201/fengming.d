@@ -44,10 +44,7 @@ function func_git_push_update
 		echo "no args"
 		return 1
 	fi
-	if [ ! -d .git/ ];then
-		echo "ERROR:No git repository found in current directory !!"
-		return 2
-	fi	
+
 	git status > ${tmp_file}  2>&1
 	ret=$?
 	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]

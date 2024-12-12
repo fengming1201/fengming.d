@@ -38,10 +38,7 @@ function func_gitlog_allcommit_of_file
     fi
     
     echo "===${file_list}"
-	if [ ! -d .git/ ];then
-		echo "ERROR:No git repository found in current directory !!"
-		return 2
-	fi
+
 	git status > /dev/null 2>&1
 	local ret=$?
     if [ $ret -ne 0 ]
