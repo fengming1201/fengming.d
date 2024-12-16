@@ -12,7 +12,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     exit 0
 fi
-if [ $(id -u) -ne 0 ];then
+if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
     maybeSUDO=sudo
 fi
 token_encrypt_file_path=${fengming_dir}/encrypt_files

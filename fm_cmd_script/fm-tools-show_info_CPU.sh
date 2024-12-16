@@ -30,12 +30,17 @@ function func_show_CPU
         inxi -C
         echo "======== end inxi -C =============="
     fi
-	which dmidecode > /dev/null
+	${maybeSUDO} which dmidecode > /dev/null
 	if [ $? -eq 0 ];then
 		#apt install dmidecode
-		sudo dmidecode --type  processor
+		${maybeSUDO} dmidecode --type  processor
 		echo "======== end dmidecode =============="
 	fi
+
+    ${maybeSUDO} dmesg | grep -i  "model:"
+    if [ $? -eq 0 ];then
+        echo "========= end dmesg ================="
+    fi
     return 0
 }
 

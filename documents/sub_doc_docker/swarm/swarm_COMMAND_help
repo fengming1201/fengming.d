@@ -14,3 +14,4 @@ Commands:
   update      Update the swarm
 
 Run 'docker swarm COMMAND --help' for more information on a command.
+====================================================================
