@@ -20,12 +20,12 @@ function func_ffmpeg_screen_record_push_2rtmpserver
 	local push_tool=ffmpeg
 	local screenID=":0.0"
 	local resol="480x320"
-	local rtmp_url=rtmp://116.62.103.60:1935/live/movie1234
+	local rtmp_url=rtmp://106.13.34.177:1935/live/movie1234
 	if [ $# -ne 3 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "ERROR:parameter wrong"
 		echo "$scriptname screenID  resolution  rtps_url"
-		echo "e.g:$scriptname :0.0 480x320 rtmp://116.62.103.60:1935/live/movie1234"
+		echo "e.g:$scriptname :0.0 480x320 rtmp://106.13.34.177:1935/live/movie1234"
 		echo "屏幕分辨率(resolution):"
 		echo "320x240   --常见于较早的移动电话和小型设备。"
     	echo "480x320   --常见于早期智能手机和某些小型平板电脑。"

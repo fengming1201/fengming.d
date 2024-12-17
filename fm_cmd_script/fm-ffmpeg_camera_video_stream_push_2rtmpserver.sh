@@ -26,7 +26,7 @@ function func_ffmpeg_camera_video_stream_push_2rtmpserver
 	then
 		echo "ERROR:parameter wrong"
 		echo "$scriptname dev resolution rtmp_url"
-		echo "e.g:$scriptname /dev/video0 1366x768 rtmp://116.62.103.60:1935/live/test"
+		echo "e.g:$scriptname /dev/video0 1366x768 rtmp://106.13.34.177:1935/live/test"
 		echo "屏幕分辨率(resolution):"
 		which ${check_tool} > /dev/null
 		if [ $? -eq 0 ]

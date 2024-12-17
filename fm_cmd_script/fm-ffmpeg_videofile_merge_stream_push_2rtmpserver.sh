@@ -25,7 +25,7 @@ function func_ffmpeg_videofile_merge_stream_push_2rtmpserver
 	then
 		echo "ERROR:parameter wrong"
 		echo "$scriptname  rtmp_url   play_times   video_file_list"
-		echo "e.g:$scriptname rtmp://116.62.103.60:1935/live/test  10  1.mp4 2.flv ..."
+		echo "e.g:$scriptname rtmp://106.13.34.177:1935/live/test  10  1.mp4 2.flv ..."
 		return 1
 	fi
 	which ${push_tool} > /dev/null

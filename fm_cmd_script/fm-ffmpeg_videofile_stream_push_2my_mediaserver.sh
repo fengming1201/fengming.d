@@ -5,7 +5,7 @@ fengming_dir=$FENGMING_DIR
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo "location:${scriptfile}"
     echo "abstract:"
-	echo "rtmp_url:rtmp://101.200.135.149:1935/live/movie1234"
+	echo "rtmp_url:rtmp://106.13.34.177:1935/live/movie1234"
 	echo ""
     exit 0
 fi
@@ -21,7 +21,7 @@ function func_ffmpeg_videofile_stream_push_2my_mediaserver
 {
 	local push_tool=ffmpeg
 
-	local server_ip=101.200.135.149
+	local server_ip=106.13.34.177
 	local server_port=1935
 
 	if [ $# -lt 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]

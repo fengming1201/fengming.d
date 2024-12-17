@@ -26,7 +26,7 @@ function func_ffmpeg_videofile_stream_push_2rtmpserver
 	then
 		echo ""
 		echo "$scriptname  loop_times  rtmp_url video_file_lsit"
-		echo "e.g:$scriptname 10 rtmp://116.62.103.60:1935/live/test 1.mp4 2.flv ..."
+		echo "e.g:$scriptname 10 rtmp://106.13.34.177:1935/live/test 1.mp4 2.flv ..."
 		echo ""
 		return 1
 	fi
