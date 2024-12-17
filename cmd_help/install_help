@@ -1,0 +1,64 @@
+Usage: install [OPTION]... [-T] SOURCE DEST
+  or:  install [OPTION]... SOURCE... DIRECTORY
+  or:  install [OPTION]... -t DIRECTORY SOURCE...
+  or:  install [OPTION]... -d DIRECTORY...
+
+此安装程序将文件（通常刚刚编译）复制到目标位置您选择的地点。  如果您想下载并安装即用型
+GNU/Linux 系统上的软件包，您应该使用软件包管理器如 yum(1) 或 apt-get(1)。
+
+在前三种形式中，将 SOURCE 复制到 DEST 或将多个 SOURCE 复制到现有的目录，同时设置权限模式和所有者/组。
+在第四种形式中，创建给定目录的所有组件。
+
+Mandatory arguments to long options are mandatory for short options too.
+      --backup[=CONTROL]  make a backup of each existing destination file
+  -b                  like --backup but does not accept an argument
+  -c                  (ignored)
+  -C, --compare       compare each pair of source and destination files, and
+                        in some cases, do not modify the destination at all
+  -d, --directory     treat all arguments as directory names; create all
+                        components of the specified directories
+  -D                  创建 DEST 的所有前导组件（最后一个除外）或 --target-directory 的所有组件，然后将 SOURCE 复制到 DEST
+  -g, --group=GROUP   set group ownership, instead of process' current group
+  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x
+  -o, --owner=OWNER   set ownership (super-user only)
+  -p, --preserve-timestamps   apply access/modification times of SOURCE files
+                        to corresponding destination files
+  -s, --strip         strip symbol tables
+      --strip-program=PROGRAM  program used to strip binaries
+  -S, --suffix=SUFFIX  override the usual backup suffix
+  -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY
+  -T, --no-target-directory  treat DEST as a normal file
+  -v, --verbose       print the name of each directory as it is created
+      --preserve-context  preserve SELinux security context
+  -Z                      set SELinux security context of destination
+                            file and each created directory to default type
+      --context[=CTX]     like -Z, or if CTX is specified then set the
+                            SELinux or SMACK security context to CTX
+      --help     display this help and exit
+      --version  output version information and exit
+
+The backup suffix is '~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.
+The version control method may be selected via the --backup option or through
+the VERSION_CONTROL environment variable.  Here are the values:
+
+  none, off       never make backups (even if --backup is given)
+  numbered, t     make numbered backups
+  existing, nil   numbered if numbered backups exist, simple otherwise
+  simple, never   always make simple backups
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Full documentation <https://www.gnu.org/software/coreutils/install>
+or available locally via: info '(coreutils) install invocation'
+==========================================================================
+install 命令可以用于复制文件并设置其权限，同时自动创建必要的目录。它的基本用法如下：
+install -D source_file destination_path
+
+选项说明
+
+    -D：自动创建目标路径中缺少的目录。
+    -m：设置目标文件的权限。例如，-m 755 设置为可执行权限。
+
+示例
+install -D lib/btstack/port/qt-usb/README.md ../tmp/lib/btstack/port/qt-usb/README.md
+
+这个命令会复制 README.md 文件到指定的目标路径，并自动创建任何缺失的目录。
