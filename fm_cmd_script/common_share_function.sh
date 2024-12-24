@@ -1,5 +1,85 @@
 
+#format: COMMOND_FUNC_check_ip [-d/--debug 1] [-m--method 1/2] ip_address
+#return: 0  -- OK，ip is a valid IP address.
+#        1  -- NO, ip is not IP format.
+#        2  -- NO, ip is not a valid IP address.
+function COMMOND_FUNC_check_ip
+{
+    #check_ip  ip  method  debug 
+    local method=1
+    local debug=0
+    local IP=8.8.8.8
 
+    # 手动解析长选项
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -d|--debug)
+                debug="$2"
+                shift 2
+                ;;
+            -m|--method)
+                method="$2"
+                shift 2
+                ;;
+            *)
+                IP="$1"
+                shift
+                ;;
+        esac
+    done
+    test ${debug} = "1" && echo "method=$method"
+    test ${debug} = "1" && echo "debug=$debug"
+    test ${debug} = "1" && echo "IP=$IP"
+
+    if [ ${method} -eq 1 ]
+    then
+        #方法1
+        # 正则表达式匹配 IPv4 地址
+        ip_regex="^([0-9]{1,3}\.){3}[0-9]{1,3}$"
+
+        # 检查参数是否符合 IP 地址格式
+        if [[ $IP =~ $ip_regex ]]; then
+            # 检查每个数字是否在 0-255 范围内
+            IFS='.' read -r -a octets <<< "$IP"
+            valid=true
+            for octet in "${octets[@]}"; do
+                if (( octet < 0 || octet > 255 )); then
+                    valid=false
+                    break
+                fi
+            done
+
+            if $valid; then
+                test ${debug} = "1" && echo "$IP :参数是一个有效的 IP 地址。"
+                return 0
+            else
+                test ${debug} = "1" && echo "$IP 参数不是一个有效的 IP 地址。"
+                return 2
+            fi
+        else
+            test ${debug} = "1" && echo "$IP 参数不是 IP 格式。"
+            return 1
+        fi
+    elif [ ${method} -eq 2 ];then
+        #方法2
+        local VALID_CHECK=$(echo $IP|awk -F. '$1<=255 && $2<=255 && $3<=255 && $4<=255 {print "yes"}')
+        if echo $IP|grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$">/dev/null; then
+            if [[ $VALID_CHECK == "yes" ]]; then
+                    test ${debug} = "1" && echo "$IP :参数是一个有效的 IP 地址。"
+                    return 0
+            else
+                    test ${debug} = "1" && echo "$IP 参数不是一个有效的 IP 地址。"
+                    return 2
+            fi
+        else
+            test ${debug} = "1" && echo "$IP 参数不是 IP 格式。"
+            return 1
+        fi
+    else
+        echo "ERROR:not support this method:$method value!!"        
+    fi
+    return 0
+}
 
 function COMMOND_FUNC_file_password_cracking_tools_list
 {
