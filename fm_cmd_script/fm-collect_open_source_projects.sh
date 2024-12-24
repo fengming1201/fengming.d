@@ -142,14 +142,15 @@ function func_git_pull_update
 
 	for sub_dir in "${dir_list[@]}"
 	do
+		echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${sub_dir}\") | .describe" ${target_file_name})
 		pushd ${sub_dir}
 		remote_name=$(git remote -v | awk '{print $1}' | uniq)
 		branch_name=$(git branch | awk '{print $2}' | uniq)
 		if [ "x$timeout_time_s" = "x0" ];then
-			echo "git pull ${remote_name} ${branch_name}"
+			echo -e "\e[31mgit pull ${remote_name} ${branch_name} \e[0m"
 			git pull ${remote_name} ${branch_name}
 		else
-			echo "timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}"
+			echo -e "\e[31mtimeout ${timeout_time_s} git pull ${remote_name} ${branch_name} \e[0m"
 			timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}
 		fi
 		popd
@@ -175,10 +176,10 @@ function func_git_clone
 		item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
 		if [ "x${item_url}" != "x" ];then
 			if [ "x$timeout_time_s" = "x0" ];then
-				echo "git clone ${item_url}"
+				echo -e "\e[31mgit clone ${item_url} \e[0m"
 				git clone ${item_url}
 			else
-				echo "timeout ${timeout_time_s} git clone ${item_url}"
+				echo -e "\e[31mtimeout ${timeout_time_s} git clone ${item_url} \e[0m"
 				timeout ${timeout_time_s} git clone ${item_url}
 			fi
 		else
