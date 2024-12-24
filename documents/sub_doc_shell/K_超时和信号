@@ -1,0 +1,67 @@
+
+
+(1)方式一：设置超时
+timeout 命令来限制某个命令的执行时间。如果命令超过指定时间没有完成，timeout 会终止它
+
+# 使用 timeout 限制 git clone 命令的执行时间为 30 秒
+timeout 30s git clone URL
+
+# 检查上一个命令的退出状态
+if [ $? -eq 124 ]; then
+    echo "git clone command timed out, moving on..."
+else
+    echo "git clone completed successfully."
+fi
+
+
+(2)方式二：捕捉信号
+trap 命令可以用来捕获信号，并在接收到信号时执行特定的命令。
+
+trap 'echo "Command timed out"; exit 1' SIGALRM
+alarm 60
+git clone URL
+alarm 0
+
+或
+#!/bin/bash
+
+url_list=("url1" "url2" "url3")
+
+# 定义一个函数来处理超时
+timeout_handler() {
+    echo "Command timed out. Killing process..."
+    kill -9 $pid 2>/dev/null
+}
+
+for new_url in "${url_list[@]}"; do
+    echo "Cloning $new_url..."
+    
+    # 设置 trap 捕捉超时信号
+    trap timeout_handler SIGALRM
+    
+    # 启动一个子 shell 来运行 git clone，并获取其 PID
+    (
+        trap '' SIGALRM
+        git clone "$new_url" &
+        pid=$!
+        wait $pid
+    ) &
+    
+    # 启动一个计时器，30 秒后发送 SIGALRM 信号
+    (sleep 30 && kill -ALRM $$) & timer_pid=$!
+    
+    # 等待子 shell 完成
+    wait $!
+    
+    # 取消计时器
+    kill $timer_pid 2>/dev/null
+    
+    # 重置 trap
+    trap - SIGALRM
+    
+    if [ $? -eq 0 ]; then
+        echo "Successfully cloned $new_url."
+    else
+        echo "Failed to clone $new_url or it timed out."
+    fi
+done

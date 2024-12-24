@@ -1,0 +1,100 @@
+如何加密自己写的shell脚本？
+
+加密或保护 Shell 脚本可以通过多种方法实现，尽管 Shell 脚本本质上是文本文件，很容易被查看和编辑。
+以下是几种常见的方法来保护你的 Shell 脚本：
+================================================
+### 1. 使用 `shc` 工具
+
+`shc` 是一个用来加密和编译 Shell 脚本的工具，可以将脚本转换为二进制文件，从而隐藏脚本的源代码。
+
+#### 安装 `shc`
+
+在 Debian/Ubuntu 系统上：
+sudo apt-get install shc
+
+在 CentOS/Red Hat 系统上：
+sudo yum install shc
+
+#### 使用 `shc` 编译脚本
+
+假设你有一个脚本 `myscript.sh`：
+
+shc -f myscript.sh
+
+这将生成两个文件：
+- `myscript.sh.x`：加密后的二进制文件
+- `myscript.sh.x.c`：中间生成的 C 源文件
+
+你可以执行 `myscript.sh.x` 来运行加密后的脚本。
+================================================
+### 2. 使用 `openssl` 加密脚本内容
+
+你可以使用 `openssl` 来加密脚本内容，然后在运行时解密并执行。
+
+#### 加密脚本
+
+openssl enc -aes-256-cbc -salt -in myscript.sh -out myscript.sh.enc
+
+你会被提示输入和确认一个密码。
+
+#### 解密并执行脚本
+
+编写一个小的解密执行脚本 `run_myscript.sh`：
+
+#!/bin/bash
+openssl enc -d -aes-256-cbc -in myscript.sh.enc -out myscript.sh -k YOUR_PASSWORD
+bash myscript.sh
+rm -f myscript.sh
+
+将 `YOUR_PASSWORD` 替换为你用于加密的密码。
+================================================
+### 3. 使用 `GPG` 加密脚本
+
+你可以使用 `GPG` 来加密脚本，并在运行时解密。
+
+#### 加密脚本
+
+gpg -c myscript.sh
+
+这将生成一个加密文件 `myscript.sh.gpg`。
+
+#### 解密并执行脚本
+
+编写一个解密执行脚本 `run_myscript.sh`：
+
+#!/bin/bash
+gpg -d myscript.sh.gpg > myscript.sh
+bash myscript.sh
+rm -f myscript.sh
+================================================
+### 4. 使用 `base64` 编码脚本
+
+虽然 `base64` 编码并不是一种加密方式，但它可以隐藏脚本内容。你可以对脚本进行 `base64` 编码，然后在运行时解码并执行。
+
+#### 编码脚本
+
+base64 myscript.sh > myscript.sh.b64
+
+#### 解码并执行脚本
+
+编写一个解码执行脚本 `run_myscript.sh`：
+
+#!/bin/bash
+base64 -d myscript.sh.b64 > myscript.sh
+bash myscript.sh
+rm -f myscript.sh
+================================================
+### 5. 使用 `chmod` 设置权限
+
+虽然这不是一种加密方法，但你可以通过设置文件权限来限制对脚本的访问。
+
+#### 设置权限
+
+chmod 700 myscript.sh
+
+这将使脚本只能由拥有者读取和执行。
+
+### 总结
+
+上述方法可以在一定程度上保护你的 Shell 脚本，但需要注意的是，任何加密或保护方法都可能被有经验的用户破解。
+选择适合你需求的保护方法，并综合使用多种技术以提高安全性。

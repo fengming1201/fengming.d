@@ -142,8 +142,8 @@ function func_git_pull_update
 		remote_name=$(git remote -v | awk '{print $1}' | uniq)
 		branch_name=$(git branch | awk '{print $2}' | uniq)
 	
-		echo "git pull ${remote_name} ${branch_name}"
-		git pull ${remote_name} ${branch_name}
+		echo "timeout 60s git pull ${remote_name} ${branch_name}"
+		timeout 60s git pull ${remote_name} ${branch_name}
 		popd
 	done
 	return 0
@@ -162,8 +162,8 @@ function func_git_clone
 		echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${item_name}\") | .describe" ${target_file_name})
 		item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
 		if [ "x${item_url}" != "x" ];then
-			echo "git clone ${item_url}"
-			git clone ${item_url}
+			echo "timeout 60s git clone ${item_url}"
+			timeout 60s git clone ${item_url}
 		else
 			echo "item: ${item_name}  URL is empty!"
 		fi
