@@ -84,7 +84,7 @@ function func_delete_item
     return 0
 }
 
-function func_check_readme_descript
+function func_check_item_status
 {
 	if [ ! -f ${target_file_name} ];then
 		echo "${target_file_name} not exist!!"
@@ -163,7 +163,7 @@ function func_git_clone
 		item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
 		if [ "x${item_url}" != "x" ];then
 			echo "git clone ${item_url}"
-			#git clone ${item_url}
+			git clone ${item_url}
 		else
 			echo "item: ${item_name}  URL is empty!"
 		fi
@@ -174,7 +174,7 @@ function func_git_clone
 function func_schedule
 {
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];then
-        echo "$scriptname  [param]"
+        echo "$scriptname  cmd  args ..."
         echo ""
         echo "$scriptname  [-h | --help | all=(check & update)]"
         echo ""
@@ -200,26 +200,26 @@ function func_schedule
     fi
 
     if [ "$1" = "add" ] && [ $# -eq 5 ];then
-        echo "add ...."
+        echo "\e[31madd ....\e[0m"
         func_add_new_item "$2" "$3" "$4" "$5" 
     fi
     if [ "$1" = "delete" ] && [ $# -eq 2 ];then
-        echo "delete ...."
+        echo "\e[31mdelete ....\e[0m"
         func_delete_item "$2"
     fi
 
     if [ "$1" = "clone" ];then
-        echo "clone ...."
+        echo "\e[31mclone ....\e[0m"
         func_git_clone
     fi
 
     if [ "$1" = "check" ] || [ "$1" = "all" ];then
-        echo "check ...."
-        func_check_readme_descript
+        echo "\e[31mcheck ....\e[0m"
+        func_check_item_status
     fi
 
     if [ "$1" = "update" ] || [ "$1" = "all" ];then
-        echo "update ...."
+        echo "\e[31mupdate ....\e[0m"
         func_git_pull_update $@
     fi
     return 0
