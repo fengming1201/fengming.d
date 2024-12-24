@@ -34,6 +34,7 @@ if [ $(id -u) -ne 0 ] && [ lshm != lshm ];then
 fi
 #start here add your code,you need to implement the following function.
 target_file_name=${fengming_dir}/documents/sub_doc_unclassified/collect_open_source_project_info.json
+timeout_time_s=180s
 
 function func_add_new_item
 {
@@ -142,8 +143,8 @@ function func_git_pull_update
 		remote_name=$(git remote -v | awk '{print $1}' | uniq)
 		branch_name=$(git branch | awk '{print $2}' | uniq)
 	
-		echo "timeout 60s git pull ${remote_name} ${branch_name}"
-		timeout 60s git pull ${remote_name} ${branch_name}
+		echo "timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}"
+		timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}
 		popd
 	done
 	return 0
@@ -162,8 +163,8 @@ function func_git_clone
 		echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${item_name}\") | .describe" ${target_file_name})
 		item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
 		if [ "x${item_url}" != "x" ];then
-			echo "timeout 60s git clone ${item_url}"
-			timeout 60s git clone ${item_url}
+			echo "timeout ${timeout_time_s} git clone ${item_url}"
+			timeout ${timeout_time_s} git clone ${item_url}
 		else
 			echo "item: ${item_name}  URL is empty!"
 		fi
@@ -200,26 +201,26 @@ function func_schedule
     fi
 
     if [ "$1" = "add" ] && [ $# -eq 5 ];then
-        echo "\e[31madd ....\e[0m"
+        echo -e "\e[31madd ....\e[0m"
         func_add_new_item "$2" "$3" "$4" "$5" 
     fi
     if [ "$1" = "delete" ] && [ $# -eq 2 ];then
-        echo "\e[31mdelete ....\e[0m"
+        echo -e "\e[31mdelete ....\e[0m"
         func_delete_item "$2"
     fi
 
     if [ "$1" = "clone" ];then
-        echo "\e[31mclone ....\e[0m"
+        echo -e "\e[31mclone ....\e[0m"
         func_git_clone
     fi
 
     if [ "$1" = "check" ] || [ "$1" = "all" ];then
-        echo "\e[31mcheck ....\e[0m"
+        echo -e "\e[31mcheck ....\e[0m"
         func_check_item_status
     fi
 
     if [ "$1" = "update" ] || [ "$1" = "all" ];then
-        echo "\e[31mupdate ....\e[0m"
+        echo -e "\e[31mupdate ....\e[0m"
         func_git_pull_update $@
     fi
     return 0
