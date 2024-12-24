@@ -1,0 +1,298 @@
+{
+  "info": [
+    {
+      "name": "cpost",
+      "language": "C",
+      "describe": "是一个c语言编写的，用于c语言程序上下文切换和解耦的工具。",
+      "URL": "https://github.com/NevermindZZT/cpost.git"
+    },
+    {
+      "name": "dbugLib-Prj",
+      "language": "",
+      "describe": "嵌入式开发必备日志库dbuglib",
+      "URL": "https://gitee.com/git-lib/dbugLib-Prj"
+    },
+    {
+      "name": "eepromfs",
+      "language": "",
+      "describe": "基于EEPROM的简易类文件的数据读写库，方便做动态功能增减时参数管理。",
+      "URL": "https://gitee.com/wtau_zaozao/eepromfs"
+    },
+    {
+      "name": "libev",
+      "language": "",
+      "describe": "libev是一个轻量级的事件循环库，它类似于libevent但更加轻量。libev提供了高性能的事件循环，支持多种类型的事件，包括I/O、定时器、信号处理等。",
+      "URL": "https://github.com/enki/libev.git"
+    },
+    {
+      "name": "libevent",
+      "language": "",
+      "describe": "它是一个轻量级的事件通知库，支持多种I/O多路复用技术（包括select、poll、epoll、kqueue等），广泛用于开发高性能网络服务器。",
+      "URL": "https://github.com/libevent/libevent.git"
+    },
+    {
+      "name": "libevnet",
+      "language": "",
+      "describe": "异步事件库",
+      "URL": "http://25thandClement.com/~william/projects/libevnet.git"
+    },
+    {
+      "name": "libhv",
+      "language": "C/C++",
+      "describe": "libhv是一个比libevent、libev、libuv更易用的跨平台c/c++国产网络库，用来开发TCP/UDP/SSL/HTTP/WebSocket/MQTT客户端/服务端。",
+      "URL": "https://github.com/ithewei/libhv.git"
+    },
+    {
+      "name": "libuev",
+      "language": "",
+      "describe": "libuv是一个跨平台的异步I/O库，它支持异步文件系统操作、TCP、UDP、异步DNS解析、子进程等。(https://libuv.org/)",
+      "URL": "https://github.com/libuv/libuv.git"
+    },
+    {
+      "name": "LiteOS",
+      "language": "",
+      "describe": "LiteOS官方源码",
+      "URL": "https://gitee.com/LiteOS/LiteOS.git"
+    },
+    {
+      "name": "mynewt-core",
+      "language": "",
+      "describe": "",
+      "URL": "https://gitclone.com/github.com/apache/mynewt-core.git"
+    },
+    {
+      "name": "nuttx",
+      "language": "",
+      "describe": "是一个具有丰富功能的、能够运行在小型微控制器上的实时操作系统（RTOS）。",
+      "URL": "https://gitclone.com/github.com/apache/nuttx.git"
+    },
+    {
+      "name": "ringbuff",
+      "language": "",
+      "describe": "是一款通用FIFO环形缓冲区实现的开源库。",
+      "URL": "https://github.com/MaJerle/ringbuff"
+    },
+    {
+      "name": "RIOT",
+      "language": "",
+      "describe": "是一款开源的实时操作系统，适用于物联网设备和嵌入式系统等低功耗、资源受限的环境。",
+      "URL": "https://gitclone.com/github.com/RIOT-OS/RIOT.git"
+    },
+    {
+      "name": "SFUD",
+      "language": "",
+      "describe": "SFUD 是一款开源的串行 SPI Flash 通用驱动库,为了解决这些 Flash 的差异现状而设计。",
+      "URL": "https://github.com/armink/SFUD.git"
+    },
+    {
+      "name": "tbox",
+      "language": "",
+      "describe": "BOX是一个用c语言实现的跨平台开发库。流库、协程库、数据库、xml库、内存库、容器库、算法库、网络库、数学运算库、libc库、libm库、object库。",
+      "URL": "https://github.com/tboox/tbox"
+    },
+    {
+      "name": "TencentOS-tiny",
+      "language": "",
+      "describe": "TencentOS tiny 是腾讯面向物联网领域开发的实时操作系统, 提供精简的 RTOS 内核，内核组件可裁剪可配置，可快速移植到多种主流 MCU (如 STM32 全系列)及模组芯片上。",
+      "URL": "https://gitee.com/173049874/TencentOS-tiny.git"
+    },
+    {
+      "name": "toolkit",
+      "language": "",
+      "describe": "ToolKit 是一套应用于嵌入式系统的通用工具包，可灵活应用到有无RTOS的程序中，采用C语言面向对象的思路实现各个功能，尽可能最大化的复用代码，工具包目前为止包含：循环队列、软件定时器、事件集。",
+      "URL": "https://github.com/cproape/toolkit"
+    },
+    {
+      "name": "Zorb-Framework",
+      "language": "",
+      "describe": "是一个基于面向对象的思想来搭建一个轻量级的嵌入式框架。",
+      "URL": "https://github.com/54zorb/Zorb-Framework.git"
+    },
+    {
+      "name": "TaskScheduler",
+      "language": "",
+      "describe": "TaskScheduler库为开发者提供了一种简单高效的单片机多任务处理解决方案。它使用协作式多任务处理模式，避免了抢占式调度带来的性能损耗和复杂性。TaskScheduler库的代码量小，资源占用少，能够在各种单片机平台上高效运行。",
+      "URL": "https://github.com/arkhipenko/TaskScheduler"
+    },
+    {
+      "name": "log.c",
+      "language": "",
+      "describe": "log.c是一个轻量级的日志库。一个用 C99 实现的简单日志库，这意味着它应该可以在任何支持 C99 标准的平台上编译和运行，如我们的嵌入式系统中。",
+      "URL": "https://github.com/rxi/log.c.git"
+    },
+    {
+      "name": "varch",
+      "language": "",
+      "describe": "varch（we-architecture，意为我们的框架库）是嵌入式C语言常用代码模块库，包含了嵌入式中常用的算法库, 数据结构（容器）库, 解析器库, 独立C语言std库, 工具库等等。",
+      "URL": "https://gitee.com/Lamdonn/varch"
+    },
+    {
+      "name": "erpc",
+      "language": "",
+      "describe": "eRPC（嵌入式RPC）是NXP开源的、用于多芯片嵌入式系统和异构多核SoC的开源远程过程调用（RPC）系统。与其他现代RPC系统（如出色的Apache Thrift）不同，eRPC的与众不同之处在于它是为紧密耦合的系统设计的，使用纯C实现远程功能，并且代码大小较小（<5kB）。它不适用于网络上的高性能分布式系统。",
+      "URL": "https://github.com/EmbeddedRPC/erpc"
+    },
+    {
+      "name": "mOTA",
+      "language": "",
+      "describe": "",
+      "URL": "https://gitee.com/DinoHaw/mOTA"
+    },
+    {
+      "name": "c-periphery",
+      "language": "",
+      "describe": "一个用 C 语言编写的硬件外设访问库。可以用它来读写 Serial、SPI、I2C 等，非常适合在嵌入式产品上使用。",
+      "URL": "https://github.com/vsergeev/c-periphery"
+    },
+    {
+      "name": "jsonrpc-c",
+      "language": "",
+      "describe": "jsonrpc-c 是一个用 C 语言编写的 JSON-RPC 库，我们可以用它来快速搭建一个基于 TCP socket 的 JSON-RPC server。核心代码就一个 json-rpc.c 文件，共 424 行代码，非常容易集成到我们自己的项目中。",
+      "URL": "https://github.com/hmng/jsonrpc-c"
+    },
+    {
+      "name": "C-Thread-Pool",
+      "language": "",
+      "describe": "C-Thread-Pool是一个轻量级、易用的线程池实现。特点：1，符合ANSI C 和 POSIX 标准。2，支持暂停/恢复/等待操作。3，简单易懂的 API。4，经过充分测试。C-Thread-Pool库未预编译，我们需要与项目一起编译。在 Linux 上用 gcc 编译时，需要添加标志 -pthread。",
+      "URL": "https://github.com/Pithikos/C-Thread-Pool"
+    },
+    {
+      "name": "QuarkTS",
+      "language": "",
+      "describe": "QuarkTS是一款开源的嵌入式操作系统，旨在为小型嵌入式应用程序提供现代化的开发环境，帮助开发者构建稳定、可预测的事件驱动型多任务软件。其特点包括：1,优先级协作式调度：任务自行管理生命周期，避免了抢占带来的复杂性，减少了重入问题。2,时间控制：提供定时任务和软件定时器，方便实现时间相关的操作。3,任务间通信机制：提供队列、通知、事件标志等机制，实现不同任务之间的有效通信。4,状态机支持：提供分层状态机支持，简化复杂逻辑的实现。5,协程：支持协程，提升代码效率，简化并发编程。5,AT命令行接口：提供简洁的命令行接口，方便调试和交互。6,安全可靠：遵循MISRA C 2012和CERT编码标准，并进行多项静态分析检查，确保代码安全可靠。",
+      "URL": "https://github.com/kmilo17pet/QuarkTS"
+    },
+    {
+      "name": "cgic",
+      "language": "",
+      "describe": "**CGI即通用网关接口（Common Gateway Interface）** ，是一个Web服务器主机提供信息服务的标准接口。通过CGI接口，Web服务器就能够获取客户端提交的信息，转交给服务器端的CGI程序进行处理，最后返回结果给客户端。",
+      "URL": "https://github.com/boutell/cgic"
+    },
+    {
+      "name": "cmockery",
+      "language": "",
+      "describe": "CMockery是google发布的用于C单元测试的一个轻量级的框架。",
+      "URL": "https://github.com/google/cmockery.git"
+    },
+    {
+      "name": "protobuf",
+      "language": "",
+      "describe": "Protocol Buffers，是Google公司开发的一种数据格式，类似于XML能够将结构化数据序列化，可用于数据存储、通信协议等方面。它不依赖于语言和平台并且可扩展性极强。",
+      "URL": "https://github.com/protocolbuffers/protobuf.git"
+    },
+    {
+      "name": "MQTT-C",
+      "language": "",
+      "describe": "适用于嵌入式系统和 PC 等的便携式 MQTT C 客户端。",
+      "URL": "https://github.com/LiamBindle/MQTT-C.git"
+    },
+    {
+      "name": "lvgl",
+      "language": "",
+      "describe": "LittlevGL是一个免费的开源图形库，提供了创建嵌入式GUI所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。",
+      "URL": "https://github.com/fengming1201/lvgl.git"
+    },
+    {
+      "name": "zephyr",
+      "language": "",
+      "describe": "Zephyr RTOS是Linux基金会下的一个开源项目,是一款面向物联网的小型、可裁剪的实时操作系统",
+      "URL": "https://github.com/zephyrproject-rtos/zephyr.git"
+    },
+    {
+      "name": "GuiLite",
+      "language": "",
+      "describe": "GUILite是一个全平台GUI库。 轻量: 4千行C++代码，0依赖，单一头文件库（GuiLite.h）。 超快: 高效渲染，单片机上也能流畅运行。",
+      "URL": "https://github.com/fengming1201/GuiLite.git"
+    },
+    {
+      "name": "EasyLogger",
+      "language": "",
+      "describe": "EasyLogger是github上ArmLink开源的一个轻量级日志库。其功能与大家平时printf把日志数据打印在终端上面是类似的。",
+      "URL": "https://github.com/fengming1201/EasyLogger.git"
+    },
+    {
+      "name": "gear-lib",
+      "language": "",
+      "describe": "Gear-Lib，用于物联网嵌入式多媒体和网络的 C 库",
+      "URL": "https://github.com/fengming1201/gear-lib.git"
+    },
+    {
+      "name": "redis",
+      "language": "",
+      "describe": "Redis 是基于 C语言编写的开源存储数据库、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。",
+      "URL": "https://github.com/fengming1201/redis.git"
+    },
+    {
+      "name": "sqlite",
+      "language": "",
+      "describe": "",
+      "URL": "https://github.com/fengming1201/sqlite.git"
+    },
+    {
+      "name": "FreeRTOS",
+      "language": "",
+      "describe": "",
+      "URL": "https://github.com/FreeRTOS/FreeRTOS.git"
+    },
+    {
+      "name": "MultiTimer",
+      "language": "",
+      "describe": "MultiTimer 是一个软件定时器扩展模块，可无限扩展你所需的定时器任务，取代传统的标志位判断方式， 更优雅更便捷地管理程序的时间触发时序。",
+      "URL": "https://github.com/fengming1201/MultiTimer.git"
+    },
+    {
+      "name": "cJSON",
+      "language": "",
+      "describe": "",
+      "URL": "https://github.com/DaveGamble/cJSON"
+    },
+    {
+      "name": "SKRTOS_sparrow",
+      "language": "",
+      "describe": "SKRTOS_sparrow 是一款极小型 RTOS，代码仅有 400 行，可以将它看成是一个 mini 版本的 FreeRTOS 内核。作者写了多篇博客讲解它的原理，并指导读者一步步完成一个实时操作系统。",
+      "URL": "https://github.com/skaiui2/SKRTOS_sparrow"
+    },
+    {
+      "name": "mqtt",
+      "language": "",
+      "describe": "MQTT协议中文版。",
+      "URL": "https://github.com/mcxiaoke/mqtt.git"
+    },
+    {
+      "name": "nanohttpd-cn",
+      "language": "",
+      "describe": "NanoHTTPD 是一个小型、轻量级的开源 HTTP 服务器，它设计用于嵌入其他应用程序。它非常适用于运行在资源受限的环境中，例如在物联网(IoT)设备上。",
+      "URL": "http://www.gitpp.com/rz/nanohttpd-cn"
+    },
+    {
+      "name": "usal_mcu",
+      "language": "",
+      "describe": "《一个基于分层架构实现的MCU通用系统》。在这个项目中，主要实现了一个仿linux分层架构实现的mcu通用系统，该项目的创建方便芯片级切换以及多产品线开发。",
+      "URL": "https://github.com/hu198021688500/usal_mcu.git"
+    },
+    {
+      "name": "contiki-ng",
+      "language": "",
+      "describe": "Contiki-NG是一个为下一代物联网设备设计的开源操作系统，专注于低功耗通信、安全性和可靠性。它支持一系列标准协议，例如IPv6、6LoWPAN、6TiSCH、RPL和CoAP，使得不同设备之间能够高效互联。Contiki-NG是在原有的Contiki OS基础上发展而来的，保留了一些经典特性，并在此基础上进行了增强，以满足现代物联网的需求。",
+      "URL": "https://github.com/contiki-ng/contiki-ng.git"
+    },
+    {
+      "name": "mbed-os",
+      "language": "",
+      "describe": "Mbed OS是Arm公司推出的一个开源嵌入式操作系统，专为物联网设备而设计。它为基于Arm Cortex-M微控制器的连接设备开发提供了全面的功能，包括安全特性、连接性、实时操作系统(RTOS)以及传感器和I/O设备的驱动程序。",
+      "URL": "https://github.com/ARMmbed/mbed-os.git"
+    },
+    {
+      "name": "HeliOS",
+      "language": "",
+      "describe": "HeliOS是一个开源的、免费使用的嵌入式多任务内核。它以其精简的体积和强大的API而闻名，为低功耗嵌入式设备提供了灵活的、可高度定制的任务管理、调度、进程间通信以及设备驱动等功能。",
+      "URL": "https://github.com/heliosproj/HeliOS.git"
+    },
+    {
+      "name": "MiROS",
+      "language": "",
+      "describe": "MiROS是一个为ARM Cortex-M微控制器设计的极简实时操作系统(RTOS)内核。它旨在以简单易懂的方式阐述RTOS的核心概念，而非追求商业应用的健壮性和可移植性。这使其成为学习RTOS的理想工具，尤其适合配合Quantum Leaps提供的在线课程使用。",
+      "URL": "https://github.com/QuantumLeaps/MiROS.git"
+    }
+  ]
+}
