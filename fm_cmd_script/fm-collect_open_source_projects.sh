@@ -85,6 +85,19 @@ function func_delete_item
     return 0
 }
 
+function func_list_item
+{
+	if [ $# -ge 1 ];then
+		for name in "$@";do
+			jq -r ".info[] | select(.name == \"${name}\")" ${target_file_name}
+		done
+	else
+		#list all
+		jq -r '.info[]' ${target_file_name}
+	fi
+	return 0
+}
+
 function func_check_item_status
 {
 	if [ ! -f ${target_file_name} ];then
@@ -196,7 +209,7 @@ function func_schedule
         echo ""
         echo "$scriptname  [-h | --help] "
         echo ""
-        echo "$scriptname  list                                        #列出所有收藏项目"
+        echo "$scriptname  list    [item_name]                         #列出收藏[个别 / 所有]项目"
         echo "$scriptname  check                                       #检查当前目录下的收藏项目状态"
         echo "$scriptname  add     \"name\" \"language\" \"describe\" \"url\"  #添加收藏项目"
         echo "$scriptname  delete  \"name\"                              #删除收藏项目"
@@ -209,12 +222,13 @@ function func_schedule
     if [ $? -ne 0 ];then
         echo "jq not found! please install it first!"
         echo "apt install jq"
-        exit 2
+        return 2
     fi
 
     if [ "$1" = "list" ];then
-        jq -r '.info[]' ${target_file_name}
-        exit 0
+		echo -e "\e[31mlist ....\e[0m"
+		shift 1
+		func_list_item $@
     fi
 
     if [ "$1" = "check" ];then
