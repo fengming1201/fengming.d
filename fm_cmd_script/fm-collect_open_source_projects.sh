@@ -34,7 +34,7 @@ if [ $(id -u) -ne 0 ] && [ lshm != lshm ];then
 fi
 #start here add your code,you need to implement the following function.
 target_file_name=${fengming_dir}/documents/sub_doc_unclassified/collect_open_source_project_info.json
-timeout_time_s=180s
+timeout_time_s=60s
 
 function func_add_new_item
 {
@@ -124,6 +124,9 @@ function func_check_item_status
 
 function func_git_pull_update
 {
+	if [ $# -eq 1 ];then
+		timeout_time_s=$1
+	fi
 	#get dir
 	local dir_list=()
 
@@ -142,9 +145,13 @@ function func_git_pull_update
 		pushd ${sub_dir}
 		remote_name=$(git remote -v | awk '{print $1}' | uniq)
 		branch_name=$(git branch | awk '{print $2}' | uniq)
-	
-		echo "timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}"
-		timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}
+		if [ "x$timeout_time_s" = "x0" ];then
+			echo "git pull ${remote_name} ${branch_name}"
+			git pull ${remote_name} ${branch_name}
+		else
+			echo "timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}"
+			timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}
+		fi
 		popd
 	done
 	return 0
@@ -152,6 +159,10 @@ function func_git_pull_update
 
 function func_git_clone
 {
+	if [ $# -eq 1 ];then
+		timeout_time_s=$1
+	fi
+	
 	local name_list=$(jq -r  '.info[].name' ${target_file_name})
 
 	for item_name in ${name_list}
@@ -163,8 +174,13 @@ function func_git_clone
 		echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${item_name}\") | .describe" ${target_file_name})
 		item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
 		if [ "x${item_url}" != "x" ];then
-			echo "timeout ${timeout_time_s} git clone ${item_url}"
-			timeout ${timeout_time_s} git clone ${item_url}
+			if [ "x$timeout_time_s" = "x0" ];then
+				echo "git clone ${item_url}"
+				git clone ${item_url}
+			else
+				echo "timeout ${timeout_time_s} git clone ${item_url}"
+				timeout ${timeout_time_s} git clone ${item_url}
+			fi
 		else
 			echo "item: ${item_name}  URL is empty!"
 		fi
@@ -177,14 +193,14 @@ function func_schedule
     if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ];then
         echo "$scriptname  cmd  args ..."
         echo ""
-        echo "$scriptname  [-h | --help | all=(check & update)]"
+        echo "$scriptname  [-h | --help] "
         echo ""
         echo "$scriptname  list                                        #列出所有收藏项目"
-        echo "$scriptname  update                                      #逐个下拉收藏项目"             
-        echo "$scriptname  check                                       #检查当前目录下的收藏项目状态"      
+        echo "$scriptname  check                                       #检查当前目录下的收藏项目状态"
         echo "$scriptname  add     \"name\" \"language\" \"describe\" \"url\"  #添加收藏项目"
-        echo "$scriptname  delete  \"name\"                              #删除收藏项目"      
-        echo "$scriptname  clone                                       #下载收藏项目"
+        echo "$scriptname  delete  \"name\"                              #删除收藏项目"
+		echo "$scriptname  pull    [time]                              #逐个下拉更新收藏的项目,time 为超时时间秒,缺省60s"
+        echo "$scriptname  clone   [time]                              #逐个下载收藏列表中的项目,time 为超时时间秒,缺省60s"
         echo ""
         return 1
     fi
@@ -200,6 +216,11 @@ function func_schedule
         exit 0
     fi
 
+    if [ "$1" = "check" ];then
+        echo -e "\e[31mcheck ....\e[0m"
+        func_check_item_status
+    fi
+
     if [ "$1" = "add" ] && [ $# -eq 5 ];then
         echo -e "\e[31madd ....\e[0m"
         func_add_new_item "$2" "$3" "$4" "$5" 
@@ -209,20 +230,15 @@ function func_schedule
         func_delete_item "$2"
     fi
 
+    if [ "$1" = "pull" ];then
+        echo -e "\e[31mpull ....\e[0m"
+        func_git_pull_update $2
+    fi
+
     if [ "$1" = "clone" ];then
         echo -e "\e[31mclone ....\e[0m"
-        func_git_clone
-    fi
-
-    if [ "$1" = "check" ] || [ "$1" = "all" ];then
-        echo -e "\e[31mcheck ....\e[0m"
-        func_check_item_status
-    fi
-
-    if [ "$1" = "update" ] || [ "$1" = "all" ];then
-        echo -e "\e[31mupdate ....\e[0m"
-        func_git_pull_update $@
-    fi
+        func_git_clone $2
+    fi	
     return 0
 }
 
