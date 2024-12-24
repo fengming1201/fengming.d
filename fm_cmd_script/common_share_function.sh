@@ -81,6 +81,18 @@ function COMMOND_FUNC_check_ip
     return 0
 }
 
+#format: 
+#return: 0  -- OK
+#        1  -- 
+#        2  --
+#        3  --
+function COMMOND_FUNC_quick_ping_ip
+{
+    local IP=$1
+    ping -c 1 -W 1 ${IP} > /dev/null 2>&1
+    return $?
+}
+
 function COMMOND_FUNC_file_password_cracking_tools_list
 {
     echo "pdfcrack  --Pdfcrack是一款用于破解PDF文件密码的工具。Pdfcrack使用暴力破解方法，通过尝试不同的密码组合来破解密码。它支持多种密码破解模式和选项，可以根据需要进行自定义配置。"

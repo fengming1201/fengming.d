@@ -55,6 +55,9 @@ function func_mount_to_myzspace
     COMMOND_FUNC_check_ip -m 1 ${ip}
     if [ $? -ne 0 ];then echo "${ip} is not a valid IP address.";return 2;fi
 
+    COMMOND_FUNC_quick_ping_ip  ${ip}
+    if [ $? -ne 0 ];then echo "This ${ip} is unreachable via ping.";return 3;fi
+
     #check mount dir
     if [ ! -d ${mount_dir1} ];then
         read -p "permit mkdir ${mount_dir1}/ ?[Y/n]"  opt
