@@ -293,6 +293,18 @@
       "language": "",
       "describe": "MiROS是一个为ARM Cortex-M微控制器设计的极简实时操作系统(RTOS)内核。它旨在以简单易懂的方式阐述RTOS的核心概念，而非追求商业应用的健壮性和可移植性。这使其成为学习RTOS的理想工具，尤其适合配合Quantum Leaps提供的在线课程使用。",
       "URL": "https://github.com/QuantumLeaps/MiROS.git"
+    },
+    {
+      "name": "rt-thread",
+      "language": "C",
+      "describe": "",
+      "URL": "https://github.com/RT-Thread/rt-thread.git"
+    },
+    {
+      "name": "FreeRTOS-Kernel-Book",
+      "language": "",
+      "describe": "",
+      "URL": "https://github.com/FreeRTOS/FreeRTOS-Kernel-Book.git"
     }
   ]
 }
