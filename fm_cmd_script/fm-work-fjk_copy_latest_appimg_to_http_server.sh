@@ -32,7 +32,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     func_location
     exit 0
 fi
-if [ $(id -u) -ne 0 ];then
+if [ $(id -u) -ne 0 ] && [ 0 -eq 1 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
