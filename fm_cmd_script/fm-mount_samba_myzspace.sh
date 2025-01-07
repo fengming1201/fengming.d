@@ -18,7 +18,7 @@ function func_location
     return 0
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
-    echo "abstract:"
+    echo "abstract: 专为挂载ZspaceT2的samba文件系统。"
     echo ""
     func_location
     exit 0
