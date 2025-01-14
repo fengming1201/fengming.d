@@ -1,0 +1,340 @@
+
+
+大纲：
+基本数据类型
+变量定义
+赋值与表达式
+条件控制
+函数
+参数与返回值
+数据结构与语言特性
+
+
+一、变量
+（0）包含
+
+（1）环境变量与本地变量
+环境变量与本地变量
+环境变量定义：1、先定义局部变量；2、再导出成为环境变量
+如：
+~$mytest=test
+~$export test  #用export命令导出成为环境变量。
+shell脚本中
+
+变量定义，赋值与引用
+定义：直接定义直接用，用的时候才定义，不必预先定义。
+赋值：因为bash shell 给变量赋值时都被看做是字符串；
+以数值表达式赋值，如：value=`expr 1 + 2`  #但expr命令只做整数运算，不能做浮点运算，浮点要用到bc 运算器
+还有let 命令
+引用：两种方式：
+1、$value
+2、${value}
+后者多了{ }大括号是在某些场合方便避产生免歧义。
+（3）函数内变量
+local value="hello"
+
+输入输出
+获取用户输入
+read 命令
+如：read var #接受从标准输入或另一个文件描述符的输入。
+
+read -p "please input:" var
+-p 选项指定提示符。
+
+多行输入
+cat << EOF > file.txt 
+cmd1
+cmd2
+cmd3
+EOF
+等价于
+cat << EOF | sudo tee -a file.txt 
+cmd1
+cmd2
+cmd3
+EOF
+
+重定向
+1，要把命令的输出和错误都重定向到/dev/null，可以使用下面的语法：
+
+command > /dev/null 2>&1
+
+2，只把错误（stderr）重定向到 /dev/null，而保留标准输出（stdout），可以使用以下命令格式：
+
+command 2> /dev/null
+
+
+（4）参数传递
+位置参数
+$0  #程序名
+$1  #第一个参数
+$2  #第二个参数
+以此类推，直到第9个 $9
+
+注意：$0中若有路径，
+可以用basename命令返回程序名而不是路径。
+
+特殊参数变量：
+$#     #参数个数
+$*      #将所有参数当做一个字符串对待，而不是多个单词。
+$@    #将所有参数当做同一字符串中的多个独立的单词。
+
+移动变量：
+shift命令用于帮助操作命令行参数，
+格式：shifth n
+n 是指移动几位，默认为1
+如 shift  ，所有参数往左移动一位，$1被丢弃，
+
+二、表达式
+    字符串比较   比较，判断等
+    
+    数值比较
+
+    数值运算
+
+    选项处理
+
+三、流程控制
+
+（0）包含
+Shell 文件包含的语法格式：. filename 或者source filename(其中 .和filename之间有空格)。
+
+（1）条件判断
+test 另一种形式
+[ conditions ]
+多个测试的逻辑组合：
+与：[ conditions1 ] && [ conditions2 ]
+或：[ conditions1 ] || [ conditions2 ]
+
+与( -a )、或( -o )、非( ! )三个逻辑操作符用于将测试条件连接起来
+if test -e ./notFile -o -e ./bash
+
+test:数值比较
+value1 -eq balue2 #1等于2
+value1 -gt balue2 #1大于2
+value1 -ge balue2 #1大于等于2
+value1 -lt balue2 #1小于2
+value1 -le balue2 #1小于等于2
+value1 -ne balue2 #1不等于2
+
+test:字符串比较
+str1 = str2 #str1是否和str2相同
+str1 != str2 #str1是否和str2不同
+str1 < str2 #str1是否比str2小
+str1 > str2 #str1是否比str2大
+-n str1 #str1的长度是否为非0
+-z str1 #str1的长度是否为0
+
+test:文件比较
+-d file  #file是否存在且是一个目录
+-f file  #file是否存在且是一个文件
+-e file  #file是否存在
+-s file  #file是否存在并非空
+-------------------------------------------
+-r file  #file是否可读
+-w file  #file是否可写
+-x file  #file是否可执行
+-------------------------------------------
+-O file  #file 是否当属于当前用户所有
+-G file  #file 是否当属于当前用户组所有
+-----------------------------------------------
+file1 -nt file2  #file1 是否比 file2 新
+file1 -ot file2  #file1 是否比 file2 旧
+------nt =new than ;ot =old than-----
+
+（2）条件控制
+if会执行command_test部分的命令，若命令的执行状态未0，则执行then部分；
+注意：对if 的条件来说，0为真，非0为假。
+
+格式：
+if command_test1
+then
+    commands1
+elif command_test2
+then
+    commands2
+else
+    commands3
+fi
+
+if-then的高级特性：
+特性1：双尖括号 ((  )) 命令允许你将高级数学表达式放入比较中。test 命令只允许在比较中进行简单的算术操作。
+格式：(( expression ))
+expression可以是任意的数学赋值或比较表达式。
+val++  #自增
+val--    #自减
+++val  #自增
+--val    #自减
+**         #幂运算
+～        #位求反
+<<       #左位移
+>>       #右位移
+&         #按位与
+|          #按位或
+&&     #逻辑与
+||         #逻辑或
+！       #逻辑求反
+
+特性2：双方括号 [[  ]]  命令提供了针对字符串比较的高级特性。
+test命令只提供标准字符串比较。
+格式：[[ expression ]]
+expression 中可以使用模式匹配
+例如： if [[ $val == r* ]];then
+
+（3）case分支
+格式：
+case value in
+pattern1 | pattern2) 
+    commands1
+    ;;
+pattern3) 
+    commands2
+    ;;
+*) defult 
+    commands
+    ;;
+esac
+
+注：case语句的分句终止符不仅仅可以是 ;; 还可以 ;& 和 ;;&, 他们的作用分别为:
+;;   //不再进行后续的匹配，直接跳出case语句
+;&   // 不再进行后续的匹配，继续执行后面的case分句
+;;&   //继续对后面的case分句进行匹配，若能找到匹配项则执行该分句。 
+
+
+
+（2）循环
+
+（3）信号捕捉和处理
+
+
+
+四、数据结构
+（1）数组
+定义：
+方式一：
+array[0]=feng
+array[1]=ming
+
+array[3]=1201
+
+方式二：
+array=(feng ming ' ' 1201)
+
+定义：array=（one two three four five）
+引用：echo $array   输出：one
+echo ${array[2]}   输出：two]
+输出所有：echo ${array［*］}   输出：one two three four five
+
+（2）字典
+
+安全临时文件：
+mktemp
+用法如：
+local tmp=$(mktemp) #创建临时文件
+rm $tmp             #退出前删除临时文件
+
+五、函数
+创建函数：格式：
+function name {
+    commands
+}
+------或者-------
+name() {
+    commands
+}
+注意：第一个花括号{与函数名之间必须有空格隔开
+
+使用函数：
+使用函数和使用其它shell命令一样，
+在行上指定函数名就行了。
+
+返回值
+有三种方式
+1）注意：在$? 之间执行了其它命令，
+则函数的返回值被覆盖。
+默认退出状态码
+
+2）用 $? 取得默认状态，
+使用return 命令
+return n
+n 必须在0~255之间值
+用 $? 取得状态值
+
+3）使用函数输出:
+保存在变量中
+如：函数中要有输出语句  echo ,
+则 var=`func`  #将func 函数的所有输出赋给变量var
+
+传递参数
+函数名 func 像其它shell命令一样，
+在函数体 func 中
+$0 $1 $2 到$9,$#  $* $@ 和shell命令一样。
+使用时直接给参数 func one two three $four
+
+变量的作用域
+全局变量：
+默认情况下，在脚本中定义的
+任何变量都是全局变量，
+在函数中可以访问。
+
+局部变量：
+在函数中，在变量前加上 local关键字，
+就声明为局部变量。
+
+数组参数
+注意：
+如果直接将数组名作为函数的参数，则得到的只是第一个元素，所以要先将数组分解成单个值再传入函数，
+
+使用例子：
+function func{
+local thisarray=`echo $@`
+#这时的thisarray 就有传入的所有参数的数组。
+#输出时
+echo “${ thisarray[*] }”  #或
+echo “${ thisarray[2] }”
+}
+
+array=(one tow three)
+func ${array[*]} four  #将数组分解成单个值。
+
+从函数返回数组
+直接在函数中输出整个数组
+echo "${ array[*] }" 
+
+
+
+
+递归
+函数递归
+像C语言函数那样递归
+不过不是使用return 返回值，
+而是使用echo 输出
+
+例子：阶乘运算
+function refunc {
+  if [ $1 -eq 1]
+  then
+echo 1
+  else
+local tem=$[$1-1]
+local result=`refunc $tem`
+echo $[$result * $1]
+  fi
+}
+
+value=`refunc 5`
+echo $value
+结果：
+120
+
+
+    
+
+
+
+
+
+
+
+
+

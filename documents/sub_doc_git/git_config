@@ -1,0 +1,28 @@
+Git支持不同层次的配置文件。按照优先级递减的顺序。
+.git/config   :版本库特定的配置设置，可用--file选项修改，是默认选项。这些设置拥有最高优先级。
+
+~/.gitconfig  :用户特定的配置设置，可用--global选项修改。
+
+/etc/gitconfig :这是系统范围的配置设置，如果你有它的UNIX文件写权限，你就可以用--system选项修改它。这些设置的优先级最低。
+
+
+查看git配置
+git config -1
+
+可以使用--unset选项来移除设置。
+git config --unset --global user.email
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
