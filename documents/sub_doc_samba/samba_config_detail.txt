@@ -1,0 +1,16 @@
+微软官方也提供了通过PowerShell来进行设置的方法，用管理员权限打开Powershell之后，可以参考下面的命令：
+
+若要获取SMB服务器协议配置的当前状态:
+Get-SmbServerConfiguration | Select EnableSMB1Protocol, EnableSMB2Protocol
+
+
+SMB v1
+检测： Get-SmbServerConfiguration | Select EnableSMB1Protocol
+禁用： Set-SmbServerConfiguration -EnableSMB1Protocol $false
+启用： Set-SmbServerConfiguration -EnableSMB1Protocol $true
+
+
+SMB v2/v3
+检测: Get-SmbServerConfiguration | Select EnableSMB2Protocol
+禁用: Set-SmbServerConfiguration -EnableSMB2Protocol $false
+启用: Set-SmbServerConfiguration -EnableSMB2Protocol $true
