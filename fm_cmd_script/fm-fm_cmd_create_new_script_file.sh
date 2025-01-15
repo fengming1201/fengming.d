@@ -147,7 +147,7 @@ function func_
             -t|--test) test=true; shift ;;
             #--realdo) realdo=true; shift ;;
             -m|--mode)
-                if [[ -z "\$2" ]]; then echo "ERROR: -m|--mode requires one parameter" >&2; return 1; fi
+                if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="\$2"; shift 2 ;; #带参数,移动2
             -*)
                 # 处理合并的选项,如-dh
@@ -176,8 +176,12 @@ function func_
         echo "ERROR: platform list is empty!!";usage;return 2
     fi
     #start your code
+    #for file in "\${remaining_args}"
+    #do
+    #    #here we process each parameter
 
-
+    #done
+    
     return 0
 }
 
