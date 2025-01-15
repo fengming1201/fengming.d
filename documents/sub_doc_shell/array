@@ -16,7 +16,7 @@ array[3]=1201
 引用所有: echo ${array[*]}   输出： one two three four five
 引用所有: echo ${array[@]}   输出： one two three four five
 
-获取数组元素个数：
+获取数组元素个数,或数组长度：
 local array_size=${#array[@]}
 
 数组赋值：

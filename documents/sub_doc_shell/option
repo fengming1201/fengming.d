@@ -119,49 +119,31 @@ done
 ===========================================
 #同时处理长选项和短选项
 # 默认值
-debug=false
-method=0
-test=false
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -d|--debug)
-      #不带参数，移动1
-      debug=true
-      shift
-      ;;
-    -m|--method)
-      #带参数，移动2
-      method="$2"
-      shift 2
-      ;;
-    -t|--test)
-      #不带参数，移动1
-      test=true
-      shift
-      ;;
-    -*)
-      # 处理合并的选项,如-dt
-      for (( i=1; i<${#1}; i++ )); do
-        case ${1:i:1} in
-          d)
-            debug=true
-            ;;
-          l)
-            test=true
-            ;;            
-          *)
-            echo "无效的选项: -${1:i:1}" >&2
-            exit 1
-            ;;
-        esac
-      done
-      shift
-      ;;
-    *)
-      # 非选项参数全部放入数组中
-      remaining_args+=("$1")
-      shift
-      ;;
-  esac
+local debug=false
+local mode=normal
+while [[ $# -gt 0 ]]
+do
+    case "$1" in
+        -h|--help) usage; return 0 ;;
+        -d|--debug) debug=true; shift ;; #不带参数，移动1
+        -m|--mode)
+            if [[ -z "$2" ]]; then echo "ERROR: -m|--mode requires one parameter" >&2; return 1; fi
+            mode="$2"; shift 2 ;; #带参数，移动2
+        -*)
+            # 处理合并的选项,如-dh
+            for (( i=1; i<${#1}; i++ )); do
+                case ${1:i:1} in
+                    h) usage; return 0 ;;
+                    d) debug=true ;;
+                    m) mode="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                    *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
+                esac
+            done
+            shift ;;
+        *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+    esac
 done
+cmd  [-h or --help]
+cmd  [-d or --debug]
+cmd  [-m or --mode  arg]
+cmd  [-hdm  arg]

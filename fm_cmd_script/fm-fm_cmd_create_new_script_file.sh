@@ -4,14 +4,12 @@ scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
 
-if [ -f ${common_share_function} ] && [ "include" = "enable" ]
-then
+if [ -f ${common_share_function} ] && [ "include" = "enable" ];then
     source ${common_share_function}
 fi
 function func_location
 {
-    if [ -L ${scriptfile} ]
-    then
+    if [ -L ${scriptfile} ];then
         echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
     else
         echo "location:${scriptfile}"
@@ -35,30 +33,60 @@ if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
 fi
 target_dir=${fengming_dir}/fm_cmd_script
 
+function usage
+{
+    echo "$scriptname  [opt]  script_filename"
+    echo "opt:"
+    echo "-h or --help     # help"
+    echo "-d or --debug    # open debug mode"
+}
 function func_create_fm_cmd
 {
-    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
-    then
-        echo "$scriptname  file_list"
-        echo "$scriptname  file1 file2 ..."
-        return 1
-    fi
-    local file_list=$@
 
-    for file in ${file_list}
-    do 
-        if [ -e ${target_dir}/${file} ];then echo "file:$file already exist!! skip it!";continue;fi
-        if [ -w ${target_dir} ]
-        then
-            touch ${target_dir}/${file}
-            chmod 747 ${target_dir}/${file}
-        else
-            sudo touch ${target_dir}/${file}
-            sudo  chmod 747 ${target_dir}/${file}
-        fi
-        ls -lh ${target_dir}/${file}
-        cat  <<-EOF >${target_dir}/${file}
+    if [ $# -ne 1 ];then usage; return 1; fi
+    local debug=false
+    local mode=normal
+    local remaining_args=()
+    while [[ $# -gt 0 ]]
+    do
+        case "$1" in
+            -h|--help) usage; return 0 ;;
+            -d|--debug) debug=true; shift ;; #不带参数，移动1
+            -*)
+                # 处理合并的选项,如-dh
+                for (( i=1; i<${#1}; i++ )); do
+                    case ${1:i:1} in
+                        h) usage; return 0 ;;
+                        d) debug=true ;;
+                        *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
+                    esac
+                done
+                shift ;;
+            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    if [ ${#remaining_args[@]} -lt 1 ];then
+        echo "ERROR: platform list is empty!!";usage;return 2
+    fi
+    if [ ${debug} = true ];then
+        echo "debug=${debug}"
+        echo "remaining_args=${remaining_args[@]}"
+    fi
+    #=================================================#
+    local file_name=(${remaining_args[0]})
+    if [ "x${file_name}" = "x" ];then echo "ERROR:file_name is empty!!";return 3;fi
+    if [ -e ${target_dir}/${file_name} ];then echo "file:${file_name} already exist!! skip it!";continue;fi
+    if [ -w ${target_dir} ];then
+        touch ${target_dir}/${file_name}
+        chmod 747 ${target_dir}/${file_name}
+    else
+        sudo touch ${target_dir}/${file_name}
+        sudo chmod 747 ${target_dir}/${file_name}
+    fi
+    ls -lh ${target_dir}/${file_name}
+    cat  <<-EOF >${target_dir}/${file_name}
 #!/bin/bash
+
 scriptfile=\$0
 scriptname=\$(basename \${scriptfile})
 fengming_dir=\$FENGMING_DIR
@@ -93,17 +121,62 @@ if [ \$(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
+function usage
+{
+    echo "\$scriptname  [opt]  files"
+    echo "opt:"
+    echo "-h or --help     # help"
+    echo "-d or --debug    # print variable status"
+    echo "-t or --test     # test mode, no modifications"
+    #echo "--realdo        # real execution"
+    echo "-m or --mode     # you define"
+}
 function func_
 {
-    #[optional]
-    #local need_help=no
-    #if [ "\$1" != "1" ] && [ "\$1" != "2" ] && [ "\$1" != "param1" ] && [ "\$1" != "param2" ];then need_help=yes;fi
-    #if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ] || [ \${need_help} = "yes" ]
-    
-    if [ \$# -lt 1 ] || [ "\$1" = "-h" ] || [ "\$1" = "--help" ];then
-        echo "\$scriptname  param_list"
-        return 1
+    if [ \$# -lt 1 ];then usage; return 1; fi
+    local debug=false
+    local test=false
+    #local realdo=false
+    local mode=normal
+    local remaining_args=()
+    while [[ \$# -gt 0 ]]
+    do
+        case "\$1" in
+            -h|--help) usage; return 0 ;;
+            -d|--debug) debug=true; shift ;; #不带参数,移动1
+            -t|--test) test=true; shift ;;
+            #--realdo) realdo=true; shift ;;
+            -m|--mode)
+                if [[ -z "\$2" ]]; then echo "ERROR: -m|--mode requires one parameter" >&2; return 1; fi
+                mode="\$2"; shift 2 ;; #带参数,移动2
+            -*)
+                # 处理合并的选项,如-dh
+                for (( i=1; i<\${#1}; i++ )); do
+                    case \${1:i:1} in
+                        h) usage; return 0 ;;
+                        d) debug=true ;;
+                        t) test=true ;;
+                        m) mode="\$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        *) echo "ERROR: invalid option: -\${1:i:1}" >&2; return 1 ;;
+                    esac
+                done
+                shift ;;
+            *) remaining_args+=("\$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    if [ \${debug} = true ];then
+        echo "DEBUG:debug=\${debug}"
+        echo "DEBUG:test=\${test}"
+        #echo "DEBUG:realdo=\${realdo}"
+        echo "DEBUG:mode=\${mode}"
+        echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
+    #=================================================#
+    if [ \${#remaining_args[@]} -lt 1 ];then
+        echo "ERROR: platform list is empty!!";usage;return 2
+    fi
+    #start your code
+
 
     return 0
 }
@@ -115,7 +188,7 @@ if [ \${ret} -ne 0 ];then
 fi
 exit 0
 EOF
-    done
+
     return 0
 }
 

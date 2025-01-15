@@ -11,8 +11,7 @@ fi
 #if unnecessary, please do not modify this function
 function func_location
 {
-    if [ -L ${scriptfile} ]
-    then
+    if [ -L ${scriptfile} ];then
         echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
     else
         echo "location:${scriptfile}"
