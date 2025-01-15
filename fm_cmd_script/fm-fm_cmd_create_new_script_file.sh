@@ -123,6 +123,7 @@ fi
 #start here add your code,you need to implement the following function.
 function usage
 {
+    echo ""
     echo "\$scriptname  [opt]  files"
     echo "opt:"
     echo "-h or --help     # help"
@@ -130,13 +131,14 @@ function usage
     echo "-t or --test     # test mode, no modifications"
     #echo "--realdo        # real execution"
     echo "-m or --mode     # you define"
+    echo ""
 }
 function func_
 {
     if [ \$# -lt 1 ];then usage; return 1; fi
     local debug=false
     local test=false
-    #local realdo=false
+    local realdo=false
     local mode=normal
     local remaining_args=()
     while [[ \$# -gt 0 ]]
@@ -145,7 +147,7 @@ function func_
             -h|--help) usage; return 0 ;;
             -d|--debug) debug=true; shift ;; #不带参数,移动1
             -t|--test) test=true; shift ;;
-            #--realdo) realdo=true; shift ;;
+            --realdo) realdo=true; shift ;;
             -m|--mode)
                 if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="\$2"; shift 2 ;; #带参数,移动2
@@ -178,7 +180,7 @@ function func_
     #start your code
     #for file in "\${remaining_args}"
     #do
-    #    #here we process each parameter
+        #here we process each parameter
 
     #done
     
