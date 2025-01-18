@@ -210,7 +210,13 @@
             "install_methor":"apt install gnuplot",
             "describe":"Gnuplot 是一个流行的绘图工具，可以在Linux系统中使用。它支持多种绘图类型，包括坐标曲线图。您可以通过在终端中输入Gnuplot命令来生成和定制您的图表。Gnuplot并不依赖图形界面。虽然 Gnuplot可以生成图形输出并在图形界面中显示图表，但它也可以在纯文本终端中工作，生成图形文件（如 PNG、SVG、PDF 等）或直接在终端中以文本形式显示图表。",
             "describe_ex":"在没有图形界面的情况下，您仍然可以使用 Gnuplot来绘制图表，只需在命令行中输入 Gnuplot 命令即可。您可以使用命令行参数和选项来控制图表的样式、输出格式等。这种灵活性使得 Gnuplot成为一个强大的工具，不仅可以在图形界面下使用，也可以在纯文本终端环境中使用，非常适合在服务器或远程计算机上生成图表。"
-        } 
+        },
+        {
+            "app_name":"hd-idle",
+            "tool_level":"",
+            "install_methor":"apt install hd-idle",
+            "describe":"hd-idle 是一个轻量级的硬盘休眠守护进程，专门用于在 Linux 系统中管理硬盘的空闲时间并触发硬盘休眠（spin-down）。它适用于机械硬盘（HDD），特别是在需要节能或减少硬盘磨损的场景下。与 hdparm 不同，hd-idle 是一个守护进程，持续运行并监控硬盘的活动状态，而 hdparm 主要用于一次性设置硬盘参数。"
+        }
     ]
 
 }

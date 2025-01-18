@@ -100,15 +100,19 @@ function func_convert_linux_windows_path
         #here we process each parameter
         echo ""
         if [ "x$(echo ${file}  | grep / )" = "x" ];then
-            #windows type 
-            echo "Linux  : ${file}"
-            echo ""
-            echo "Windows: $(echo ${file} | sed -e 's#^[A-Z]:##' -e 's#\\#/#g')"
-        else
-            #linux type
-            echo "Linux  : $(echo ${file} | sed 's#/#\\#g')"
-            echo ""
+            if [ ${debug} = true ];then
+                echo "windows type "
+            fi
             echo "Windows: ${file}"
+            echo ""
+            echo "Linux  : $(echo ${file} | sed -e 's#^[A-Z]:##' -e 's#\\#/#g')"
+        else
+            if [ ${debug} = true ];then
+                echo "linux type "
+            fi
+            echo "Windows: $(echo ${file} | sed 's#/#\\#g')"
+            echo ""
+            echo "Linux  : ${file}"
         fi
         echo ""
     done
