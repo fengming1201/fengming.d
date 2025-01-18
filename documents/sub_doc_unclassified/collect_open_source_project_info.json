@@ -187,12 +187,6 @@
       "URL": "https://github.com/LiamBindle/MQTT-C.git"
     },
     {
-      "name": "lvgl",
-      "language": "",
-      "describe": "LittlevGL是一个免费的开源图形库，提供了创建嵌入式GUI所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。",
-      "URL": "https://github.com/fengming1201/lvgl.git"
-    },
-    {
       "name": "zephyr",
       "language": "",
       "describe": "Zephyr RTOS是Linux基金会下的一个开源项目,是一款面向物联网的小型、可裁剪的实时操作系统",
@@ -215,12 +209,6 @@
       "language": "",
       "describe": "Gear-Lib，用于物联网嵌入式多媒体和网络的 C 库",
       "URL": "https://github.com/fengming1201/gear-lib.git"
-    },
-    {
-      "name": "redis",
-      "language": "",
-      "describe": "Redis 是基于 C语言编写的开源存储数据库、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。",
-      "URL": "https://github.com/fengming1201/redis.git"
     },
     {
       "name": "sqlite",
@@ -305,6 +293,90 @@
       "language": "",
       "describe": "",
       "URL": "https://github.com/FreeRTOS/FreeRTOS-Kernel-Book.git"
+    },
+    {
+      "name": "ha_xiaomi_home",
+      "language": "",
+      "describe": "米家集成是一个由小米官方提供支持的 Home Assistant 的集成组件，它可以让您在 Home Assistant 中使用小米 IoT 智能设备。",
+      "URL": "https://github.com/XiaoMi/ha_xiaomi_home.git"
+    },
+    {
+      "name": "lvgl",
+      "language": "",
+      "describe": "LittlevGL是一个免费的开源图形库，提供了创建嵌入式GUI所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。",
+      "URL": "https://github.com/lvgl/lvgl.git"
+    },
+    {
+      "name": "redis",
+      "language": "",
+      "describe": "Redis 是基于 C语言编写的开源存储数据库、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。",
+      "URL": "https://github.com/redis/redis.git"
+    },
+    {
+      "name": "cosyos",
+      "language": "",
+      "describe": "CosyOS是一款来自中国的开源实时操作系统，从经典的8051内核，到流行的Arm Cortex-M内核，均可实现全局不关总中断、零中断延迟，适用于对系统实时性及中断响应速度有较高要求的场合。",
+      "URL": "https://gitee.com/cosyos/cosyos"
+    },
+    {
+      "name": "breadboard-os",
+      "language": "",
+      "describe": "BreadboardOS是一个功能强大且灵活的固件平台，旨在帮助开发者快速构建和测试嵌入式项目。通过使用命令行界面、RTOS任务管理器以及丰富的系统资源信息工具，BreadboardOS大幅提升了开发效率，同时也为未来的项目扩展打下了良好的基础。",
+      "URL": "https://github.com/mcknly/breadboard-os"
+    },
+    {
+      "name": "levelx",
+      "language": "",
+      "describe": "LevelX为嵌入式应用提供了重要的功能。它首先实现了闪存的均匀写入，解决了反复使用同一物理存储区导致的提前磨损问题。此外，LevelX设计了故障恢复机制，使得在每次写入过程中的中断都能自动恢复，确保数据的一致性和完整性。",
+      "URL": "https://github.com/eclipse-threadx/levelx"
+    },
+    {
+      "name": "spiffs",
+      "language": "",
+      "describe": "SPIFFS 是一款为嵌入式系统设计的优秀闪存文件系统，它在资源受限的环境下展现出极高的效率和可靠性。虽然它目前还存在一些局限性，例如不支持目录和可扩展性有限，但其简单易用、低资源消耗以及类似 POSIX 的 API 等优点使其成为许多嵌入式项目的理想选择。",
+      "URL": "clone https://github.com/pellepl/spiffs"
+    },
+    {
+      "name": "StateOS",
+      "language": "",
+      "describe": "StateOS 是一款功能强大、轻量高效的实时操作系统，其简洁的设计、丰富的功能以及对标准库的良好支持，使其成为嵌入式开发者的有力工具。",
+      "URL": "https://github.com/stateos/StateOS"
+    },
+    {
+      "name": "trampoline",
+      "language": "",
+      "describe": "Trampoline RTOS 以其轻量级、高度可移植性、标准化 API 和丰富的示例代码，为小型嵌入式系统开发提供了一个理想的解决方案。其对各种主流架构和评估板的支持，以及对 OSEK/VDX 和 AUTOSAR 标准的遵循，使其成为一个值得关注和尝试的优秀 RTOS。",
+      "URL": "https://github.com/TrampolineRTOS/trampoline.git"
+    },
+    {
+      "name": "threadx",
+      "language": "",
+      "describe": "hreadX是一个先进的实时操作系统（RTOS），专为深度嵌入式应用而设计。它以其高效、可靠和可扩展性而闻名，广泛应用于各种领域，从汽车电子到工业自动化，再到物联网设备。",
+      "URL": "https://github.com/eclipse-threadx/threadx.git"
+    },
+    {
+      "name": "modm",
+      "language": "",
+      "describe": "modm是一个用于构建定制 C++23 嵌入式库的工具箱。它能够生成启动代码、硬件抽象层 (HAL) 及其实现、通信协议、外部设备驱动程序和板级支持包 (BSP)。modm 的模块化和可定制化流程允许你根据自身需求进行微调，极大简化嵌入式开发的复杂性。它并非一个完整的嵌入式操作系统，而是一个库生成器，提供构建嵌入式项目的骨架，并高度关注代码效率和可移植性。",
+      "URL": "https://github.com/modm-io/modm.git"
+    },
+    {
+      "name": "lk",
+      "language": "",
+      "describe": "Little Kernel (LK) 并非一个简单的内核，而是极具魅力的嵌入式操作系统内核，它以其轻量级、可移植性和模块化设计而闻名。",
+      "URL": "https://github.com/littlekernel/lk.git"
+    },
+    {
+      "name": "RROS",
+      "language": "",
+      "describe": "RROS (Rust Real-Time Operating System) 是一款由北京邮电大学研发的新型双内核操作系统，它巧妙地结合了 Rust 编写的实时内核和通用的 Linux 内核，实现了高性能实时处理与强大的 Linux 应用程序兼容性的完美平衡。",
+      "URL": "https://github.com/BUPT-OS/RROS.git"
+    },
+    {
+      "name": "StratifyOS",
+      "language": "",
+      "describe": "StratifyOS并非一个简单的嵌入式操作系统，而是一个为ARM Cortex-M架构微控制器量身打造的、功能完备的实时操作系统（RTOS），它致力于简化开发流程，并充分发挥Cortex-M处理器的强大性能。",
+      "URL": "https://github.com/StratifyLabs/StratifyOS.git"
     }
   ]
 }
