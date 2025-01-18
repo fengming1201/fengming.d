@@ -21,6 +21,41 @@ function func_location
     fi
     return 0
 }
+##Parameter Counts      : >=1
+# Parameter Requirements: func_name  args ...
+# Example: usage
+##
+function func_debug_function
+{
+    local debug=false
+    local func_test=false
+    local remaining_args=()
+    while [[ $# -gt 0 ]];do
+        case "$1" in
+            --debug) debug=true; shift ;; #不带参数,移动1
+            --func) func_test=true; shift ;; #不带参数,移动1
+            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    if [ ${func_test} = true ];then
+        if [ ${#remaining_args[@]} -lt 1 ];then grep -w "^function"  ${scriptfile};return 1;fi
+        local func_list=($(grep -w "^function"  ${scriptfile} | awk '{print$2}'))
+        local found_it=false
+        for func in ${func_list[@]};do
+            if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi
+        done
+        if [ ${found_it} = false ];then
+            echo "ERROR:${remaining_args[0]} not at this scriptfile"
+            echo "Possible Function Name:{ ${func_list[@]} }"
+            return 2
+        fi
+        echo -e "\e[31mcall func call....\e[0m"
+        ${remaining_args[0]} "${remaining_args[@]:1}"
+        if [ ${debug} = true ];then echo "DEBUG:${remaining_args[0]} ${remaining_args[@]:1}";fi
+        return 3
+    fi
+    return 0
+}
 if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:"
     echo ""
@@ -113,7 +148,14 @@ function func_create_fm_cmd
     #=================================================#
     local file_name=(${remaining_args[0]})
     if [ "x${file_name}" = "x" ];then echo "ERROR:file_name is empty!!";return 3;fi
-    if [ -e ${target_dir}/${file_name} ];then echo "file:${file_name} already exist!! skip it!";fi
+    if [ -e ${target_dir}/${file_name} ];then
+        local opt=n
+        read -p "file:${file_name} already exist!! overwrite?[y/N]" opt
+        if [ "x${opt}" = x ];then opt=N;fi
+        if [ "x${opt}" = "xn"  ] || [ "x${opt}" = "xN"  ] || [ "x${opt}" = "xno"  ] || [ "x${opt}" = "xNO"  ];then
+            return 0
+        fi
+    fi
     if [ -w ${target_dir} ];then
         touch ${target_dir}/${file_name}
         chmod 747 ${target_dir}/${file_name}
@@ -148,6 +190,42 @@ function func_location
     fi
     return 0
 }
+
+##Parameter Counts      : >=1
+# Parameter Requirements: func_name  args ...
+# Example: usage
+##
+function func_debug_function
+{
+    local debug=false
+    local func_test=false
+    local remaining_args=()
+    while [[ \$# -gt 0 ]];do
+        case "\$1" in
+            --debug) debug=true; shift ;; #不带参数,移动1
+            --func) func_test=true; shift ;; #不带参数,移动1
+            *) remaining_args+=("\$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    if [ \${func_test} = true ];then
+        if [ \${#remaining_args[@]} -lt 1 ];then grep -w "^function"  \${scriptfile};return 1;fi
+        local func_list=(\$(grep -w "^function"  \${scriptfile} | awk '{print\$2}'))
+        local found_it=false
+        for func in \${func_list[@]};do
+            if [ \${func} = "\${remaining_args[0]}" ];then found_it=true;fi
+        done
+        if [ \${found_it} = false ];then
+            echo "ERROR:\${remaining_args[0]} not at this scriptfile"
+            echo "Possible Function Name:{ \${func_list[@]} }"
+            return 2
+        fi
+        echo -e "\e[31mcall func call....\e[0m"
+        \${remaining_args[0]} "\${remaining_args[@]:1}"
+        if [ \${debug} = true ];then echo "DEBUG:\${remaining_args[0]} \${remaining_args[@]:1}";fi
+        return 3
+    fi
+    return 0
+}
 if [ "\$1" = "info" ] || [ "\$1" = "-info" ] || [ "\$1" = "--info" ];then
     echo "abstract:"
     echo ""
@@ -160,7 +238,7 @@ if [ "\$1" = "show" ] || [ "\$1" = "-show" ] || [ "\$1" = "--show" ];then
     func_location
     exit 0
 fi
-if [ \$(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ \$(id -u) -ne 0 ] && [ \${USER} != \$(ls -ld . | awk '{print\$3}') ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
@@ -179,7 +257,6 @@ function usage
     echo "-t or --test     # test mode, no modifications"
     #echo "--realdo        # real execution"
     echo "-m or --mode     # you define"
-    echo "--func   func_name  args ...  # call func_name for test"
     echo ""
 }
 
@@ -193,7 +270,6 @@ function func_
     local debug=false
     local test=false
     local realdo=false
-    local func_test=false
     local mode=normal
     local remaining_args=()
     while [[ \$# -gt 0 ]]
@@ -203,7 +279,6 @@ function func_
             -d|--debug) debug=true; shift ;; #不带参数,移动1
             -t|--test) test=true; shift ;;
             --realdo) realdo=true; shift ;;
-            --func) func_test=true; shift ;; #不带参数,移动1
             -m|--mode)
                 if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="\$2"; shift 2 ;; #带参数,移动2
@@ -222,21 +297,9 @@ function func_
             *) remaining_args+=("\$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    #=================== function test ==============================#
-    if [ \${func_test} = true ];then
-        if [ \${#remaining_args[@]} -lt 1 ];then grep -w "^function"  \${scriptfile};return 1;fi
-        local func_list=(\$(grep -w "^function"  \${scriptfile} | awk '{print\$2}'))
-        local found_it=false
-        for func in \${func_list[@]};do if [ \${func} = "\${remaining_args[0]}" ];then found_it=true;fi;done
-        if [ \${found_it} = false ];then echo "ERROR:\${remaining_args[0]} not at this scriptfile";echo "Possible Function Name:{ \${func_list[@]} }";return 2;fi
-        echo -e "\e[31mcall func call....\e[0m"
-        \${remaining_args[0]} "\${remaining_args[@]:1}"
-        if [ \${debug} = true ];then echo "DEBUG:\${remaining_args[0]} "\${remaining_args[@]:1}"";fi
-    fi
     #==================== print debug =============================#
     if [ \${debug} = true ];then
         echo "DEBUG:debug=\${debug}"
-        echo "DEBUG:func_test=\${func_test}"
         echo "DEBUG:test=\${test}"
         #echo "DEBUG:realdo=\${realdo}"
         echo "DEBUG:mode=\${mode}"
@@ -256,21 +319,19 @@ function func_
     return 0
 }
 
+func_debug_function "\$@"
+if [ \$? -ne 0 ];then exit 0;fi
+
 func_ "\$@"
-ret=\$?
-if [ \${ret} -ne 0 ];then 
-    exit 1
-fi
+if [ \$? -ne 0 ];then exit 1;fi
 exit 0
 EOF
-
     return 0
 }
 
+func_debug_function "$@"
+if [ $? -ne 0 ];then exit 0;fi
 
-func_create_fm_cmd "$@"
-ret=$?
-if [ ${ret} -ne 0 ];then 
-    exit 1
-fi
+func_ "$@"
+if [ $? -ne 0 ];then exit 1;fi
 exit 0

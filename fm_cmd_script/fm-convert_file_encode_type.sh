@@ -18,6 +18,42 @@ function func_location
     fi
     return 0
 }
+
+##Parameter Counts      : >=1
+# Parameter Requirements: func_name  args ...
+# Example: usage
+##
+function func_debug_function
+{
+    local debug=false
+    local func_test=false
+    local remaining_args=()
+    while [[ $# -gt 0 ]];do
+        case "$1" in
+            --debug) debug=true; shift ;; #不带参数,移动1
+            --func) func_test=true; shift ;; #不带参数,移动1
+            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    if [ ${func_test} = true ];then
+        if [ ${#remaining_args[@]} -lt 1 ];then grep -w "^function"  ${scriptfile};return 1;fi
+        local func_list=($(grep -w "^function"  ${scriptfile} | awk '{print$2}'))
+        local found_it=false
+        for func in ${func_list[@]};do
+            if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi
+        done
+        if [ ${found_it} = false ];then
+            echo "ERROR:${remaining_args[0]} not at this scriptfile"
+            echo "Possible Function Name:{ ${func_list[@]} }"
+            return 2
+        fi
+        echo -e "\e[31mcall func call....\e[0m"
+        ${remaining_args[0]} "${remaining_args[@]:1}"
+        if [ ${debug} = true ];then echo "DEBUG:${remaining_args[0]} ${remaining_args[@]:1}";fi
+        return 3
+    fi
+    return 0
+}
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo "abstract:"
     echo ""
@@ -100,9 +136,9 @@ function func_convert_file_encode_type
     return 0
 }
 
+func_debug_function "$@"
+if [ $? -ne 0 ];then exit 0;fi
+
 func_convert_file_encode_type "$@"
-ret=$?
-if [ ${ret} -ne 0 ];then 
-    exit 1
-fi
+if [ $? -ne 0 ];then exit 1;fi
 exit 0
