@@ -55,6 +55,11 @@ function func_debug_function
     return 0
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
+    echo ""
+    echo " [info | -info | --info]                           #优先级1: 显示摘要"
+    echo " [show | -show | --show]                           #优先级2: 打印本脚本文件"
+    echo " [--debug ||&& --func [function_name  args ...] ]  #优先级3: 列出所有子函数或调用子函数"
+    echo ""
     echo "abstract:"
     echo "删除行尾的“windows”换行符和空格"
     func_location
