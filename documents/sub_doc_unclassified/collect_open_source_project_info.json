@@ -377,6 +377,12 @@
       "language": "",
       "describe": "StratifyOS并非一个简单的嵌入式操作系统，而是一个为ARM Cortex-M架构微控制器量身打造的、功能完备的实时操作系统（RTOS），它致力于简化开发流程，并充分发挥Cortex-M处理器的强大性能。",
       "URL": "https://github.com/StratifyLabs/StratifyOS.git"
+    },
+    {
+      "name": "pikoRT",
+      "language": "",
+      "describe": "PikoRT是一个针对ARM Cortex-M系列微处理器优化的微型实时操作系统内核，它拥有Linux-like的架构，但体积精简，性能高效。",
+      "URL": "https://github.com/PikoRT/pikoRT"
     }
   ]
 }

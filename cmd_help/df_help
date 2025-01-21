@@ -1,0 +1,38 @@
+Usage: df [OPTION]... [FILE]...
+显示每个文件所在文件系统的信息，或默认显示所有文件系统。
+
+长选项的强制参数对于短选项也是强制的。
+  -a, --all             包括伪、重复、无法访问的文件系统
+  -B, --block-size=SIZE  打印之前按 SIZE 缩放尺寸；例如，
+                           '-BM' prints sizes in units of 1,048,576 bytes;
+                           see SIZE format below
+  -h, --human-readable  打印尺寸以 1024 的幂为单位（例如 1023M）
+  -H, --si              打印尺寸以 1000 的幂为单位（例如 1.1G）
+  -i, --inodes          列出 inode 信息而不是块使用情况
+  -k                    like --block-size=1K
+  -l, --local           限制列出本地文件系统
+      --no-sync         获取使用信息之前不调用同步（默认）
+      --output[=FIELD_LIST]  使用FIELD_LIST定义的输出格式，如果省略FIELD_LIST则打印所有字段。
+  -P, --portability     使用 POSIX 输出格式
+      --sync            在获取使用信息之前调用同步
+      --total           删除所有对可用空间不重要的条目，并得出总计
+  -t, --type=TYPE       限制列出类型为 TYPE 的文件系统
+  -T, --print-type      打印文件系统类型
+  -x, --exclude-type=TYPE   限制列出非 TYPE 类型的文件系统
+  -v                    (ignored)
+      --help     display this help and exit
+      --version  output version information and exit
+
+显示值以 --block-size 中第一个可用的 SIZE 为单位，以及 DF_BLOCK_SIZE、BLOCK_SIZE 和 BLOCKSIZE 环境变量。
+否则，单位默认为 1024 字节（如果设置了 POSIXLY_CORRECT，则为 512）。
+
+SIZE 参数是一个整数和可选单位（例如：10K 是 10*1024）。
+单位为 K、M、G、T、P、E、Z、Y（1024 的幂）或 KB、MB、...（1000 的幂）。
+也可以使用二进制前缀：KiB=K、MiB=M，等等。
+
+FIELD_LIST 是要包含的列的逗号分隔列表。有效字段名称为：'source'、'fstype'、'itotal'、'iused'、'iavail'、'ipcent'、
+'size'、'used'、'avail'、'pcent'、'file' 和 'target'（参见信息页）。
+
+GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
+Full documentation <https://www.gnu.org/software/coreutils/df>
+or available locally via: info '(coreutils) df invocation'
