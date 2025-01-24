@@ -81,12 +81,3 @@ function clrall
 if [ "x$STY" = "x" ];then
 	export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
 fi
-
-if [ $LOGNAME = lshm ];then
-	echo "*******************************************"
-	echo "****  fengming.d  environment  loaded  ****"
-	echo "*******************************************"
-	if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ];then
-		cat ${FENGMING_DIR}/documents/sub_doc_embedded_engineer/How_to_quickly_learn_new_technologies.txt
-	fi
-fi
