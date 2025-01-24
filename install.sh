@@ -34,11 +34,12 @@ function buildin_install_mybashrc
 	tee -a ${home_bashrc} <<EOF
 if [ -f ${mybash_file} ];then
     . ${mybash_file}
-    if [ $LOGNAME = lshm ];then
+    print_level=0
+    if [ "$LOGNAME" = lshm ] && [ \$print_level -ge 1 ];then
         echo "*******************************************"
         echo "****  fengming.d  environment  loaded  ****"
         echo "*******************************************"
-        if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ] && [ 1 -eq 0 ];then
+        if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ] && [ \$print_level -ge 2 ];then
             cat ${fengming_root_dir}/documents/sub_doc_embedded_engineer/How_to_quickly_learn_new_technologies.txt
         fi
     fi
@@ -48,7 +49,7 @@ EOF
 }
 
 #call function 
-buildin_install_mybashrc
+buildin_install_mybashrc "$@"
 ret=$?
 if [ ${ret} -ne 0 ]
 then
