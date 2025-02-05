@@ -17,17 +17,64 @@ if [ $(id -u) -ne 0 ];then
 fi
 function func_get_GPU_info
 {
-    echo "COMMOM  ======================"
+    # lspci
+    echo "COMMOM  lspci ======================"
     local app=lspci
     which ${app} > /dev/null
     if [ $? -eq 0 ]
     then
         echo "${app} | grep -i vga"
-        ${app} | grep -i vga
+        local gpuinfo=$(${app} | grep -i vga)
+        echo ${gpuinfo}
+        local idlist=$(echo ${gpuinfo} | awk '{print $1}')
+        for id in ${idlist};do
+            echo "${app} -v -s ${id}"
+            ${app} -v -s ${id}
+        done
     else 
         echo "ERROR:${app} not found!,please install it first"
         echo "apt install  pciutils"
     fi
+    # lshw
+    echo ""
+    echo "COMMOM  lshw ==================="
+    app=lshw
+    which ${app} > /dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "${maybeSUDO} ${app} -C display"
+        ${maybeSUDO} ${app} -C display
+    else 
+        echo "ERROR:${app} not found!,please install it first"
+        echo "apt install lshw"
+    fi
+    # lshw
+    echo ""
+    echo "COMMOM  glxinfo ==================="
+    app=glxinfo
+    which ${app} > /dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "${app} | grep -i 'device\|memory'"
+        ${app} | grep -i 'device\|memory'
+    else 
+        echo "ERROR:${app} not found!,please install it first"
+        echo "apt install mesa-utils"
+    fi
+    # inxi
+    echo ""
+    echo "COMMOM  inxi ==================="
+    app=inxi
+    which ${app} > /dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "${app} -G"
+        ${app} -G
+    else 
+        echo "ERROR:${app} not found!,please install it first"
+        echo "apt install inxi"
+    fi
+
     #NVIDIA GPU
     echo ""
     echo "NVIDIA GPU ==================="
