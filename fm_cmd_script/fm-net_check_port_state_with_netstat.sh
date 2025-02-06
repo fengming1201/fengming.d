@@ -102,7 +102,7 @@ function usage
 # Parameter Requirements: none
 # Example:
 ##
-function func_net_check_port_state_with_nmap
+function func_net_check_port_state_with_netstat
 {
     if [ $# -lt 1 ];then usage; return 1; fi
     local debug=false
@@ -153,29 +153,13 @@ function func_net_check_port_state_with_nmap
         #here we process each parameter
 
     #done
-    local tool=nmap
-    local default_opt="-p"
-
-    which ${tool} > /dev/null
-    if [ $? -ne 0 ];then echo "${tool} not found,please install it first!";return 1;fi
-
-    if [ $# -ne 2 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
-    then
-        echo "CN:检测远程主机端口号状态，也是端口号是否开放。"
-        echo "$scriptname  IP  PORT"
-        echo ".e.g:$scriptname  116.62.103.60  1201"
-        return 2
-    fi
-    local  ip=$1
-    local port=$2
-    echo "${tool} ${default_opt} ${port} ${ip}"
-    ${tool} ${default_opt} ${port}  ${ip} 
+    
     return 0
 }
 
 func_debug_function "$@"
 if [ $? -ne 0 ];then exit 0;fi
 
-func_net_check_port_state_with_nmap "$@"
+func_net_check_port_state_with_netstat "$@"
 if [ $? -ne 0 ];then exit 1;fi
 exit 0
