@@ -86,6 +86,7 @@ function func_get_GPU_info
         ${app}
     else 
         echo "ERROR:${app} not found!,please install it first"
+        echo "apt install  nvidia-detect"
         echo "apt install  nvidia-driver-<version>"
         echo "apt install  nvidia-driver-460"
     fi
