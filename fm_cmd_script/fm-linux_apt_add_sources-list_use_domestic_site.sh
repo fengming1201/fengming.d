@@ -66,6 +66,7 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo " [--debug ||&& --func [function_name  args ...] ]  #优先级3: 列出所有子函数或调用子函数"
     echo ""
     echo "abstract:"
+    echo "         为 apt 添加国内镜像源"
     echo ""
     func_location
     exit 0
@@ -76,7 +77,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     func_location
     exit 0
 fi
-if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ $(id -u) -ne 0 ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
@@ -92,9 +93,9 @@ function usage
     echo "opt:"
     echo "-h or --help     # help"
     echo "-d or --debug    # print variable status"
-    echo "-t or --test     # test mode, no modifications"
-    #echo "--realdo        # real execution"
-    echo "-m or --mode  {}   # you define"
+    #echo "-t or --test     # test mode, no modifications"
+    echo "--realdo        # real execution"
+    #echo "-m or --mode   # you define"
     echo ""
 }
 
@@ -102,9 +103,9 @@ function usage
 # Parameter Requirements: none
 # Example:
 ##
-function func_
+function func_add_source_list_for_apt
 {
-    if [ $# -lt 1 ];then usage; return 1; fi
+    #if [ $# -lt 1 ];then usage; return 1; fi
     local debug=false
     local test=false
     local realdo=false
@@ -137,16 +138,17 @@ function func_
     done
     #==================== print debug =============================#
     if [ ${debug} = true ];then
+        echo "DEBUG:maybeSUDO=${maybeSUDO}"
         echo "DEBUG:debug=${debug}"
-        echo "DEBUG:test=${test}"
-        #echo "DEBUG:realdo=${realdo}"
-        echo "DEBUG:mode=${mode}"
+        #echo "DEBUG:test=${test}"
+        echo "DEBUG:realdo=${realdo}"
+        #echo "DEBUG:mode=${mode}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
-    if [ ${#remaining_args[@]} -lt 1 ];then
-        echo "ERROR: platform list is empty!!";usage;return 2
-    fi
+    #if [ ${#remaining_args[@]} -lt 1 ];then
+    #    echo "ERROR: platform list is empty!!";usage;return 2
+    #fi
     #start your code
     #for file in "${remaining_args}"
     #do
@@ -155,14 +157,17 @@ function func_
     #done
     local  source_list_file=/etc/apt/sources.list
     #check and backup 
-    if [ ! -f ${source_list_file}.org ];then
+    if [ ! -f ${source_list_file}.org ] || [ ${realdo} == true ];then
         echo "backup ${source_list_file} ..."
         ${maybeSUDO} cp -v ${source_list_file} ${source_list_file}.org
     fi
-
+    if [ ${realdo} == false ];then
+        maybeSUDO=
+        source_list_file=$(mktemp)
+    fi
     #add source
     local debian_name=$(grep VERSION_CODENAME /etc/os-release | sed 's/VERSION_CODENAME=//') && \
-    ${maybeSUDO} tee -a ${source_list_file} <<EOF
+    ${maybeSUDO} tee ${source_list_file} <<EOF
 #debian offic
 deb http://deb.debian.org/debian/  ${debian_name} main contrib non-free
 
@@ -181,14 +186,14 @@ deb http://mirrors.163.com/debian/ ${debian_name} main contrib non-free
 deb http://mirrors.163.com/debian/ ${debian_name}-updates main contrib non-free
 deb http://mirrors.163.com/debian-security/ ${debian_name}-security main contrib non-free
 EOF
-    cat ${source_list_file}
-
+    #cat ${source_list_file}
+    if [ ${realdo} == false ];then echo -e "\nNote:use option --realdo to real write to /etc/apt/sources.list";rm ${source_list_file};fi
     return 0
 }
 
 func_debug_function "$@"
 if [ $? -ne 0 ];then exit 0;fi
 
-func_ "$@"
+func_add_source_list_for_apt "$@"
 if [ $? -ne 0 ];then exit 1;fi
 exit 0

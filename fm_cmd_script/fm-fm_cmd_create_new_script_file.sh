@@ -309,6 +309,7 @@ function func_
     done
     #==================== print debug =============================#
     if [ \${debug} = true ];then
+        echo "DEBUG:maybeSUDO=\${maybeSUDO}"
         echo "DEBUG:debug=\${debug}"
         echo "DEBUG:test=\${test}"
         #echo "DEBUG:realdo=\${realdo}"
