@@ -320,7 +320,7 @@ function func_
         echo "ERROR: platform list is empty!!";usage;return 2
     fi
     #start your code
-    #for file in "\${remaining_args}"
+    #for file in "\${remaining_args[@]}"
     #do
         #here we process each parameter
 
