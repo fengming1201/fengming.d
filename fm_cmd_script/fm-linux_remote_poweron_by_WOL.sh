@@ -99,6 +99,7 @@ function usage
     echo "             enable 网口名称           # 启用 WoL"
     echo "             disable 网口名称          # 禁用 WoL"
     echo "             wakeup MAC地址列表        # 唤醒列表中的主机"
+    echo "-f or --file file                     # 从指定文件中读取参数"
     echo ""
 }
 
@@ -112,7 +113,8 @@ function func_
     local debug=false
     local test=false
     local realdo=false
-    local cmd=none
+    local cmd=
+    local file=
     local remaining_args=()
     while [[ $# -gt 0 ]]
     do
@@ -124,6 +126,9 @@ function func_
             -c|--cmd)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 cmd="$2"; shift 2 ;; #带参数,移动2
+            -f|--file)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                file="$2"; shift 2 ;; #带参数,移动2
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
@@ -132,6 +137,7 @@ function func_
                         d) debug=true ;;
                         t) test=true ;;
                         c) cmd="$2"; shift;break ;; # 当 c 是合并选项的一部分时，它应该停止解析剩余的字符
+                        f) file="$2"; shift;break ;; # 当 f 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -146,12 +152,18 @@ function func_
         #echo "DEBUG:test=${test}"
         echo "DEBUG:realdo=${realdo}"
         echo "DEBUG:cmd=${cmd}"
+        echo "DEBUG:file=${file}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
-    #if [ ${#remaining_args[@]} -lt 1 ];then
-    #    echo "ERROR: platform list is empty!!";usage;return 2
-    #fi
+    if [ "x${file}" != "x" ];then
+        if [ ! -f ${file} ];then echo "ERROR: file:${file} not exist!!";return 2;fi
+        readarray -t loadfile < <(cat $file)
+        remaining_args+=("${loadfile[@]}")
+        if [ ${debug} = true ];then
+            echo "append_from_file:remaining_args=${remaining_args[@]}"
+        fi
+    fi
     ${maybeSUDO} which ethtool > /dev/null
     if [ $? -ne 0 ];then echo -e "ERROR:ethtool not found,please install it first!\napt install ethtool";return 2;fi
     which wakeonlan > /dev/null
