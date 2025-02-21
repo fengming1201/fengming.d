@@ -1,0 +1,94 @@
+名称:
+   croc - 轻松安全地将内容从一台计算机传输到另一台计算机
+
+用法:
+   croc [GLOBAL OPTIONS] [COMMAND] [COMMAND OPTIONS] [filename(s) or folder]
+
+   使用示例:
+   发送一个文件:
+      croc send file.txt
+
+      -git to respect your .gitignore
+   发送多个文件:
+      croc send file1.txt file2.txt file3.txt
+    or
+      croc send *.jpg
+
+   发送文件夹中的所有内容:
+      croc send example-folder-name
+
+   发送带有自定义代码的文件:
+      croc send --code secret-code file.txt
+
+   使用代码接收文件:
+      croc secret-code
+
+命令:
+   send     发送文件或文件夹（查看 croc send -h 选项）
+   relay    启动你自己的中继服务器（可选）
+   help, h  显示命令列表或某个命令的帮助
+
+全局选项:
+   --internal-dns          使用内置 DNS 存根解析器而不是主机操作系统（默认值：false）
+   --classic               在经典模式（由于本地攻击媒介而不安全）和新模式（安全）之间切换（默认值：false）
+   --remember              保存这些设置以便下次重复使用（默认值：false）
+   --debug                 切换调试模式（默认值：false）
+   --yes                   自动同意所有提示（默认值：false）
+   --stdout                将文件重定向到标准输出（默认值：false）
+   --no-compress           禁用压缩（默认值：false）
+   --ask                   确保提示发件人和收件人（默认值：false）
+   --local                 强制仅使用本地连接（默认值：false）
+   --ignore-stdin          忽略管道标准输入（默认值：false）
+   --overwrite             不提示覆盖或恢复（默认值：false）
+   --testing               用于测试目的的标志（默认值：false）
+   --multicast value       用于本地发现的多播地址（默认值：“239.255.255.250”）
+   --curve value           选择加密曲线（p521、p256、p384、siec）（默认：“p256”）
+   --ip value              如果已知，则设置发送方 IP，例如 10.0.0.1:9009，[::1]:9009
+   --relay value           中继地址（默认值：“168.119.238.198:9009”）[$CROC_RELAY]
+   --relay6 value          中继的 ipv6 地址（默认值：“[2a01:4f8:1002:a38::67b4:64eb]:9009”）[$CROC_RELAY6]
+   --out value             指定接收文件的输出文件夹（默认值：“.”）
+   --pass value            中继的密码（默认：“pass123”）[$CROC_PASS]
+   --socks5 value          添加 socks5 代理 [$SOCKS5_PROXY]
+   --connect value         添加 http 代理 [$HTTP_PROXY]
+   --throttleUpload value  限制上传速度，例如 500k
+   --help, -h              显示帮助（默认值：false）
+   --version, -v           打印版本（默认值：false）
+=====================================================
+中继服务:
+   croc relay - start your own relay (optional)
+
+USAGE:
+   croc relay [command options] [arguments...]
+
+DESCRIPTION:
+   启动中继
+
+OPTIONS:
+   --host value       中继主机
+   --ports value      中继的端口（默认值：“9009,9010,9011,9012,9013”）
+   --port value       中继的基本端口（默认值：9009）
+   --transfers value  用于中继的端口数（默认值：5）
+   --help, -h         show help (default: false)
+=====================================================
+发送:
+   croc send - 发送文件或文件夹（查看 croc send -h 选项）
+
+格式:
+   croc send [command options] [filename(s) or folder]
+
+描述:
+   通过中继发送文件或文件夹
+
+选项:
+   --zip                   发送前压缩文件夹（默认值：false）
+   --code value, -c value  用于连接中继的代码
+   --hash value            哈希算法（xxhash、imohash、md5）（默认：“xxhash”）
+   --text value, -t value  发送一些文本
+   --no-local              发送时禁用本地中继（默认值：false）
+   --no-multi              禁用多路复用（默认值：false）
+   --git                   启用 .gitignore 尊重/不发送忽略的文件（默认值：false）
+   --port value            中继的基本端口（默认值：9009）
+   --transfers value       用于传输的端口数（默认值：4）
+   --qrcode, --qr          将接收代码显示为二维码（默认值：false）
+   --exclude value         如果文件包含任何逗号分隔的字符串，则排除它们
+   --help, -h              show help (default: false)

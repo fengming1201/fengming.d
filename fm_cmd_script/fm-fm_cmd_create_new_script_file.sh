@@ -89,6 +89,7 @@ function usage
     echo "-h or --help                  # help"
     echo "-d or --debug                 # open debug mode"
     echo "--func   func_name  args ...  # call func_name for test"
+    echo "-p or --path  path            # save to other dir,e.g. -p ."
 }
 
 ##Parameter Counts      : 0
@@ -98,7 +99,7 @@ function usage
 function func_create_fm_cmd
 {
 
-    if [ $# -ne 1 ];then usage; return 1; fi
+    if [ $# -lt 1 ];then usage; return 1; fi
     local debug=false
     local func_test=false
     local mode=normal
@@ -109,12 +110,16 @@ function func_create_fm_cmd
             -h|--help) usage; return 0 ;;
             -d|--debug) debug=true; shift ;; #不带参数，移动1
             --func) func_test=true; shift ;; #不带参数,移动1
+            -p|--path)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                target_dir="$2"; shift 2 ;; #带参数,移动2
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
                     case ${1:i:1} in
                         h) usage; return 0 ;;
                         d) debug=true ;;
+                        p) target_dir="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -139,7 +144,8 @@ function func_create_fm_cmd
         echo "DEBUG:func_test=${func_test}"
         echo "DEBUG:test=${test}"
         #echo "DEBUG:realdo=${realdo}"
-        echo "DEBUG:mode=${mode}"
+        #echo "DEBUG:mode=${mode}"
+        echo "DEBUG:outfile=${outfile}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
@@ -281,6 +287,7 @@ function func_
     local test=false
     local realdo=false
     local mode=normal
+    local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
     while [[ \$# -gt 0 ]]
     do
@@ -292,6 +299,10 @@ function func_
             -m|--mode)
                 if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="\$2"; shift 2 ;; #带参数,移动2
+            -F|--file)
+                if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                cmd_opt+=("--file \$2"); shift 2 ;; #带参数,移动2
+            -Q|--qr) cmd_opt+=("--qr=true"); shift ;;
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<\${#1}; i++ )); do
@@ -300,6 +311,8 @@ function func_
                         d) debug=true ;;
                         t) test=true ;;
                         m) mode="\$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        F) cmd_opt+=("--file \$2"); shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        Q) cmd_opt+=("--qr=true") ;;
                         *) echo "ERROR: invalid option: -\${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -314,6 +327,7 @@ function func_
         echo "DEBUG:test=\${test}"
         #echo "DEBUG:realdo=\${realdo}"
         echo "DEBUG:mode=\${mode}"
+        echo "DEBUG:cmd_opt=\${cmd_opt[@]} #累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。"
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
@@ -324,7 +338,7 @@ function func_
     #for file in "\${remaining_args[@]}"
     #do
         #here we process each parameter
-
+        #linux_cmd  \${cmd_opt[@]} args ....
     #done
     
     return 0

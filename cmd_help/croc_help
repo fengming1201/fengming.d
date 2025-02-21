@@ -1,0 +1,124 @@
+
+《一》关于：
+croc 是一款允许任意两台计算机简单安全地传输文件和文件夹的工具。据我所知，croc 是唯一一款可以执行以下所有操作的 CLI 文件传输工具：
+- 允许任意两台计算机传输数据（使用中继）
+- 提供端到端加密（使用 PAKE）
+- 轻松实现跨平台传输（Windows、Linux、Mac）
+- 允许多个文件传输
+- 允许恢复中断的传输
+- 无需本地服务器或端口转发
+- IPv6 优先，IPv4 回退
+- 可以使用代理，如 Tor
+
+《二》安装;
+您可以下载适合您系统的最新版本，
+https://github.com/schollz/croc/releases/latest
+
+《三》从源代码构建：
+
+如果愿意，您可以安装 Go 并从源代码构建（需要 Go 1.22+）：
+go install github.com/schollz/croc/v10@latest
+
+《四》Android APP
+
+There is a 3rd-party F-Droid app [available to download](https://f-droid.org/packages/com.github.howeyc.crocgui/).
+
+《五》基本用法
+要发送文件，只需执行以下操作：
+$ croc send [file(s)-or-folder]
+Sending 'file-or-folder' (X MB)
+Code is: code-phrase
+
+然后，要在另一台计算机上接收文件（或文件夹），请运行：
+
+croc code-phrase
+
+该代码短语用于建立密码认证密钥协议 (PAKE)，该协议为发送者和接收者生成一个密钥，用于端到端加密。
+
+《六》定制和选项
+在 Linux 或 macOS 上使用 croc
+
+在 Linux 和 macOS 上，发送和接收过程略有不同，以避免通过进程名称泄露密钥。您需要使用密钥作为环境变量来运行 croc。例如，要使用密钥 *** 接收：
+
+CROC_SECRET=*** croc
+
+对于单用户系统，可以通过运行以下命令永久启用默认行为：
+
+croc --classic
+
+（1）自定义代码短语
+您可以使用自己的代码短语发送（必须超过6个字符）：
+
+croc send --code [code-phrase] [file(s)-or-folder]
+
+（2）允许无提示覆盖
+要自动覆盖文件而不提示，请使用 --overwrite 标志：
+
+croc --yes --overwrite <code>
+
+（3）排除文件夹
+要排除发送文件夹，请使用带有逗号分隔的排除项的 --exclude 标志：
+
+croc send --exclude "node_modules,.venv" [folder]
+
+（4）使用管道 - stdin 和 stdout
+你可以通过管道传输给 croc：
+
+cat [filename] | croc send
+
+要将文件接收到标准输出，您可以使用：
+
+croc --yes [code-phrase] > out
+
+（5）发送文本
+要发送 URL 或简短文本，请使用：
+
+croc send --text "hello world"
+
+（6）使用代理
+您可以通过添加--socks5通过代理发送文件：
+
+croc --socks5 "127.0.0.1:9050" send SOMEFILE
+
+（7）改变加密曲线
+要选择不同的椭圆曲线进行加密，请使用 --curve 标志：
+
+croc --curve p521 <codephrase>
+
+（8）更改哈希算法
+为了更快地进行散列，请使用 imohash 算法：
+croc send --hash imohash SOMEFILE
+
+《四》自托管中继
+
+您可以运行自己的中继：
+
+croc relay
+
+默认情况下，它使用 TCP 端口 9009-9013。您可以自定义端口（例如，croc reply --ports 1111,1112），但至少需要 2 个端口。
+
+要使用中继发送文件：
+
+croc --relay "myrelay.example.com:9009" send [filename]
+
+《五》使用 Docker 进行自托管中继
+
+您还可以使用 Docker 运行中继：
+
+docker run -d -p 9009-9013:9009-9013 -e CROC_PASS='YOURPASSWORD' schollz/croc
+或用docker-compose
+version: '3.8'
+
+services:
+  croc:
+    image: schollz/croc
+    container_name: croc
+    ports:
+      - "9009-9013:9009-9013" # 映射端口范围
+    environment:
+      - CROC_PASS=YOURPASSWORD # 设置环境变量
+    restart: always # 可选：如果需要容器自动重启
+
+要使用自定义中继发送文件：
+
+croc --pass YOURPASSWORD --relay "myreal.example.com:9009" send [filename]
