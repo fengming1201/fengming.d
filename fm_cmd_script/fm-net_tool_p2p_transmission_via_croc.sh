@@ -185,8 +185,10 @@ function func_p2p_tool_croc
         echo "DEBUG:cmd=${cmd}"
         echo "DEBUG:code=${code}"
         echo "DEBUG:out=${outdir}"
-        echo "DEBUG:glabole_opt[0]=${glabole_opt[0]}"
-        echo "DEBUG:glabole_opt[1]=${glabole_opt[1]}"
+        if [ ${test} = true ];then
+            echo "DEBUG:glabole_opt[0]=${glabole_opt[0]}"
+            echo "DEBUG:glabole_opt[1]=${glabole_opt[1]}"
+        fi
         echo "DEBUG:glabole_opt=${glabole_opt[@]}"
         echo "DEBUG:send_opt=${send_opt[@]}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"        
@@ -215,9 +217,9 @@ function func_p2p_tool_croc
                 CROC_SECRET=${code} croc ${glabole_opt[@]}
             fi
         else
-            echo "croc --pass ******** --relay ${g_my_cloud_server_ip_baidu2}:${serverport}"
+            echo "croc ${glabole_opt[@]}"
             if [ ${test} = false ];then
-                croc --pass ${mycroc_pass} --relay "${g_my_cloud_server_ip_baidu2}:${serverport}"
+                croc ${glabole_opt[@]}
             fi
         fi
     elif [ $cmd = text ];then

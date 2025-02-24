@@ -1,12 +1,14 @@
 #!/bin/bash
+
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
-
-if [ -f ${common_share_function} ] && [ "include" = "enable" ];then
+isinclude_common_func=false
+if [ -f ${common_share_function} ] && [ $isinclude_common_func = true ];then
     source ${common_share_function}
 fi
+#if unnecessary, please do not modify this function
 
 ##Parameter Counts      : 0
 # Parameter Requirements: none
@@ -21,10 +23,15 @@ function func_location
     fi
     return 0
 }
+
 ##Parameter Counts      : >=1
 # Parameter Requirements: func_name  args ...
 # Example: usage
 ##
+function func_debug_help
+{
+    echo "--func function_name [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
+}
 function func_debug_function
 {
     local debug=false
@@ -37,9 +44,20 @@ function func_debug_function
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
+    if [ $debug = true ];then
+        echo "DEBUG:debug=${debug}"
+        echo "DEBUG:func_test=${func_test}"
+        echo "DEBUG:remaining_args=${remaining_args[@]}"
+    fi
     if [ ${func_test} = true ];then
-        if [ ${#remaining_args[@]} -lt 1 ];then grep -w "^function"  ${scriptfile};return 1;fi
-        local func_list=($(grep -w "^function"  ${scriptfile} | awk '{print$2}'))
+        if [ ${#remaining_args[@]} -lt 1 ];then 
+            echo "函数列表:"
+            if [ $isinclude_common_func = true ];then grep -w "^function"  ${common_share_function};fi
+            grep -w "^function"  ${scriptfile}
+            echo "用法:";echo -n "$scriptname ";func_debug_help;return 1
+        fi
+        local func_list=($(grep -w "^function"  ${scriptfile} ${common_share_function} | awk '{print $2}'))
+        if [ $debug = true ];then echo "DEBUG:func_list=${func_list[@]}";fi
         local found_it=false
         for func in ${func_list[@]};do
             if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi
@@ -49,18 +67,20 @@ function func_debug_function
             echo "Possible Function Name:{ ${func_list[@]} }"
             return 2
         fi
-        echo -e "\e[31mcall func call....\e[0m"
+        echo -e "\e[31mcall func ....\e[0m"
+        if [ ${debug} = true ];then echo "CALL: ${remaining_args[0]}( ${remaining_args[@]:1} )";fi
         ${remaining_args[0]} "${remaining_args[@]:1}"
-        if [ ${debug} = true ];then echo "DEBUG:${remaining_args[0]} ${remaining_args[@]:1}";fi
+        echo -e "\e[31m.... done\e[0m"
         return 3
     fi
     return 0
 }
-if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
+
+if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo ""
-    echo " [info | -info | --info]                           #优先级1: 显示摘要"
-    echo " [show | -show | --show]                           #优先级2: 打印本脚本文件"
-    echo " [--debug ||&& --func [function_name  args ...] ]  #优先级3: 列出所有子函数或调用子函数"
+    echo "info | -info | --info                      #优先级1: 显示摘要"
+    echo "show | -show | --show                      #优先级2: 打印本脚本文件"
+    func_debug_help
     echo ""
     echo "abstract:"
     echo ""
@@ -174,7 +194,6 @@ function func_create_fm_cmd
         sudo touch ${target_dir}/${file_name}
         sudo chmod 747 ${target_dir}/${file_name}
     fi
-    ls -lh ${target_dir}/${file_name}
     cat  <<-EOF >${target_dir}/${file_name}
 #!/bin/bash
 
@@ -182,8 +201,8 @@ scriptfile=\$0
 scriptname=\$(basename \${scriptfile})
 fengming_dir=\$FENGMING_DIR
 common_share_function=\${fengming_dir}/fm_cmd_script/common_share_function.sh
-
-if [ -f \${common_share_function} ] && [ "include" = "enable" ];then
+isinclude_common_func=false
+if [ -f \${common_share_function} ] && [ \$isinclude_common_func = true ];then
     source \${common_share_function}
 fi
 #if unnecessary, please do not modify this function
@@ -206,6 +225,10 @@ function func_location
 # Parameter Requirements: func_name  args ...
 # Example: usage
 ##
+function func_debug_help
+{
+    echo "--func function_name [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
+}
 function func_debug_function
 {
     local debug=false
@@ -218,9 +241,20 @@ function func_debug_function
             *) remaining_args+=("\$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
+    if [ \$debug = true ];then
+        echo "DEBUG:debug=\${debug}"
+        echo "DEBUG:func_test=\${func_test}"
+        echo "DEBUG:remaining_args=\${remaining_args[@]}"
+    fi
     if [ \${func_test} = true ];then
-        if [ \${#remaining_args[@]} -lt 1 ];then grep -w "^function"  \${scriptfile};return 1;fi
-        local func_list=(\$(grep -w "^function"  \${scriptfile} | awk '{print\$2}'))
+        if [ \${#remaining_args[@]} -lt 1 ];then
+            echo "函数列表:"
+            if [ \$isinclude_common_func = true ];then grep -w "^function"  \${common_share_function};fi
+            grep -w "^function"  \${scriptfile}
+            echo "用法:";echo -n "\$scriptname ";func_debug_help;return 1
+        fi
+        local func_list=(\$(grep -w "^function"  \${scriptfile} \${common_share_function} | awk '{print\$2}'))
+        if [ \$debug = true ];then echo "DEBUG:func_list=\${func_list[@]}";fi
         local found_it=false
         for func in \${func_list[@]};do
             if [ \${func} = "\${remaining_args[0]}" ];then found_it=true;fi
@@ -230,18 +264,19 @@ function func_debug_function
             echo "Possible Function Name:{ \${func_list[@]} }"
             return 2
         fi
-        echo -e "\e[31mcall func call....\e[0m"
+        echo -e "\e[31mcall func ....\e[0m"
+        if [ \${debug} = true ];then echo "CALL: \${remaining_args[0]}( \${remaining_args[@]:1} )";fi
         \${remaining_args[0]} "\${remaining_args[@]:1}"
-        if [ \${debug} = true ];then echo "DEBUG:\${remaining_args[0]} \${remaining_args[@]:1}";fi
+        echo -e "\e[31m.... done\e[0m"
         return 3
     fi
     return 0
 }
 if [ "\$1" = "info" ] || [ "\$1" = "-info" ] || [ "\$1" = "--info" ];then
     echo ""
-    echo " [info | -info | --info]                           #优先级1: 显示摘要"
-    echo " [show | -show | --show]                           #优先级2: 打印本脚本文件"
-    echo " [--debug ||&& --func [function_name  args ...] ]  #优先级3: 列出所有子函数或调用子函数"
+    echo "info | -info | --info                      #优先级1: 显示摘要"
+    echo "show | -show | --show                      #优先级2: 打印本脚本文件"
+    func_debug_help
     echo ""
     echo "abstract:"
     echo ""
@@ -351,6 +386,15 @@ func_ "\$@"
 if [ \$? -ne 0 ];then exit 1;fi
 exit 0
 EOF
+    ls -lh ${target_dir}/${file_name}
+    #create other file
+    for newfilename in "${remaining_args[@]:1}"
+    do
+        #echo "cp -av ${target_dir}/${file_name} ${target_dir}/${newfilename}"
+        cp -a ${target_dir}/${file_name} ${target_dir}/${newfilename}
+        ls -lh ${target_dir}/${newfilename}
+    done
+    
     return 0
 }
 
