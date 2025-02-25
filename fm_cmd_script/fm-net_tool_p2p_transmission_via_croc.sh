@@ -132,7 +132,7 @@ function func_p2p_tool_croc
     local test=false
     local realdo=false
     local cmd=
-    local glabole_opt=("--pass ${mycroc_pass}" "--relay \"${g_my_cloud_server_ip_baidu2}:${serverport}\"" "--ask")
+    local glabole_opt=("--pass ${mycroc_pass}" "--relay \"${g_my_cloud_server_ip_baidu2}:${serverport}\"")
     local send_opt=("--git")
     local code=12345678
     local remaining_args=()
@@ -202,19 +202,21 @@ function func_p2p_tool_croc
         echo "ERROR:-c | --cmd must request"
         return 2
     fi
-
+    export CROC_SECRET="${code}"
     #start your code
     if [ $cmd = send ];then
         if [ ${#remaining_args[@]} -lt 1 ];then echo "ERROR:args is empty!";return 2;fi
-        echo "CROC_SECRET=${code} croc ${glabole_opt[@]} send ${send_opt[@]} ${remaining_args[@]}"
+        echo -n "CROC_SECRET=\"${code}\" "
+        echo "croc ${glabole_opt[@]} send ${send_opt[@]} ${remaining_args[@]}"
         if [ ${test} = false ];then
-            CROC_SECRET=${code} croc ${glabole_opt[@]} send ${send_opt[@]} ${remaining_args[@]}
+            croc ${glabole_opt[@]} send ${send_opt[@]} ${remaining_args[@]}
         fi
     elif [ $cmd = recv ];then
         if [ "x$code" != x12345678 ];then
-            echo "CROC_SECRET=${code} croc ${glabole_opt[@]}"
+            echo -n "CROC_SECRET=\"${code}\" "
+            echo "croc ${glabole_opt[@]}"
             if [ ${test} = false ];then
-                CROC_SECRET=${code} croc ${glabole_opt[@]}
+                croc ${glabole_opt[@]}
             fi
         else
             echo "croc ${glabole_opt[@]}"
@@ -224,15 +226,16 @@ function func_p2p_tool_croc
         fi
     elif [ $cmd = text ];then
         if [ ${#remaining_args[@]} -lt 1 ];then echo "ERROR:args is empty!";return 2;fi
-        echo "CROC_SECRET=${code} croc ${glabole_opt[@]} send ${send_opt[@]} --text ${remaining_args[0]}"
+        echo -n "CROC_SECRET=\"${code}\" "
+        echo "croc ${glabole_opt[@]} send ${send_opt[@]} --text ${remaining_args[0]}"
         if [ ${test} = false ];then
-            CROC_SECRET=${code} croc ${glabole_opt[@]} send ${send_opt[@]} --text "${remaining_args[0]}"
+            croc ${glabole_opt[@]} send ${send_opt[@]} --text "${remaining_args[0]}"
         fi
     elif [ $cmd = file ];then
         if [ ${#remaining_args[@]} -lt 1 ];then echo "ERROR:args is empty!";return 2;fi
-        echo "cat ${remaining_args[@]} | CROC_SECRET=${code} croc ${glabole_opt[@]} send ${send_opt[@]} "
+        echo "cat ${remaining_args[@]} | CROC_SECRET=\"${code}\" croc ${glabole_opt[@]} send ${send_opt[@]} "
         if [ ${test} = false ];then
-            cat ${remaining_args[@]} | CROC_SECRET=${code} croc ${glabole_opt[@]} send ${send_opt[@]} 
+            cat ${remaining_args[@]} | croc ${glabole_opt[@]} send ${send_opt[@]}
         fi
     else
         echo "ERROR:Unknow Cammand!!"

@@ -150,3 +150,14 @@ function COMMOND_FUNC_get_host_ip
     hostname -I | awk '{print$1}'
     return 0
 }
+
+#descript: 以十六进制打印变量或文件内容
+#调用: COMMOND_FUNC_print_hex  $varial  or COMMOND_FUNC_print_hex ""
+function COMMOND_FUNC_print_hex
+{
+    od 
+
+}
+
+
+

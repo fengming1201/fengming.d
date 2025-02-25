@@ -38,5 +38,10 @@ ${array[@]}
 for item in "${array[@]}"; do
     echo "$item"
 done
+数组切片：
+# 获取从第 2 项到结尾的所有元素
+# 注意：数组索引从 0 开始，第 2 项的索引是 1，如果不指定结束索引，默认取到数组的末尾。
+sub_array=("${my_array[@]:1}")
 
+sub_array=("${my_array[@]:起始索引:长度}")
 

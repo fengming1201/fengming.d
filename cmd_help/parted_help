@@ -1,0 +1,37 @@
+用法： parted [OPTION]... [DEVICE [COMMAND [PARAMETERS]...]...]
+将带有参数的命令应用于设备。如果没有给出命令，则以交互模式运行。
+
+选项：
+  -h, --help                      显示此帮助消息
+  -l, --list                      列出所有块设备上的分区布局
+  -m, --machine                   显示机器可解析的输出
+  -s, --script                    永远不会提示用户干预
+  -v, --version                   显示版本
+  -a, --align=[none|cyl|min|opt]  新分区的对齐
+
+命令：
+  align-check TYPE N                       检查分区 N 的 TYPE(min|opt) 对齐
+  help [COMMAND]                           打印常规帮助，或者命令帮助
+  mklabel,mktable LABEL-TYPE               创建一个新的磁盘标签（分区表）
+  mkpart PART-TYPE [FS-TYPE] START END     进行分区
+  name NUMBER NAME                         将分区编号命名为 NAME
+  print [devices|free|list,all|NUMBER]     显示分区表、可用设备、可用空间、所有找到的分区或特定分区
+  quit                                     退出程序
+  rescue START END                         挽救 START 和 END 附近丢失的分区
+  resizepart NUMBER END                    调整分区大小
+  rm NUMBER                                删除分区编号
+  select DEVICE                            选择要编辑的设备
+  disk_set FLAG STATE                      更改选定设备上的标志
+  disk_toggle [FLAG]                       切换所选设备上的 FLAG 状态
+  set NUMBER FLAG STATE                    更改分区号上的标志
+  toggle [NUMBER [FLAG]]                   切换分区 NUMBER 上的 FLAG 状态
+  unit UNIT                                将默认单位设置为 UNIT
+  version                                  显示 GNU Parted 的版本号和版权信息
+
+将错误报告给 bug-parted@gnu.org
+===========================================
+删除分区：
+(parted) rm 2
+
+创建新分区：
+(parted) mkpart extended 33.4GB 34.4GB

@@ -1,0 +1,58 @@
+用法: gzip [OPTION]... [FILE]...
+压缩或解压缩文件（默认情况下，就地压缩文件）。
+
+长选项的强制参数对于短选项也是强制的。
+
+  -c, --stdout      写入标准输出，保持原始文件不变
+  -d, --decompress  解压缩
+  -f, --force       强制覆盖输出文件并压缩链接
+  -h, --help        give this help
+  -k, --keep        保留（不要删除）输入文件
+  -l, --list        列出压缩文件内容
+  -L, --license     显示软件许可证
+  -n, --no-name     不保存或恢复原始名称和时间戳
+  -N, --name        保存或恢复原始名称和时间戳
+  -q, --quiet       禁止所有警告
+  -r, --recursive   对目录进行递归操作
+      --rsyncable   制作适合 rsync 的存档
+  -S, --suffix=SUF  在压缩文件上使用后缀 SUF
+      --synchronous 同步输出（系统崩溃时更安全，但速度较慢）
+  -t, --test        测试压缩文件的完整性
+  -v, --verbose     verbose mode
+  -V, --version     display version number
+  -1, --fast        compress faster
+  -9, --best        compress better
+
+如果没有 FILE，或者 FILE 为 -，则读取标准输入。
+
+Report bugs to <bug-gzip@gnu.org>.
+=================================================================
+关联：bzip2, xz
+=================================================================
+（1）压缩命令：
+gzip -v -k system.img
+
+参数说明：
+    -v：显示压缩过程中的详细信息。
+    -k：保留（不要删除）输入文件。
+    system.img：要压缩的文件。
+
+压缩完成后，会生成一个名为 system.img.gz 的压缩文件，原始的 system.img 文件会被替换为压缩后的文件。
+
+（2）自定义压缩等级：
+gzip 提供 1 到 9 的压缩等级，数字越大，压缩率越高，但速度越慢。默认是 6。
+gzip -9 -v -k system.img
+    -1：最快压缩速度，压缩比最低。
+    -9：最大压缩比，速度较慢。
+
+
+（3）解压命令：
+gzip -d -v -k system.img.gz
+
+参数说明：
+    -d：表示解压。
+    -v：显示解压过程中的详细信息。
+    -k：保留（不要删除）输入文件。
+    system.img.gz：要解压的文件。
+
+解压完成后，system.img.gz 文件会被替换为原始的 system.img 文件。

@@ -130,4 +130,83 @@
 
     将 your_username 替换为你希望自动登录的用户名后。
     备注：如何查看是哪种显示管理器，参考fm-tools-show_info_display_manager.sh 
+},
+{
+    扩展系统镜像的分区大小
+    原系统镜像的分区情况：
+    #lsblk 
+    NAME            MAJ:MIN  RM   SIZE RO  TYPE  MOUNTPOINTS
+    loop0             7:0    0    32G   0  loop  
+    ├─loop0p1       259:4    0    15G   0  part  
+    ├─loop0p2       259:6    0     1K   0  part  
+    └─loop0p5       259:7    0   975M   0  part
+    //要将整个系统分区由原来的16G,扩展到占剩下的空间， 
+    步骤1：删除swap 分区 和 删除扩展分区（释放空间）
+    sudo parted /dev/loop0
+    (parted) rm 2            # 删除扩展分区2（连带逻辑分区5）
+    (parted) quit
+
+    步骤2：扩容主分区1
+    sudo parted /dev/loop0
+    (parted) resizepart 1    # 调整主分区1
+    End? [16.2GB]? 33.4GB    # 预留1GB给新SWAP（例如33.4GB=总容量34.4GB-1GB）
+    (parted) quit
+
+    步骤3：重建SWAP分区
+    sudo parted /dev/loop0
+    (parted) mkpart extended 33.4GB 34.4GB  # 创建新扩展分区
+    (parted) mkpart logical 33.4GB 34.4GB   # 创建逻辑分区5作为SWAP
+    (parted) set 5 lvm off                  # 确保标记为SWAP
+    (parted) quit
+    sudo mkswap /dev/loop0p5                # 格式化SWAP
+    sudo swapon /dev/loop0p5               # 重新启用
+
+    步骤4：扩展文件系统
+    sudo resize2fs /dev/loop0p1             # 调整ext4文件系统大小
+
+},
+{
+    linux下创建“虚拟硬盘”并格式化和挂载
+    1. 创建硬盘
+    使用 dd 命令创建一个空硬盘镜像文件（例如 10GB）：
+
+    dd if=/dev/zero of=disk.img bs=1G count=10
+    参数：
+        if=/dev/zero：输入文件为 /dev/zero，表示填充零。
+        of=disk.img：输出文件为 disk.img。
+        bs=1G：块大小为 1GB。
+        count=10：创建 10 个块，即 10GB。
+    
+    2. 
+    使用 losetup 将镜像文件关联到回环设备：
+
+    sudo losetup -fP disk.img
+     参数：
+        -f：自动选择一个空闲的回环设备。
+        -P：强制内核扫描分区表。
+    
+    查看关联的设备：
+    losetup -a
+
+    输出示例：
+    /dev/loop0: [] (/path/to/disk.img)
+    3.格式化硬盘
+    假设设备为 /dev/loop0，使用 fdisk 或 parted 创建分区：
+    sudo fdisk /dev/loop0
+    按 n 创建新分区。
+    按 w 保存并退出。
+    格式化分区（例如使用 ext4 文件系统）：
+    sudo mkfs.ext4 /dev/loop0p1
+
+    4.挂载硬盘
+    挂载分区：
+    sudo mount /dev/loop0p1 /mnt
+
+    5.卸载和清理
+    卸载分区(如果有挂载)：
+    sudo umount /mnt/mydisk
+
+    删除回环设备：
+    sudo losetup -d /dev/loop0
+
 }
