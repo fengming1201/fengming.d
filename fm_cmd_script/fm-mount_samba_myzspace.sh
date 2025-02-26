@@ -43,15 +43,23 @@ function func_mount_to_myzspace
 	local username="13534211201"
 	local password="Fengming1201"
 
-	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+	if [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		echo "parameter wrong!"
 		echo "$scriptname  IP"
 		echo "e.g. $scriptname  192.168.254.100"
 		return 1
 	fi
+
     #check ip
-    ip=$1
+    if [ $# -lt 1 ];then
+        #get zspacet1
+        local remote_ip=$(ssh MyZSpaceT2 "hostname -I")
+        ip=$(echo ${remote_ip} | awk '{print $1}')
+        echo "remote_ip=${ip}"
+    else
+        ip=$1
+    fi
     COMMOND_FUNC_check_ip -m 1 ${ip}
     if [ $? -ne 0 ];then echo "${ip} is not a valid IP address.";return 2;fi
 
@@ -67,7 +75,7 @@ function func_mount_to_myzspace
         fi
     fi
     if [ ! -d ${mount_dir2} ];then
-        read -p "permit mkdir ${mount_dir1}/ ?[Y/n]"  opt
+        read -p "permit mkdir ${mount_dir2}/ ?[Y/n]"  opt
         if [ "x${opt}" = x ];then opt=Y;fi
         if [ "x${opt}" = "xy" ] || [ "x${opt}" = "xY" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ];then
             ${maybeSUDO} mkdir ${mount_dir2}
