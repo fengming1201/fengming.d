@@ -186,6 +186,17 @@ function func_list_item
     return 0
 }
 
+function func_list_item_sort
+{
+    if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
+    #list all
+    jq -r '.info[].name' ${target_file_name}
+    if [ ${debug} = true ];then
+        echo "EXEC: jq -r '.info[].name' ${target_file_name}"
+    fi
+    return 0
+}
+
 ##Parameter Counts      : 0
 # Parameter Requirements: none
 # Example:
@@ -325,7 +336,7 @@ function usage
     echo "opt:"
     echo ""
     echo "  -h | --help                                       #帮助"
-    echo "  --test                                            #不执行动作"
+    echo "  -t | --test                                       #不执行动作"
     echo "  -d | --debug                                      #打开调试"
     echo "  -l | --list   [item_name]                         #列出收藏[个别 / 所有]项目"
     echo "  -s | --sort                                       #简短输出"
@@ -337,10 +348,10 @@ function usage
     echo "       -D | --describe  \"describe\""
     echo "       -U | --url \"url\""
     echo "  --delete  \"item_name\" | -N  item_name                         #删除收藏项目"
-    echo "  --pull                                [-t|--time  timeout]    #逐个下拉更新已收藏的项目,time 为超时时间秒,缺省60s"
-    echo "  --pull    \"item_name\" | -N item_name  [-t|--time  timeout]    #下拉某个已收藏的项目,time 为超时时间秒,缺省60s"
-    echo "  --clone                               [-t|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省60s"
-    echo "  --clone   \"item_name\" | -N item_name  [-t|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省60s"
+    echo "  --pull                                [-T|--time  timeout]    #逐个下拉更新已收藏的项目,time 为超时时间秒,缺省60s"
+    echo "  --pull    \"item_name\" | -N item_name  [-T|--time  timeout]    #下拉某个已收藏的项目,time 为超时时间秒,缺省60s"
+    echo "  --clone                               [-T|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省60s"
+    echo "  --clone   \"item_name\" | -N item_name  [-T|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省60s"
     echo "--func   func_name  args ...                                     # 单独调用函数"
 }
 
@@ -359,7 +370,6 @@ function func_schedule
     local timeoute=60 #60s
     local debug=false
     local test=false
-    local sort=false
     local func_test=false
     local remaining_args=()
     while [[ $# -gt 0 ]]
@@ -367,8 +377,8 @@ function func_schedule
         case "$1" in
             -h|--help) usage; return 0 ;;
             -d|--debug) debug=true; shift ;; #不带参数,移动1
-            -s|--sort) sort=true; shift ;; #不带参数,移动1
-            --test) test=true; shift ;; #不带参数,移动1
+            -t|--test) test=true; shift ;; #不带参数,移动1
+            -s|--sort) if [[ -z "$cmd" ]]; then cmd=sort;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -l|--list) if [[ -z "$cmd" ]]; then cmd=list;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -c|--check) if [[ -z "$cmd" ]]; then cmd=check;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -t|--time)
@@ -397,14 +407,15 @@ function func_schedule
                     case ${1:i:1} in
                         h) usage; return 0 ;;
                         d) debug=true ;;
-                        s) sort=true ;;
+                        t) test=true ;;
                         l) if [[ -z "$cmd" ]]; then cmd=list;else echo "ERROR: multiple commands";return 2;fi ;;
+                        s) if [[ -z "$cmd" ]]; then cmd=sort;else echo "ERROR: multiple commands";return 2;fi ;;
                         c) if [[ -z "$cmd" ]]; then cmd=check;else echo "ERROR: multiple commands";return 2;fi ;;
-                        t) timeout="$2"; shift;break ;; # 当 D 是合并选项的一部分时，它应该停止解析剩余的字符
-                        N) name="$2"; shift;break ;; # 当 D 是合并选项的一部分时，它应该停止解析剩余的字符
-                        L) language="$2"; shift;break ;; # 当 D 是合并选项的一部分时，它应该停止解析剩余的字符
+                        T) timeout="$2"; shift;break ;; # 当 T 是合并选项的一部分时，它应该停止解析剩余的字符
+                        N) name="$2"; shift;break ;; # 当 N 是合并选项的一部分时，它应该停止解析剩余的字符
+                        L) language="$2"; shift;break ;; # 当 L 是合并选项的一部分时，它应该停止解析剩余的字符
                         D) describe="$2"; shift;break ;; # 当 D 是合并选项的一部分时，它应该停止解析剩余的字符
-                        U) url="$2"; shift;break ;; # 当 D 是合并选项的一部分时，它应该停止解析剩余的字符
+                        U) url="$2"; shift;break ;; # 当 U 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -435,6 +446,7 @@ function func_schedule
     if [ ${debug} = true ];then
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:test=${test}"
+        echo "DEBUG:sort=${sort}"
         echo "DEBUG:cmd=${cmd}"
         echo "DEBUG:name=${name}"
         echo "DEBUG:language=${language}"
@@ -463,6 +475,11 @@ function func_schedule
         else
             func_list_item "${remaining_args[@]}"
         fi
+    fi
+
+    if [ "${cmd}" = "sort" ];then
+        echo -e "\e[31msort ....\e[0m"
+        func_list_item_sort
     fi
 
     if [ "${cmd}" = "check" ];then

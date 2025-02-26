@@ -1,223 +1,227 @@
 {
-    "app_array":[
-        {
-            "app_name":"vim",
-            "work_group":"SYSTEM_ENV",
-            "tool_level":1,
-            "install_methor":"app install vim",
-            "describe":"vim 编辑器"
-        },
-        {
-            "app_name":"tree",
-            "tool_level":1,
-            "install_methor":"app install tree",
-            "describe":""
-        },
-        {
-            "app_name":"bd",
-            "tool_level":1,
-            "install_methor":"apt install bd",
-            "describe":"快捷返回上层目录"
-        },
-        {
-            "app_name":"qrencode",
-            "tool_level":1,
-            "install_methor":"apt install qrencode",
-            "describe":"生成二维码工具，并且可以输出保存图片"
-        }, 
-        {
-            "app_name":"jq",
-            "tool_level":1,
-            "install_methor":"apt install jq",
-            "describe":"Command-line JSON processor."
-        },
-        {
-            "app_name":"indent",
-            "install_methor":"apt install indent",
-            "describe":"changes the appearance of a C program by inserting or deleting whitespace."
-        },
-        {
-            "app_name":"manpages-zh",
-            "tool_level":2,
-            "install_methor":"apt install manpages-zh",
-            "describe":"Chinese manual pages."
-        }, 
-        {
-            "app_name":"vimdiff",
-            "tool_level":1,
-            "install_methor":"apt install vimdiff",
-            "describe":"edit two, three or four versions of a file with Vim and show differences."
-        }, 
-        {
-            "app_name":"strings",
-            "tool_level":1,
-            "install_methor":"apt install strings",
-            "describe":"print the strings of printable characters in files."
-        }, 
-        {
-            "app_name":"reptyr",
-            "tool_level":2,
-            "install_methor":"apt install reptyr",
-            "describe":"Tool for moving running programs between ptys."
-        }, 
-        {
-            "app_name":"screen",
-            "tool_level":1,
-            "install_methor":"apt install screen",
-            "describe":"screen manager with VT100/ANSI terminal emulation"
-        }, 
-        {
-            "app_name":"tmux",
-            "tool_level":1,
-            "install_methor":"apt install tmux",
-            "describe":"screen manager with VT100/ANSI terminal emulation"
-        },         
-        {
-            "app_name":"flashbench",
-            "tool_level":"BASE",
-            "install_methor":"apt install flashbench",
-            "describe":"identify flash storage properties,FlashBench能够全方位的测试U盘和SD卡等使用Flash作为介质的移动存储设备的读写速度。"
-        },
-        {
-            "app_name":"shred",
-            "tool_level":1,
-            "install_methor":"apt install  coreutils",
-            "describe":"shred可覆盖文件以隐藏内容，另外还可以彻底删除文件。"
-        },
-        {
-            "app_name":"dig",
-            "tool_level":1,
-            "install_methor":"",
-            "describe":"dig命令它是一个功能强大且灵活的命令行工具，用于查询 DNS 名称服务器"
-        },
-        {
-            "app_name":"host",
-            "tool_level":1,
-            "install_methor":"",
-            "describe":"它是用于执行 DNS 查询的简单程序。"
-        },
-        {
-            "app_name":"pdftk",
-            "tool_level":2,
-            "install_methor":"apt install  pdftk",
-            "describe":"transitional package for pdftk, a tool for manipulating PDF documents"
-        },
-        {
-            "app_name":"pdfcrack",
-            "tool_level":2,
-            "install_methor":"apt install  pdfcrack",
-            "describe":"PDF files password cracker,pdfcrack是Linux下一个PDF暴力破解密工具。"
-        },
-        {
-            "app_name":"pdfgrep",
-            "tool_level":2,
-            "install_methor":"apt install pdfgrep",
-            "describe":"search in pdf files for strings matching a regular expression,pdfgrep命令用于过滤对一个 PDF 或多个 PDF 中特定字符模式的搜索。"
-        },        
-        {
-            "app_name":"crunch",
-            "tool_level":2,
-            "install_methor":"apt install crunch",
-            "describe":"tool for creating wordlist,crunch是密码字典生成器，可以根据指定的字符来生成组合密码字典。"
-        },
-        {
-            "app_name":"cmake",
-            "tool_level":3,
-            "install_methor":"apt install cmake",
-            "describe":""
-        },
-        {
-            "app_name":"cryptsetup",
-            "tool_level":4,
-            "install_methor":"apt install cryptsetup",
-            "describe":"transitional dummy package for cryptsetup-{run,initramfs},"
-        },
-        {
-            "app_name":"lvm2",
-            "tool_level":4,
-            "install_methor":"apt install lvm2",
-            "describe":"Linux Logical Volume Manager,"
-        },
-        {
-            "app_name":"mdadm",
-            "tool_level":4,
-            "install_methor":"apt install  mdadm",
-            "describe":"mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)"
-        },
-        {
-            "app_name":"shellcheck",
-            "tool_level":1,
-            "install_methor":"apt install shellcheck",
-            "describe":"用于shell脚本的语法检查工具。"
-        },
-        {
-            "app_name":"cppcheck",
-            "tool_level":5,
-            "install_methor":"apt install  cppcheck",
-            "describe":"tool for static C/C++ code analysis (CLI)，cppcheck工具是一个C/C++代码缺陷静态检查工具。它不仅可以检查代码中的语法错误，还可以检查出编译器检查不出来的缺陷，从而辅助提升代码质量。"
-        },
-        {
-            "app_name":"astyle",
-            "tool_level":5,
-            "install_methor":"apt install astyle",
-            "describe":"Source code indenter for C, C++, Objective-C, C#, and Java."
-        },
-        {
-            "app_name":"foremost",
-            "tool_level":0,
-            "install_methor":"apt install foremost",
-            "describe":"Recover files using their headers, footers, and data structures：foremost是一款根据文件头，尾和内部结构来尝试从镜像文件（或者磁盘）中恢复文件的工具。"
-        },
-        {
-            "app_name":"sc",
-            "tool_level":0,
-            "install_methor":"",
-            "describe":"Text-based spreadsheet with VI-like keybindings：命令行里的电子表格。"
-        },
-        {
-            "app_name":"tesseract-ocr",
-            "tool_level":0,
-            "install_methor":"apt install tesseract-ocr",
-            "describe":"Tesseract command line OCR tool"
-        },
-        {
-            "app_name":"wkhtmltopdf",
-            "tool_level":1,
-            "install_methor":"apt install  wkhtmltopdf",
-            "describe":"Command line utilities to convert html to pdf or image using WebKit:https://wkhtmltopdf.org/index.html"
-        },
-        {
-            "app_name":"nmap",
-            "tool_level":"",
-            "install_methor":"",
-            "describe":"The Network Mapper.nmap命令（网络映射器）是一个用于网络发现的免费开源工具。"
-        },
-        {
-            "app_name":"xclip",
-            "tool_level":"",
-            "install_methor":"",
-            "describe":""
-        },
-        {
-            "app_name":"xsel",
-            "tool_level":"",
-            "install_methor":"",
-            "describe":""
-        },
-        {
-            "app_name":"gnuplot",
-            "tool_level":"2",
-            "install_methor":"apt install gnuplot",
-            "describe":"Gnuplot 是一个流行的绘图工具，可以在Linux系统中使用。它支持多种绘图类型，包括坐标曲线图。您可以通过在终端中输入Gnuplot命令来生成和定制您的图表。Gnuplot并不依赖图形界面。虽然 Gnuplot可以生成图形输出并在图形界面中显示图表，但它也可以在纯文本终端中工作，生成图形文件（如 PNG、SVG、PDF 等）或直接在终端中以文本形式显示图表。",
-            "describe_ex":"在没有图形界面的情况下，您仍然可以使用 Gnuplot来绘制图表，只需在命令行中输入 Gnuplot 命令即可。您可以使用命令行参数和选项来控制图表的样式、输出格式等。这种灵活性使得 Gnuplot成为一个强大的工具，不仅可以在图形界面下使用，也可以在纯文本终端环境中使用，非常适合在服务器或远程计算机上生成图表。"
-        },
-        {
-            "app_name":"hd-idle",
-            "tool_level":"",
-            "install_methor":"apt install hd-idle",
-            "describe":"hd-idle 是一个轻量级的硬盘休眠守护进程，专门用于在 Linux 系统中管理硬盘的空闲时间并触发硬盘休眠（spin-down）。它适用于机械硬盘（HDD），特别是在需要节能或减少硬盘磨损的场景下。与 hdparm 不同，hd-idle 是一个守护进程，持续运行并监控硬盘的活动状态，而 hdparm 主要用于一次性设置硬盘参数。"
-        }
-    ]
-
+  "app_array": [
+    {
+      "app": "vim",
+      "level": 1,
+      "install": "app install vim",
+      "describe": "vim 编辑器"
+    },
+    {
+      "app": "tree",
+      "level": 1,
+      "install": "app install tree",
+      "describe": ""
+    },
+    {
+      "app": "bd",
+      "level": 1,
+      "install": "apt install bd",
+      "describe": "快捷返回上层目录"
+    },
+    {
+      "app": "qrencode",
+      "level": 1,
+      "install": "apt install qrencode",
+      "describe": "生成二维码工具，并且可以输出保存图片"
+    },
+    {
+      "app": "jq",
+      "level": 1,
+      "install": "apt install jq",
+      "describe": "Command-line JSON processor."
+    },
+    {
+      "app": "indent",
+      "level": 1,
+      "install": "apt install indent",
+      "describe": "changes the appearance of a C program by inserting or deleting whitespace."
+    },
+    {
+      "app": "manpages-zh",
+      "level": 2,
+      "install": "apt install manpages-zh",
+      "describe": "Chinese manual pages."
+    },
+    {
+      "app": "vimdiff",
+      "level": 1,
+      "install": "apt install vimdiff",
+      "describe": "edit two, three or four versions of a file with Vim and show differences."
+    },
+    {
+      "app": "strings",
+      "level": 1,
+      "install": "apt install strings",
+      "describe": "print the strings of printable characters in files."
+    },
+    {
+      "app": "reptyr",
+      "level": 2,
+      "install": "apt install reptyr",
+      "describe": "Tool for moving running programs between ptys."
+    },
+    {
+      "app": "screen",
+      "level": 1,
+      "install": "apt install screen",
+      "describe": "screen manager with VT100/ANSI terminal emulation"
+    },
+    {
+      "app": "tmux",
+      "level": 1,
+      "install": "apt install tmux",
+      "describe": "screen manager with VT100/ANSI terminal emulation"
+    },
+    {
+      "app": "flashbench",
+      "level": "BASE",
+      "install": "apt install flashbench",
+      "describe": "identify flash storage properties,FlashBench能够全方位的测试U盘和SD卡等使用Flash作为介质的移动存储设备的读写速度。"
+    },
+    {
+      "app": "shred",
+      "level": 1,
+      "install": "apt install  coreutils",
+      "describe": "shred可覆盖文件以隐藏内容，另外还可以彻底删除文件。"
+    },
+    {
+      "app": "dig",
+      "level": 1,
+      "install": "",
+      "describe": "dig命令它是一个功能强大且灵活的命令行工具，用于查询 DNS 名称服务器"
+    },
+    {
+      "app": "host",
+      "level": 1,
+      "install": "",
+      "describe": "它是用于执行 DNS 查询的简单程序。"
+    },
+    {
+      "app": "pdftk",
+      "level": 2,
+      "install": "apt install  pdftk",
+      "describe": "transitional package for pdftk, a tool for manipulating PDF documents"
+    },
+    {
+      "app": "pdfcrack",
+      "level": 2,
+      "install": "apt install  pdfcrack",
+      "describe": "PDF files password cracker,pdfcrack是Linux下一个PDF暴力破解密工具。"
+    },
+    {
+      "app": "pdfgrep",
+      "level": 2,
+      "install": "apt install pdfgrep",
+      "describe": "search in pdf files for strings matching a regular expression,pdfgrep命令用于过滤对一个 PDF 或多个 PDF 中特定字符模式的搜索。"
+    },
+    {
+      "app": "crunch",
+      "level": 2,
+      "install": "apt install crunch",
+      "describe": "tool for creating wordlist,crunch是密码字典生成器，可以根据指定的字符来生成组合密码字典。"
+    },
+    {
+      "app": "cmake",
+      "level": 3,
+      "install": "apt install cmake",
+      "describe": ""
+    },
+    {
+      "app": "cryptsetup",
+      "level": 4,
+      "install": "apt install cryptsetup",
+      "describe": "transitional dummy package for cryptsetup-{run,initramfs},"
+    },
+    {
+      "app": "lvm2",
+      "level": 4,
+      "install": "apt install lvm2",
+      "describe": "Linux Logical Volume Manager,"
+    },
+    {
+      "app": "mdadm",
+      "level": 4,
+      "install": "apt install  mdadm",
+      "describe": "mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)"
+    },
+    {
+      "app": "shellcheck",
+      "level": 1,
+      "install": "apt install shellcheck",
+      "describe": "用于shell脚本的语法检查工具。"
+    },
+    {
+      "app": "cppcheck",
+      "level": 5,
+      "install": "apt install  cppcheck",
+      "describe": "tool for static C/C++ code analysis (CLI)，cppcheck工具是一个C/C++代码缺陷静态检查工具。它不仅可以检查代码中的语法错误，还可以检查出编译器检查不出来的缺陷，从而辅助提升代码质量。"
+    },
+    {
+      "app": "astyle",
+      "level": 5,
+      "install": "apt install astyle",
+      "describe": "Source code indenter for C, C++, Objective-C, C#, and Java."
+    },
+    {
+      "app": "foremost",
+      "level": 0,
+      "install": "apt install foremost",
+      "describe": "Recover files using their headers, footers, and data structures：foremost是一款根据文件头，尾和内部结构来尝试从镜像文件（或者磁盘）中恢复文件的工具。"
+    },
+    {
+      "app": "sc",
+      "level": 0,
+      "install": "",
+      "describe": "Text-based spreadsheet with VI-like keybindings：命令行里的电子表格。"
+    },
+    {
+      "app": "tesseract-ocr",
+      "level": 0,
+      "install": "apt install tesseract-ocr",
+      "describe": "Tesseract command line OCR tool"
+    },
+    {
+      "app": "wkhtmltopdf",
+      "level": 1,
+      "install": "apt install  wkhtmltopdf",
+      "describe": "Command line utilities to convert html to pdf or image using WebKit:https://wkhtmltopdf.org/index.html"
+    },
+    {
+      "app": "nmap",
+      "level": 1,
+      "install": "",
+      "describe": "The Network Mapper.nmap命令（网络映射器）是一个用于网络发现的免费开源工具。"
+    },
+    {
+      "app": "xclip",
+      "level": 1,
+      "install": "",
+      "describe": ""
+    },
+    {
+      "app": "xsel",
+      "level": 1,
+      "install": "",
+      "describe": ""
+    },
+    {
+      "app": "gnuplot",
+      "level": 2,
+      "install": "apt install gnuplot",
+      "describe": "Gnuplot 是一个流行的绘图工具，可以在Linux系统中使用。它支持多种绘图类型，包括坐标曲线图。您可以通过在终端中输入Gnuplot命令来生成和定制您的图表。Gnuplot并不依赖图形界面。虽然 Gnuplot可以生成图形输出并在图形界面中显示图表，但它也可以在纯文本终端中工作，生成图形文件（如 PNG、SVG、PDF 等）或直接在终端中以文本形式显示图表。",
+      "describe_ex": "在没有图形界面的情况下，您仍然可以使用 Gnuplot来绘制图表，只需在命令行中输入 Gnuplot 命令即可。您可以使用命令行参数和选项来控制图表的样式、输出格式等。这种灵活性使得 Gnuplot成为一个强大的工具，不仅可以在图形界面下使用，也可以在纯文本终端环境中使用，非常适合在服务器或远程计算机上生成图表。"
+    },
+    {
+      "app": "hd-idle",
+      "level": 1,
+      "install": "apt install hd-idle",
+      "describe": "hd-idle 是一个轻量级的硬盘休眠守护进程，专门用于在 Linux 系统中管理硬盘的空闲时间并触发硬盘休眠（spin-down）。它适用于机械硬盘（HDD），特别是在需要节能或减少硬盘磨损的场景下。与 hdparm 不同，hd-idle 是一个守护进程，持续运行并监控硬盘的活动状态，而 hdparm 主要用于一次性设置硬盘参数。"
+    },
+    {
+      "app": "firejail",
+      "level": 1,
+      "install": "apt install firejail",
+      "describe": "Firejail 是一个开源的 Linux 安全沙箱工具，用于隔离和限制应用程序的运行环境，从而提高系统的安全性。它通过使用 Linux 内核的安全功能（如 namespaces、seccomp、capabilities 和 AppArmor/SELinux**）来创建一个受限的沙箱环境，防止应用程序对主机系统造成潜在的安全威胁。"
+    }
+  ]
 }
-

@@ -184,7 +184,6 @@ function func_p2p_tool_croc
         #echo "DEBUG:realdo=${realdo}"
         echo "DEBUG:cmd=${cmd}"
         echo "DEBUG:code=${code}"
-        echo "DEBUG:out=${outdir}"
         if [ ${test} = true ];then
             echo "DEBUG:glabole_opt[0]=${glabole_opt[0]}"
             echo "DEBUG:glabole_opt[1]=${glabole_opt[1]}"
