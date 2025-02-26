@@ -1,87 +1,274 @@
 #!/bin/bash
+
 scriptfile=$0
 scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
-if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
-    echo "location:${scriptfile}"
+common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
+
+if [ -f ${common_share_function} ] && [ "include" = "enable" ];then
+    source ${common_share_function}
+fi
+#if unnecessary, please do not modify this function
+
+##Parameter Counts      : 0
+# Parameter Requirements: none
+# Example:
+##
+function func_location
+{
+    if [ -L ${scriptfile} ];then
+        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
+    else
+        echo "location:${scriptfile}"
+    fi
+    return 0
+}
+
+##Parameter Counts      : >=1
+# Parameter Requirements: func_name  args ...
+# Example: usage
+##
+function func_debug_function
+{
+    local debug=false
+    local func_test=false
+    local remaining_args=()
+    while [[ $# -gt 0 ]];do
+        case "$1" in
+            --debug) debug=true; shift ;; #不带参数,移动1
+            --func) func_test=true; shift ;; #不带参数,移动1
+            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    if [ ${func_test} = true ];then
+        if [ ${#remaining_args[@]} -lt 1 ];then grep -w "^function"  ${scriptfile};return 1;fi
+        local func_list=($(grep -w "^function"  ${scriptfile} | awk '{print$2}'))
+        local found_it=false
+        for func in ${func_list[@]};do
+            if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi
+        done
+        if [ ${found_it} = false ];then
+            echo "ERROR:${remaining_args[0]} not at this scriptfile"
+            echo "Possible Function Name:{ ${func_list[@]} }"
+            return 2
+        fi
+        echo -e "\e[31mcall func call....\e[0m"
+        ${remaining_args[0]} "${remaining_args[@]:1}"
+        if [ ${debug} = true ];then echo "DEBUG:${remaining_args[0]} ${remaining_args[@]:1}";fi
+        return 3
+    fi
+    return 0
+}
+if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
+    echo ""
+    echo " [info | -info | --info]                           #优先级1: 显示摘要"
+    echo " [show | -show | --show]                           #优先级2: 打印本脚本文件"
+    echo " [--debug ||&& --func [function_name  args ...] ]  #优先级3: 列出所有子函数或调用子函数"
+    echo ""
     echo "abstract:"
+    echo ""
+    func_location
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
-    echo "location:${scriptfile}"
     cat ${scriptfile}
+    echo ""
+    func_location
     exit 0
 fi
-if [ $(id -u) -ne 0 ];then
+if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
     maybeSUDO=sudo
 fi
-function func_video_player
+#start here add your code,you need to implement the following function.
+
+##Parameter Counts      : 0
+# Parameter Requirements: none
+# Example:
+##
+function usage
 {
-	local app=mpv
-	local default_opt=
-
-	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
-	then
-		echo ""
-		echo "$scriptname  video file list or  rtmp_url #参数支持三种模式"
-		echo "$scriptname  a.mp4  b.mp4 ..." 
-		echo "$scriptname  rtmp://IP:PORT/live/movie123"
-		echo "$scriptname  player_list.txt"  
-		echo "  cat player_list.txt"
-		echo "    /pathto/video1.mp4"
-		echo "    ./pathto/video2.mp4"
-		echo "    ...."
-		echo ""
-		return 1
-	fi
-	#which ${app} > /dev/null
-	#if [ $? -ne 0 ];then echo ¨ERROR:${funcname},${app} not exist!¨;return 1;fi;
-	
-	if [ $# -eq 1 ] && [ -f $1 ] && [ "x$(file "$1" | grep -w "text")" != "x" ]
-	then
-		# 使用 set 命令将文件内容作为参数列表
-		set -- $(cat $1)
-	fi
-
-	local play_list=()
-	for file in "$@"
-	do
-		if [ -f "${file}"  ] || [ "x$(echo "${file}" | grep -w "rtmp:")" != "x" ]
-		then 
-			play_list+=("${file}")
-		else
-			echo "file:${file} not exist!"
-		fi
-	done
-	if [ ${#play_list[@]} -eq 0 ];then echo "play_list is empty!";return 2;fi
-	
-	if [ x"$SSH_CLIENT" = x ]
-	then
-		for vfile in "${play_list[@]}"
-		do
-			echo "${app} ${default_opt} ${vfile}"
-			${app} ${default_opt} "${vfile}"
-		done
-	else
-		local opt="Y"
-		read -p "Are you sure display to remote screen? [Y/n]"  opt
-		if [ "x${opt}" = "x"  ];then opt="Y";fi
-		if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
-		then
-			for vfile in "${play_list[@]}"
-			do
-				echo "DISPLAY=:0 ${app} ${default_opt} --fs ${vfile}"
-				DISPLAY=:0 ${app} ${default_opt} --fs "${vfile}"
-			done
-		fi
-	fi
-	return 0
+    echo ""
+    echo "$scriptname  [opt]  video_files"
+    echo ""
+    echo "opt:"
+    echo "-P or --path   num                                   # pre path "
+    echo "-p or --playlist   playlist1 playlist2 ...           # play list files"
+    echo "-f or --videofile  a.mp4  b.mp4  cc* ...             # video list files "
+    echo "-u or --rtmpurl    rtmp://IP:PORT/live/movie123 ...  # rtmp_url list"
+    echo ""
+    echo "-W or --which  num  # DISPLAY=:? "
+    echo "-F or --full        # --fs :全屏"
+    echo "-A or --auto        # --autofit :使得视频的最大尺寸适应屏幕"
+    echo "-S or --speed  num  # 1.0, 1.10, 1.21, 1.33, 1.46, 1.61, 1.77"
+    echo ""
+    echo "-h or --help     # help"
+    echo "-d or --debug    # print variable status"
+    echo "-t or --test     # test mode, no modifications"
+    #echo "--realdo        # real execution"
+    #echo "-m or --mode    # videofile | playlist | rtmp_url"
+    echo ""
 }
 
+##Parameter Counts      : 0
+# Parameter Requirements: none
+# Example:
+##
+function func_video_player
+{
+    if [ $# -lt 1 ];then usage; return 1; fi
+    local app=mpv
+    local app_opt=()
+    local debug=false
+    local test=false
+    local realdo=false
+    local mode=none
+    local whichis=0
+    local path=
+
+    local listmode=none
+    local playlist=()
+    local filelist=()
+    local rtmp_url=()
+    local remaining_args=()
+    while [[ $# -gt 0 ]]
+    do
+        case "$1" in
+            -h|--help) usage; return 0 ;;
+            -d|--debug) debug=true; shift ;; #不带参数,移动1
+            -t|--test) test=true; shift ;;
+            -F|--full) app_opt+=("--fs"); shift ;;
+            -A|--auto) app_opt+=("--autofit"); shift ;;
+            --realdo) realdo=true; shift ;;
+            -m|--mode)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                mode="$2"; shift 2 ;; #带参数,移动2
+            -W|--which)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                whichis="$2"; shift 2 ;; #带参数,移动2
+            -P|--path)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                path="$2"; shift 2 ;; #带参数,移动2
+            -S|--speed)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                app_opt+=("--speed=$2"); shift 2 ;; #带参数,移动2
+            -p|--playlist) listmode=playlist; shift ;;
+            -f|--videofile) listmode=filelist; shift ;;
+            -u|--rtmpurl) listmode=rtmp_url; shift ;;
+            -*)
+                # 处理合并的选项,如-dh
+                for (( i=1; i<${#1}; i++ )); do
+                    case ${1:i:1} in
+                        h) usage; return 0 ;;
+                        d) debug=true ;;
+                        t) test=true ;;
+                        F) app_opt+=("--fs") ;;
+                        A) app_opt+=("--autofit") ;;
+                        m) mode="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        W) whichis="$2"; shift;break ;; # 当 W 是合并选项的一部分时，它应该停止解析剩余的字符
+                        P) path="$2"; shift;break ;; # 当 P 是合并选项的一部分时，它应该停止解析剩余的字符
+                        S) app_opt=("--speed=$2"); shift;break ;; # 当 S 是合并选项的一部分时，它应该停止解析剩余的字符
+                        p) listmode=playlist ;;
+                        f) listmode=filelist ;;
+                        u) listmode=rtmp_url ;;
+                        *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
+                    esac
+                done
+                shift ;;
+            *) if [ "$listmode" = "playlist" ];then
+                   playlist+=("$1");
+               elif [ "$listmode" = "filelist" ];then
+                   filelist+=("$1");
+                elif [ "$listmode" = "rtmp_url" ];then
+                   rtmp_url+=("$1");
+                else
+                   remaining_args+=("$1"); 
+                fi
+                shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    #==================== print debug =============================#
+    if [ ${debug} = true ];then
+        echo "DEBUG:debug=${debug}"
+        echo "DEBUG:test=${test}"
+        #echo "DEBUG:realdo=${realdo}"
+        echo "DEBUG:mode=${mode}"
+        echo "DEBUG:which=${whichis}"
+        echo "DEBUG:path=${path}"
+        echo ""
+        echp "DEBUG:app_opt=${app_opt[@]}"
+        echo "DEBUG:playlist=${playlist[@]}"
+        echo "DEBUG:filelist=${filelist[@]}"
+        echo "DEBUG:rtmp_url=${rtmp_url[@]}"
+        echo "DEBUG:remaining_args=${remaining_args[@]}"
+    fi
+    #=================== start your code ==============================#
+    local play_list=()
+    local filecontext=
+    #play list
+    if [ ${#playlist[@]} -gt 0 ];then
+        for list in "$playlist";do
+            if [ -f ${list} ];then
+                filecontext=$(cat ${list})
+                play_list+=$(ls ${filecontext} 2>/dev/null | tr '\n' ' ')
+            fi
+        done
+    fi
+    if [ ${debug} = true ];then
+        echo "==playlist=${play_list[@]}"
+    fi
+    #file list
+    if [ ${#filelist[@]} -gt 0 ];then
+        play_list+=$(ls ${filelist[@]} 2>/dev/null | tr '\n' ' ')
+    fi
+    if [ ${debug} = true ];then
+        echo "==filelist=$(ls ${filelist[@]} 2>/dev/null | tr '\n' ' ')"
+    fi
+    #rtmp_url list
+    if [ ${#rtmp_url[@]} -gt 0 ];then
+        play_list+=${rtmp_url[@]}
+    fi
+    if [ ${debug} = true ];then
+        echo "==rtmp_url=${rtmp_url[@]}"
+    fi
+    # other
+    if [ ${#remaining_args[@]} -gt 0 ];then
+        play_list+=${remaining_args[@]}
+    fi
+    if [ ${debug} = true ];then
+        echo "==other=${remaining_args[@]}"
+    fi
+
+    if [ ${#play_list[@]} -eq 0 ];then echo "play_list is empty!";return 2;fi
+
+    if [ x"$SSH_CLIENT" = x ]
+    then
+        for vfile in ${play_list[@]};do
+            #if [ ! -f ${vfile} ];then echo 
+            echo "${app} ${app_opt[@]} ${vfile}"
+            if [ ${test} = false ];then
+                ${app} ${app_opt[@]} "${vfile}"
+            fi
+        done
+    else
+        local opt="Y"
+        read -p "Are you sure display to remote screen? [Y/n]"  opt
+        if [ "x${opt}" = "x"  ];then opt="Y";fi
+        if [ "x${opt}" = "xy"  ] || [ "x${opt}" = "xY"  ] || [ "x${opt}" = "xyes"  ] || [ "x${opt}" = "xYES"  ]
+        then
+            for vfile in ${play_list[@]};do
+                echo "DISPLAY=:${whichis} ${app} ${app_opt[@]} ${vfile}"
+                if [ ${test} = false ];then
+                    DISPLAY=:${whichis} ${app} ${app_opt[@]} "${vfile}"
+                fi
+            done
+        fi
+    fi
+    return 0
+}
+
+func_debug_function "$@"
+if [ $? -ne 0 ];then exit 0;fi
+
 func_video_player "$@"
-ret=$?
-if [ ${ret} -ne 0 ]
-then 
-    exit 1
-fi
+if [ $? -ne 0 ];then exit 1;fi
 exit 0
