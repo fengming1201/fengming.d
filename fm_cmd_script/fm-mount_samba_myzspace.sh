@@ -100,9 +100,9 @@ function func_list
 {
     echo "call func_list"
     if [ ${debug} = true ];then
-        echo "DEBUG:df -h | grep nvme11-135XXXX1201"
+        echo "DEBUG:df -h | grep 135XXXX1201"
     fi
-    df -h | grep nvme11-135XXXX1201
+    df -h | grep 135XXXX1201
 
     return 0
 }
@@ -154,7 +154,7 @@ function func_mount
 	if [ "x${ip}" = x ];then echo "SMB server IP cannot be empty!";return 1;fi
 
     if [ -d ${mount_dir1} ] || [ ${test} = true ];then
-        if $(mount -l | grep -w ${mount_dir1});then
+        if $(mount -l | grep -w ${mount_dir1}) > /dev/null 2>&1;then
             echo "${mount_dir1} already mounted!!"
         else
             if [ ${test} = true ];then
@@ -165,7 +165,7 @@ function func_mount
         fi
     fi
     if [ -d ${mount_dir2} ] || [ ${test} = true ];then
-        if $(mount -l | grep -w ${mount_dir2});then
+        if $(mount -l | grep -w ${mount_dir2}) > /dev/null 2>&1;then
             echo "${mount_dir2} already mounted!!"
         else    
             if [ ${test} = true ];then
@@ -183,6 +183,7 @@ function func_mount
 
 function func_umount
 {
+    local opt=N
     local mount_point=$(mount -l  | grep 135XXXX1201 | awk '{print$3}' | tr  '\n' ' ')
     if [ "x${mount_point}" = x ];then
         echo "ERROR:umount: no mount point found"
