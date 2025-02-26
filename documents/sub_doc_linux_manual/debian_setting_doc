@@ -135,35 +135,44 @@
     扩展系统镜像的分区大小
     原系统镜像的分区情况：
     #lsblk 
-    NAME            MAJ:MIN  RM   SIZE RO  TYPE  MOUNTPOINTS
-    loop0             7:0    0    32G   0  loop  
-    ├─loop0p1       259:4    0    15G   0  part  
-    ├─loop0p2       259:6    0     1K   0  part  
-    └─loop0p5       259:7    0   975M   0  part
+    NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    sda      8:0    0 476.9G  0 disk
+    ├─sda1   8:1    0   447G  0 part /
+    ├─sda2   8:2    0     1K  0 part 
+    └─sda5   8:5    0  29.9G  0 part [SWAP]
+    sdb      8:16   0 119.2G  0 disk
+    ├─sdb1   8:17   0    15G  0 part
+    ├─sdb2   8:18   0     1K  0 part
+    └─sdb5   8:21   0   975M  0 part
     //要将整个系统分区由原来的16G,扩展到占剩下的空间， 
     步骤1：删除swap 分区 和 删除扩展分区（释放空间）
-    sudo parted /dev/loop0
+    sudo parted /dev/sdb
     (parted) rm 2            # 删除扩展分区2（连带逻辑分区5）
-    (parted) quit
 
     步骤2：扩容主分区1
-    sudo parted /dev/loop0
-    (parted) resizepart 1    # 调整主分区1
-    End? [16.2GB]? 33.4GB    # 预留1GB给新SWAP（例如33.4GB=总容量34.4GB-1GB）
-    (parted) quit
-
+    (parted) resizepart 1     # 调整主分区1
+    End? [16.2GB]? 111.2GB    # 预留16GB给新SWAP（例如111.2GB=总容量128GB-16GB）
+    
     步骤3：重建SWAP分区
-    sudo parted /dev/loop0
-    (parted) mkpart extended 33.4GB 34.4GB  # 创建新扩展分区
-    (parted) mkpart logical 33.4GB 34.4GB   # 创建逻辑分区5作为SWAP
+    (parted) mkpart extended 111.2GB 128GB  # 创建新扩展分区
+    (parted) mkpart logical 111.2GB 128GB   # 创建逻辑分区5作为SWAP
     (parted) set 5 lvm off                  # 确保标记为SWAP
     (parted) quit
-    sudo mkswap /dev/loop0p5                # 格式化SWAP
-    sudo swapon /dev/loop0p5               # 重新启用
+    sudo mkswap /dev/sdb5                # 格式化SWAP
 
     步骤4：扩展文件系统
-    sudo resize2fs /dev/loop0p1             # 调整ext4文件系统大小
+    sudo e2fsck -f /dev/sdb1
+    sudo resize2fs /dev/sdb1             # 调整ext4文件系统大小
+    sudo fsck.ext4 /dev/sdb1
 
+    步骤5：
+    从新系统启动后，更新/etc/fstab, /etc/init 中swap UUID
+    然后启用新swap
+    sudo swapon /dev/sdb5               # 重新启用
+    
+    重新安装 GRUB：
+    sudo grub-install /dev/sda
+    sudo update-grub
 },
 {
     linux下创建“虚拟硬盘”并格式化和挂载
