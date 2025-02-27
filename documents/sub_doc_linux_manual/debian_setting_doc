@@ -166,13 +166,19 @@
     sudo fsck.ext4 /dev/sdb1
 
     步骤5：
-    从新系统启动后，更新/etc/fstab, /etc/init 中swap UUID
-    然后启用新swap
-    sudo swapon /dev/sdb5               # 重新启用
+    挂载/dev/sdb1:
+    sudo mount /dev/sdb1 /mnt
+    更新etc/fstab, etc/initramfs-tools/conf.d/resume 中swap UUID为新的swap分区UUID
     
-    重新安装 GRUB：
+    另外，待系统启动后，重新安装 GRUB：
     sudo grub-install /dev/sda
     sudo update-grub
+
+    OK,到此就扩展区分完成了。
+    注意：
+    如果新系统启动后没有启用新swap，则需手动启用
+    sudo swapon /dev/sdb5             # 重新启用
+    sudo update-initramfs -u          # 更新 initramfs
 },
 {
     linux下创建“虚拟硬盘”并格式化和挂载
