@@ -111,7 +111,9 @@ function func_mount
 {
     local ip=
     local remote_ip=
+    local nvme11=nvme11-135XXXX1201
     local mount_dir1=zspace_nvme1
+    local nvme12=nvme12-135XXXX1201
     local mount_dir2=zspace_nvme2
     local username="13534211201"
     local password="Fengming1201"
@@ -153,13 +155,14 @@ function func_mount
 	#read -p "smb server IP:"  ip
 	if [ "x${ip}" = x ];then echo "SMB server IP cannot be empty!";return 1;fi
 
-    if [ -d ${mount_dir1} ] || [ ${test} = true ];then
+    if [ -d ${mount_dir1} ] || [ ${test} = false ];then
         if $(mount -l | grep -w ${mount_dir1}) > /dev/null 2>&1;then
             echo "${mount_dir1} already mounted!!"
         else
-            if [ ${test} = true ];then
+            if [ ${test} = true ] || [ ${debug} = true ];then
 	            echo "${maybeSUDO} mount -t cifs -o username=${username},password=********,vers=3.1.1,uid=$(id -u),gid=$(id -g) //${ip}/${nvme11}  ${mount_dir1}"
-            else
+            fi
+            if [ ${test} = false ];then
                 ${maybeSUDO}  mount -t cifs -o username=${username},password=${password},vers=3.1.1,uid=$(id -u),gid=$(id -g) //${ip}/${nvme11}  ${mount_dir1}
             fi
         fi
@@ -168,9 +171,10 @@ function func_mount
         if $(mount -l | grep -w ${mount_dir2}) > /dev/null 2>&1;then
             echo "${mount_dir2} already mounted!!"
         else    
-            if [ ${test} = true ];then
+            if [ ${test} = true ] || [ ${debug} = true ];then
                 echo "${maybeSUDO} mount -t cifs -o username=${username},password=********,vers=3.1.1,uid=$(id -u),gid=$(id -g) //${ip}/${nvme12}  ${mount_dir2}"
-            else
+            fi
+            if [ ${test} = false ];then
                 ${maybeSUDO}  mount -t cifs -o username=${username},password=${password},vers=3.1.1,uid=$(id -u),gid=$(id -g) //${ip}/${nvme12}  ${mount_dir2}
             fi
         fi
