@@ -1,11 +1,10 @@
 #!/bin/bash
 
 scriptfile=($0)
-scriptname=$(basename ${scriptfile[0]})
+scriptname=$(basename ${scriptfile})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
-isinclude_common_func=false
-if [ -f ${common_share_function} ] && [ $isinclude_common_func = true ];then
+if [ -f ${common_share_function} ] && [ true = false ];then
     source ${common_share_function}
     scriptfile+=(${common_share_function})
 fi
@@ -17,10 +16,10 @@ fi
 ##
 function func_location
 {
-    if [ -L ${scriptfile[0]} ];then
-        echo "location:${scriptfile[0]}  --> $(readlink ${scriptfile[0]})"
+    if [ -L ${scriptfile} ];then
+        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
     else
-        echo "location:${scriptfile[0]}"
+        echo "location:${scriptfile}"
     fi
     return 0
 }
@@ -47,12 +46,14 @@ function func_debug_function
     done
     if [ ${func_test} = false ];then return 0;fi
     if [ ${debug} = true ];then
+        echo "DEBUG:script_file=${scriptfile[@]}"
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:func_test=${func_test}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     local index=0
-    local func_list=($(grep -Eo 'function [a-zA-Z_][a-zA-Z0-9_]*|^[a-zA-Z_][a-zA-Z0-9_]*\(\)' ${scriptfile[@]} | awk '{print $2}' | sed 's/[()]//g'))
+    local func_list=($(cat  ${scriptfile[@]} | grep -E '(function\s+[a-zA-Z_][a-zA-Z0-9_]*|\w+\s*\(\s*\))' | sed -e 's/#.*//' -e '/^[[:space:]]*$/d' | \
+                        grep -v "=" | sed -e 's/function//' -e 's/{//' -e 's/(//' -e 's/)//' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//'))
     if [ ${#remaining_args[@]} -lt 1 ];then
         echo "函数列表:"
         echo ""
@@ -89,7 +90,7 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
-    cat ${scriptfile[0]}
+    cat ${scriptfile}
     echo ""
     func_location
     exit 0
@@ -188,11 +189,10 @@ function func_create_fm_cmd
 #!/bin/bash
 
 scriptfile=(\$0)
-scriptname=\$(basename \${scriptfile[0]})
+scriptname=\$(basename \${scriptfile})
 fengming_dir=\$FENGMING_DIR
 common_share_function=\${fengming_dir}/fm_cmd_script/common_share_function.sh
-isinclude_common_func=false
-if [ -f \${common_share_function} ] && [ \$isinclude_common_func = true ];then
+if [ -f \${common_share_function} ] && [ true = false ];then
     source \${common_share_function}
     scriptfile+=(\${common_share_function})
 fi
@@ -204,10 +204,10 @@ fi
 ##
 function func_location
 {
-    if [ -L \${scriptfile[0]} ];then
-        echo "location:\${scriptfile[0]}  --> \$(readlink \${scriptfile[0]})"
+    if [ -L \${scriptfile} ];then
+        echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
     else
-        echo "location:\${scriptfile[0]}"
+        echo "location:\${scriptfile}"
     fi
     return 0
 }
@@ -234,12 +234,14 @@ function func_debug_function
     done
     if [ \${func_test} = false ];then return 0;fi
     if [ \${debug} = true ];then
+        echo "DEBUG:script_file=\${scriptfile[@]}"
         echo "DEBUG:debug=\${debug}"
         echo "DEBUG:func_test=\${func_test}"
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
     local index=0
-    local func_list=(\$(grep -Eo 'function [a-zA-Z_][a-zA-Z0-9_]*|^[a-zA-Z_][a-zA-Z0-9_]*\(\)' \${scriptfile[@]} | awk '{print \$2}' | sed 's/[()]//g'))
+    local func_list=(\$(cat  \${scriptfile[@]} | grep -E '(function\s+[a-zA-Z_][a-zA-Z0-9_]*|\w+\s*\(\s*\))' | sed -e 's/#.*//' -e '/^[[:space:]]*$/d' | \
+                        grep -v "=" | sed -e 's/function//' -e 's/{//' -e 's/(//' -e 's/)//' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//'))
     if [ \${#remaining_args[@]} -lt 1 ];then
         echo "函数列表:"
         echo ""
@@ -276,7 +278,7 @@ if [ "\$1" = "info" ] || [ "\$1" = "-info" ] || [ "\$1" = "--info" ];then
     exit 0
 fi
 if [ "\$1" = "show" ] || [ "\$1" = "-show" ] || [ "\$1" = "--show" ];then
-    cat \${scriptfile[0]}
+    cat \${scriptfile}
     echo ""
     func_location
     exit 0
