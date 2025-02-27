@@ -1,12 +1,13 @@
 #!/bin/bash
 
-scriptfile=$0
-scriptname=$(basename ${scriptfile})
+scriptfile=($0)
+scriptname=$(basename ${scriptfile[0]})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
 isinclude_common_func=false
 if [ -f ${common_share_function} ] && [ $isinclude_common_func = true ];then
     source ${common_share_function}
+    scriptfile+=(${common_share_function})
 fi
 #if unnecessary, please do not modify this function
 
@@ -16,10 +17,10 @@ fi
 ##
 function func_location
 {
-    if [ -L ${scriptfile} ];then
-        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
+    if [ -L ${scriptfile[0]} ];then
+        echo "location:${scriptfile[0]}  --> $(readlink ${scriptfile[0]})"
     else
-        echo "location:${scriptfile}"
+        echo "location:${scriptfile[0]}"
     fi
     return 0
 }
@@ -30,7 +31,7 @@ function func_location
 ##
 function func_debug_help
 {
-    echo "--func function_name [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
+    echo "--func {function_name or index} [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
 }
 function func_debug_function
 {
@@ -44,38 +45,38 @@ function func_debug_function
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    if [ $debug = true ];then
+    if [ ${func_test} = false ];then return 0;fi
+    if [ ${debug} = true ];then
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:func_test=${func_test}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
-    if [ ${func_test} = true ];then
-        if [ ${#remaining_args[@]} -lt 1 ];then 
-            echo "函数列表:"
-            if [ $isinclude_common_func = true ];then grep -w "^function"  ${common_share_function};fi
-            grep -w "^function"  ${scriptfile}
-            echo "用法:";echo -n "$scriptname ";func_debug_help;return 1
-        fi
-        local func_list=($(grep -w "^function"  ${scriptfile} ${common_share_function} | awk '{print $2}'))
-        if [ $debug = true ];then echo "DEBUG:func_list=${func_list[@]}";fi
-        local found_it=false
-        for func in ${func_list[@]};do
-            if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi
-        done
-        if [ ${found_it} = false ];then
-            echo "ERROR:${remaining_args[0]} not at this scriptfile"
-            echo "Possible Function Name:{ ${func_list[@]} }"
-            return 2
-        fi
-        echo -e "\e[31mcall func ....\e[0m"
-        if [ ${debug} = true ];then echo "CALL: ${remaining_args[0]}( ${remaining_args[@]:1} )";fi
-        ${remaining_args[0]} "${remaining_args[@]:1}"
-        echo -e "\e[31m.... done\e[0m"
-        return 3
+    local index=0
+    local func_list=($(grep -Eo 'function [a-zA-Z_][a-zA-Z0-9_]*|^[a-zA-Z_][a-zA-Z0-9_]*\(\)' ${scriptfile[@]} | awk '{print $2}' | sed 's/[()]//g'))
+    if [ ${#remaining_args[@]} -lt 1 ];then
+        echo "函数列表:"
+        echo ""
+        for func in ${func_list[@]};do echo "[${index}] ${func}";index=$((index+1));done
+        echo ""
+        echo "用法:";echo -n "$scriptname ";func_debug_help;return 1
     fi
-    return 0
+    if [ ${debug} = true ];then echo "DEBUG:func_list[${#func_list[@]}]=${func_list[@]}";fi
+    local call_func_name=
+    if expr "${remaining_args[0]}" : '-*[0-9]\+$' > /dev/null; then
+        if [ ${debug} = true ];then echo "${remaining_args[0]} is number";fi
+        call_func_name=${func_list[${remaining_args[0]}]}
+    else
+        if [ ${debug} = true ];then echo "${remaining_args[0]} is string";fi
+        for func in ${func_list[@]};do if [ ${func} = "${remaining_args[0]}" ];then call_func_name=${func};fi;done
+    fi
+    if [ ${debug} = true ];then echo "DEBUG:call_func_name=${call_func_name}";fi
+    if [ x${call_func_name} = x ];then echo "ERROR:${remaining_args[0]} not at this scriptfile";echo "Possible Function Name:{ ${func_list[@]} }";return 2;fi
+    echo -e "\e[31mcall func ....\e[0m"
+    if [ ${debug} = true ];then echo "CALL: ${call_func_name}( ${remaining_args[@]:1} ) ";fi
+    ${call_func_name} "${remaining_args[@]:1}"
+    echo -e "\e[31m.... done\e[0m"
+    return 3
 }
-
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo ""
     echo "info | -info | --info                      #优先级1: 显示摘要"
@@ -88,7 +89,7 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
-    cat ${scriptfile}
+    cat ${scriptfile[0]}
     echo ""
     func_location
     exit 0
@@ -147,17 +148,6 @@ function func_create_fm_cmd
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    #=================== function test ==============================#
-    if [ ${func_test} = true ];then
-        if [ ${#remaining_args[@]} -lt 1 ];then grep -w "^function"  ${scriptfile};return 1;fi
-        local func_list=($(grep -w "^function"  ${scriptfile} | awk '{print$2}'))
-        local found_it=false
-        for func in ${func_list[@]};do if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi;done
-        if [ ${found_it} = false ];then echo "ERROR:${remaining_args[0]} not at this scriptfile";return 2;fi
-        echo -e "\e[31mcall func ....\e[0m"
-        ${remaining_args[0]} "${remaining_args[@]:1}"
-        if [ ${debug} = true ];then echo "DEBUG:${remaining_args[0]} "${remaining_args[@]:1}"";fi
-    fi
     #==================== print debug =============================#
     if [ ${debug} = true ];then
         echo "DEBUG:debug=${debug}"
@@ -197,13 +187,14 @@ function func_create_fm_cmd
     cat  <<-EOF >${target_dir}/${file_name}
 #!/bin/bash
 
-scriptfile=\$0
-scriptname=\$(basename \${scriptfile})
+scriptfile=(\$0)
+scriptname=\$(basename \${scriptfile[0]})
 fengming_dir=\$FENGMING_DIR
 common_share_function=\${fengming_dir}/fm_cmd_script/common_share_function.sh
 isinclude_common_func=false
 if [ -f \${common_share_function} ] && [ \$isinclude_common_func = true ];then
     source \${common_share_function}
+    scriptfile+=(\${common_share_function})
 fi
 #if unnecessary, please do not modify this function
 
@@ -213,10 +204,10 @@ fi
 ##
 function func_location
 {
-    if [ -L \${scriptfile} ];then
-        echo "location:\${scriptfile}  --> \$(readlink \${scriptfile})"
+    if [ -L \${scriptfile[0]} ];then
+        echo "location:\${scriptfile[0]}  --> \$(readlink \${scriptfile[0]})"
     else
-        echo "location:\${scriptfile}"
+        echo "location:\${scriptfile[0]}"
     fi
     return 0
 }
@@ -227,7 +218,7 @@ function func_location
 ##
 function func_debug_help
 {
-    echo "--func function_name [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
+    echo "--func {function_name or index} [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
 }
 function func_debug_function
 {
@@ -241,36 +232,37 @@ function func_debug_function
             *) remaining_args+=("\$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    if [ \$debug = true ];then
+    if [ \${func_test} = false ];then return 0;fi
+    if [ \${debug} = true ];then
         echo "DEBUG:debug=\${debug}"
         echo "DEBUG:func_test=\${func_test}"
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
-    if [ \${func_test} = true ];then
-        if [ \${#remaining_args[@]} -lt 1 ];then
-            echo "函数列表:"
-            if [ \$isinclude_common_func = true ];then grep -w "^function"  \${common_share_function};fi
-            grep -w "^function"  \${scriptfile}
-            echo "用法:";echo -n "\$scriptname ";func_debug_help;return 1
-        fi
-        local func_list=(\$(grep -w "^function"  \${scriptfile} \${common_share_function} | awk '{print\$2}'))
-        if [ \$debug = true ];then echo "DEBUG:func_list=\${func_list[@]}";fi
-        local found_it=false
-        for func in \${func_list[@]};do
-            if [ \${func} = "\${remaining_args[0]}" ];then found_it=true;fi
-        done
-        if [ \${found_it} = false ];then
-            echo "ERROR:\${remaining_args[0]} not at this scriptfile"
-            echo "Possible Function Name:{ \${func_list[@]} }"
-            return 2
-        fi
-        echo -e "\e[31mcall func ....\e[0m"
-        if [ \${debug} = true ];then echo "CALL: \${remaining_args[0]}( \${remaining_args[@]:1} )";fi
-        \${remaining_args[0]} "\${remaining_args[@]:1}"
-        echo -e "\e[31m.... done\e[0m"
-        return 3
+    local index=0
+    local func_list=(\$(grep -Eo 'function [a-zA-Z_][a-zA-Z0-9_]*|^[a-zA-Z_][a-zA-Z0-9_]*\(\)' \${scriptfile[@]} | awk '{print \$2}' | sed 's/[()]//g'))
+    if [ \${#remaining_args[@]} -lt 1 ];then
+        echo "函数列表:"
+        echo ""
+        for func in \${func_list[@]};do echo "[\${index}] \${func}";index=\$((index+1));done
+        echo ""
+        echo "用法:";echo -n "\$scriptname ";func_debug_help;return 1
     fi
-    return 0
+    if [ \${debug} = true ];then echo "DEBUG:func_list[\${#func_list[@]}]=\${func_list[@]}";fi
+    local call_func_name=
+    if expr "\${remaining_args[0]}" : '-*[0-9]\+$' > /dev/null; then
+        if [ \${debug} = true ];then echo "\${remaining_args[0]} is number";fi
+        call_func_name=\${func_list[\${remaining_args[0]}]}
+    else
+        if [ \${debug} = true ];then echo "\${remaining_args[0]} is string";fi
+        for func in \${func_list[@]};do if [ \${func} = "\${remaining_args[0]}" ];then call_func_name=\${func};fi;done
+    fi
+    if [ \${debug} = true ];then echo "DEBUG:call_func_name=\${call_func_name}";fi
+    if [ x\${call_func_name} = x ];then echo "ERROR:\${remaining_args[0]} not at this scriptfile";echo "Possible Function Name:{ \${func_list[@]} }";return 2;fi
+    echo -e "\e[31mcall func ....\e[0m"
+    if [ \${debug} = true ];then echo "CALL: \${call_func_name}( \${remaining_args[@]:1} ) ";fi
+    \${call_func_name} "\${remaining_args[@]:1}"
+    echo -e "\e[31m.... done\e[0m"
+    return 3
 }
 if [ "\$1" = "info" ] || [ "\$1" = "-info" ] || [ "\$1" = "--info" ];then
     echo ""
@@ -284,7 +276,7 @@ if [ "\$1" = "info" ] || [ "\$1" = "-info" ] || [ "\$1" = "--info" ];then
     exit 0
 fi
 if [ "\$1" = "show" ] || [ "\$1" = "-show" ] || [ "\$1" = "--show" ];then
-    cat \${scriptfile}
+    cat \${scriptfile[0]}
     echo ""
     func_location
     exit 0
@@ -362,7 +354,7 @@ function func_
         echo "DEBUG:test=\${test}"
         #echo "DEBUG:realdo=\${realdo}"
         echo "DEBUG:mode=\${mode}"
-        echo "DEBUG:cmd_opt=\${cmd_opt[@]} #累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。"
+        echo "DEBUG:cmd_opt=\${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
     #=================== start your code ==============================#

@@ -1,12 +1,13 @@
 #!/bin/bash
 
-scriptfile=$0
-scriptname=$(basename ${scriptfile})
+scriptfile=($0)
+scriptname=$(basename ${scriptfile[0]})
 fengming_dir=$FENGMING_DIR
 common_share_function=${fengming_dir}/fm_cmd_script/common_share_function.sh
-
-if [ -f ${common_share_function} ] && [ "include" = "enable" ];then
+isinclude_common_func=false
+if [ -f ${common_share_function} ] && [ $isinclude_common_func = true ];then
     source ${common_share_function}
+    scriptfile+=(${common_share_function})
 fi
 #if unnecessary, please do not modify this function
 
@@ -16,10 +17,10 @@ fi
 ##
 function func_location
 {
-    if [ -L ${scriptfile} ];then
-        echo "location:${scriptfile}  --> $(readlink ${scriptfile})"
+    if [ -L ${scriptfile[0]} ];then
+        echo "location:${scriptfile[0]}  --> $(readlink ${scriptfile[0]})"
     else
-        echo "location:${scriptfile}"
+        echo "location:${scriptfile[0]}"
     fi
     return 0
 }
@@ -28,6 +29,10 @@ function func_location
 # Parameter Requirements: func_name  args ...
 # Example: usage
 ##
+function func_debug_help
+{
+    echo "--func {function_name or index} [args ...] [--debug]  #优先级3: 列出所有子函数或调用子函数"
+}
 function func_debug_function
 {
     local debug=false
@@ -40,30 +45,43 @@ function func_debug_function
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    if [ ${func_test} = true ];then
-        if [ ${#remaining_args[@]} -lt 1 ];then grep -w "^function"  ${scriptfile};return 1;fi
-        local func_list=($(grep -w "^function"  ${scriptfile} | awk '{print$2}'))
-        local found_it=false
-        for func in ${func_list[@]};do
-            if [ ${func} = "${remaining_args[0]}" ];then found_it=true;fi
-        done
-        if [ ${found_it} = false ];then
-            echo "ERROR:${remaining_args[0]} not at this scriptfile"
-            echo "Possible Function Name:{ ${func_list[@]} }"
-            return 2
-        fi
-        echo -e "\e[31mcall func call....\e[0m"
-        ${remaining_args[0]} "${remaining_args[@]:1}"
-        if [ ${debug} = true ];then echo "DEBUG:${remaining_args[0]} ${remaining_args[@]:1}";fi
-        return 3
+    if [ ${func_test} = false ];then return 0;fi
+    if [ ${debug} = true ];then
+        echo "DEBUG:debug=${debug}"
+        echo "DEBUG:func_test=${func_test}"
+        echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
-    return 0
+    local index=0
+    local func_list=($(grep -Eo 'function [a-zA-Z_][a-zA-Z0-9_]*|^[a-zA-Z_][a-zA-Z0-9_]*\(\)' ${scriptfile[@]} | awk '{print $2}' | sed 's/[()]//g'))
+    if [ ${#remaining_args[@]} -lt 1 ];then
+        echo "函数列表:"
+        echo ""
+        for func in ${func_list[@]};do echo "[${index}] ${func}";index=$((index+1));done
+        echo ""
+        echo "用法:";echo -n "$scriptname ";func_debug_help;return 1
+    fi
+    if [ ${debug} = true ];then echo "DEBUG:func_list[${#func_list[@]}]=${func_list[@]}";fi
+    local call_func_name=
+    if expr "${remaining_args[0]}" : '-*[0-9]\+$' > /dev/null; then
+        if [ ${debug} = true ];then echo "${remaining_args[0]} is number";fi
+        call_func_name=${func_list[${remaining_args[0]}]}
+    else
+        if [ ${debug} = true ];then echo "${remaining_args[0]} is string";fi
+        for func in ${func_list[@]};do if [ ${func} = "${remaining_args[0]}" ];then call_func_name=${func};fi;done
+    fi
+    if [ ${debug} = true ];then echo "DEBUG:call_func_name=${call_func_name}";fi
+    if [ x${call_func_name} = x ];then echo "ERROR:${remaining_args[0]} not at this scriptfile";echo "Possible Function Name:{ ${func_list[@]} }";return 2;fi
+    echo -e "\e[31mcall func ....\e[0m"
+    if [ ${debug} = true ];then echo "CALL: ${call_func_name}( ${remaining_args[@]:1} ) ";fi
+    ${call_func_name} "${remaining_args[@]:1}"
+    echo -e "\e[31m.... done\e[0m"
+    return 3
 }
 if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     echo ""
-    echo " [info | -info | --info]                           #优先级1: 显示摘要"
-    echo " [show | -show | --show]                           #优先级2: 打印本脚本文件"
-    echo " [--debug ||&& --func [function_name  args ...] ]  #优先级3: 列出所有子函数或调用子函数"
+    echo "info | -info | --info                      #优先级1: 显示摘要"
+    echo "show | -show | --show                      #优先级2: 打印本脚本文件"
+    func_debug_help
     echo ""
     echo "abstract:"
     echo ""
@@ -71,7 +89,7 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ] || [ "$1" = "--info" ];then
     exit 0
 fi
 if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
-    cat ${scriptfile}
+    cat ${scriptfile[0]}
     echo ""
     func_location
     exit 0
@@ -124,7 +142,7 @@ function func_video_player
     local mode=none
     local whichis=0
     local path=
-
+    local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local listmode=none
     local playlist=()
     local filelist=()
@@ -151,6 +169,10 @@ function func_video_player
             -S|--speed)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 app_opt+=("--speed=$2"); shift 2 ;; #带参数,移动2
+            -F|--file)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                cmd_opt+=("--file $2"); shift 2 ;; #带参数,移动2
+            -Q|--qr) cmd_opt+=("--qr=true"); shift ;;
             -p|--playlist) listmode=playlist; shift ;;
             -f|--videofile) listmode=filelist; shift ;;
             -u|--rtmpurl) listmode=rtmp_url; shift ;;
@@ -167,6 +189,8 @@ function func_video_player
                         W) whichis="$2"; shift;break ;; # 当 W 是合并选项的一部分时，它应该停止解析剩余的字符
                         P) path="$2"; shift;break ;; # 当 P 是合并选项的一部分时，它应该停止解析剩余的字符
                         S) app_opt=("--speed=$2"); shift;break ;; # 当 S 是合并选项的一部分时，它应该停止解析剩余的字符
+			F) cmd_opt+=("--file $2"); shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        Q) cmd_opt+=("--qr=true") ;;
                         p) listmode=playlist ;;
                         f) listmode=filelist ;;
                         u) listmode=rtmp_url ;;
@@ -188,10 +212,12 @@ function func_video_player
     done
     #==================== print debug =============================#
     if [ ${debug} = true ];then
+        echo "DEBUG:maybeSUDO=${maybeSUDO}"
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:test=${test}"
         #echo "DEBUG:realdo=${realdo}"
         echo "DEBUG:mode=${mode}"
+	echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:which=${whichis}"
         echo "DEBUG:path=${path}"
         echo ""
