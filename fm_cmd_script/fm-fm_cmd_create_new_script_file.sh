@@ -52,8 +52,9 @@ function func_debug_function
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     local index=0
-    local func_list=($(cat  ${scriptfile[@]} | grep -E '(function\s+[a-zA-Z_][a-zA-Z0-9_]*|\w+\s*\(\s*\))' | sed -e 's/#.*//' -e '/^[[:space:]]*$/d' | \
-                        grep -v "=" | sed -e 's/function//' -e 's/{//' -e 's/(//' -e 's/)//' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//'))
+    local func_list=($(cat  ${scriptfile[@]} | grep -E '(function\s+[a-zA-Z_][a-zA-Z0-9_]*|\w+\s*\(\s*\))' | \
+                        sed -e 's/#.*//' -e '/^[[:space:]]*$/d' -e '/=/d' -e 's/function//' -e 's/{//' -e 's/(//' -e 's/)//' | \
+                        sed 's/^[[:space:]]*//; s/[[:space:]]*$//'))
     if [ ${#remaining_args[@]} -lt 1 ];then
         echo "函数列表:"
         echo ""
@@ -240,8 +241,9 @@ function func_debug_function
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
     local index=0
-    local func_list=(\$(cat  \${scriptfile[@]} | grep -E '(function\s+[a-zA-Z_][a-zA-Z0-9_]*|\w+\s*\(\s*\))' | sed -e 's/#.*//' -e '/^[[:space:]]*$/d' | \
-                        grep -v "=" | sed -e 's/function//' -e 's/{//' -e 's/(//' -e 's/)//' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//'))
+    local func_list=(\$(cat  \${scriptfile[@]} | grep -E '(function\s+[a-zA-Z_][a-zA-Z0-9_]*|\w+\s*\(\s*\))' | \\
+                        sed -e 's/#.*//' -e '/^[[:space:]]*$/d' -e '/=/d' -e 's/function//' -e 's/{//' -e 's/(//' -e 's/)//' | \\
+                        sed 's/^[[:space:]]*//; s/[[:space:]]*$//'))
     if [ \${#remaining_args[@]} -lt 1 ];then
         echo "函数列表:"
         echo ""
