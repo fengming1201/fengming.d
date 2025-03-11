@@ -1,0 +1,148 @@
+Install Docker Engine on Debian
+
+要在 Debian 上开始使用 Docker Engine，请确保满足先决条件，然后按照安装步骤进行操作。
+先决条件{
+防火墙限制
+    Warning
+
+    在安装 Docker 之前，请确保考虑以下安全隐患和防火墙不兼容性。
+
+    If you use ufw or firewalld to manage firewall settings, be aware that when you expose container ports using Docker, these ports bypass your firewall rules. For more information, refer to Docker and ufw.
+    Docker is only compatible with iptables-nft and iptables-legacy. Firewall rules created with nft are not supported on a system with Docker installed. Make sure that any firewall rulesets you use are created with iptables or ip6tables, and that you add them to the DOCKER-USER chain, see Packet filtering and firewalls.
+}
+
+操作系统要求{
+
+要安装 Docker Engine，您需要以下 Debian 版本之一的 64 位版本：
+    Debian Bookworm 12 (stable)
+    Debian Bullseye 11 (oldstable)
+Debian 的 Docker Engine 与 x86_64（或 amd64）、armhf、arm64 和 ppc64le（ppc64el）架构兼容。
+}
+
+卸载旧版本{
+
+在安装 Docker Engine 之前，您需要卸载所有有冲突的软件包。
+
+您的 Linux 发行版可能提供了非官方的 Docker 软件包，这些软件包可能会与 Docker 提供的官方软件包冲突。您必须在安装 Docker Engine 正式版之前卸载这些软件包。
+
+要卸载的非官方软件包包括：
+
+    docker.io
+    docker-compose
+    docker-doc
+    podman-docker
+
+Moreover, Docker Engine depends on containerd and runc. Docker Engine bundles these dependencies as one bundle: containerd.io. If you have installed the containerd or runc previously, uninstall them to avoid conflicts with the versions bundled with Docker Engine.
+
+Run the following command to uninstall all conflicting packages:
+
+ for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+apt-get might report that you have none of these packages installed.
+
+Images, containers, volumes, and networks stored in /var/lib/docker/ aren't automatically removed when you uninstall Docker. If you want to start with a clean installation, and prefer to clean up any existing data, read the uninstall Docker Engine section.
+}
+
+安装方法{
+
+您可以根据需要通过不同的方式安装 Docker Engine：
+
+    Docker Engine 与 Linux 版 Docker Desktop 捆绑在一起。这是最简单、最快捷的入门方式。
+
+    从 Docker 的 apt 存储库设置并安装 Docker Engine。
+
+    手动安装并手动管理升级。
+
+    使用便捷脚本。仅推荐用于测试和开发环境。
+
+使用 apt 存储库安装
+
+在新的主机上首次安装 Docker Engine 之前，您需要设置 Docker apt 存储库。之后，您可以从存储库安装和更新 Docker。
+
+1,设置 Docker 的 apt 镜像库。
+
+# 添加Docker的官方GPG密钥：
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# 将镜像库添加到 Apt 源：
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+
+注意
+如果您使用衍生发行版（例如 Kali Linux），则可能需要替换此命令中预期打印版本代号的部分：
+    (. /etc/os-release && echo "$VERSION_CODENAME")
+    将此部分替换为相应 Debian 版本的代号，例如 bookworm。
+
+2,安装 Docker 软件包
+
+要安装最新版本，请运行：
+
+ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+3,通过运行hello-world镜像来验证安装是否成功：
+
+     sudo docker run hello-world
+
+此命令下载测试映像并在容器中运行它。容器运行时，它会打印一条确认消息并退出。
+
+您现在已成功安装并启动 Docker Engine。
+
+    提示
+    尝试以非 root 身份运行时出现错误？
+    docker 用户组存在但不包含任何用户，这就是为什么您需要使用 sudo 来运行 Docker 命令。
+    sudo usermod -aG docker $USER
+}
+
+升级 Docker 引擎{
+要升级 Docker Engine，请按照安装说明的第 2 步进行操作，选择要安装的新版本。
+
+}
+
+从包中安装{
+
+If you can't use Docker's apt repository to install Docker Engine, you can download the deb file for your release and install it manually. You need to download a new file each time you want to upgrade Docker Engine.
+
+    Go to https://download.docker.com/linux/debian/dists/
+
+.
+
+Select your Debian version in the list.
+
+Go to pool/stable/ and select the applicable architecture (amd64, armhf, arm64, or s390x).
+
+Download the following deb files for the Docker Engine, CLI, containerd, and Docker Compose packages:
+
+    containerd.io_<version>_<arch>.deb
+    docker-ce_<version>_<arch>.deb
+    docker-ce-cli_<version>_<arch>.deb
+    docker-buildx-plugin_<version>_<arch>.deb
+    docker-compose-plugin_<version>_<arch>.deb
+
+Install the .deb packages. Update the paths in the following example to where you downloaded the Docker packages.
+
+ sudo dpkg -i ./containerd.io_<version>_<arch>.deb \
+  ./docker-ce_<version>_<arch>.deb \
+  ./docker-ce-cli_<version>_<arch>.deb \
+  ./docker-buildx-plugin_<version>_<arch>.deb \
+  ./docker-compose-plugin_<version>_<arch>.deb
+
+The Docker daemon starts automatically.
+
+Verify that the installation is successful by running the hello-world image:
+
+ sudo service docker start
+
+     sudo docker run hello-world
+
+    This command downloads a test image and runs it in a container. When the container runs, it prints a confirmation message and exits.
+
+You have now successfully installed and started Docker Engine.
+}

@@ -4,30 +4,47 @@ Usage: usermod [options] LOGIN
 Options:
   -b, --badnames                允许坏名字
   -c, --comment COMMENT         GECOS领域的新价值
-  -d, --home HOME_DIR           用户帐户的新主目录
-  -e, --expiredate EXPIRE_DATE  将帐户到期日期设置为EXPIRE_DATE
-  -f, --inactive INACTIVE       将过期后密码非活动设置为非活动
-  -g, --gid GROUP               强制使用 GROUP 作为新的主组
-  -G, --groups GROUPS           新的补充组列表
-  -a, --append                  将用户追加到 -G 选项提到的补充 GROUPS，而不从其他组中删除该用户
+  -d, --home HOME_DIR           更改用户的家目录
+  -e, --expiredate EXPIRE_DATE  设置用户的账户过期日期
+  -f, --inactive INACTIVE       设置用户密码过期后的宽限期（天数）
+  -g, --gid GROUP               更改用户的初始登录组
+  -G, --groups GROUPS           更改用户的附加组
+  -a, --append                  将用户追加到 -G 选项提到的附加组 GROUPS，而不从其他组中删除该用户
   -h, --help                    显示此帮助消息并退出
-  -l, --login NEW_LOGIN         登录名的新值
-  -L, --lock                    锁定用户帐户
-  -m, --move-home               将主目录的内容移动到新位置（仅与 -d 一起使用）
+  -l, --login NEW_LOGIN         更改用户的登录名
+  -L, --lock                    锁定用户账户
+  -m, --move-home               移动用户的家目录到新的位置
   -o, --non-unique              允许使用重复（非唯一）UID
-  -p, --password PASSWORD       使用加密密码作为新密码
+  -p, --password PASSWORD       更改用户的密码（不推荐，建议使用 passwd 命令）
   -R, --root CHROOT_DIR         要进入的目录
   -P, --prefix PREFIX_DIR       前缀目录，其中 /etc/* 文件的位置
-  -s, --shell SHELL             用户帐户的新登录外壳
-  -u, --uid UID                 用户帐户的新 UID
-  -U, --unlock                  解锁用户帐户
+  -s, --shell SHELL             更改用户的登录 shell
+  -u, --uid UID                 更改用户的用户 ID（UID）
+  -U, --unlock                  解锁用户账户
   -v, --add-subuids FIRST-LAST  添加从属 UID 的范围
   -V, --del-subuids FIRST-LAST  删除从属 UID 的范围
   -w, --add-subgids FIRST-LAST  添加从属 GID 的范围
   -W, --del-subgids FIRST-LAST  删除从属 GID 的范围
   -Z, --selinux-user SEUSER     用户帐户的新 SELinux 用户映射
+==============================================================
+注意事项
+备份：在更改用户属性之前，建议备份相关配置文件（如 /etc/passwd 和 /etc/group）。
 
 例如：
-更改用户的所属的组
+1,更改用户的所属的组
 #usermod -g newgroud   username
 
+2,将用户添加到附加组
+#usermod -aG groupname username
+
+3,将用户添加到多个组
+#usermod -aG group1,group2 username
+
+4,将用户从组中删除
+#usermod -G groupname username
+
+5,将用户从多个组中删除
+#usermod -G group1,group2 username
+
+6,将用户添加到docker组,之后可以在不使用 sudo 的情况下运行 Docker 命令了。
+#usermod -aG docker $USER

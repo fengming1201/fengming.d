@@ -48,6 +48,7 @@ function usage
     echo ""
     echo "-s or --standalone            # create standalone file"
     echo "-p or --path  path            # save to other dir,e.g. -p ."
+    echo "--setx or --detail            # open set -x mode"
     echo ""
 }
 
@@ -63,6 +64,7 @@ function func_create_fm_cmd
     local func_test=false
     local mode=normal
     local standalone=false
+    local setx=false
     local remaining_args=()
     while [[ $# -gt 0 ]]
     do
@@ -74,6 +76,8 @@ function func_create_fm_cmd
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 target_dir="$2"; shift 2 ;; #带参数,移动2
             -s|--standalone) standalone=true; shift ;; #不带参数,移动1
+            --setx) setx=true; shift ;; #不带参数,移动1
+            --detail) setx=true; shift ;; #不带参数,移动1
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
@@ -97,6 +101,7 @@ function func_create_fm_cmd
         echo "DEBUG:standalone=${standalone}"
         #echo "DEBUG:realdo=${realdo}"
         #echo "DEBUG:mode=${mode}"
+        echo "DEBUG:setx=${setx}"
         echo "DEBUG:outfile=${outfile}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
@@ -185,11 +190,12 @@ function usage
     echo ""
     echo "\$scriptname  [opt]  files"
     echo "opt:"
-    echo "-h or --help     # help"
-    echo "-d or --debug    # print variable status"
-    echo "-t or --test     # test mode, no modifications"
-    #echo "--realdo        # real execution"
-    echo "-m or --mode     # you define"
+    echo "-h or --help       # help"
+    echo "-d or --debug      # print variable status"
+    echo "-t or --test       # test mode, no modifications"
+    #echo "--realdo          # real execution"
+    echo "-m or --mode       # you define"
+    echo "--setx or --detail # open set -x mode"
     echo ""
 }
 
@@ -204,6 +210,7 @@ function func_
     local test=false
     local realdo=false
     local mode=normal
+    local setx=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
     while [[ \$# -gt 0 ]]
@@ -213,6 +220,8 @@ function func_
             -d|--debug) debug=true; shift ;; #不带参数,移动1
             -t|--test) test=true; shift ;;
             --realdo) realdo=true; shift ;;
+            --setx) setx=true; shift ;; #不带参数,移动1
+            --detail) setx=true; shift ;; #不带参数,移动1
             -m|--mode)
                 if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="\$2"; shift 2 ;; #带参数,移动2
@@ -244,6 +253,7 @@ function func_
         echo "DEBUG:test=\${test}"
         #echo "DEBUG:realdo=\${realdo}"
         echo "DEBUG:mode=\${mode}"
+        echo "DEBUG:setx=\${setx}"
         echo "DEBUG:cmd_opt=\${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi

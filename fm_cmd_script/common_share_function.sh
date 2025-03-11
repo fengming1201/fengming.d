@@ -13,7 +13,10 @@ function func_location
     fi
     return 0
 }
-
+#difine micro string for debug detail
+#use: eval "${open_setx_mode}" or eval "${close_setx_mode}"
+open_setx_mode="if [ \${setx} = true ];then set -x;fi"
+close_setx_mode="if [ \${setx} = true ];then set +x;fi"
 ##Parameter Counts      : >=1
 # Parameter Requirements: func_name  args ...
 # Example: usage
