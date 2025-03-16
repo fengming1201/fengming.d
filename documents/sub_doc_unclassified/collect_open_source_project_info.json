@@ -389,6 +389,36 @@
       "language": "",
       "describe": "",
       "URL": "https://gitee.com/moluo-tech/CodeBrick"
+    },
+    {
+      "name": "mcuboot",
+      "language": "c",
+      "describe": "针对MCU的boot，它是一款适用于 32 位微控制器的安全引导加载程序（软件框架）。而且，这款MCUboot开源、并遵循Apache License 2.0开源协议。",
+      "URL": "https://github.com/mcu-tools/mcuboot"
+    },
+    {
+      "name": "openblt",
+      "language": "C",
+      "describe": "OpenBLT 是一款适用于常见 8 位、16 位、32 位等众多单片机的Bootloader。它支持RS232、CAN、USB、TCP/IP、Modbus RTU等单片机常见通信协议。并附带易于使用的 MicroBoot PC 工具，用于启动和监控固件更新。同时，还支持直接从 SD 卡执行固件更新。",
+      "URL": "https://github.com/feaser/openblt"
+    },
+    {
+      "name": "tiny_bootloader",
+      "language": "C",
+      "describe": "Tiny Bootloader顾名思义，它是一款微小（轻量级）的Bootloader，适合于8位（AVR）、32位单片机等资源有限的单片机，只需要2KB ROM即可。",
+      "URL": "https://github.com/jaz303/tiny_bootloader"
+    },
+    {
+      "name": "wolfBoot",
+      "language": "",
+      "describe": "wolfBoot 是一款开源的、轻量级的安全Bootloader，它是完全独立的应用程序，适用于32位MCU操作系统或裸机项目。",
+      "URL": "https://github.com/wolfSSL/wolfBoot"
+    },
+    {
+      "name": "b_flash",
+      "language": "c",
+      "describe": "一个开源轻量级flash管理器的实现和应用--带磨损均衡和备份,",
+      "URL": "https://gitee.com/zhao-zhangbo/b_flash"
     }
   ]
 }
