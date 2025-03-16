@@ -58,7 +58,6 @@ function usage
 ##
 function func_create_fm_cmd
 {
-
     if [ $# -lt 1 ];then usage; return 1; fi
     local debug=false
     local func_test=false
@@ -106,7 +105,8 @@ function func_create_fm_cmd
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
-    if [ ${#remaining_args[@]} -lt 1 ];then
+    local remaining_argc=${#remaining_args[@]}
+    if [ ${remaining_argc} -lt 1 ];then
         echo "ERROR: platform list is empty!!";usage;return 2
     fi
     if [ ${debug} = true ];then
@@ -116,20 +116,19 @@ function func_create_fm_cmd
     #=================================================#
     local file_name=(${remaining_args[0]})
     if [ "x${file_name}" = "x" ];then echo "ERROR:file_name is empty!!";return 3;fi
-    if [ -e ${target_dir}/${file_name} ];then
+    if [ -f ${target_dir}/${file_name} ];then
         local opt=n
         read -p "file:${file_name} already exist!! overwrite?[y/N]" opt
         if [ "x${opt}" = x ];then opt=N;fi
         if [ "x${opt}" = "xn"  ] || [ "x${opt}" = "xN"  ] || [ "x${opt}" = "xno"  ] || [ "x${opt}" = "xNO"  ];then
             return 0
         fi
-    fi
-    if [ -w ${target_dir} ];then
-        touch ${target_dir}/${file_name}
-        chmod 747 ${target_dir}/${file_name}
+        if [ ! -x ${target_dir}/${file_name} ];then
+            ${maybeSUDO} chmod 755 ${target_dir}/${file_name}
+        fi
     else
-        sudo touch ${target_dir}/${file_name}
-        sudo chmod 747 ${target_dir}/${file_name}
+        ${maybeSUDO} touch ${target_dir}/${file_name}
+        sudo chmod 755 ${target_dir}/${file_name}
     fi
     #common head code
     cat <<-EOF >${target_dir}/${file_name}
@@ -157,6 +156,7 @@ EOF
     fi
     #common code
     cat <<-EOF >>${target_dir}/${file_name}
+#if unnecessary, please do not modify following code
 if [ "\$1" = "info" ] || [ "\$1" = "-info" ] || [ "\$1" = "--info" ];then
     echo ""
     echo "info | -info | --info                                 #优先级1: 显示摘要"
@@ -258,7 +258,8 @@ function func_
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
-    if [ \${#remaining_args[@]} -lt 1 ];then
+    local remaining_argc=\${#remaining_args[@]}
+    if [ \${remaining_argc} -lt 1 ];then
         echo "ERROR: platform list is empty!!";usage;return 2
     fi
     #start your code
@@ -289,7 +290,7 @@ EOF
     
     return 0
 }
-
+#if unnecessary, please do not modify following code
 func_debug_function "$@"
 if [ $? -ne 0 ];then exit 0;fi
 
