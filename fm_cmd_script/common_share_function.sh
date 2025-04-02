@@ -235,6 +235,34 @@ function COMMOND_FUNC_print_hex
     od 
 
 }
-
+#
+#format: COMMOND_FUNC_find_file_with_prefix_or_suffix  find_dir  find_stream  match
+#descript: 查找指定目录下的文件，支持前缀、后缀、包含三种模式
+#find_dir: 查找的目录
+#find_stream: 查找的字符串
+#match: prefix  -- 前缀匹配
+#       suffix  -- 后缀匹配
+#       contain -- 包含匹配
+#return: 0  -- 成功
+#        1  -- 参数错误
+#        2  -- 目录不存在
+#用法：找到文件放入数组中
+#local file_list=($(COMMOND_FUNC_find_file_with_prefix_or_suffix  find_dir  find_stream  match))
+function COMMOND_FUNC_find_file_with_prefix_or_suffix
+{
+    if [ $# -lt 3 ];then return 1; fi
+    local find_dir=$1
+    local find_stream=$2
+    local match=$3
+    if [ ! -d ${find_dir} ];then return 2; fi
+    if [ ${match} = prefix ];then
+        find ${find_dir} -type f -iname "${find_stream}*" -o -type l -iname "${find_stream}*" 2>/dev/null
+    elif [ ${match} = suffix ];then
+        find ${find_dir} -type f -iname "*${find_stream}" -o -type l -iname "*${find_stream}" 2>/dev/null
+    else
+        find ${find_dir} -type f -iname "*${find_stream}*" -o -type l -iname "*${find_stream}*" 2>/dev/null
+    fi
+    return 0
+}
 
 

@@ -1,0 +1,18 @@
+tig 2.5.1 
+
+Usage: tig        [options] [revs] [--] [paths]
+   or: tig log    [options] [revs] [--] [paths]
+   or: tig show   [options] [revs] [--] [paths]
+   or: tig reflog [options] [revs]
+   or: tig blame  [options] [rev] [--] path
+   or: tig grep   [options] [pattern]
+   or: tig refs   [options]
+   or: tig stash
+   or: tig status
+   or: tig <      [git command output]
+
+选项:
+  +<数字>         在第一个视图中选择第<数字>行
+  -v, --version   显示版本并退出
+  -h, --help      显示帮助信息并退出
+  -C<路径>        在指定<路径>中启动

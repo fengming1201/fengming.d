@@ -111,9 +111,9 @@ function func_
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
-    if [ ${#remaining_args[@]} -lt 1 ];then
-        echo "ERROR: platform list is empty!!";usage;return 2
-    fi
+    #if [ ${#remaining_args[@]} -lt 1 ];then
+    #    echo "ERROR: platform list is empty!!";usage;return 2
+    #fi
     #start your code
     #for file in "${remaining_args[@]}"
     #do

@@ -1,0 +1,24 @@
+Usage:
+  ollama [flags]
+  ollama [command]
+
+Available Commands:
+  serve       启动 ollama
+  create      从Modelfile创建模型
+  show        显示模型的信息
+  run         运行模型
+  stop        停止正在运行的模型
+  pull        从仓库中提取模型
+  push        将模型推送到仓库
+  list        列出模型
+  ps          列出正在运行的模型
+  cp          复制模型
+  rm          删除模型
+  help        有关任何命令的帮助
+
+Flags:
+  -h, --help      help for ollama
+  -v, --version   Show version information
+
+使用“ollama [command] --help”获取有关命令的更多信息。
+====================================================================

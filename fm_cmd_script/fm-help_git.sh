@@ -34,11 +34,13 @@ if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-target_dir=${fengming_dir}/documents/sub_doc_shell
+target_dir=${fengming_dir}/documents/sub_doc_git/options
+prefix_or_suffix=prefix
 ##Parameter Counts      : 0
 # Parameter Requirements: none
 # Example:
 ##
+
 function usage
 {
     echo ""
@@ -48,10 +50,10 @@ function usage
     echo "-d or --debug         # print variable status"
     echo "-t or --test          # test mode, no modifications"
     #echo "--realdo             # real execution"
-    echo "-a or --add     file  # add new help files"
-    echo "-d or --delete  file  # delete file"
+    echo "-A or --add     file  # add new help files"
+    echo "-D or --del     file  # delete file"
 
-    echo "-m or --mode          # you define"
+    #echo "-m or --mode          # you define"
     echo "--setx or --detail    # open set -x mode"
     echo ""
 }
@@ -62,12 +64,13 @@ function usage
 ##
 function func_
 {
-    if [ $# -lt 1 ];then tree -FL 1 ${target_dir};usage; return 1; fi
+    if [ $# -lt 1 ];then tree -FhL 1 ${target_dir};usage; return 1; fi
     local debug=false
     local test=false
     local realdo=false
     local mode=normal
     local setx=false
+    local cmd=()
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
     while [[ $# -gt 0 ]]
@@ -86,6 +89,8 @@ function func_
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 cmd_opt+=("--file $2"); shift 2 ;; #带参数,移动2
             -Q|--qr) cmd_opt+=("--qr=true"); shift ;;
+            -A|--add) cmd+=("add"); shift ;;
+            -D|--del) cmd+=("delete"); shift ;;
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
@@ -111,6 +116,7 @@ function func_
         #echo "DEBUG:realdo=${realdo}"
         echo "DEBUG:mode=${mode}"
         echo "DEBUG:setx=${setx}"
+        echo "DEBUG:cmd=${cmd[@]}"
         echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
@@ -120,24 +126,67 @@ function func_
         echo "ERROR: platform list is empty!!";usage;return 2
     fi
     #start your code
+    local new_file_dir=
+    local new_file_name=
+    if [ ${#cmd[@]} -ge 1 ];then
+        if [ ${remaining_argc} -gt 1 ] && [ -d ${target_dir}/${remaining_args[0]} ];then
+            new_file_dir=${target_dir}/${remaining_args[0]}
+            new_file_name=${remaining_args[1]}
+        else
+            new_file_dir=${target_dir}
+            new_file_name=${remaining_args[0]}
+        fi
+    fi
+    if [ "${cmd[0]}" = "add" ];then
+        if [ -f ${new_file_dir}/${new_file_name} ];then
+            read -p "WARN: file ${filename} already exists!!, do you want to oveewrite it?[y/N]" opt
+            if [ "x${opt}" = "x" ];then opt=N;fi
+            if [ "x${opt}" = "xY" ] || [ "x${opt}" = "xy" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ];then
+                if [ ${debug} = true ];then echo "DEBUG:overwrite file ${filename}";fi
+                echo "" > ${new_file_dir}/${new_file_name}
+            fi
+        else
+            touch ${new_file_dir}/${new_file_name}
+        fi
+        return 0
+    elif [ "${cmd[0]}" = "delete" ];then
+        if [ ! -f ${new_file_dir}/${new_file_name} ];then
+            echo "ERROR: file ${filename} not exists!!"
+            return 2
+        fi
+        read -p "WARN: file ${filename}, do you want to delete it?[y/N]" opt
+        if [ "x${opt}" = "x" ];then opt=N;fi
+        if [ "x${opt}" = "xY" ] || [ "x${opt}" = "xy" ] || [ "x${opt}" = "xyes" ] || [ "x${opt}" = "xYES" ];then
+            if [ ${debug} = true ];then echo "DEBUG:delete file ${new_file_name}";fi
+            pushd ${new_file_dir}/
+            git rm ${new_file_name} 2>&1 /dev/null
+            if [ $? -eq 128 ];then
+                rm -v ${new_file_name}
+            elif [ $? -eq 1 ];then
+                git checkout ${new_file_name}
+                git rm ${new_file_name}
+            fi
+            popd
+        fi
+        return 0
+    fi
+    
     local file_list=()
     local file_list_size=0
     #[optional] check sub dir first
     if [ -d ${target_dir}/${remaining_args[0]} ];then
+        if [ ${debug} = true ];then echo "DEBUG:dir=${target_dir}/${remaining_args[0]}";fi
         #only dir
         if [ ${remaining_argc} -lt 2 ];then
-            tree -F ${target_dir}/${remaining_args[0]}
+            tree -Fh ${target_dir}/${remaining_args[0]}
             return 0
         fi
         #dir/file
-        #file_list+=($(find ${target_dir}/${remaining_args[0]} -type f -iname "${remaining_args[1]}*"))  #前缀
-        file_list+=($(find ${target_dir}/${remaining_args[0]} -type f -iname "*${remaining_args[1]}"))  #后缀
-        #file_list+=($(find ${target_dir}/${remaining_args[0]} -type f -iname "${remaining_args[1]}*" -o -type l -iname "${remaining_args[1]}*"))  #包括链接文件
+        file_list+=($(COMMOND_FUNC_find_file_with_prefix_or_suffix ${target_dir}/${remaining_args[0]} ${remaining_args[1]} ${prefix_or_suffix}))
         #no found
         if [ ${#file_list[@]} -lt 1 ];then 
-            echo "no found help file with prefix ${remaining_args[0]}"
-            local maybe_file=$(find ${target_dir}/${remaining_args[0]} -type f -iname "*${remaining_args[1]}*")
-            #local maybe_file=$(find find ${target_dir}/${remaining_args[0]} -type f -iname "*${remaining_args[0]}*" -o -type l -iname ${remaining_args[0]}*")  #包括链接文件
+            echo "no found file with ${prefix_or_suffix} ${remaining_args[0]}"
+            local maybe_file=$(COMMOND_FUNC_find_file_with_prefix_or_suffix ${target_dir}/${remaining_args[0]} ${remaining_args[1]} all)
             if [ "x${maybe_file}" != x ];then
                 echo "maybe you looking for: "
                 echo "${maybe_file}"
@@ -145,13 +194,23 @@ function func_
             return 2
         fi
     elif [ -f ${target_dir}/${remaining_args[0]} ];then
+        if [ ${debug} = true ];then echo "DEBUG:file=${target_dir}/${remaining_args[0]}";fi
         #complete filename
         file_list+=(${target_dir}/${remaining_args[0]})
     else
+        if [ ${debug} = true ];then echo "DEBUG:borth not dir and file";fi
         #borth not dir and file
-        file_list+=($(find ${target_dir}/ -type f -iname "${remaining_args[0]}*"))  #前缀
-        file_list+=($(find ${target_dir}/ -type f -iname "*${remaining_args[0]}"))  #后缀
-        file_list+=($(find ${target_dir}/${remaining_args[0]} -type f -iname "${remaining_args[0]}*" -o -type l -iname "${remaining_args[1]}*"))  #包括链接文件
+        file_list+=($(COMMOND_FUNC_find_file_with_prefix_or_suffix ${target_dir}/ ${remaining_args[0]} ${prefix_or_suffix}))
+        #no found
+        if [ ${#file_list[@]} -lt 1 ];then 
+            echo "no found file with ${prefix_or_suffix} ${remaining_args[0]}"
+            local maybe_file=$(COMMOND_FUNC_find_file_with_prefix_or_suffix ${target_dir}/ ${remaining_args[0]} all)
+            if [ "x${maybe_file}" != x ];then
+                echo "maybe you looking for: "
+                echo "${maybe_file}"
+            fi
+            return 2
+        fi        
     fi
 
     #readarray -t file_array <<< "${file_list}"
@@ -159,7 +218,7 @@ function func_
     if [ ${debug} = true ];then echo "DEBUG:file_list[${file_list_size}]=${file_list[@]}";fi
 
     local sub_num=1
-    if [ ${file_list_size} -eq 1 ];then
+    if [ ${file_list_size} -eq 1 ] || [ "${remaining_args[-1]}" = all ];then
         for file_each in "${file_list[@]}"
         do
             echo "start[$sub_num/$file_list_size] ..."
@@ -172,12 +231,6 @@ function func_
         done
         echo "==============================================================="
     fi
-    sub_num=1
-    for file_each in "${file_list[@]}"
-    do 
-        echo "file[$sub_num/$file_list_size]: ${file_each}"
-        sub_num=$(expr $sub_num + 1)
-    done
 
     #select by number
     if [[ ${remaining_args[-1]} =~ ^[0-9]+$ ]] ;then
@@ -186,14 +239,24 @@ function func_
             return 3
         fi
         sub_num=$(expr ${remaining_args[-1]} - 1)
-        echo "file[${sub_num}] start..."
+        echo "file[${remaining_args[-1]}] start..."
         echo ""
         cat ${file_list[${sub_num}]}
         echo ""
-        echo "file[${sub_num}] end"
+        echo "file[${remaining_args[-1]}] end"
         echo "--------------------------------------------------------------"
     fi
     echo ""
+    sub_num=1
+    for file_each in "${file_list[@]}"
+    do 
+        echo "file[$sub_num/$file_list_size]: ${file_each}"
+        sub_num=$(expr $sub_num + 1)
+    done
+    if [ ${file_list_size} -gt 1 ] && [ ${remaining_args[-1]} != all ];then
+        echo ""
+        echo "multiple files found! which file do you want to see? select by number?"
+    fi    
     return 0
 }
 #if unnecessary, please do not modify following code
