@@ -51,4 +51,4 @@ logout
 
 ```shell
 $bash sorftware_pagke_install.sh
-```
+
