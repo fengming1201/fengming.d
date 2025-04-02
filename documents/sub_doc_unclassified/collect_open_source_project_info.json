@@ -419,6 +419,30 @@
       "language": "c",
       "describe": "一个开源轻量级flash管理器的实现和应用--带磨损均衡和备份,",
       "URL": "https://gitee.com/zhao-zhangbo/b_flash"
+    },
+    {
+      "name": "nanogui",
+      "language": "c",
+      "describe": "NanoGUI是一款超轻量级图形库，支持单色LCD驱动。它代码量仅8KB，适合简单显示设备。",
+      "URL": "https://github.com/wjakob/nanogui"
+    },
+    {
+      "name": "FlashDB",
+      "language": "c",
+      "describe": "FlashDB是一款超轻量级的嵌入式数据库，专注于提供嵌入式产品的数据存储方案。",
+      "URL": "https://github.com/armink/FlashDB"
+    },
+    {
+      "name": "zlog",
+      "language": "c",
+      "describe": "zlog是一个高性能、线程安全、灵活、概念清晰的纯C日志函数库。",
+      "URL": "https://github.com/HardySimpson/zlog"
+    },
+    {
+      "name": "mosquitto",
+      "language": "c",
+      "describe": "mosquitto是一款开源的MQTT消息代理（服务器）软件，提供轻量级的，支持可发布/可订阅的的消息推送模式，使设备对设备之间的短消息通信变得简单。",
+      "URL": "https://github.com/eclipse/mosquitto"
     }
   ]
 }
