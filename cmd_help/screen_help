@@ -68,3 +68,77 @@ Options:
 
 终止指定的 screen 会话：
 screen -S your_screen_name -X quit  : 删除某个会话.
+===================================================================
+Screen key bindings, page 1 of 1.
+Command key:  ^A   Literal ^A:  a
+
+break       ^B b
+fit         F
+lastmsg     ^M m
+number      N
+redisplay   ^L l
+suspend     ^Z z
+writebuf    >
+clear       C
+flow        ^F f
+license     ,
+only        Q
+remove      X
+time        ^T t
+xoff        ^S s
+colon       :
+focus       ^I
+lockscreen  ^X x
+other       ^A
+removebuf   =
+title       A
+xon         ^Q q
+copy        ^[ [
+hardcopy    h
+log         H
+pow_break   B
+reset       Z
+vbell       ^G
+detach      ^D d
+help        ?
+login       L
+pow_detach  D
+screen      ^C c
+version     v
+digraph     ^V
+history     { }
+meta        a
+prev        ^H ^P p ^?
+select      '
+width       W
+displays    *
+info        i
+monitor     M
+quit        \
+silence     _
+windows     ^W w
+dumptermcap .
+kill        K k
+next        ^@ ^N sp n
+readbuf     <
+split       S
+wrap        ^R r
+
+^]   paste .
+"    windowlist -b
+-    select -
+0    select 0
+1    select 1
+2    select 2
+3    select 3
+4    select 4
+5    select 5
+6    select 6
+7    select 7
+8    select 8
+9    select 9
+I    login on
+O    login off
+]    paste .
+|    split -v
+:kB: focus prev

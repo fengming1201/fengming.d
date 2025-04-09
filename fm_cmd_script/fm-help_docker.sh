@@ -44,7 +44,8 @@ prefix_or_suffix=suffix
 function usage
 {
     echo ""
-    echo "$scriptname  [opt]  files"
+    echo -n "$scriptname  [opt]  "
+    if [ ${prefix_or_suffix} = prefix ];then echo "[匹配前缀]";else echo "[匹配后缀]";fi
     echo "opt:"
     echo "-h or --help          # help"
     echo "-d or --debug         # print variable status"
@@ -62,7 +63,7 @@ function usage
 # Parameter Requirements: none
 # Example:
 ##
-function func_
+function func_docker
 {
     if [ $# -lt 1 ];then tree -FhL 1 ${target_dir};usage; return 1; fi
     local debug=false
@@ -263,6 +264,6 @@ function func_
 func_debug_function "$@"
 if [ $? -ne 0 ];then exit 0;fi
 
-func_ "$@"
+func_docker "$@"
 if [ $? -ne 0 ];then exit 1;fi
 exit 0

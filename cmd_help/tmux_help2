@@ -1,29 +1,29 @@
 | screen 和 tmux 操作快捷键对比                                                     |
 |-----------------------------|------------------|------------------------|
-| 操作                        | screen 快捷键    | tmux 快捷键            |
+| 操作                        | screen 快捷键     | tmux 快捷键            |
 |-----------------------------|------------------|------------------------|
-| 启动一个新会话              | screen           | tmux                   |
-| 创建新窗口                  | Ctrl + a, c      | Ctrl + b, c            |
-| 切换到下一个窗口            | Ctrl + a, n      | Ctrl + b, n            |
-| 切换到上一个窗口            | Ctrl + a, p      | Ctrl + b, p            |
-| 列出窗口                    | Ctrl + a, "      | Ctrl + b, w            |
-| 在窗口之间切换              | Ctrl + a, <数字> | Ctrl + b, <数字>       |
-| 分割窗口（水平）            | Ctrl + a, S      | Ctrl + b, %            |
-| 分割窗口（垂直）            | Ctrl + a, |      | Ctrl + b, "            |
-| 切换窗格（上下左右）        | Ctrl + a, Tab    | Ctrl + b, <方向键>     |
-| 调整窗格大小                | Ctrl + a, :resize| Ctrl + b, :resize-pane |
-| 关闭当前窗格                | Ctrl + a, X      | Ctrl + b, x            |
-| 退出会话                    | Ctrl + a, d      | Ctrl + b, d            |
-| 重新连接到一个会话          | screen -r        | tmux attach-session    |
-| 分离当前会话                | Ctrl + a, d      | Ctrl + b, d            |
-| 退出当前窗口/会话           | Ctrl + a, \      | Ctrl + b, &            |
-| 命令行模式                  | Ctrl + a, :      | Ctrl + b, :            |
-| 重命名窗口                  | Ctrl + a, A      | Ctrl + b, ,            |
-| 复制模式（开始选择文本）    | Ctrl + a, [      | Ctrl + b, [            |
-| 进入复制模式（滚动查看历史）| Ctrl + a, Esc    | Ctrl + b, PgUp         |
-| 退出复制模式                | Ctrl + a, ]      | Ctrl + b, ]            |
-| 查看帮助                    | Ctrl + a, ?      | Ctrl + b, ?            |
-|-----------------------------|------------------|------------------------|
+| 启动一个新会话              | screen             | tmux                   |
+| 创建新窗口                  | Ctrl + a, c       | Ctrl + b, c            |
+| 切换到下一个窗口            | Ctrl + a, n        | Ctrl + b, n            |
+| 切换到上一个窗口            | Ctrl + a, p        | Ctrl + b, p            |
+| 列出窗口                    | Ctrl + a, "       | Ctrl + b, w            |
+| 重命名窗口                  | Ctrl + a, A        | Ctrl + b, ,            |
+| 在窗口之间切换              | Ctrl + a, <数字>   | Ctrl + b, <数字>       |
+| 分割窗口（水平）            | Ctrl + a, S        | Ctrl + b, %            |
+| 分割窗口（垂直）            | Ctrl + a, |        | Ctrl + b, "            |
+| 切换窗格（上下左右）        | Ctrl + a, Tab       | Ctrl + b, <方向键>     |
+| 调整窗格大小                | Ctrl + a, :resize  | Ctrl + b, :resize-pane |
+| 关闭当前窗格                | Ctrl + a, X        | Ctrl + b, x            |
+| 退出会话                    | Ctrl + a, d        | Ctrl + b, d            |
+| 重新连接到一个会话          | screen -r  name     | tmux attach-session -t name |
+| 分离/退出当前会话           | Ctrl + a, d         | Ctrl + b, d            |
+| 退出当前会话                | Ctrl + a, \         | Ctrl + b, &            |
+| 命令行模式                  | Ctrl + a, :        | Ctrl + b, :            |
+| 复制模式（开始选择文本）     | Ctrl + a, [         | Ctrl + b, [            |
+| 进入复制模式（滚动查看历史） | Ctrl + a, Esc        | Ctrl + b, PgUp         |
+| 退出复制模式                | Ctrl + a, ]         | Ctrl + b, ]            |
+| 查看帮助                    | Ctrl + a, ?         | Ctrl + b, ?            |
+|-----------------------------|--------------------|------------------------|
 主要差异
 窗口命令：screen 使用 Ctrl + a 作为前缀，而 tmux 使用 Ctrl + b 作为前缀。
 窗口分割：screen 支持水平分割（Ctrl + a, S）和垂直分割（Ctrl + a, |），而tmux 的分割命令略有不同，

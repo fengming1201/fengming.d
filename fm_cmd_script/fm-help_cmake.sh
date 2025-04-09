@@ -35,6 +35,7 @@ if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
 fi
 #start here add your code,you need to implement the following function.
 target_dir=${fengming_dir}/documents/sub_doc_cmake
+prefix_or_suffix=prefix
 ##Parameter Counts      : 0
 # Parameter Requirements: none
 # Example:
@@ -43,7 +44,8 @@ target_dir=${fengming_dir}/documents/sub_doc_cmake
 function usage
 {
     echo ""
-    echo "$scriptname  [opt]  files"
+    echo -n "$scriptname  [opt]  "
+    if [ ${prefix_or_suffix} = prefix ];then echo "[匹配前缀]";else echo "[匹配后缀]";fi
     echo "opt:"
     echo "-h or --help          # help"
     echo "-d or --debug         # print variable status"
@@ -51,7 +53,7 @@ function usage
     #echo "--realdo             # real execution"
     echo "-A or --add  [subdir]  file  # add new help files"
     echo "-D or --del  [subdir]  file  # delete file"
-
+    
     #echo "-m or --mode          # you define"
     echo "--setx or --detail    # open set -x mode"
     echo ""
@@ -61,7 +63,7 @@ function usage
 # Parameter Requirements: none
 # Example:
 ##
-function func_
+function func_cmake_help
 {
     if [ $# -lt 1 ];then tree -FhL 1 ${target_dir};usage; return 1; fi
     local debug=false
@@ -262,6 +264,6 @@ function func_
 func_debug_function "$@"
 if [ $? -ne 0 ];then exit 0;fi
 
-func_ "$@"
+func_cmake_help "$@"
 if [ $? -ne 0 ];then exit 1;fi
 exit 0
