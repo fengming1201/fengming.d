@@ -443,6 +443,48 @@
       "language": "c",
       "describe": "mosquitto是一款开源的MQTT消息代理（服务器）软件，提供轻量级的，支持可发布/可订阅的的消息推送模式，使设备对设备之间的短消息通信变得简单。",
       "URL": "https://github.com/eclipse/mosquitto"
+    },
+    {
+      "name": "yyjson",
+      "language": "C",
+      "describe": "yyjson 作为一个高性能、跨平台的 JSON 库，为嵌入式开发提供了强大的支持。它的快速解析能力、灵活扩展性和开发者友好的接口，使其成为嵌入式系统中处理 JSON 数据的理想选择。",
+      "URL": "https://github.com/ibireme/yyjson"
+    },
+    {
+      "name": "lwrb",
+      "language": "C",
+      "describe": "lwrb是一个基于标准C11编写的二分缓冲区(Bipartite Buffer)实现，适用于从深度嵌入式系统到高性能计算等各种平台。",
+      "URL": "https://github.com/MaJerle/lwrb"
+    },
+    {
+      "name": "embedlog",
+      "language": "C",
+      "describe": "Embedlog 是一个功能强大、轻量高效的嵌入式日志库，它在保持小巧体积的同时，提供了丰富的功能和灵活的配置选项。其出色的性能和可靠性使其成为嵌入式系统开发的理想选择。",
+      "URL": "https://github.com/mlyszczek/embedlog"
+    },
+    {
+      "name": "smolrtsp",
+      "language": "C",
+      "describe": "SmolRTSP是一个轻量级、高效、灵活的RTSP服务器库，它特别适合嵌入式设备的开发。 其简单易用的API、强大的功能以及活跃的社区支持，使其成为嵌入式开发者实现RTSP视频流传输的理想选择",
+      "URL": "https://github.com/OpenIPC/smolrtsp"
+    },
+    {
+      "name": "nanoMODBUS",
+      "language": "C",
+      "describe": "nanoMODBUS 是一款专为嵌入式及微控制器环境量身定制的MODBUS协议库。其小巧紧凑的代码、模块化的设计、丰富的功能支持以及高度的可定制性，都使其成为开发者实现工业通讯的理想选择。",
+      "URL": "https://github.com/debevv/nanoMODBUS"
+    },
+    {
+      "name": "lwow",
+      "language": "C",
+      "describe": "LwOW (Lightweight OneWire) 是一款专为嵌入式系统设计的轻量级OneWire协议库，它以其卓越的性能和灵活的架构脱颖而出。LwOW 巧妙地利用了MCU 的UART外设或GPIO，实现高效的OneWire 通信，显著降低了资源消耗，并提升了系统效率。",
+      "URL": "“https://github.com/MaJerle/lwow”"
+    },
+    {
+      "name": "sloop",
+      "language": "C",
+      "describe": "sloop是一个嵌入式裸机框架，提供一套API，方便管理多种任务，比如超时任务/周期任务/并行任务/互斥任务等。",
+      "URL": "https://github.com/sloop-open/sloop"
     }
   ]
 }
