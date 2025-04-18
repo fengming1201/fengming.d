@@ -12,7 +12,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     exit 0
 fi
-if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 function func_gitls
@@ -23,32 +23,30 @@ function func_gitls
 		return 1
 	fi
 
-	git status > /dev/null 2>&1
-	ret=$?
-	if [ ${ret} -ne 0 ]
-	then
-		echo "{"
-		sudo git remote -v
-		echo "},"
-		echo "{"
-		sudo git branch
-		echo "},"
-	else
-		echo "{"
-		git remote -v
-		echo "},"
-		echo "{"
-		git branch
-		echo "},"
-	fi
+	${maybeSUDO} git rev-parse --is-inside-work-tree &> /dev/null
+	if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
+	local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
+	
 	echo "{"
-	if [ $? -ne 0 ]
-	then
-		sudo git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
+	if [ "${1}" = "--detail" ];then
+		${maybeSUDO} git remote -v
 	else
-		git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
+		${maybeSUDO} git remote -v
 	fi
+	echo "},"
+	echo "{"
+	if [ "${1}" = "--detail" ];then
+		${maybeSUDO} git branch -r
+	else
+		${maybeSUDO} git branch
+	fi
+	echo "},"
+	echo "{"
+	${maybeSUDO} git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
 	echo "}"
+
+	echo "git_root_dir:${git_root_dir}"
+	echo ""
 	return 0
 }
 

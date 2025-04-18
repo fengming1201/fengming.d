@@ -31,7 +31,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     func_location
     exit 0
 fi
-if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.

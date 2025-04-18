@@ -12,7 +12,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     cat ${scriptfile}
     exit 0
 fi
-if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 function func_gitst
@@ -22,14 +22,12 @@ function func_gitst
 		echo "no args"
 		return 1
 	fi
+	${maybeSUDO} git rev-parse --is-inside-work-tree &> /dev/null
+	if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
+	local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
 
-	git status > /dev/null  2>&1
-	if [ $? -ne 0 ]
-	then
-		sudo git status
-	else
-		git status
-	fi
+	${maybeSUDO} git status
+
 	return 0
 }
 

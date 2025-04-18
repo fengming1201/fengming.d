@@ -1,29 +1,42 @@
-test:数值比较
-value1 -eq balue2 #1等于2
-value1 -gt balue2 #1大于2
-value1 -ge balue2 #1大于等于2
-value1 -lt balue2 #1小于2
-value1 -le balue2 #1小于等于2
-value1 -ne balue2 #1不等于2
 
-test:字符串比较
-str1 = str2 #str1是否和str2相同
-str1 != str2 #str1是否和str2不同
-str1 < str2 #str1是否比str2小
-str1 > str2 #str1是否比str2大
--n str1 #str1的长度是否为非0
--z str1 #str1的长度是否为0
+1. 检查文件类型
+-b file：检查文件是否为块设备文件。
+-c file：检查文件是否为字符设备文件。
+-d file：检查文件是否为目录。
+-e file：检查文件是否存在。
+-f file：检查文件是否存在且为普通文件。
+-L file：检查文件是否为符号链接。
+-p file：检查文件是否为管道文件。
+-S file：检查文件是否为套接字文件。
 
-test:文件比较
--d file  #file是否存在且是一个目录
--f file  #file是否存在且是一个文件
--e file  #file是否存在
--s file  #file是否存在并非空
--------------------------------------------
--r file  #file是否可读
--w file  #file是否可写
--x file  #file是否可执行
--------------------------------------------
+2. 比较字符串
+string1 = string2：检查两个字符串是否相等。
+string1 != string2：检查两个字符串是否不相等。
+-n string：检查字符串是否非空。
+-z string：检查字符串是否为空。
+
+3. 比较数值
+num1 -eq num2：检查两个数值是否相等。
+num1 -ne num2：检查两个数值是否不相等。
+num1 -lt num2：检查第一个数值是否小于第二个数值。
+num1 -le num2：检查第一个数值是否小于或等于第二个数值。
+num1 -gt num2：检查第一个数值是否大于第二个数值。
+num1 -ge num2：检查第一个数值是否大于或等于第二个数值。
+
+4. 检查文件权限
+-r file：检查文件是否存在且可读。
+-w file：检查文件是否存在且可写。
+-x file：检查文件是否存在且可执行。
+-u file：检查文件是否存在且设置了 SUID 位。
+-g file：检查文件是否存在且设置了 SGID 位。
+-k file：检查文件是否存在且设置了 sticky 位。
+
+5. 组合条件
+可以使用逻辑运算符组合多个条件：
+-a：逻辑与（&&）。
+-o：逻辑或（||）。
+!：逻辑非。
+
 -O file  #file 是否当属于当前用户所有
 -G file  #file 是否当属于当前用户组所有
 -----------------------------------------------

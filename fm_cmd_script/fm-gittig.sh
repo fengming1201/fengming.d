@@ -38,7 +38,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     exit 0
 fi
 
-if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
@@ -129,16 +129,10 @@ function func_
         #here we process each parameter
         #linux_cmd  ${cmd_opt[@]} args ....
     #done
-    local tmp_file=$(mktemp)
-    git status > ${tmp_file}  2>&1
-	local ret=$?
-	if [ "x$(grep "not a git repository" ${tmp_file})" != x ] && [ ${ret} -ne 0 ]
-	then 
-		echo "fatal: this dir:$(pwd) not in git repository"
-		rm -f ${tmp_file}
-		return 1
-	fi
-	rm -f ${tmp_file}
+
+	${maybeSUDO} git rev-parse --is-inside-work-tree &> /dev/null
+	if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
+	local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
 
     local app=tig
     which ${app} > /dev/null

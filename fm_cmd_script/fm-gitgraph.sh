@@ -29,7 +29,7 @@ if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
     exit 0
 fi
 
-if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
+if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
@@ -120,6 +120,9 @@ function func_
         #here we process each parameter
         #linux_cmd  ${cmd_opt[@]} args ....
     #done
+    git rev-parse --is-inside-work-tree &> /dev/null
+	if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
+
     local tmp_file=$(mktemp)
     git status > ${tmp_file}  2>&1
 	ret=$?

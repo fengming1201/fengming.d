@@ -7,10 +7,8 @@ if [ "$1" = "info" ] || [ "$1" = "-info" ]|| [ "$1" = "--info" ];then
     echo "abstract:"
     exit 0
 fi
-if [ "$1" = "show" ] || [ "$1" = "-show" ] || [ "$1" = "--show" ];then
-    echo "location:${scriptfile}"
-    cat ${scriptfile}
-    exit 0
+if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
+    maybeSUDO=sudo
 fi
 if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
     maybeSUDO=sudo
