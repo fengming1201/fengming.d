@@ -136,7 +136,13 @@ function func_list_item
         if [ ${debug} = true ];then
             echo "DEBUG: jq -r '.info[]' ${target_file_name}"
         fi
+        echo "=============================================================="
+        echo "${target_file_name}"
+        echo ""
+        echo "total item counts: $(jq '.info | length' ${target_file_name})"
+        echo ""
     fi
+
     return 0
 }
 
