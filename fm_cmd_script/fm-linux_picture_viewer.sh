@@ -17,8 +17,7 @@ if [ $(id -u) -ne 0 ];then
 fi
 function func_picture_viewer
 {
-	local app=eog
-	local app2=gpicview
+	local app=gpicview
 	local default_opt=
 
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
