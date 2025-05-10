@@ -1,0 +1,14 @@
+[alias]
+  st = status
+  co = checkout
+  br = branch
+  ci = commit
+  cm = commit -m
+  aa = add .
+  df = diff
+  lg = log --oneline --graph --decorate --all
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  last = log -1 HEAD
+  undo = reset --soft HEAD~1
+  fix = commit --amend
+  unstage = reset HEAD --
