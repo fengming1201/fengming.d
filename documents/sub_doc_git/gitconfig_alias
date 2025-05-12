@@ -12,3 +12,7 @@
   undo = reset --soft HEAD~1
   fix = commit --amend
   unstage = reset HEAD --
+
+[core]
+  editor = vi
+

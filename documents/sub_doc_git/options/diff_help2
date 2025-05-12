@@ -1,12 +1,10 @@
 
-git diff --cached [files]：对比暂存区和本地仓库。
-对比 暂存区 和 本地仓库 的差异。
-显示已暂存但未提交的更改。
+git diff  <filename>           工作区 vs 暂存区            修改但没 add 的内容
 
-git diff HEAD [files]：对比工作区和本地仓库。
-对比 工作区 和 本地仓库 的差异。
-显示所有未暂存和未提交的更改。
+git diff --cached  <filename>  暂存区 vs HEAD（Git 仓库）  add 了但没 commit 的内容
+#或，--cached 和 --staged 是同义词
+git diff --staged <filename>
 
-git status：查看工作区、暂存区和本地仓库的状态。
-查看工作区、暂存区和本地仓库的状态。
-显示哪些文件已修改、已暂存或未跟踪。
+git diff HEAD  <filename>      工作区 vs HEAD（Git 仓库）  所有尚未 commit 的修改内容
+
+#注意，有<filename>，则仅对此文件列表对比，无则按区对比。
