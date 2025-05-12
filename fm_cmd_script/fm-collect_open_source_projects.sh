@@ -154,6 +154,11 @@ function func_list_item_sort
     if [ ${debug} = true ];then
         echo "EXEC: jq -r '.info[].name' ${target_file_name}"
     fi
+    echo "=============================================================="
+    echo "${target_file_name}"
+    echo ""
+    echo "total item counts: $(jq '.info | length' ${target_file_name})"
+    echo ""    
     return 0
 }
 
