@@ -4,13 +4,18 @@ apt install samba
 配置：
 vi /etc/samba/smb.conf
 
-[root_dir]
-path = /
-valid users = root
-writeable = yes
-guest ok = yes
+[home_dir]
+comment=root home
+path = /home/mining
+valid users = mining
+guest ok= no
+read only = No
 browseable = yes
-create mask = 0777
+create mask = 0775
+directory mask = 0775
+force user = mining
+force group = mining
+inherit permissions = yes
 
 设置访问密码：（可以先创建专用samba的新用户）
 smbpasswd -a root   #其他选项smbpasswd -h查看。
@@ -23,3 +28,54 @@ windows端://192.168.254.5/root_dir
 linux:mount -t cifs -o username=root,password=****,vers=2.0 //192.168.254.5/root_dir  local_samba_dir
 
 注意：如果cifs工具没有安装，则安装：apt install cifs-utils
+以下是一些常用的 Samba 配置选项及其作用：
+path：
+指定共享目录的路径。
+
+comment：
+为共享资源添加注释说明。
+
+valid users：
+指定允许访问共享的用户列表。
+
+guest ok：
+允许未验证的用户访问共享（Yes 或 No）。
+
+read only：
+设置共享为只读（Yes 或 No）。
+
+create mask：
+定义新创建文件的权限掩码。
+
+directory mask：
+定义新创建目录的权限掩码。
+
+force user：
+强制所有文件和目录由指定用户拥有。
+
+force group：
+强制所有文件和目录由指定组拥有。
+
+inherit permissions：
+使新创建的文件和目录继承父目录的权限。
+
+browseable：
+控制共享是否在网络浏览中可见（Yes 或 No）。
+
+write list：
+指定允许写入共享的用户列表。
+
+public：
+等同于 guest ok，允许公共访问。
+
+locking：
+控制文件锁定机制（Yes 或 No）。
+
+oplocks：
+启用或禁用文件的机会锁（Yes 或 No）。
+
+max connections：
+限制同时连接到共享的最大用户数。
+
+hide files：
+指定在共享中隐藏的文件。

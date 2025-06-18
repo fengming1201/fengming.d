@@ -96,9 +96,10 @@ function func_detected_system_run_in_where
     ${maybeSUDO} which ${tool} > /dev/null
     if [ $? -eq 0 ];then
         echo "============ dmidecode ==================="
-        echo "   cmd: ${maybeSUDO} dmidecode -s system-manufacturer"
+        echo "   cmd: ${maybeSUDO} ${tool} -s system-manufacturer"
+        #echo "   cmd: ${maybeSUDO} ${tool} -t system | grep Manufacturer"
         echo "result:"           
-        ${maybeSUDO} dmidecode -s system-manufacturer
+        ${maybeSUDO} ${tool} -s system-manufacturer
         echo "=========== end  dmidecode ==============="
     fi
     return 0

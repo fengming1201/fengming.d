@@ -2,19 +2,19 @@
     Linux默认开机进入终端模式
 
     step 1:修改Grub配置文件
-    vi /etc/default/grub 
+    vi /etc/default/grub
 
     修改
-    GRUB_CMDLINE_LINUX="" 为GRUB_CMDLINE_LINUX="text" 
+    GRUB_CMDLINE_LINUX="" 为GRUB_CMDLINE_LINUX="text"
 
     同时修改网口为eth0
     GRUB_CMDLINE_LINUX="text net.ifnames=0 biosdevname=0"
 
     step 2:更新grub
-    update-grub 
+    update-grub
 
     step 3:更新系统服务管理器配置
-    systemctl set-default multi-user.target 
+    systemctl set-default multi-user.target
 
     step 4:重启
     init 6
@@ -37,7 +37,7 @@
     systemctl set-default graphical.target
 
     step 4:重启
-    init 6 
+    init 6
 
     补充：
     查看模式：sudo systemctl  get-default
@@ -129,22 +129,18 @@
     autologin-user-timeout=0
 
     将 your_username 替换为你希望自动登录的用户名后。
-    备注：如何查看是哪种显示管理器，参考fm-tools-show_info_display_manager.sh 
+    备注：如何查看是哪种显示管理器，参考fm-tools-show_info_display_manager.sh
 },
 {
     扩展系统镜像的分区大小
     原系统镜像的分区情况：
-    #lsblk 
+    #lsblk
     NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
-    sda      8:0    0 476.9G  0 disk
-    ├─sda1   8:1    0   447G  0 part /
-    ├─sda2   8:2    0     1K  0 part 
-    └─sda5   8:5    0  29.9G  0 part [SWAP]
     sdb      8:16   0 119.2G  0 disk
     ├─sdb1   8:17   0    15G  0 part
     ├─sdb2   8:18   0     1K  0 part
     └─sdb5   8:21   0   975M  0 part
-    //要将整个系统分区由原来的16G,扩展到占剩下的空间， 
+    //要将整个系统分区由原来的16G,扩展到占剩下的空间，
     步骤1：删除swap 分区 和 删除扩展分区（释放空间）
     sudo parted /dev/sdb
     (parted) rm 2            # 删除扩展分区2（连带逻辑分区5）
@@ -152,7 +148,11 @@
     步骤2：扩容主分区1
     (parted) resizepart 1     # 调整主分区1
     End? [16.2GB]? 111.2GB    # 预留16GB给新SWAP（例如111.2GB=总容量128GB-16GB）
-    
+                              #|  img |                                              |
+                              #0GB    16.2GB                                          128GB
+                              #|  img  -------------extend------------------ | swap  |
+                              #0GB                                           111.2GB  128GB
+
     步骤3：重建SWAP分区
     (parted) mkpart extended 111.2GB 128GB  # 创建新扩展分区
     (parted) mkpart logical 111.2GB 128GB   # 创建逻辑分区5作为SWAP
@@ -169,7 +169,7 @@
     挂载/dev/sdb1:
     sudo mount /dev/sdb1 /mnt
     更新etc/fstab, etc/initramfs-tools/conf.d/resume 中swap UUID为新的swap分区UUID
-    
+
     另外，待系统启动后，重新安装 GRUB：
     sudo grub-install /dev/sda
     sudo update-grub
@@ -179,6 +179,47 @@
     如果新系统启动后没有启用新swap，则需手动启用
     sudo swapon /dev/sdb5             # 重新启用
     sudo update-initramfs -u          # 更新 initramfs
+},
+{
+    注意第一个主分区类型
+    root@debian12x:~# lsblk /dev/sdb
+    NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    sdb      8:16   0 931.5G  0 disk
+    ├─sdb1   8:17   0   512M  0 part
+    ├─sdb2   8:18   0     1K  0 part
+    └─sdb5   8:21   0  79.5G  0 part
+    root@debian12x:~# lsblk  -f /dev/sdb
+    NAME   FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+    sdb
+    ├─sdb1 vfat   FAT32       2673-1968
+    ├─sdb2
+    └─sdb5 ext4   1.0         0297f829-9f9d-4026-9799-3b3a6cceb2df
+    root@debian12x:~#
+    parted /dev/sdb
+    查看当前分区布局：
+    print
+
+    调整扩展分区大小：
+    首先调整扩展分区（sdb2）的大小，以便为逻辑分区提供更多空间：
+    resizepart 2 100%
+
+    调整逻辑分区大小：
+    然后调整逻辑分区（sdb5）的大小：
+    resizepart 5 100%
+
+    退出 parted：
+    输入 quit 退出 parted。
+
+    调整文件系统：
+    使用 resize2fs 命令扩展文件系统：
+    e2fsck -f /dev/sdb5
+    resize2fs /dev/sdb5
+    确保在操作前备份数据，并确认分区没有被挂载。
+    上电启动
+    sda      8:0    0 931.5G  0 disk
+    ├─sda1   8:1    0   512M  0 part /boot/efi
+    ├─sda2   8:2    0     1K  0 part
+    └─sda5   8:5    0   931G  0 part /
 },
 {
     linux下创建“虚拟硬盘”并格式化和挂载
@@ -191,15 +232,15 @@
         of=disk.img：输出文件为 disk.img。
         bs=1G：块大小为 1GB。
         count=10：创建 10 个块，即 10GB。
-    
-    2. 
+
+    2.
     使用 losetup 将镜像文件关联到回环设备：
 
     sudo losetup -fP disk.img
      参数：
         -f：自动选择一个空闲的回环设备。
         -P：强制内核扫描分区表。
-    
+
     查看关联的设备：
     losetup -a
 
