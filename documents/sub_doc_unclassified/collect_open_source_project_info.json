@@ -485,6 +485,36 @@
       "language": "C",
       "describe": "sloop是一个嵌入式裸机框架，提供一套API，方便管理多种任务，比如超时任务/周期任务/并行任务/互斥任务等。",
       "URL": "https://github.com/sloop-open/sloop"
+    },
+    {
+      "name": "lwmem",
+      "language": "C",
+      "describe": "LWMEM是一个高效、轻量级、易于集成的动态内存管理器，它为嵌入式系统开发者提供了一种全新的内存管理方案。其高效的算法、灵活的配置、以及对碎片化内存的良好支持。LWMEM能帮助轻松管理内存，提高系统稳定性和性能。",
+      "URL": "“https://github.com/MaJerle/lwmem”"
+    },
+    {
+      "name": "toaruos",
+      "language": " ",
+      "describe": "\n\n    ToaruOS是一个为x86-64架构PC设计的完整操作系统，并提供对ARMv8架构的实验性支持。ToaruOS的目标是成为一个教育资源，提供一个代表性微观世界，展现主流桌面操作系统中的功能。它包含内核、引导加载程序、动态共享对象链接器、C标准库、自研的合成窗口系统、动态字节码编译编程语言、高级代码编辑器以及数十个其他实用程序和示例应用程序。所有必要的源代码（主要为C语言）总计约10万行",
+      "URL": "https://github.com/klange/toaruos"
+    },
+    {
+      "name": "nanoprintf",
+      "language": "C",
+      "describe": "nanoprintf是一个轻量级、高性能、安全可靠、易于使用的Printf实现，它完美地解决了嵌入式系统中Printf函数体积过大的问题。高度的可配置性、高效的浮点数转换以及多平台支持，让它成为嵌入式开发者的理想选择。",
+      "URL": "https://github.com/charlesnicholson/nanoprintf"
+    },
+    {
+      "name": "embox",
+      "language": "C",
+      "describe": "Embox 是一个为嵌入式系统和受限资源设计的灵活而强大的实时操作系统。凭借其 POSIX 兼容性、对多种编程语言的支持，以及对多种硬件平台的适用性，Embox 使得开发者能够高效地构建和部署嵌入式应用。Embox 是采用一个高效、灵活的解决方案来开发嵌入式系统。",
+      "URL": "https://github.com/embox/embox"
+    },
+    {
+      "name": "mr-library",
+      "language": "C",
+      "describe": "mr-library 框架支持互斥锁、对象管理等基础内核功能。集成异步事件驱动框架（event）、多时基软件定时器(soft-timer) 等服务。",
+      "URL": "https://gitee.com/MacRsh/mr-library"
     }
   ]
 }
