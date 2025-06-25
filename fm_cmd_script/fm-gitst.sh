@@ -26,7 +26,7 @@ function func_gitst
 	if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
 	local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
 
-	${maybeSUDO} git status
+	${maybeSUDO} git status --ignored
 
 	return 0
 }
