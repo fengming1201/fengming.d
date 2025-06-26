@@ -256,9 +256,6 @@ function func_git_pull_update
 function func_git_clone
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
-    if [ $# -eq 1 ];then
-        timeout_time_s=$1
-    fi
 
     local name_list=$(jq -r  '.info[].name' ${target_file_name})
 
@@ -271,16 +268,9 @@ function func_git_clone
         echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${item_name}\") | .describe" ${target_file_name})
         item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
         if [ "x${item_url}" != "x" ];then
-            if [ "x$timeout_time_s" = "x0" ];then
-                echo -e "\e[31mgit clone ${item_url} \e[0m"
-                if [ ${test} = true ];then
-                    git clone ${item_url}
-                fi
-            else
-                echo -e "\e[31mtimeout ${timeout_time_s} git clone ${item_url} \e[0m"
-                if [ ${test} = true ];then
-                    timeout ${timeout_time_s} git clone ${item_url}
-                fi
+            echo -e "\e[31mgit clone ${item_url} \e[0m"
+            if [ ${test} = false ];then
+                git clone ${item_url}
             fi
         else
             echo "item: ${item_name}  URL is empty!"
@@ -481,11 +471,7 @@ function func_schedule
 
     if [ "${cmd}" = "clone" ];then
         echo -e "\e[31mclone ....\e[0m"
-        if [ "x${url}" != "x" ];then
-            func_git_clone "${url}" "${remaining_args[@]}"
-        else
-            echo "ERROR: item_name can not empty!!"
-        fi
+        func_git_clone "${url}" "${remaining_args[@]}"
     fi
 
     return 0
