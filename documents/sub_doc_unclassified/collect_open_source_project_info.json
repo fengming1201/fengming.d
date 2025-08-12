@@ -478,7 +478,7 @@
       "name": "lwow",
       "language": "C",
       "describe": "LwOW (Lightweight OneWire) 是一款专为嵌入式系统设计的轻量级OneWire协议库，它以其卓越的性能和灵活的架构脱颖而出。LwOW 巧妙地利用了MCU 的UART外设或GPIO，实现高效的OneWire 通信，显著降低了资源消耗，并提升了系统效率。",
-      "URL": "“https://github.com/MaJerle/lwow”"
+      "URL": "https://github.com/MaJerle/lwow"
     },
     {
       "name": "sloop",
@@ -490,7 +490,7 @@
       "name": "lwmem",
       "language": "C",
       "describe": "LWMEM是一个高效、轻量级、易于集成的动态内存管理器，它为嵌入式系统开发者提供了一种全新的内存管理方案。其高效的算法、灵活的配置、以及对碎片化内存的良好支持。LWMEM能帮助轻松管理内存，提高系统稳定性和性能。",
-      "URL": "“https://github.com/MaJerle/lwmem”"
+      "URL": "https://github.com/MaJerle/lwmem"
     },
     {
       "name": "toaruos",

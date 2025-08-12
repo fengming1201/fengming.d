@@ -1,0 +1,13 @@
+
+Usage:  docker manifest rm MANIFEST_LIST [MANIFEST_LIST...]
+
+Delete one or more manifest lists from local storage
+
+EXPERIMENTAL:
+  docker manifest rm is an experimental feature.
+  Experimental features provide early access to product functionality. These
+  features may change between releases without warning, or can be removed from a
+  future release. Learn more about experimental features in our documentation:
+  https://docs.docker.com/go/experimental/
+====================================================
+从本地存储中删除一个或多个清单列表

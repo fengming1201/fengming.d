@@ -53,16 +53,43 @@ function func_upgrade_step_help
         version="your_version"
     fi
     echo "Upgrade steps using local server:"
-    echo "step 1:(redirect server)"
-    echo "      http_ota http://${http_server_ip}:${http_server_port}/flag_debug_dcm_server      /mnt/mtd/system_data/flag_debug_dcm_server 0"
-    echo "      http_ota http://${http_server_ip}:${http_server_port}/flag_debug_dcm_server.md5  /mnt/mtd/system_data/flag_debug_dcm_server.md5 0"
-    echo ""
-    echo "step 2:(not certified)"
-    echo "      touch  /mnt/mtd/flag_debug_pkg_no_sign_verify"
-    echo ""
-    echo "step 3:(trigger upgrade)"
-    echo "      ipcctl_cmd_upgrade_ver http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/${version}/upgrade-init.pkg"
-    echo ""
+    if [ x"$platform" = "xbipc_fh8852v201_aiw4211" ] || [ x"$platform" = "xbipc_fh862x_hi3861" ];then 
+        echo "step 1:(redirect server)"
+        echo "      http_ota http://${http_server_ip}:${http_server_port}/flag_debug_dcm_server      /mnt/mtd/system_data/flag_debug_dcm_server 0"
+        echo "      http_ota http://${http_server_ip}:${http_server_port}/flag_debug_dcm_server.md5  /mnt/mtd/system_data/flag_debug_dcm_server.md5 0"
+        echo ""
+        echo "step 2:(not certified)"
+        echo "      touch  /mnt/mtd/flag_debug_pkg_no_sign_verify"
+        echo ""
+        echo "step 3:(trigger upgrade)"
+        echo "      ipcctl_cmd_upgrade_ver http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/${version}/upgrade-init.pkg"
+        echo ""
+    elif [ x"$platform" = "xfh1x" ];then
+        echo "step 1:(redirect server)"
+        echo "      create file:/mnt/mtd/system_data/flag_debug_dcm_server"
+        echo "      {"
+        echo "         dcm_server:"${http_server_ip}:${http_server_port}","
+        echo "         dcm_path:"dcm/ipc/$platform""
+        echo "      }"
+        echo ""
+        echo "step 2:(not certified)"
+        echo "      touch  /mnt/mtd/flag_debug_pkg_no_sign_verify"
+        echo ""
+        echo "step 3:(trigger upgrade)"
+        echo "      upgrade8m sbull      http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/${version}/upgrade-init.pkg"
+        echo "      upgrade8m sbull_fast http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/${version}/upgrade-init.pkg"
+        echo "      upgrade8m fast       http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/${version}/upgrade-init.pkg"
+        echo ""
+        echo "UPGRADE_STATE: 1 create_virtual_mtd"
+        echo "UPGRADE_STATE: 2 test_virtual_mtd"
+        echo "UPGRADE_STATE: 3 upgrade_mtd"
+        echo "UPGRADE_STATE: 4 test_mtd"
+        echo "UPGRADE_STATE: 5 fix_ver"
+        echo "UPGRADE_STATE: 6 sd_ver_customize"
+        echo "UPGRADE_STATE: 7 run_from"
+        echo ""
+    fi
+
     return 0
 }
 function func_copy_local_version_to_http_server
@@ -88,8 +115,8 @@ function func_copy_local_version_to_http_server
     for dir in $(seq 1 "${dir_level}")
     do
         absolute_path=$(realpath ${search_dir})
-        echo ">>>find ${absolute_path} -type d -path \"*${version}/upload_file\" 2>/dev/null"
-        found_dir=$(find ${absolute_path} -type d -path "*${version}/upload_file" 2>/dev/null)
+        echo ">>>find ${absolute_path} -type d -path \"*${version}/upload_file\" -o -path \"*${version}/development/version_upload\" 2>/dev/null"
+        found_dir=$(find ${absolute_path} -type d -path "*${version}/upload_file" -o -path "*${version}/development/version_upload" 2>/dev/null)
         if [ "x${found_dir}" != "x" ];then echo ">>>found it !!";tree -sh ${found_dir};break;fi
         #go to previous level directory
         search_dir="${current_path}/$(printf "../%.0s" $(seq 1 ${dir}))"
@@ -100,27 +127,50 @@ function func_copy_local_version_to_http_server
     pushd ${absolute_path}
     for sub_dir in ${found_dir}
     do
-        if [ -d ${sub_dir}/${version} ]
+        echo "sub_dir=$sub_dir"
+        if [ -d ${sub_dir}/${version} ] || [ -f ${sub_dir}/upgrade-init.pkg ]
         then
             #get platform
-            local platform=$(realpath ${sub_dir}/../../ | xargs basename)
+            local publish_path=$(echo "$sub_dir" | sed "s|\(.*$version\).*|\1|")
+            local platform=$(realpath ${publish_path}/../ | xargs basename)
             local target_dir=${http_server_root_dir}/dcm/ipc/${platform}
-
+            echo "publish_path=$publish_path"
+            echo "platform=$platform"
+            echo "target_dir=$target_dir"
             if [ ! -w ${http_server_root_dir}/dcm/ipc ];then
                 maybeSUDO=sudo
             fi
-            if [ -d ${target_dir}/${version} ];
-            then 
-                ${maybeSUDO} rm -r ${target_dir}/${version}/*
+            if [ -d ${target_dir}/${version} ];then 
+                echo "${maybeSUDO} rm -r ${target_dir}/${version}/*"
+                #${maybeSUDO} rm -r ${target_dir}/${version}/*
             else
-                ${maybeSUDO} mkdir -p ${target_dir}/${version}
+                echo "${maybeSUDO} mkdir -p ${target_dir}/${version}"
+                #${maybeSUDO} mkdir -p ${target_dir}/${version}
             fi
             echo "===================================================="
-            echo "src_dir:${sub_dir}/upload_file/${version}"
-            echo "des_dir:${target_dir}/${version}"
-            echo ">>>${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/"
-            ${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/
-            if [ $? -ne 0 ]
+            if [ x"$platform" = "xbipc_fh8852v201_aiw4211" ] || [ x"$platform" = "xbipc_fh862x_hi3861" ];then
+                echo "src_dir:${sub_dir}/upload_file/${version}"
+                echo "des_dir:${target_dir}/${version}"
+                if [ -d ${target_dir}/${version} ];then rm -r ${target_dir}/${version};fi
+                echo ">>>${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/"
+                ${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/
+                ret=$?
+            elif [ x"$platform" = "xfh1x" ];then
+                echo "src_dir:${sub_dir}/"
+                echo "des_dir:${target_dir}/${version}"
+                if [ -d ${target_dir}/${version} ];then rm -r ${target_dir}/${version};fi
+                #fh1x-v88.88.88.250707170122.ver.zip
+                local target_file=${sub_dir}/${platform}-${version}.ver.zip
+                if [ -f ${target_file} ];then
+                    echo ">>>${maybeSUDO} unzip -q $target_file -d  ${target_dir}/${version}/"
+                    ${maybeSUDO} unzip -q $target_file -d  ${target_dir}/${version}/
+                    ret=$?
+                else
+                    echo ""
+                    ret=1
+                fi
+            fi
+            if [ $ret -ne 0 ]
             then 
                 echo ">>>copy fail..."
                 ret=3

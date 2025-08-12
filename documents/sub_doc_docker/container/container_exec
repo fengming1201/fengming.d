@@ -1,6 +1,6 @@
 $ sudo docker container exec --help     
 
-Usage:  docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
 
 Execute a command in a running container
 

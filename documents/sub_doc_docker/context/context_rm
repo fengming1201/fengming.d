@@ -1,0 +1,10 @@
+
+Usage:  docker context rm CONTEXT [CONTEXT...]
+
+Remove one or more contexts
+
+Aliases:
+  docker context rm, docker context remove
+
+Options:
+  -f, --force   Force the removal of a context in use

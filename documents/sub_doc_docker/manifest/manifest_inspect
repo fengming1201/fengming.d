@@ -1,0 +1,21 @@
+
+Usage:  docker manifest inspect [OPTIONS] [MANIFEST_LIST] MANIFEST
+
+Display an image manifest, or manifest list
+
+EXPERIMENTAL:
+  docker manifest inspect is an experimental feature.
+  Experimental features provide early access to product functionality. These
+  features may change between releases without warning, or can be removed from a
+  future release. Learn more about experimental features in our documentation:
+  https://docs.docker.com/go/experimental/
+
+Options:
+      --insecure   Allow communication with an insecure registry
+  -v, --verbose    Output additional info including layers and platform
+=======================================================================
+显示图像清单或清单列表
+
+Options:
+      --insecure   允许与不安全的注册表通信
+  -v, --verbose    输出附加信息，包括图层和平台

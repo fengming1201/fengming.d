@@ -1,0 +1,9 @@
+
+Usage:  docker compose port [OPTIONS] SERVICE PRIVATE_PORT
+
+Print the public port for a port binding
+
+Options:
+      --dry-run           Execute command in dry run mode
+      --index int         Index of the container if service has multiple replicas
+      --protocol string   tcp or udp (default "tcp")

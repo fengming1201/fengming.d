@@ -1,0 +1,32 @@
+
+Usage:  docker context COMMAND
+
+Manage contexts
+
+Commands:
+  create      Create a context
+  export      Export a context to a tar archive FILE or a tar stream on STDOUT.
+  import      Import a context from a tar or zip file
+  inspect     Display detailed information on one or more contexts
+  ls          List contexts
+  rm          Remove one or more contexts
+  show        Print the name of the current context
+  update      Update a context
+  use         Set the current docker context
+
+Run 'docker context COMMAND --help' for more information on a command.
+=====================================================================
+管理上下文
+
+Commands:
+  create      创建上下文
+  export      将上下文导出到STDOUT上的tar存档FILE或tar流。
+  import      从tar或zip文件导入上下文
+  inspect     显示一个或多个上下文的详细信息
+  ls          列出上下文
+  rm          删除一个或多个上下文
+  show        打印当前上下文的名称
+  update      更新上下文
+  use         设置当前docker上下文
+
+Run 'docker context COMMAND --help' for more information on a command.

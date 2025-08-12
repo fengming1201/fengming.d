@@ -1,0 +1,20 @@
+
+Usage:  docker compose down [OPTIONS] [SERVICES]
+
+Stop and remove containers, networks
+
+Options:
+      --dry-run          Execute command in dry run mode
+      --remove-orphans   Remove containers for services not defined in the Compose file
+      --rmi string       Remove images used by services. "local" remove only images that don't have a custom tag ("local"|"all")
+  -t, --timeout int      Specify a shutdown timeout in seconds
+  -v, --volumes          Remove named volumes declared in the "volumes" section of the Compose file and anonymous volumes attached to containers
+=================================================================
+停止并删除容器、网络
+
+Options:
+      --dry-run          Execute command in dry run mode
+      --remove-orphans   删除Compose文件中未定义的服务的容器
+      --rmi string       删除服务使用的镜像。“本地”仅删除没有自定义标签的镜像 ("local"|"all")
+  -t, --timeout int      指定关机超时时间（秒）
+  -v, --volumes          删除Compose文件的“volumes”部分中声明的命名卷和附加到容器的匿名卷

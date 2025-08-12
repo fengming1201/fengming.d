@@ -1,0 +1,21 @@
+
+Usage:  docker manifest create MANIFEST_LIST MANIFEST [MANIFEST...]
+
+Create a local manifest list for annotating and pushing to a registry
+
+EXPERIMENTAL:
+  docker manifest create is an experimental feature.
+  Experimental features provide early access to product functionality. These
+  features may change between releases without warning, or can be removed from a
+  future release. Learn more about experimental features in our documentation:
+  https://docs.docker.com/go/experimental/
+
+Options:
+  -a, --amend      Amend an existing manifest list
+      --insecure   Allow communication with an insecure registry
+===================================================================
+创建本地清单列表，用于注释和推送到注册表
+
+Options:
+  -a, --amend      修改现有清单
+      --insecure   允许与不安全的注册表通信

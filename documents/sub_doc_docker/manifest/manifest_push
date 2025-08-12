@@ -1,0 +1,21 @@
+
+Usage:  docker manifest push [OPTIONS] MANIFEST_LIST
+
+Push a manifest list to a repository
+
+EXPERIMENTAL:
+  docker manifest push is an experimental feature.
+  Experimental features provide early access to product functionality. These
+  features may change between releases without warning, or can be removed from a
+  future release. Learn more about experimental features in our documentation:
+  https://docs.docker.com/go/experimental/
+
+Options:
+      --insecure   Allow push to an insecure registry
+  -p, --purge      Remove the local manifest list after push
+===============================================================
+将清单列表推送到存储库
+
+Options:
+      --insecure   允许推送到不安全的注册表
+  -p, --purge      推送后删除本地清单列表

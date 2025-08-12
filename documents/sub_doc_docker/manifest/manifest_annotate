@@ -1,0 +1,27 @@
+
+Usage:  docker manifest annotate [OPTIONS] MANIFEST_LIST MANIFEST
+
+Add additional information to a local image manifest
+
+EXPERIMENTAL:
+  docker manifest annotate is an experimental feature.
+  Experimental features provide early access to product functionality. These
+  features may change between releases without warning, or can be removed from a
+  future release. Learn more about experimental features in our documentation:
+  https://docs.docker.com/go/experimental/
+
+Options:
+      --arch string           Set architecture
+      --os string             Set operating system
+      --os-features strings   Set operating system feature
+      --os-version string     Set operating system version
+      --variant string        Set architecture variant
+===========================================================
+向本地映像清单添加其他信息
+
+Options:
+      --arch string           设置架构
+      --os string             设置操作系统
+      --os-features strings   设置操作系统功能
+      --os-version string     设置操作系统版本
+      --variant string        设置架构变体

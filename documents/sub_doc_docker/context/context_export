@@ -1,0 +1,4 @@
+
+Usage:  docker context export [OPTIONS] CONTEXT [FILE|-]
+
+Export a context to a tar archive FILE or a tar stream on STDOUT.

@@ -1,6 +1,6 @@
 $ sudo docker container ls --help     
 
-Usage:  docker container ls [OPTIONS]
+Usage:  docker ps [OPTIONS]
 
 List containers
 

@@ -203,7 +203,7 @@ function usage
 # Parameter Requirements: none
 # Example:
 ##
-function func_
+function func_main
 {
     if [ \$# -lt 1 ];then usage; return 1; fi
     local debug=false
@@ -275,7 +275,7 @@ function func_
 func_debug_function "\$@"
 if [ \$? -ne 0 ];then exit 0;fi
 
-func_ "\$@"
+func_main "\$@"
 if [ \$? -ne 0 ];then exit 1;fi
 exit 0
 EOF

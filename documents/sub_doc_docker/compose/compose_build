@@ -1,0 +1,37 @@
+
+Usage:  docker compose build [OPTIONS] [SERVICE...]
+
+Build or rebuild services
+
+Options:
+      --build-arg stringArray   Set build-time variables for services
+      --builder string          Set builder to use
+      --dry-run                 Execute command in dry run mode
+  -m, --memory bytes            Set memory limit for the build container. Not supported by BuildKit.
+      --no-cache                Do not use cache when building the image
+      --pull                    Always attempt to pull a newer version of the image
+      --push                    Push service images
+  -q, --quiet                   Don't print anything to STDOUT
+      --ssh string              Set SSH authentications used when building service images. (use 'default' for using your default SSH Agent)
+      --with-dependencies       Also build dependencies (transitively)
+=======================================================================
+构建或重建服务
+
+Options:
+      --build-arg stringArray   为服务设置构建时间变量
+      --builder string          设置要使用的生成器
+      --dry-run                 在干运行模式下执行命令
+  -m, --memory bytes            设置构建容器的内存限制。BuildKit不支持。
+      --no-cache                构建映像时不使用缓存
+      --pull                    始终尝试拉取较新版本的镜像
+      --push                    推送服务镜像
+  -q, --quiet                   Don't print anything to STDOUT
+      --ssh string              设置构建服务镜像时使用的SSH身份验证。 (use 'default' for using your default SSH Agent)
+      --with-dependencies       还构建依赖关系（可传递）
+
+例子：
+1，本地构建镜像
+docker compose build .
+
+2，本地构建镜像，不使用缓存
+docker compose build . --no-cache

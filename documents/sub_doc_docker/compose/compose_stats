@@ -1,0 +1,30 @@
+
+Usage:  docker compose stats [OPTIONS] [SERVICE]
+
+Display a live stream of container(s) resource usage statistics
+
+Options:
+  -a, --all             Show all containers (default shows just running)
+      --dry-run         Execute command in dry run mode
+      --format string   Format output using a custom template:
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+      --no-stream       Disable streaming stats and only pull the first result
+      --no-trunc        Do not truncate output
+=======================================================
+显示容器资源使用统计信息的实时流
+
+Options:
+  -a, --all             显示所有容器（默认显示仅运行）
+      --dry-run         Execute command in dry run mode
+      --format string   使用自定义模板设置输出格式：
+                        'table':            Print output in table format with column headers (default)
+                        'table TEMPLATE':   Print output in table format using the given Go template
+                        'json':             Print in JSON format
+                        'TEMPLATE':         Print output using the given Go template.
+                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
+      --no-stream       禁用流媒体统计数据，只拉取第一个结果
+      --no-trunc        不截断输出
