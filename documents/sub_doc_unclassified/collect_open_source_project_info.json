@@ -478,7 +478,7 @@
       "name": "lwow",
       "language": "C",
       "describe": "LwOW (Lightweight OneWire) 是一款专为嵌入式系统设计的轻量级OneWire协议库，它以其卓越的性能和灵活的架构脱颖而出。LwOW 巧妙地利用了MCU 的UART外设或GPIO，实现高效的OneWire 通信，显著降低了资源消耗，并提升了系统效率。",
-      "URL": "https://github.com/MaJerle/lwow"
+      "URL": "“https://github.com/MaJerle/lwow”"
     },
     {
       "name": "sloop",
@@ -490,7 +490,7 @@
       "name": "lwmem",
       "language": "C",
       "describe": "LWMEM是一个高效、轻量级、易于集成的动态内存管理器，它为嵌入式系统开发者提供了一种全新的内存管理方案。其高效的算法、灵活的配置、以及对碎片化内存的良好支持。LWMEM能帮助轻松管理内存，提高系统稳定性和性能。",
-      "URL": "https://github.com/MaJerle/lwmem"
+      "URL": "“https://github.com/MaJerle/lwmem”"
     },
     {
       "name": "toaruos",
@@ -515,6 +515,30 @@
       "language": "C",
       "describe": "mr-library 框架支持互斥锁、对象管理等基础内核功能。集成异步事件驱动框架（event）、多时基软件定时器(soft-timer) 等服务。",
       "URL": "https://gitee.com/MacRsh/mr-library"
+    },
+    {
+      "name": "scmrtos",
+      "language": "C",
+      "describe": "scmRTOS是一个用C++编写的，适用于MCU的轻量级实时操作系统。最低只需要512字节RAM（内存）、1K的代码量、具有上下文切换极低的延时。",
+      "URL": "https://github.com/scmrtos/scmrtos"
+    },
+    {
+      "name": "phoenix-rtos-kernel",
+      "language": "C",
+      "describe": "就是一款“凤凰”级别的微内核项目——小巧、灵活，还跨架构。它能跑在你手边那些小到只能点亮LED的Cortex-M芯片上，也能跑在内存几百兆的ARM Cortex-A、x86、RISC-V、LEON3/4 (SPARC)甚至QEMU模拟环境里。底层全BSD协议开源，想捣鼓啥都随你。",
+      "URL": "https://github.com/phoenix-rtos/phoenix-rtos-kernel.git"
+    },
+    {
+      "name": "stlink",
+      "language": "C",
+      "describe": "说起 STM32 开发板，肯定绕不开官方的 ST-LINK 调试器。stlink 就是一个开源版的 STLINK 工具集，用它你能刷固件、调试、查看芯片信息功能跟官方几乎 1:1 对标",
+      "URL": ""
+    },
+    {
+      "name": "lwbtn",
+      "language": "",
+      "describe": "lwbtn（Lightweight Button Manager）就是个超轻量级的按键管理库，用 C11 写的。它不依赖操作系统，零动态内存，一切都靠你提供个毫秒级的时间源。回调驱动，支持单击、多击、长按，还自带软件防抖——功能虽精简，但绝对够用。",
+      "URL": "https://github.com/MaJerle/lwbtn.git"
     }
   ]
 }
