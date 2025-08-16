@@ -1,0 +1,23 @@
+
+Usage:  docker swarm update [OPTIONS]
+
+Update the swarm
+
+Options:
+      --autolock                        Change manager autolocking setting (true|false)
+      --cert-expiry duration            Validity period for node certificates (ns|us|ms|s|m|h) (default 2160h0m0s)
+      --dispatcher-heartbeat duration   Dispatcher heartbeat period (ns|us|ms|s|m|h) (default 5s)
+      --external-ca external-ca         Specifications of one or more certificate signing endpoints
+      --max-snapshots uint              Number of additional Raft snapshots to retain
+      --snapshot-interval uint          Number of log entries between Raft snapshots (default 10000)
+      --task-history-limit int          Task history retention limit (default 5)
+==================================================================================
+更新群
+Options:
+      --autolock                        更改管理器自动锁定设置 (true|false)
+      --cert-expiry duration            节点证书的有效期 (ns|us|ms|s|m|h) (default 2160h0m0s)
+      --dispatcher-heartbeat duration   调度员心跳周期 (ns|us|ms|s|m|h) (default 5s)
+      --external-ca external-ca         一个或多个证书签名端点的规范
+      --max-snapshots uint              要保留的其他Raft快照的数量
+      --snapshot-interval uint          Raft快照之间的日志条目数 (default 10000)
+      --task-history-limit int          任务历史记录保留限制 (default 5)

@@ -1,0 +1,7 @@
+
+Usage:  docker swarm leave [OPTIONS]
+
+Leave the swarm
+
+Options:
+  -f, --force   Force this node to leave the swarm, ignoring warnings

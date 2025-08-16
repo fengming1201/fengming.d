@@ -1,0 +1,12 @@
+
+Usage:  docker volume update [OPTIONS] [VOLUME]
+
+Update a volume (cluster volumes only)
+
+Options:
+      --availability string   Cluster Volume availability ("active", "pause", "drain") (default "active")
+=========================================================
+更新卷（仅限群集卷）
+
+Options:
+      --availability string   群集卷可用性 ("active", "pause", "drain") (default "active")

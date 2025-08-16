@@ -56,8 +56,8 @@ function func_mount
     local opt=
     #check ip
     if [ $# -lt 1 ];then
-        #get from zspacet1
-        local remote_ip=$(ssh MyZSpaceT2 "hostname -I")
+        #get from ZSpaceT2_remote
+        local remote_ip=$(ssh ZSpaceT2_remote "hostname -I")
         ip=$(echo ${remote_ip} | awk '{print $1}')
     else
         ip=$1

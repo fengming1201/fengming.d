@@ -1,28 +1,41 @@
-docker volume create
-Description:	Create a volume
-      Usage:	docker volume create [OPTIONS] [VOLUME]
 
+Usage:  docker volume create [OPTIONS] [VOLUME]
 
-Description
-创建容器可以使用并存储数据的新卷。如果未指定名称，Docker将生成随机名称。
+Create a volume
 
-Options
-Option	        Default	      Description
---availability	active	      API 1.42+ Swarm Cluster Volume availability (active, pause, drain)
--d, --driver	  local	Specify volume driver name
---group		API 1.42+ Swarm Cluster Volume group (cluster volumes)
---label		Set metadata for a volume
---limit-bytes		API 1.42+ Swarm Minimum size of the Cluster Volume in bytes
--o, --opt		Set driver specific options
---required-bytes		API 1.42+ Swarm Maximum size of the Cluster Volume in bytes
---scope	single	API 1.42+ Swarm Cluster Volume access scope (single, multi)
---secret		API 1.42+ Swarm Cluster Volume secrets
---sharing	none	API 1.42+ Swarm Cluster Volume access sharing (none, readonly, onewriter, all)
---topology-preferred		    API 1.42+ Swarm A topology that the Cluster Volume would be preferred in
---topology-required		      API 1.42+ Swarm A topology that the Cluster Volume must be accessible from
---type	       block	      API 1.42+ Swarm Cluster Volume access type (mount, block)
+Options:
+      --availability string       Cluster Volume availability ("active", "pause", "drain") (default "active")
+  -d, --driver string             Specify volume driver name (default "local")
+      --group string              Cluster Volume group (cluster volumes)
+      --label list                Set metadata for a volume
+      --limit-bytes bytes         Minimum size of the Cluster Volume in bytes
+  -o, --opt map                   Set driver specific options (default map[])
+      --required-bytes bytes      Maximum size of the Cluster Volume in bytes
+      --scope string              Cluster Volume access scope ("single", "multi") (default "single")
+      --secret map                Cluster Volume secrets (default map[])
+      --sharing string            Cluster Volume access sharing ("none", "readonly", "onewriter", "all") (default "none")
+      --topology-preferred list   A topology that the Cluster Volume would be preferred in
+      --topology-required list    A topology that the Cluster Volume must be accessible from
+      --type string               Cluster Volume access type ("mount", "block") (default "block")
 ===============================================================================
-例子
+创建卷
+
+Options:
+      --availability string       群集卷可用性 ("active", "pause", "drain") (default "active")
+  -d, --driver string             指定卷驱动程序名称 (default "local")
+      --group string              群集卷组 (cluster volumes)
+      --label list                为卷设置元数据
+      --limit-bytes bytes         群集卷的最小大小（字节）
+  -o, --opt map                   设置特定于驾驶员的选项 (default map[])
+      --required-bytes bytes      群集卷的最大大小（字节）
+      --scope string              群集卷访问范围 ("single", "multi") (default "single")
+      --secret map                群集卷机密 (default map[])
+      --sharing string            群集卷访问共享 ("none", "readonly", "onewriter", "all") (default "none")
+      --topology-preferred list   群集卷首选的拓扑
+      --topology-required list    群集卷必须可从中访问的拓扑
+      --type string               群集卷访问类型 ("mount", "block") (default "block")
+
+例子：
 
 创建卷，然后配置容器以使用它：
 

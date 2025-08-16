@@ -1,0 +1,14 @@
+
+Usage:  docker swarm unlock-key [OPTIONS]
+
+Manage the unlock key
+
+Options:
+  -q, --quiet    Only display token
+      --rotate   Rotate unlock key
+===================================
+管理解锁钥匙
+
+Options:
+  -q, --quiet    Only display token
+      --rotate   旋转解锁键

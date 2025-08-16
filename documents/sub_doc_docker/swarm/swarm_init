@@ -1,0 +1,41 @@
+
+Usage:  docker swarm init [OPTIONS]
+
+Initialize a swarm
+
+Options:
+      --advertise-addr string                  Advertised address (format: "<ip|interface>[:port]")
+      --autolock                               Enable manager autolocking (requiring an unlock key to start a stopped manager)
+      --availability string                    Availability of the node ("active", "pause", "drain") (default "active")
+      --cert-expiry duration                   Validity period for node certificates (ns|us|ms|s|m|h) (default 2160h0m0s)
+      --data-path-addr string                  Address or interface to use for data path traffic (format: "<ip|interface>")
+      --data-path-port uint32                  Port number to use for data path traffic (1024 - 49151). If no value is set or is set to 0,
+                                               the default port (4789) is used.
+      --default-addr-pool ipNetSlice           default address pool in CIDR format (default [])
+      --default-addr-pool-mask-length uint32   default address pool subnet mask length (default 24)
+      --dispatcher-heartbeat duration          Dispatcher heartbeat period (ns|us|ms|s|m|h) (default 5s)
+      --external-ca external-ca                Specifications of one or more certificate signing endpoints
+      --force-new-cluster                      Force create a new cluster from current state
+      --listen-addr node-addr                  Listen address (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
+      --max-snapshots uint                     Number of additional Raft snapshots to retain
+      --snapshot-interval uint                 Number of log entries between Raft snapshots (default 10000)
+      --task-history-limit int                 Task history retention limit (default 5)
+============================================================================================
+初始化群
+
+Options:
+      --advertise-addr string                  Advertised address (format: "<ip|interface>[:port]")
+      --autolock                               启用管理器自动锁定 (需要解锁钥匙才能启动已停止的管理器)
+      --availability string                    节点的可用性 ("active", "pause", "drain") (default "active")
+      --cert-expiry duration                   节点证书的有效期 (ns|us|ms|s|m|h) (default 2160h0m0s)
+      --data-path-addr string                  用于数据路径流量的地址或接口 (format: "<ip|interface>")
+      --data-path-port uint32                  用于数据路径流量的端口号（1024-49151）。如果没有设置值或设置为0，使用默认端口（4789）。
+      --default-addr-pool ipNetSlice           CIDR格式的默认地址池 (default [])
+      --default-addr-pool-mask-length uint32   默认地址池子网掩码长度 (default 24)
+      --dispatcher-heartbeat duration          调度员心跳周期 (ns|us|ms|s|m|h) (default 5s)
+      --external-ca external-ca                一个或多个证书签名端点的规范
+      --force-new-cluster                      强制从当前状态创建新群集
+      --listen-addr node-addr                  侦听地址 (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
+      --max-snapshots uint                     要保留的其他Raft快照的数量
+      --snapshot-interval uint                 Raft快照之间的日志条目数 (default 10000)
+      --task-history-limit int                 任务历史记录保留限制 (default 5)

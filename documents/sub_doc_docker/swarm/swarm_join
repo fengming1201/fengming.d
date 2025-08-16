@@ -1,0 +1,20 @@
+
+Usage:  docker swarm join [OPTIONS] HOST:PORT
+
+Join a swarm as a node and/or manager
+
+Options:
+      --advertise-addr string   Advertised address (format: "<ip|interface>[:port]")
+      --availability string     Availability of the node ("active", "pause", "drain") (default "active")
+      --data-path-addr string   Address or interface to use for data path traffic (format: "<ip|interface>")
+      --listen-addr node-addr   Listen address (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
+      --token string            Token for entry into the swarm
+==============================================================
+以节点和/或管理员的身份加入群
+
+Options:
+      --advertise-addr string   Advertised address (format: "<ip|interface>[:port]")
+      --availability string     节点的可用性 ("active", "pause", "drain") (default "active")
+      --data-path-addr string   用于数据路径流量的地址或接口 (format: "<ip|interface>")
+      --listen-addr node-addr   侦听地址 (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
+      --token string            进入群的令牌

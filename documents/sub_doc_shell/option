@@ -117,6 +117,7 @@ for arg in "$@"; do
   esac
 done
 ===========================================
+# 通用长短选项处理方法
 #同时处理长选项和短选项
 # 默认值
 local debug=false
@@ -143,6 +144,12 @@ do
         *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
     esac
 done
+if [ ${debug} = true ];then
+    echo "DEBUG:debug=${debug}"
+    echo "DEBUG:mode=${mode}"
+    echo "DEBUG:remaining_args=${remaining_args[@]}"
+fi
+#用法
 cmd  [-h or --help]
 cmd  [-d or --debug]
 cmd  [-m or --mode  arg]

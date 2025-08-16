@@ -1,0 +1,13 @@
+
+Usage:  docker swarm join-token [OPTIONS] (worker|manager)
+
+Manage join tokens
+
+Options:
+  -q, --quiet    Only display token
+      --rotate   Rotate join token
+==================================
+管理加入令牌
+Options:
+  -q, --quiet    Only display token
+      --rotate   旋转加入令牌

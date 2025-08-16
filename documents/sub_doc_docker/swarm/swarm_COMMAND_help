@@ -15,3 +15,14 @@ Commands:
 
 Run 'docker swarm COMMAND --help' for more information on a command.
 ====================================================================
+管理Swarm
+
+Commands:
+  ca          显示并旋转根CA
+  init        初始化群
+  join        以节点和/或管理员的身份加入集群
+  join-token  管理加入令牌
+  leave       离开集群
+  unlock      解锁群
+  unlock-key  管理解锁钥匙
+  update      更新群
