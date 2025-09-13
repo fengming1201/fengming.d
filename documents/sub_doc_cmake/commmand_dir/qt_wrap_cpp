@@ -1,0 +1,12 @@
+qt_wrap_cpp
+-----------
+
+Manually create Qt Wrappers.
+
+ qt_wrap_cpp(resultingLibraryName DestName SourceLists ...)
+
+Produces moc files for all the .h files listed in the SourceLists.  The
+moc files will be added to the library using the ``DestName`` source list.
+
+Consider updating the project to use the ``AUTOMOC`` target property
+instead for a more automated way of invoking the ``moc`` tool.

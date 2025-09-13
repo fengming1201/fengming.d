@@ -6,7 +6,7 @@ export FENGMING_DIR=/opt/fengming.d
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 	
 	alias l='ls -CF --color=auto'
 	alias ll='ls -hl --color=auto'
@@ -15,11 +15,11 @@ if [ -x /usr/bin/dircolors ]; then
 	alias la='ls -aF --color=auto'
 	alias lf='ls -AF --color=auto'
 	#grep: 1,默认情况下使用基本正则表达式.2,可以通过选项 -E 来使用扩展正则表达式（ERE），相当于 egrep。
-    alias grep='grep --binary-files=without-match --color=auto'
+	alias grep='grep --binary-files=without-match --color=auto'
 	#fgrep: 1,不使用正则表达式。2,直接搜索固定字符串。3,适合搜索特殊字符或多个固定字符串。
-    alias fgrep='fgrep --binary-files=without-match --color=auto'
+	alias fgrep='fgrep --binary-files=without-match --color=auto'
 	#egrep: 1,使用扩展正则表达式。2,支持更复杂的正则表达式语法，如 +, ?, |, () 等。注意：fgrep 和 egrep 已被视为过时，建议使用 grep -F 和 grep -E 代替。
-    alias egrep='egrep --binary-files=without-match --color=auto'
+	alias egrep='egrep --binary-files=without-match --color=auto'
 
 	alias treee='tree -C'
 	alias treeee='tree -C'

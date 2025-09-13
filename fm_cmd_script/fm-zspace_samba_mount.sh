@@ -57,6 +57,7 @@ function func_mount
     #check ip
     if [ $# -lt 1 ];then
         #get from ZSpaceT2_remote
+        echo  "ssh ZSpaceT2_remote \"hostname -I\""
         local remote_ip=$(ssh ZSpaceT2_remote "hostname -I")
         ip=$(echo ${remote_ip} | awk '{print $1}')
     else
@@ -150,7 +151,7 @@ function func_umount
 function usage
 {
     echo ""
-    echo "$scriptname  [opt]  {auto| ip | umount}"
+    echo "$scriptname  [opt]"
     echo "opt:"
     echo "-h or --help     # help"
     echo "-d or --debug    # print variable status"

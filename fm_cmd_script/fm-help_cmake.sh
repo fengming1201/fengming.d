@@ -34,7 +34,7 @@ if [ $(id -u) -ne 0 ] && [ ${USER} != $(ls -ld . | awk '{print$3}') ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
-target_dir=${fengming_dir}/documents/sub_doc_cmake
+target_dir=${fengming_dir}/documents/sub_doc_cmake/commmand_dir
 prefix_or_suffix=prefix
 ##Parameter Counts      : 0
 # Parameter Requirements: none
