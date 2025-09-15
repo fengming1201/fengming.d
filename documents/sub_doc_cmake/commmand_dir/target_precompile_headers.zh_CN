@@ -1,0 +1,92 @@
+target_precompile_headers
+-------------------------
+
+添加要预编译的头文件列表。
+
+预编译头文件可以通过创建某些头文件的部分处理版本来加速编译，
+然后在编译过程中使用该版本而不是重复解析原始头文件。
+
+主要形式
+^^^^^^^^^
+
+ target_precompile_headers(<target>
+   <INTERFACE|PUBLIC|PRIVATE> [header1...]
+   [<INTERFACE|PUBLIC|PRIVATE> [header2...] ...])
+
+该命令将头文件添加到``<target>``的``PRECOMPILE_HEADERS``和/或
+``INTERFACE_PRECOMPILE_HEADERS``目标属性中。
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+
+需要``INTERFACE``、``PUBLIC``和``PRIVATE``关键字来指定后续参数的作用域。
+``PRIVATE``和``PUBLIC``项将填充``<target>``的``PRECOMPILE_HEADERS``属性。
+``PUBLIC``和``INTERFACE``项将填充``<target>``的``INTERFACE_PRECOMPILE_HEADERS``属性
+（:ref:`IMPORTED targets <Imported Targets>`仅支持``INTERFACE``项）。
+对同一``<target>``的重复调用将按调用顺序追加项目。
+
+项目通常应避免对将被:ref:`导出 <install(EXPORT)>`的目标使用``PUBLIC``或``INTERFACE``，
+或者至少使用``$<BUILD_INTERFACE:...>``生成器表达式来防止预编译头文件出现在已安装的导出目标中。
+目标的消费者通常应该控制他们使用什么预编译头文件，而不是被消耗的目标强制使用预编译头文件
+（因为预编译头文件通常不是使用要求）。一个明显的例外是创建一个:ref:`接口库 <Interface Libraries>`
+来在一处定义一组常用的预编译头文件，然后其他目标私有地链接到该接口库。
+在这种情况下，接口库专门用于将预编译头文件传播到其消费者，
+并且消费者实际上仍然处于控制之中，因为它决定是否链接到接口库。
+
+头文件列表用于生成名为``cmake_pch.h|xx``的头文件，
+该头文件用于生成预编译头文件（``.pch``、``.gch``、``.pchi``）构件。
+``cmake_pch.h|xx``头文件将被强制包含（GCC为``-include``，MSVC为``/FI``）到所有源文件中，
+因此源文件不需要有``#include "pch.h"``。
+
+用尖括号（例如``<unordered_map>``）或显式双引号（为``cmake-language(7)``转义，
+例如``[["other_header.h"]]``）指定的头文件名将被按原样处理，
+并且包含目录必须可供编译器找到它们。
+其他头文件名（例如``project_header.h``）被解释为相对于当前源目录
+（例如``CMAKE_CURRENT_SOURCE_DIR``），并将通过绝对路径包含。例如：
+
+ target_precompile_headers(myTarget
+   PUBLIC
+     project_header.h
+   PRIVATE
+     [["other_header.h"]]
+     <unordered_map>
+ )
+
+``target_precompile_headers()``的参数可以使用语法为``$<...>``的"生成器表达式"。
+请参见``cmake-generator-expressions(7)``手册以了解可用表达式。
+``$<COMPILE_LANGUAGE:...>``生成器表达式对于指定仅针对一种语言（例如``CXX``而不是``C``）
+预编译的特定语言头文件特别有用。在这种情况下，
+未显式用双引号或尖括号括起来的头文件名必须通过绝对路径指定。
+此外，在生成器表达式中指定尖括号时，请确保将关闭的``>``编码为``$<ANGLE-R>``。
+例如：
+
+ target_precompile_headers(mylib PRIVATE
+   "$<$<COMPILE_LANGUAGE:CXX>:${CMAKE_CURRENT_SOURCE_DIR}/cxx_only.h>"
+   "$<$<COMPILE_LANGUAGE:C>:<stddef.h$<ANGLE-R>>"
+   "$<$<COMPILE_LANGUAGE:CXX>:<cstddef$<ANGLE-R>>"
+ )
+
+重用预编译头文件
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+该命令还支持第二种签名，可用于指定一个目标重用来自另一个目标的预编译头文件构件，
+而不是生成自己的预编译头文件：
+
+ target_precompile_headers(<target> REUSE_FROM <other_target>)
+
+此形式将``PRECOMPILE_HEADERS_REUSE_FROM``属性设置为``<other_target>``，
+并添加依赖项，使得``<target>``将依赖于``<other_target>``。
+如果``<target>``的``PRECOMPILE_HEADERS``属性已在使用``REUSE_FROM``形式时设置，
+CMake将停止并报错。
+
+.. 注意::
+
+  ``REUSE_FROM``形式要求``<target>``和``<other_target>``具有相同的编译器选项、
+  编译器标志和编译器定义集。某些编译器（例如GCC）如果无法使用预编译头文件（``-Winvalid-pch``）可能会发出警告。
+
+另请参见
+^^^^^^^^
+
+要禁用特定目标的预编译头文件，请参见``DISABLE_PRECOMPILE_HEADERS``目标属性。
+
+要防止在编译特定源文件时使用预编译头文件，
+请参见``SKIP_PRECOMPILE_HEADERS``源文件属性。

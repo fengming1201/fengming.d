@@ -1,0 +1,16 @@
+ctest_sleep
+-----------
+
+睡眠一段时间
+
+::
+
+ ctest_sleep(<seconds>)
+
+睡眠给定的秒数。
+
+::
+
+ ctest_sleep(<time1> <duration> <time2>)
+
+如果 t > 0，睡眠 t=(time1 + duration - time2) 秒。

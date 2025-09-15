@@ -1,0 +1,15 @@
+include_regular_expression
+--------------------------
+
+设置用于依赖项检查的正则表达式。
+
+ include_regular_expression(regex_match [regex_complain])
+
+设置用于依赖项检查的正则表达式。只有匹配 ``regex_match`` 的文件才会被追踪为依赖项。
+只有匹配 ``regex_complain`` 的文件在找不到时才会生成警告（不搜索标准标头路径）。
+默认值为：
+
+::
+
+ regex_match    = "^.*$" (匹配所有内容)
+ regex_complain = "^$" (仅匹配空字符串)

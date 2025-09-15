@@ -1,0 +1,21 @@
+get_directory_property
+----------------------
+
+获取 ``DIRECTORY`` 作用域的属性。
+
+ get_directory_property(<variable> [DIRECTORY <dir>] <prop-name>)
+
+将目录作用域的属性存储在命名的 ``<variable>`` 中。
+``DIRECTORY`` 参数指定另一个目录，从该目录检索属性值，而不是当前目录。
+指定的目录必须已经被 CMake 遍历过。
+
+如果为指定的目录作用域未定义属性，则返回空字符串。
+对于 ``INHERITED`` 属性，如果为指定的目录作用域找不到属性，
+搜索将链式连接到父作用域，如 ``define_property()`` 命令中所述。
+
+ get_directory_property(<variable> [DIRECTORY <dir>]
+                        DEFINITION <var-name>)
+
+从目录获取变量定义。此形式对于从另一个目录获取变量定义很有用。
+
+另请参见更通用的 ``get_property()`` 命令。

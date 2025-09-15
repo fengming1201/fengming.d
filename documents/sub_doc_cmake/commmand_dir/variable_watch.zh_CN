@@ -1,0 +1,12 @@
+variable_watch
+--------------
+
+监视CMake变量的更改。
+
+ variable_watch(<variable> [<command>])
+
+如果指定的``<variable>``发生变化，将打印一条消息通知此更改。
+
+此外，如果提供了``<command>``，则会执行此命令。
+该命令将接收以下参数：
+``COMMAND(<variable> <access> <value> <current_list_file> <stack>)``

@@ -1,0 +1,6 @@
+site_name
+---------
+
+将给定变量设置为计算机的名称。
+
+ site_name(variable)

@@ -1,0 +1,14 @@
+write_file
+----------
+
+::
+
+ write_file(filename "message to write"... [APPEND])
+
+第一个参数是文件名，其余参数是要写入的消息。
+如果指定了参数``APPEND``，则消息将被追加。
+
+注意1：``file(WRITE)``和``file(APPEND)``与此命令完全相同，但增加了更多功能。
+
+注意2：使用``write_file``时，生成的文件不能用作CMake的输入（CONFIGURE_FILE、源文件等），因为这会导致无限循环。
+如果要生成CMake的输入文件，请使用``configure_file()``。

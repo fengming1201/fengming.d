@@ -1,0 +1,20 @@
+ctest_upload
+------------
+
+将文件上传到仪表板服务器作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_upload(FILES <file>... [QUIET] [CAPTURE_CMAKE_ERROR <result-var>])
+
+选项为：
+
+``FILES <file>...``
+  指定要与构建结果一起发送到仪表板服务器的文件列表。
+
+``QUIET``
+  抑制所有否则会打印到控制台的 CTest 特定非错误输出。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。

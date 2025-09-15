@@ -1,0 +1,30 @@
+set_source_files_properties
+---------------------------
+
+源文件可以具有影响其构建方式的属性。
+
+ set_source_files_properties(<files> ...
+                             [DIRECTORY <dirs> ...]
+                             [TARGET_DIRECTORY <targets> ...]
+                             PROPERTIES <prop1> <value1>
+                             [<prop2> <value2>] ...)
+
+使用键/值配对列表设置与源文件关联的属性。
+
+默认情况下，源文件属性仅对同一目录（``CMakeLists.txt``）中添加的目标可见。
+可以使用以下一个或两个选项在其他目录作用域中设置可见性：
+
+``DIRECTORY <dirs>...``
+  源文件属性将在每个 ``<dirs>`` 目录的作用域中设置。
+  CMake必须已经知道这些源目录中的每一个，
+  要么通过调用 ``add_subdirectory()`` 添加它们，要么是顶级源目录。
+  相对路径被视为相对于当前源目录。
+
+``TARGET_DIRECTORY <targets>...``
+  源文件属性将在创建任何指定 ``<targets>`` 的目录作用域中设置
+  （因此 ``<targets>`` 必须已经存在）。
+
+使用 ``get_source_file_property()`` 获取属性值。
+另请参见 ``set_property(SOURCE)`` 命令。
+
+参见 :ref:`Source File Properties` 了解CMake已知的属性列表。

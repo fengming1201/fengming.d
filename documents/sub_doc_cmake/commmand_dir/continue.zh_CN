@@ -1,0 +1,10 @@
+continue
+--------
+
+继续到封闭的 foreach 或 while 循环的顶部。
+
+ continue()
+
+``continue`` 命令允许 cmake 脚本中止 ``foreach()`` 或 ``while()`` 循环中块的其余部分，并从下一次迭代的顶部开始。
+
+另请参阅 ``break()`` 命令。

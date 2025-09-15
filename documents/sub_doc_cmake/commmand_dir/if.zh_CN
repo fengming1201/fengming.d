@@ -1,0 +1,141 @@
+if
+--
+
+条件执行一组命令。
+
+简介
+^^^^
+
+ if(<condition>)
+   <commands>
+ elseif(<condition>) # 可选块，可重复
+   <commands>
+ else()              # 可选块
+   <commands>
+ endif()
+
+根据下面描述的 Condition 语法评估 ``if`` 子句的 ``condition`` 参数。如果结果为真，则执行 ``if`` 块中的 ``commands``。
+否则，以相同方式处理可选的 ``elseif`` 块。最后，如果没有 ``condition`` 为真，则执行可选 ``else`` 块中的 ``commands``。
+
+按传统，``else()`` 和 ``endif()`` 命令接受可选的 ``<condition>`` 参数。
+如果使用，它必须是开头 ``if`` 命令参数的逐字重复。
+
+条件语法
+^^^^^^^^
+
+以下语法适用于 ``if``、``elseif`` 和 ``while()`` 子句的 ``condition`` 参数。
+
+复合条件按以下优先级顺序评估：最内层括号首先评估。接下来是一元测试，如 ``EXISTS``、``COMMAND`` 和 ``DEFINED``。
+然后是二元测试，如 ``EQUAL``、``LESS``、``LESS_EQUAL``、``GREATER``、``GREATER_EQUAL``、
+``STREQUAL``、``STRLESS``、``STRLESS_EQUAL``、``STRGREATER``、
+``STRGREATER_EQUAL``、``VERSION_EQUAL``、``VERSION_LESS``、
+``VERSION_LESS_EQUAL``、``VERSION_GREATER``、``VERSION_GREATER_EQUAL`` 和 ``MATCHES``。然后是布尔运算符，顺序为 ``NOT``、``AND``，最后为 ``OR``。
+
+可能的条件：
+
+``if(<constant>)``
+ 如果常量为 ``1``、``ON``、``YES``、``TRUE``、``Y`` 或非零数字，则为真。如果常量为 ``0``、``OFF``、
+ ``NO``、``FALSE``、``N``、``IGNORE``、``NOTFOUND``、空字符串或以后缀 ``-NOTFOUND`` 结尾，则为假。
+ 命名布尔常量不区分大小写。如果参数不是这些特定常量之一，则将其视为变量或字符串，并使用以下签名。
+
+``if(<variable|string>)``
+ 如果给定变量定义为不是假常量的值，则为真。否则为假。（注意宏参数不是变量。）
+
+``if(NOT <condition>)``
+ 如果条件不为真，则为真。
+
+``if(<cond1> AND <cond2>)``
+ 如果两个条件单独都为真，则为真。
+
+``if(<cond1> OR <cond2>)``
+ 如果任一条件单独为真，则为真。
+
+``if(COMMAND command-name)``
+ 如果给定名称是可以调用的命令、宏或函数，则为真。
+
+``if(POLICY policy-id)``
+ 如果给定名称是现有策略（形式为 ``CMP<NNNN>``），则为真。
+
+``if(TARGET target-name)``
+ 如果给定名称是由已调用的 ``add_executable()``、``add_library()`` 或 ``add_custom_target()`` 命令（在任何目录中）创建的现有逻辑目标名称，则为真。
+
+``if(TEST test-name)``
+ 如果给定名称是由 ``add_test()`` 命令创建的现有测试名称，则为真。
+
+``if(EXISTS path-to-file-or-directory)``
+ 如果命名文件或目录存在，则为真。行为仅对完整路径定义良好。解析符号链接，即如果命名文件或目录是符号链接，如果符号链接的目标存在，则返回真。
+
+``if(file1 IS_NEWER_THAN file2)``
+ 如果 ``file1`` 比 ``file2`` 新，或者两个文件之一不存在，则为真。行为仅对完整路径定义良好。
+ 如果文件时间戳完全相同，``IS_NEWER_THAN`` 比较返回真，以便在平局的情况下发生任何依赖构建操作。这包括为 file1 和 file2 传递相同文件名的情况。
+
+``if(IS_DIRECTORY path-to-directory)``
+ 如果给定名称是目录，则为真。行为仅对完整路径定义良好。
+
+``if(IS_SYMLINK file-name)``
+ 如果给定名称是符号链接，则为真。行为仅对完整路径定义良好。
+
+``if(IS_ABSOLUTE path)``
+ 如果给定路径是绝对路径，则为真。
+
+``if(<variable|string> MATCHES regex)``
+ 如果给定字符串或变量的值匹配给定正则条件，则为真。有关正则格式，请参阅 :ref:`正则规范`。``()`` 组捕获在 ``CMAKE_MATCH_<n>`` 变量中。
+
+``if(<variable|string> LESS <variable|string>)``
+ 如果给定字符串或变量的值是有效数字且小于右侧的值，则为真。
+
+``if(<variable|string> GREATER <variable|string>)``
+ 如果给定字符串或变量的值是有效数字且大于右侧的值，则为真。
+
+``if(<variable|string> EQUAL <variable|string>)``
+ 如果给定字符串或变量的值是有效数字且等于右侧的值，则为真。
+
+``if(<variable|string> LESS_EQUAL <variable|string>)``
+ 如果给定字符串或变量的值是有效数字且小于或等于右侧的值，则为真。
+
+``if(<variable|string> GREATER_EQUAL <variable|string>)``
+ 如果给定字符串或变量的值是有效数字且大于或等于右侧的值，则为真。
+
+``if(<variable|string> STRLESS <variable|string>)``
+ 如果给定字符串或变量的值在字典序上小于右侧的字符串或变量，则为真。
+
+``if(<variable|string> STRGREATER <variable|string>)``
+ 如果给定字符串或变量的值在字典序上大于右侧的字符串或变量，则为真。
+
+``if(<variable|string> STREQUAL <variable|string>)``
+ 如果给定字符串或变量的值在字典序上等于右侧的字符串或变量，则为真。
+
+``if(<variable|string> STRLESS_EQUAL <variable|string>)``
+ 如果给定字符串或变量的值在字典序上小于或等于右侧的字符串或变量，则为真。
+
+``if(<variable|string> STRGREATER_EQUAL <variable|string>)``
+ 如果给定字符串或变量的值在字典序上大于或等于右侧的字符串或变量，则为真。
+
+``if(<variable|string> VERSION_LESS <variable|string>)``
+ 组件式整数版本号比较（版本格式为 ``major[.minor[.patch[.tweak]]]``，省略的组件视为零）。
+ 任何非整数版本组件或非整数版本组件的尾随部分有效地在该点截断字符串。
+
+``if(<variable|string> VERSION_GREATER <variable|string>)``
+ 组件式整数版本号比较（版本格式为 ``major[.minor[.patch[.tweak]]]``，省略的组件视为零）。
+ 任何非整数版本组件或非整数版本组件的尾随部分有效地在该点截断字符串。
+
+``if(<variable|string> VERSION_EQUAL <variable|string>)``
+ 组件式整数版本号比较（版本格式为 ``major[.minor[.patch[.tweak]]]``，省略的组件视为零）。
+ 任何非整数版本组件或非整数版本组件的尾随部分有效地在该点截断字符串。
+
+``if(<variable|string> VERSION_LESS_EQUAL <variable|string>)``
+ 组件式整数版本号比较（版本格式为 ``major[.minor[.patch[.tweak]]]``，省略的组件视为零）。
+ 任何非整数版本组件或非整数版本组件的尾随部分有效地在该点截断字符串。
+
+``if(<variable|string> VERSION_GREATER_EQUAL <variable|string>)``
+ 组件式整数版本号比较（版本格式为 ``major[.minor[.patch[.tweak]]]``，省略的组件视为零）。
+ 任何非整数版本组件或非整数版本组件的尾随部分有效地在该点截断字符串。
+
+``if(<variable|string> IN_LIST <variable>)``
+ 如果给定元素包含在命名的列表变量中，则为真。
+
+``if(DEFINED <name>|CACHE{<name>}|ENV{<name>})``
+ 如果给定 ``<name>`` 的变量、缓存变量或环境变量已定义，则为真。变量的值无关紧要。注意宏参数不是变量。
+
+``if((condition) AND (condition OR (condition)))``
+ 括号内的条件首先评估，然后剩余条件按前面的示例评估。如果有嵌套括号，最内层的作为评估包含它们的条件的一部分进行评估。

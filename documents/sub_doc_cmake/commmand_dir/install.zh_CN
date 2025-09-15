@@ -1,0 +1,526 @@
+install
+-------
+
+指定在安装时运行的规则。
+
+简介
+^^^^
+
+ install(TARGETS <target>... [...])
+ install({FILES | PROGRAMS} <file>... [...])
+ install(DIRECTORY <dir>... [...])
+ install(SCRIPT <file> [...])
+ install(CODE <code> [...])
+ install(EXPORT <export-name> [...])
+
+介绍
+^^^^
+
+此命令为项目生成安装规则。通过调用 ``install()`` 命令在源目录中指定的安装规则在安装期间按顺序执行。
+通过调用 ``add_subdirectory()`` 命令添加的子目录中的安装规则与父目录中的规则交错运行，按声明的顺序运行（参见策略 ``CMP0082``）。
+
+此命令有多个签名。其中一些为文件和目标定义安装选项。
+多个签名共有的选项在此处介绍，但它们仅对指定它们的签名有效。
+常见选项包括：
+
+``DESTINATION``
+  指定文件将安装到的磁盘目录。参数可以是相对路径或绝对路径。
+
+  如果给定相对路径，则相对于 ``CMAKE_INSTALL_PREFIX`` 变量的值进行解释。
+  前缀可以在安装时使用 ``DESTDIR`` 机制重新定位，如 ``CMAKE_INSTALL_PREFIX`` 变量文档中所述。
+
+  如果给定绝对路径（以斜杠或驱动器号开头），则按原样使用。
+
+  由于绝对路径不受 ``cpack`` 安装程序生成器支持，建议始终使用相对路径。
+
+``PERMISSIONS``
+  指定已安装文件的权限。有效权限包括
+  ``OWNER_READ``、``OWNER_WRITE``、``OWNER_EXECUTE``、``GROUP_READ``、
+  ``GROUP_WRITE``、``GROUP_EXECUTE``、``WORLD_READ``、``WORLD_WRITE``、
+  ``WORLD_EXECUTE``、``SETUID`` 和 ``SETGID``。在某些平台上无意义的权限在这些平台上会被忽略。
+
+``CONFIGURATIONS``
+  指定安装规则适用的构建配置列表（Debug、Release等）。
+  请注意，为此选项指定的值仅适用于 ``CONFIGURATIONS`` 选项之后列出的选项。
+  例如，要为Debug和Release配置设置单独的安装路径，请执行以下操作：
+
+  .. code-block:: cmake
+
+    install(TARGETS target
+            CONFIGURATIONS Debug
+            RUNTIME DESTINATION Debug/bin)
+    install(TARGETS target
+            CONFIGURATIONS Release
+            RUNTIME DESTINATION Release/bin)
+
+  请注意，``CONFIGURATIONS`` 出现在 ``RUNTIME DESTINATION`` 之前。
+
+``COMPONENT``
+  指定与安装规则关联的安装组件名称，例如 "runtime" 或 "development"。
+  在组件特定安装期间，仅执行与给定组件名称关联的安装规则。
+  在完整安装期间，除非标记为 ``EXCLUDE_FROM_ALL``，否则所有组件都会安装。
+  如果未提供 ``COMPONENT``，则创建默认组件 "Unspecified"。
+  默认组件名称可以通过 ``CMAKE_INSTALL_DEFAULT_COMPONENT_NAME`` 变量控制。
+
+``EXCLUDE_FROM_ALL``
+  指定文件从完整安装中排除，仅作为组件特定安装的一部分安装。
+
+``RENAME``
+  指定已安装文件的名称，该名称可能与原始文件不同。仅当命令安装单个文件时才允许重命名。
+
+``OPTIONAL``
+  指定如果要安装的文件不存在，则不是错误。
+
+安装文件的命令签名可能在安装期间打印消息。
+使用 ``CMAKE_INSTALL_MESSAGE`` 变量控制打印哪些消息。
+
+许多 ``install()`` 变体隐式创建包含已安装文件的目录。
+如果设置了 ``CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS``，这些目录将使用指定的权限创建。
+否则，它们将根据类Unix平台上的uname规则创建。Windows平台不受影响。
+
+安装目标
+^^^^^^^^^^
+
+ install(TARGETS targets... [EXPORT <export-name>]
+         [[ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|
+           PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE]
+          [DESTINATION <dir>]
+          [PERMISSIONS permissions...]
+          [CONFIGURATIONS [Debug|Release|...]]
+          [COMPONENT <component>]
+          [NAMELINK_COMPONENT <component>]
+          [OPTIONAL] [EXCLUDE_FROM_ALL]
+          [NAMELINK_ONLY|NAMELINK_SKIP]
+         ] [...]
+         [INCLUDES DESTINATION [<dir> ...]]
+         )
+
+``TARGETS`` 形式指定从项目安装目标的规则。
+有几种 :ref:`输出工件` 可以安装：
+
+``ARCHIVE``
+  此类别的目标工件包括：
+
+  * *静态库*
+    （macOS上标记为 ``FRAMEWORK`` 时除外，见下文）；
+  * *DLL导入库*
+    （包括Cygwin在内的所有基于Windows的系统；它们的扩展名为
+    ``.lib``，与转到 ``RUNTIME`` 的 ``.dll`` 库相反）；
+  * 在AIX上，为启用了 ``ENABLE_EXPORTS`` 的可执行文件创建的 *链接器导入文件*。
+
+``LIBRARY``
+  此类别的目标工件包括：
+
+  * *共享库*，除了
+
+    - DLL（这些转到 ``RUNTIME``，见下文），
+    - macOS上标记为 ``FRAMEWORK``（见下文）。
+
+``RUNTIME``
+  此类别的目标工件包括：
+
+  * *可执行文件*
+    （macOS上标记为 ``MACOSX_BUNDLE`` 时除外，见下面的 ``BUNDLE``）；
+  * DLL（包括Cygwin在内的所有基于Windows的系统；请注意，附带的导入库属于 ``ARCHIVE`` 类别）。
+
+``OBJECTS``
+  与 *对象库* 关联的对象文件。
+
+``FRAMEWORK``
+  标记有 ``FRAMEWORK`` 属性的静态和共享库在macOS上都被视为 ``FRAMEWORK`` 目标。
+
+``BUNDLE``
+  标记有 ``MACOSX_BUNDLE`` 属性的可执行文件在macOS上被视为 ``BUNDLE`` 目标。
+
+``PUBLIC_HEADER``
+  与库关联的任何 ``PUBLIC_HEADER`` 文件都安装在非Apple平台上由 ``PUBLIC_HEADER`` 参数指定的目标位置。
+  对于Apple平台上的 ``FRAMEWORK`` 库，此参数定义的规则被忽略，因为关联的文件安装在框架文件夹内的相应位置。
+  有关详细信息，请参见 ``PUBLIC_HEADER``。
+
+``PRIVATE_HEADER``
+  类似于 ``PUBLIC_HEADER``，但适用于 ``PRIVATE_HEADER`` 文件。
+  有关详细信息，请参见 ``PRIVATE_HEADER``。
+
+``RESOURCE``
+  类似于 ``PUBLIC_HEADER`` 和 ``PRIVATE_HEADER``，但适用于 ``RESOURCE`` 文件。
+  有关详细信息，请参见 ``RESOURCE``。
+
+对于给定的这些参数中的每一个，后面的参数仅适用于参数中指定的目标或文件类型。
+如果未给定，则安装属性适用于所有目标类型。
+如果只给定一个，则仅安装该类型的目标（这可用于仅安装DLL或仅安装导入库）。
+
+对于常规可执行文件、静态库和共享库，``DESTINATION`` 参数不是必需的。
+对于这些目标类型，当省略 ``DESTINATION`` 时，将从 ``GNUInstallDirs`` 中的相应变量获取默认目标，
+如果该变量未定义，则设置为内置默认值。
+  通过 ``PUBLIC_HEADER`` 和 ``PRIVATE_HEADER`` 目标属性与已安装目标关联的公共和私有标头也是如此。
+必须为模块库、Apple捆绑包和框架始终提供目标。
+可以为接口和对象库省略目标，但它们的处理方式不同（参见本节末尾对此主题的讨论）。
+
+下表显示了目标类型及其关联的变量和在没有给定目标时适用的内置默认值：
+
+================== =============================== ======================
+   目标类型         GNUInstallDirs变量               内置默认值
+================== =============================== ======================
+``RUNTIME``        ``${CMAKE_INSTALL_BINDIR}``     ``bin``
+``LIBRARY``        ``${CMAKE_INSTALL_LIBDIR}``     ``lib``
+``ARCHIVE``        ``${CMAKE_INSTALL_LIBDIR}``     ``lib``
+``PRIVATE_HEADER`` ``${CMAKE_INSTALL_INCLUDEDIR}`` ``include``
+``PUBLIC_HEADER``  ``${CMAKE_INSTALL_INCLUDEDIR}`` ``include``
+================== =============================== ======================
+
+希望遵循将标头安装到项目特定子目录的常见做法的项目将需要提供目标，而不是依赖上述内容。
+
+为了使包符合分发文件系统布局策略，如果项目必须指定 ``DESTINATION``，建议它们使用以相应 ``GNUInstallDirs`` 变量开头的路径。
+这允许包维护者通过设置相应的缓存变量来控制安装目标。
+以下示例显示了一个静态库被安装到由 ``GNUInstallDirs`` 提供的默认目标，但其标头安装到遵循上述建议的项目特定子目录：
+
+ add_library(mylib STATIC ...)
+ set_target_properties(mylib PROPERTIES PUBLIC_HEADER mylib.h)
+ include(GNUInstallDirs)
+ install(TARGETS mylib
+         PUBLIC_HEADER
+           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/myproj
+ )
+
+除了上面列出的常见选项外，每个目标还可以接受以下附加参数：
+
+``NAMELINK_COMPONENT``
+  在某些平台上，版本化的共享库具有符号链接，例如：
+
+   lib<name>.so -> lib<name>.so.1
+
+ 其中 ``lib<name>.so.1`` 是库的soname，``lib<name>.so`` 是允许链接器在给出 ``-l<name>`` 时找到库的 "namelink"。
+  ``NAMELINK_COMPONENT`` 选项类似于 ``COMPONENT`` 选项，但它会更改共享库namelink的安装组件（如果生成了一个）。
+  如果未指定，这默认为 ``COMPONENT`` 的值。
+  在 ``LIBRARY`` 块外使用此参数是错误的。
+
+  考虑以下示例：
+
+  .. code-block:: cmake
+
+   install(TARGETS mylib
+           LIBRARY
+             COMPONENT Libraries
+             NAMELINK_COMPONENT Development
+           PUBLIC_HEADER
+             COMPONENT Development
+          )
+
+  在此场景中，如果您选择仅安装 ``Development`` 组件，则标头和namelink都将安装，而不安装库。
+  （如果您也不安装 ``Libraries`` 组件，namelink将是悬空符号链接，并且链接到库的项目将有构建错误。）
+  如果您仅安装 ``Libraries`` 组件，则仅安装库，而不安装标头和namelink。
+
+  此选项通常用于具有单独运行时和开发包的包管理器。
+  例如，在Debian系统上，库预期在运行时包中，标头和namelink预期在开发包中。
+
+  有关创建版本化共享库的详细信息，请参见 :prop_tgt:`VERSION` 和 :prop_tgt:`SOVERSION` 目标属性。
+
+``NAMELINK_ONLY``
+  此选项导致在安装库目标时仅安装namelink。
+  在没有namelink的版本化共享库平台上，或当库未版本化时，``NAMELINK_ONLY`` 选项不安装任何内容。
+  在 ``LIBRARY`` 块外使用此参数是错误的。
+
+  当给定 ``NAMELINK_ONLY`` 时，可以使用 ``NAMELINK_COMPONENT`` 或 ``COMPONENT`` 指定namelink的安装组件，但通常应首选 ``COMPONENT``。
+
+``NAMELINK_SKIP``
+  类似于 ``NAMELINK_ONLY``，但它具有相反的效果：它导致在安装库目标时安装除namelink之外的库文件。
+  当既未给定 ``NAMELINK_ONLY`` 也未给定 ``NAMELINK_SKIP`` 时，两部分都安装。
+  在没有符号链接的版本化共享库平台上，或当库未版本化时，``NAMELINK_SKIP`` 安装库。
+  在 ``LIBRARY`` 块外使用此参数是错误的。
+
+  如果指定了 ``NAMELINK_SKIP``，则 ``NAMELINK_COMPONENT`` 无效。
+  不建议将 ``NAMELINK_SKIP`` 与 ``NAMELINK_COMPONENT`` 结合使用。
+
+install(TARGETS)命令还可以接受以下顶级选项：
+
+``EXPORT``
+  此选项将已安装的目标文件与名为 ``<export-name>`` 的导出关联。
+  它必须出现在任何目标选项之前。
+  要实际安装导出文件本身，请调用install(EXPORT)，如下所述。
+  有关更改导出目标名称的文档，请参见 ``EXPORT_NAME`` 目标属性。
+
+``INCLUDES DESTINATION``
+  此选项指定目录列表，这些目录将添加到 ``<targets>`` 的 ``INTERFACE_INCLUDE_DIRECTORIES`` 目标属性中，
+  当通过install(EXPORT)命令导出时。
+  如果指定了相对路径，则将其视为相对于 ``$<INSTALL_PREFIX>``。
+
+可以在对命令的 ``TARGETS`` 形式的单个调用中指定一个或多个属性组。
+  目标可以多次安装到不同位置。
+  考虑假设目标 ``myExe``、``mySharedLib`` 和 ``myStaticLib``。
+  代码：
+
+ install(TARGETS myExe mySharedLib myStaticLib
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+         ARCHIVE DESTINATION lib/static)
+ install(TARGETS mySharedLib DESTINATION /some/full/path)
+
+将安装 ``myExe`` 到 ``<prefix>/bin`` 和 ``myStaticLib`` 到 ``<prefix>/lib/static``。
+  在非DLL平台上，``mySharedLib`` 将安装到 ``<prefix>/lib`` 和 ``/some/full/path``。
+  在DLL平台上，``mySharedLib`` DLL将安装到 ``<prefix>/bin`` 和 ``/some/full/path``，
+  其导入库将安装到 ``<prefix>/lib/static`` 和 ``/some/full/path``。
+
+:ref:`接口库` 可以列在要安装的目标中。
+  它们不安装工件，但将包含在关联的 ``EXPORT`` 中。
+  如果列出的 :ref:`对象库` 未给定其对象文件的目标，它们将作为 :ref:`接口库` 导出。
+  这足以满足链接到对象库的其他目标的传递使用要求。
+
+使用 ``EXCLUDE_FROM_ALL`` 目标属性设置为 ``TRUE`` 安装目标具有未定义的行为。
+
+install(TARGETS)可以安装在其他目录中创建的目标。
+  当使用此类跨目录安装规则时，从子目录运行 ``make install``（或类似命令）
+  不保证来自其他目录的目标是最新的。
+  您可以使用 ``target_link_libraries()`` 或 ``add_dependencies()``
+  确保在运行子目录特定安装规则之前构建此类目录外目标。
+
+作为 ``DESTINATION`` 参数给出的安装目标可以使用语法为 ``$<...>`` 的 "生成器表达式"。
+  请参见 ``cmake-generator-expressions(7)`` 手册了解可用的表达式。
+
+安装文件
+^^^^^^^^^^
+
+ install(<FILES|PROGRAMS> files...
+         TYPE <type> | DESTINATION <dir>
+         [PERMISSIONS permissions...]
+         [CONFIGURATIONS [Debug|Release|...]]
+         [COMPONENT <component>]
+         [RENAME <name>] [OPTIONAL] [EXCLUDE_FROM_ALL])
+
+``FILES`` 形式指定项目的文件安装规则。
+  作为相对路径给出的文件名相对于当前源目录进行解释。
+  此形式安装的文件的默认权限为 ``OWNER_WRITE``、``OWNER_READ``、``GROUP_READ`` 和 ``WORLD_READ``（如果未给定 ``PERMISSIONS`` 参数）。
+
+``PROGRAMS`` 形式与 ``FILES`` 形式相同，只是已安装文件的默认权限还包括 ``OWNER_EXECUTE``、
+  ``GROUP_EXECUTE`` 和 ``WORLD_EXECUTE``。
+  此形式旨在安装不是目标的程序，例如shell脚本。
+  使用 ``TARGETS`` 形式安装项目中构建的目标。
+
+``FILES`` 或 ``PROGRAMS`` 给定的 ``files...`` 列表可以使用语法为 ``$<...>`` 的 "生成器表达式"。
+  请参见 ``cmake-generator-expressions(7)`` 手册了解可用的表达式。
+  但是，如果任何项目以生成器表达式开头，则它必须评估为完整路径。
+
+必须提供 ``TYPE`` 或 ``DESTINATION``，但不能同时提供两者。
+  ``TYPE`` 参数指定要安装的文件的通用文件类型。
+  然后通过从 ``GNUInstallDirs`` 获取相应变量或使用内置默认值（如果该变量未定义）来自动设置目标。
+  请参见下表了解支持的文件类型及其对应的变量和内置默认值。
+  如果希望明确定义安装目标，项目可以提供 ``DESTINATION`` 参数而不是文件类型。
+
+======================= ================================== =========================
+   ``TYPE`` 参数         GNUInstallDirs变量               内置默认值
+======================= ================================== =========================
+``BIN``                 ``${CMAKE_INSTALL_BINDIR}``        ``bin``
+``SBIN``                ``${CMAKE_INSTALL_SBINDIR}``       ``sbin``
+``LIB``                 ``${CMAKE_INSTALL_LIBDIR}``        ``lib``
+``INCLUDE``             ``${CMAKE_INSTALL_INCLUDEDIR}``    ``include``
+``SYSCONF``             ``${CMAKE_INSTALL_SYSCONFDIR}``    ``etc``
+``SHAREDSTATE``         ``${CMAKE_INSTALL_SHARESTATEDIR}`` ``com``
+``LOCALSTATE``          ``${CMAKE_INSTALL_LOCALSTATEDIR}`` ``var``
+``RUNSTATE``            ``${CMAKE_INSTALL_RUNSTATEDIR}``   ``<LOCALSTATE dir>/run``
+``DATA``                ``${CMAKE_INSTALL_DATADIR}``       ``<DATAROOT dir>``
+``INFO``                ``${CMAKE_INSTALL_INFODIR}``       ``<DATAROOT dir>/info``
+``LOCALE``              ``${CMAKE_INSTALL_LOCALEDIR}``     ``<DATAROOT dir>/locale``
+``MAN``                 ``${CMAKE_INSTALL_MANDIR}``        ``<DATAROOT dir>/man``
+``DOC``                 ``${CMAKE_INSTALL_DOCDIR}``        ``<DATAROOT dir>/doc``
+======================= ================================== =========================
+
+希望遵循将标头安装到项目特定子目录的常见做法的项目将需要提供目标，而不是依赖上述内容。
+
+为了使包符合分发文件系统布局策略，如果项目必须指定 ``DESTINATION``，建议它们使用以相应 ``GNUInstallDirs`` 变量开头的路径。
+这允许包维护者通过设置相应的缓存变量来控制安装目标。
+以下示例显示了如何遵循此建议，同时将标头安装到项目特定子目录：
+
+ include(GNUInstallDirs)
+ install(FILES mylib.h
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/myproj
+ )
+
+作为 ``DESTINATION`` 参数给出的安装目标可以使用语法为 ``$<...>`` 的 "生成器表达式"。
+  请参见 ``cmake-generator-expressions(7)`` 手册了解可用的表达式。
+
+安装目录
+^^^^^^^^^^
+
+ install(DIRECTORY dirs...
+         TYPE <type> | DESTINATION <dir>
+         [FILE_PERMISSIONS permissions...]
+         [DIRECTORY_PERMISSIONS permissions...]
+         [USE_SOURCE_PERMISSIONS] [OPTIONAL] [MESSAGE_NEVER]
+         [CONFIGURATIONS [Debug|Release|...]]
+         [COMPONENT <component>] [EXCLUDE_FROM_ALL]
+         [FILES_MATCHING]
+         [[PATTERN <pattern> | REGEX <regex>]
+          [EXCLUDE] [PERMISSIONS permissions...]] [...])
+
+``DIRECTORY`` 形式将一个或多个目录的内容安装到给定目标。
+  目录结构逐字复制到目标。
+  每个目录名称的最后一个组件附加到目标目录，但可以使用尾部斜杠避免这种情况，因为它使最后一个组件为空。
+  作为相对路径给出的目录名称相对于当前源目录进行解释。
+  如果未给定输入目录名称，则将创建目标目录，但不会向其中安装任何内容。
+  ``FILE_PERMISSIONS`` 和 ``DIRECTORY_PERMISSIONS`` 选项指定给予目标的文件和目录的权限。
+  如果指定了 ``USE_SOURCE_PERMISSIONS`` 且未指定 ``FILE_PERMISSIONS``，则文件权限将从源目录结构复制。
+  如果未指定权限，文件将获得命令的 ``FILES`` 形式中指定的默认权限，目录将获得命令的 ``PROGRAMS`` 形式中指定的默认权限。
+
+``MESSAGE_NEVER`` 选项禁用文件安装状态输出。
+
+可以使用 ``PATTERN`` 或 ``REGEX`` 选项以细粒度控制目录的安装。
+  这些 "匹配" 选项指定用于匹配输入目录中遇到的目录或文件的全局模式或正则表达式。
+  它们可用于将某些选项（见下文）应用于遇到的文件和目录的子集。
+  每个输入文件或目录的完整路径（使用正斜杠）与表达式匹配。
+  ``PATTERN`` 将仅匹配完整文件名：与模式匹配的完整路径部分必须出现在文件名的末尾，并由斜杠前导。
+  ``REGEX`` 将匹配完整路径的任何部分，但它可以使用 ``/`` 和 ``$`` 来模拟 ``PATTERN`` 行为。
+  默认情况下，无论是否匹配，所有文件和目录都会安装。
+  可以在第一个匹配选项之前给定 ``FILES_MATCHING`` 选项，以禁用未由任何表达式匹配的文件的安装（但不包括目录）。
+  例如，代码
+
+ install(DIRECTORY src/ DESTINATION include/myproj
+         FILES_MATCHING PATTERN "*.h")
+
+将从源树中提取并安装标头文件。
+
+某些选项可以跟随 ``PATTERN`` 或 ``REGEX`` 表达式，并仅适用于与它们匹配的文件或目录。
+  ``EXCLUDE`` 选项将跳过匹配的文件或目录。
+  ``PERMISSIONS`` 选项覆盖匹配的文件或目录的权限设置。
+  例如，代码
+
+ install(DIRECTORY icons scripts/ DESTINATION share/myproj
+         PATTERN "CVS" EXCLUDE
+         PATTERN "scripts/*"
+         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ
+                     GROUP_EXECUTE GROUP_READ)
+
+将 ``icons`` 目录安装到 ``share/myproj/icons``，将 ``scripts`` 目录安装到 ``share/myproj``。
+  图标将获得默认文件权限，脚本将获得特定权限，任何 ``CVS`` 目录都将被排除。
+
+必须提供 ``TYPE`` 或 ``DESTINATION``，但不能同时提供两者。
+  ``TYPE`` 参数指定要安装的列出的目录中的文件的通用文件类型。
+  然后通过从 ``GNUInstallDirs`` 获取相应变量或使用内置默认值（如果该变量未定义）来自动设置目标。
+  请参见下表了解支持的文件类型及其对应的变量和内置默认值。
+  如果希望明确定义安装目标，项目可以提供 ``DESTINATION`` 参数而不是文件类型。
+
+======================= ================================== =========================
+   ``TYPE`` 参数         GNUInstallDirs变量               内置默认值
+======================= ================================== =========================
+``BIN``                 ``${CMAKE_INSTALL_BINDIR}``        ``bin``
+``SBIN``                ``${CMAKE_INSTALL_SBINDIR}``       ``sbin``
+``LIB``                 ``${CMAKE_INSTALL_LIBDIR}``        ``lib``
+``INCLUDE``             ``${CMAKE_INSTALL_INCLUDEDIR}``    ``include``
+``SYSCONF``             ``${CMAKE_INSTALL_SYSCONFDIR}``    ``etc``
+``SHAREDSTATE``         ``${CMAKE_INSTALL_SHARESTATEDIR}`` ``com``
+``LOCALSTATE``          ``${CMAKE_INSTALL_LOCALSTATEDIR}`` ``var``
+``RUNSTATE``            ``${CMAKE_INSTALL_RUNSTATEDIR}``   ``<LOCALSTATE dir>/run``
+``DATA``                ``${CMAKE_INSTALL_DATADIR}``       ``<DATAROOT dir>``
+``INFO``                ``${CMAKE_INSTALL_INFODIR}``       ``<DATAROOT dir>/info``
+``LOCALE``              ``${CMAKE_INSTALL_LOCALEDIR}``     ``<DATAROOT dir>/locale``
+``MAN``                 ``${CMAKE_INSTALL_MANDIR}``        ``<DATAROOT dir>/man``
+``DOC``                 ``${CMAKE_INSTALL_DOCDIR}``        ``<DATAROOT dir>/doc``
+======================= ================================== =========================
+
+请注意，某些类型的内置默认值使用 ``DATAROOT`` 目录作为前缀。
+  ``DATAROOT`` 前缀的计算类似于类型，使用 ``CMAKE_INSTALL_DATAROOTDIR`` 作为变量，使用 ``share`` 作为内置默认值。
+  您不能使用 ``DATAROOT`` 作为 ``TYPE`` 参数；请改用 ``DATA``。
+
+为了使包符合分发文件系统布局策略，如果项目必须指定 ``DESTINATION``，建议它们使用以相应 ``GNUInstallDirs`` 变量开头的路径。
+  这允许包维护者通过设置相应的缓存变量来控制安装目标。
+
+``DIRECTORY`` 给定的 ``dirs...`` 列表和作为 ``DESTINATION`` 参数给出的安装目标可以使用语法为 ``$<...>`` 的 "生成器表达式"。
+  请参见 ``cmake-generator-expressions(7)`` 手册了解可用的表达式。
+
+自定义安装逻辑
+^^^^^^^^^^^^^^^
+
+ install([[SCRIPT <file>] [CODE <code>]]
+         [COMPONENT <component>] [EXCLUDE_FROM_ALL] [...])
+
+``SCRIPT`` 形式将在安装期间调用给定的CMake脚本文件。
+  如果脚本文件名是相对路径，则相对于当前源目录进行解释。
+  ``CODE`` 形式将在安装期间调用给定的CMake代码。
+  代码指定为双引号字符串内的单个参数。
+  例如，代码
+
+ install(CODE "MESSAGE(\"示例安装消息。\")")
+
+将在安装期间打印消息。
+
+``<file>`` 或 ``<code>`` 可以使用语法为 ``$<...>`` 的 "生成器表达式"（在 ``<file>`` 的情况下，这指的是它们在文件名中的使用，而不是文件内容）。
+  请参见 ``cmake-generator-expressions(7)`` 手册了解可用的表达式。
+
+安装导出
+^^^^^^^^^^
+
+ install(EXPORT <export-name> DESTINATION <dir>
+         [NAMESPACE <namespace>] [[FILE <name>.cmake]|
+         [PERMISSIONS permissions...]
+         [CONFIGURATIONS [Debug|Release|...]]
+         [EXPORT_LINK_INTERFACE_LIBRARIES]
+         [COMPONENT <component>]
+         [EXCLUDE_FROM_ALL])
+ install(EXPORT_ANDROID_MK <export-name> DESTINATION <dir> [...])
+
+``EXPORT`` 形式生成并安装包含代码的CMake文件，用于将目标从安装树导入到另一个项目中。
+  目标安装使用 ``install(TARGETS)`` 签名的 ``EXPORT`` 选项与导出 ``<export-name>`` 关联，如上所述。
+  ``NAMESPACE`` 选项将在将目标名称写入导入文件时在其前添加 ``<namespace>``。
+  默认情况下，生成的文件将称为 ``<export-name>.cmake``，但可以使用 ``FILE`` 选项指定不同的名称。
+  给予 ``FILE`` 选项的值必须是带有 ``.cmake`` 扩展名的文件名。
+  如果给定 ``CONFIGURATIONS`` 选项，则仅当安装命名配置之一时才会安装该文件。
+  此外，生成的导入文件将仅引用匹配的目标配置。
+  如果存在 ``EXPORT_LINK_INTERFACE_LIBRARIES`` 关键字，则当策略 ``CMP0022`` 为 ``NEW`` 时，
+  将导出匹配 ``(IMPORTED_)?LINK_INTERFACE_LIBRARIES(_<CONFIG>)?`` 的属性的内容。
+
+.. 注意::
+  已安装的 ``<export-name>.cmake`` 文件可能会附带额外的按配置 ``<export-name>-*.cmake`` 文件，
+  这些文件将通过glob加载。
+  不要使用与包名称相同的导出名称，结合安装 ``<package-name>-config.cmake`` 文件，
+  否则后者可能被glob错误匹配并加载。
+
+当给定 ``COMPONENT`` 选项时，列出的 ``<component>`` 隐式依赖于导出集中提到的所有组件。
+  导出的 ``<name>.cmake`` 文件将要求每个导出的组件都存在，以便依赖项目正确构建。
+  例如，项目可以定义组件 ``Runtime`` 和 ``Development``，共享库进入 ``Runtime`` 组件，静态库和标头进入 ``Development`` 组件。
+  导出集通常也是 ``Development`` 组件的一部分，但它将从 ``Runtime`` 和 ``Development`` 组件导出目标。
+  因此，如果安装了 ``Development`` 组件，则需要安装 ``Runtime`` 组件，但反之则不需要。
+  如果未安装 ``Runtime`` 组件的情况下安装了 ``Development`` 组件，则尝试链接到它的依赖项目将有构建错误。
+  诸如APT和RPM之类的包管理器通常通过在包元数据中将 ``Runtime`` 组件列为 ``Development`` 组件的依赖项来处理此问题，
+  确保如果标头和CMake导出文件存在，则始终安装库。
+
+除了cmake语言文件外，``EXPORT_ANDROID_MK`` 模式可用于指定对android ndk构建系统的导出。
+  此模式接受与正常导出模式相同的选项。
+  Android NDK支持使用预构建库，包括静态和共享。
+  这允许cmake构建项目的库，并使它们可用于带有完整传递依赖项的ndk构建系统，包括使用库所需的包含标志和定义。
+
+``EXPORT`` 形式有助于外部项目使用当前项目构建和安装的目标。
+  例如，代码
+
+ install(TARGETS myexe EXPORT myproj DESTINATION bin)
+ install(EXPORT myproj NAMESPACE mp_ DESTINATION lib/myproj)
+ install(EXPORT_ANDROID_MK myproj DESTINATION share/ndk-modules)
+
+将可执行文件 ``myexe`` 安装到 ``<prefix>/bin``，并在文件 ``<prefix>/lib/myproj/myproj.cmake`` 和 ``<prefix>/share/ndk-modules/Android.mk`` 中导入它的代码。
+  外部项目可以使用include命令加载此文件，并使用导入的目标名称 ``mp_myexe`` 从安装树引用 ``myexe`` 可执行文件，
+  就好像目标是在其自己的树中构建的一样。
+
+.. 注意::
+  此命令取代 ``install_targets()`` 命令和 ``PRE_INSTALL_SCRIPT`` 和 ``POST_INSTALL_SCRIPT`` 目标属性。
+  它还取代 ``install_files()`` 和 ``install_programs()`` 命令的 ``FILES`` 形式。
+  这些安装规则相对于由 ``install_targets()``、``install_files()`` 和 ``install_programs()`` 命令生成的安装规则的处理顺序未定义。
+
+生成的安装脚本
+^^^^^^^^^^^^^^^^^
+
+.. 注意::
+
+  不建议使用此功能。请考虑改用 ``cmake(1)`` 的 ``--install`` 参数。
+
+``install()`` 命令在构建目录中生成一个文件 ``cmake_install.cmake``，生成的安装目标和CPack在内部使用该文件。
+  您也可以使用 ``cmake -P`` 手动调用此脚本。
+  此脚本接受几个变量：
+
+``COMPONENT``
+  设置此变量以仅安装单个CPack组件，而不是全部。
+  例如，如果您只想安装 ``Development`` 组件，请运行 ``cmake -DCOMPONENT=Development -P cmake_install.cmake``。
+
+``BUILD_TYPE``
+  设置此变量以在使用多配置生成器时更改构建类型。
+  例如，要使用 ``Debug`` 配置安装，请运行 ``cmake -DBUILD_TYPE=Debug -P cmake_install.cmake``。
+
+``DESTDIR``
+  这是环境变量而不是CMake变量。它允许您在UNIX系统上更改安装前缀。
+  有关详细信息，请参见 ``DESTDIR``。

@@ -1,0 +1,81 @@
+add_custom_target
+-----------------
+
+添加一个没有输出的目标，使其始终被构建。
+
+ add_custom_target(Name [ALL] [command1 [args1...]]
+                   [COMMAND command2 [args2...] ...]
+                   [DEPENDS depend depend depend ... ]
+                   [BYPRODUCTS [files...]]
+                   [WORKING_DIRECTORY dir]
+                   [COMMENT comment]
+                   [JOB_POOL job_pool]
+                   [VERBATIM] [USES_TERMINAL]
+                   [COMMAND_EXPAND_LISTS]
+                   [SOURCES src1 [src2...]])
+
+添加具有给定名称的目标，该目标执行给定的命令。该目标没有输出文件，并且*始终被视为过期*，即使命令尝试创建具有目标名称的文件。
+使用add_custom_command()命令生成具有依赖项的文件。默认情况下，没有任何东西依赖于自定义目标。
+使用add_dependencies()命令添加与其他目标的依赖关系。
+
+选项有：
+
+``ALL``
+  指示此目标应添加到默认构建目标中，以便每次都运行（命令不能称为ALL）。
+
+``BYPRODUCTS``
+  指定命令预期产生的文件，但其修改时间在后续构建中可能会或可能不会更新。
+  如果副产品名称是相对路径，它将被解释为相对于当前源目录对应的构建树目录。每个副产品文件将自动标记GENERATED源文件属性。
+
+  明确指定副产品受到Ninja生成器的支持，用于告诉ninja构建工具如何在缺少副产品时重新生成它们。
+  当其他构建规则（例如自定义命令）依赖于副产品时也很有用。Ninja要求对任何生成文件（其他规则依赖于该文件）都有构建规则，
+  即使有顺序依赖项，也要确保副产品将在其依赖项构建之前可用。
+
+  Makefile生成器将在make clean期间删除BYPRODUCTS和其他GENERATED文件。
+
+``COMMAND``
+  指定在构建时要执行的命令行。如果指定了多个COMMAND，它们将按顺序执行，但不一定组合到有状态的shell或批处理脚本中。
+  （要运行完整脚本，请使用configure_file()命令或file(GENERATE)命令创建它，然后指定COMMAND来启动它。）
+
+  如果COMMAND指定了可执行目标名称（由add_executable()命令创建），如果满足以下任一条件，它将自动被构建时创建的可执行文件位置替换：
+
+  * 目标未被交叉编译（即CMAKE_CROSSCOMPILING变量未设置为true）。
+  * 目标正在被交叉编译且提供了模拟器（即其CROSSCOMPILING_EMULATOR目标属性已设置）。在这种情况下，CROSSCOMPILING_EMULATOR的内容将在目标可执行文件位置之前添加到命令中。
+
+  如果以上条件都不满足，则假定命令名称是构建时在PATH上找到的程序。
+
+  COMMAND的参数可以使用生成器表达式。使用TARGET_FILE生成器表达式在命令行中稍后引用目标位置（即作为命令参数而不是要执行的命令）。
+
+  每当目标用作要执行的命令或在生成器表达式中作为命令参数提及时，将自动添加目标级依赖项，以便提及的目标将在该自定义目标之前构建。
+  命令和参数是可选的，如果未指定，将创建空目标。
+
+``COMMENT``
+  在构建时执行命令之前显示给定的消息。
+
+``DEPENDS``
+  引用同一目录（CMakeLists.txt文件）中使用add_custom_command()命令调用创建的自定义命令的文件和输出。
+  当目标构建时，它们将被更新。如果任何依赖项是目标或其构建事件的副产品，则会添加目标级依赖项以确保副产品在该目标构建之前可用。
+
+  使用add_dependencies()命令添加对其他目标的依赖关系。
+
+``COMMAND_EXPAND_LISTS``
+  COMMAND参数中的列表将被扩展，包括那些使用生成器表达式创建的列表，允许诸如${CC} "-I$<JOIN:$<TARGET_PROPERTY:foo,INCLUDE_DIRECTORIES>,;-I>" foo.cc之类的COMMAND参数被正确扩展。
+
+``JOB_POOL``
+  为Ninja生成器指定pool。与USES_TERMINAL不兼容，后者暗示console池。使用未由JOB_POOLS定义的池会导致ninja在构建时出错。
+
+``SOURCES``
+  指定要包含在自定义目标中的其他源文件。指定的源文件将被添加到IDE项目文件中以便编辑方便，即使它们没有构建规则。
+
+``VERBATIM``
+  命令的所有参数都将为构建工具正确转义，以便被调用的命令接收每个参数不变。
+  注意，在add_custom_target看到参数之前，CMake语言处理器仍使用一级转义。建议使用VERBATIM，因为它启用正确行为。
+  当未给定VERBATIM时，行为是平台特定的，因为没有工具特定特殊字符的保护。
+
+``USES_TERMINAL``
+  如果可能，命令将被给予对终端的直接访问。使用Ninja生成器时，这会将命令放入console pool。
+
+``WORKING_DIRECTORY``
+  使用给定的当前工作目录执行命令。如果是相对路径，它将被解释为相对于当前源目录对应的构建树目录。
+
+  WORKING_DIRECTORY的参数可以使用生成器表达式。

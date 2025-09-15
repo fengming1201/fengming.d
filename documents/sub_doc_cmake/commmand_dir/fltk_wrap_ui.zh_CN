@@ -1,0 +1,11 @@
+fltk_wrap_ui
+------------
+
+创建 FLTK 用户界面包装器。
+
+ fltk_wrap_ui(resultingLibraryName source1
+              source2 ... sourceN )
+
+为所有列出的 .fl 和 .fld 文件生成 .h 和 .cxx 文件。
+生成的 .h 和 .cxx 文件将被添加到名为 ``resultingLibraryName_FLTK_UI_SRCS`` 的变量中，
+该变量应添加到您的库中。

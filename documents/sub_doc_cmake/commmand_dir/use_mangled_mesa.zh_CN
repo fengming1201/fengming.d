@@ -1,0 +1,14 @@
+use_mangled_mesa
+----------------
+
+自3.0版本起已弃用。参见CMake策略``CMP0030``。
+
+复制mesa头文件以与系统GL结合使用。
+
+::
+
+ use_mangled_mesa(PATH_TO_MESA OUTPUT_DIRECTORY)
+
+mesa包含文件的路径，应包含``gl_mangle.h``。
+mesa头文件被复制到指定的输出目录。
+这允许被修改的mesa头文件通过被添加到包含目录路径的前面来覆盖其他GL头文件。

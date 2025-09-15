@@ -1,0 +1,17 @@
+get_test_property
+-----------------
+
+获取测试的属性。
+
+ get_test_property(test property VAR)
+
+从测试获取属性。属性的值存储在变量 ``VAR`` 中。
+如果未找到测试属性，行为取决于它是否已被定义为 ``INHERITED`` 属性
+（参见 ``define_property()``）。
+非继承属性会将 ``VAR`` 设置为 "NOTFOUND"，
+而继承属性将搜索相关父作用域，如 ``define_property()`` 命令中所述，
+如果仍然无法找到属性，则 ``VAR`` 将设置为空字符串。
+
+对于标准属性列表，您可以键入 ``cmake --help-property-list``。
+
+另请参见更通用的 ``get_property()`` 命令。

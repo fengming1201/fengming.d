@@ -1,0 +1,133 @@
+ctest_test
+----------
+
+执行 :ref:`CTest 测试步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_test([BUILD <build-dir>] [APPEND]
+            [START <start-number>]
+            [END <end-number>]
+            [STRIDE <stride-number>]
+            [EXCLUDE <exclude-regex>]
+            [INCLUDE <include-regex>]
+            [EXCLUDE_LABEL <label-exclude-regex>]
+            [INCLUDE_LABEL <label-include-regex>]
+            [EXCLUDE_FIXTURE <regex>]
+            [EXCLUDE_FIXTURE_SETUP <regex>]
+            [EXCLUDE_FIXTURE_CLEANUP <regex>]
+            [PARALLEL_LEVEL <level>]
+            [RESOURCE_SPEC_FILE <file>]
+            [TEST_LOAD <threshold>]
+            [SCHEDULE_RANDOM <ON|OFF>]
+            [STOP_ON_FAILURE]
+            [STOP_TIME <time-of-day>]
+            [RETURN_VALUE <result-var>]
+            [CAPTURE_CMAKE_ERROR <result-var>]
+            [REPEAT <mode>:<n>]
+            [QUIET]
+            )
+
+在项目构建树中运行测试并将结果存储在 ``Test.xml`` 中，
+以便与 ``ctest_submit()`` 命令一起提交。
+
+选项为：
+
+``BUILD <build-dir>``
+  指定顶级构建目录。如果未给出，则使用 ``CTEST_BINARY_DIRECTORY`` 变量。
+
+``APPEND``
+  标记 ``Test.xml`` 以附加到自上次 ``ctest_start()`` 调用以来先前提交到仪表板服务器的结果。
+  附加语义由使用的仪表板服务器定义。
+  这 *不会* 导致结果附加到先前调用此命令生成的 ``.xml`` 文件。
+
+``START <start-number>``
+  指定测试编号范围的开始。
+
+``END <end-number>``
+  指定测试编号范围的结束。
+
+``STRIDE <stride-number>``
+  指定跨越测试编号范围的步长。
+
+``EXCLUDE <exclude-regex>``
+  指定正则表达式匹配要排除的测试名称。
+
+``INCLUDE <include-regex>``
+  指定正则表达式匹配要包含的测试名称。
+  不匹配此表达式的测试将被排除。
+
+``EXCLUDE_LABEL <label-exclude-regex>``
+  指定正则表达式匹配要排除的测试标签。
+
+``INCLUDE_LABEL <label-include-regex>``
+  指定正则表达式匹配要包含的测试标签。
+  不匹配此表达式的测试将被排除。
+
+``EXCLUDE_FIXTURE <regex>``
+  如果待执行测试集中的测试需要特定夹具，
+  通常会自动将夹具的设置和清理测试添加到测试集中。
+  此选项阻止为匹配 ``<regex>`` 的夹具添加设置或清理测试。
+  请注意，所有其他夹具行为都会保留，包括测试依赖项以及跳过具有失败的夹具设置测试的测试。
+
+``EXCLUDE_FIXTURE_SETUP <regex>``
+  与 ``EXCLUDE_FIXTURE`` 相同，只是仅排除匹配的设置测试。
+
+``EXCLUDE_FIXTURE_CLEANUP <regex>``
+  与 ``EXCLUDE_FIXTURE`` 相同，只是仅排除匹配的清理测试。
+
+``PARALLEL_LEVEL <level>``
+  指定一个正数，表示要并行运行的测试数量。
+
+``RESOURCE_SPEC_FILE <file>``
+  指定一个 :ref:`资源规范文件 <ctest-resource-specification-file>`。
+  有关更多信息，请参见 :ref:`ctest-resource-allocation`。
+
+``TEST_LOAD <threshold>``
+  在并行运行测试时，尽量避免在可能导致 CPU 负载超过给定阈值时启动测试。
+  如果未指定，则将检查 ``CTEST_TEST_LOAD`` 变量，
+  然后检查 ``ctest(1)`` 的 ``--test-load`` 命令行参数。
+  另请参见 :ref:`CTest 测试步骤` 中的 ``TestLoad`` 设置。
+
+``REPEAT <mode>:<n>``
+  根据给定的 ``<mode>`` 重复运行测试最多 ``<n>`` 次。
+  模式为：
+
+  ``UNTIL_FAIL``
+    要求每个测试运行 ``<n>`` 次而不失败才能通过。
+    这对于查找测试用例中的偶发故障很有用。
+
+  ``UNTIL_PASS``
+    允许每个测试运行最多 ``<n>`` 次才能通过。
+  如果测试因任何原因失败，则重复测试。
+    这对于容忍测试用例中的偶发故障很有用。
+
+  ``AFTER_TIMEOUT``
+    允许每个测试运行最多 ``<n>`` 次才能通过。
+    仅当测试超时时才重复测试。
+    这对于容忍繁忙机器上的测试用例中的偶发超时很有用。
+
+``SCHEDULE_RANDOM <ON|OFF>``
+  以随机顺序启动测试。这对于检测隐式测试依赖项可能很有用。
+
+``STOP_ON_FAILURE``
+  一旦测试失败，就停止执行测试。
+
+``STOP_TIME <time-of-day>``
+  指定所有测试应停止运行的当天时间。
+
+``RETURN_VALUE <result-var>``
+  如果所有测试通过，则在 ``<result-var>`` 变量中存储 ``0``。
+  如果出现任何问题，则存储非零值。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。
+
+``QUIET``
+  抑制所有否则会打印到控制台的 CTest 特定非错误消息。
+  来自底层测试命令的输出不受影响。
+  详细说明通过测试百分比的摘要信息也不受 ``QUIET`` 选项的影响。
+
+另请参见 ``CTEST_CUSTOM_MAXIMUM_PASSED_TEST_OUTPUT_SIZE``
+和 ``CTEST_CUSTOM_MAXIMUM_FAILED_TEST_OUTPUT_SIZE`` 变量。

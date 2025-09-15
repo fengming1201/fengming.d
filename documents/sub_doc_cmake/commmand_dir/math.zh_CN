@@ -1,0 +1,29 @@
+math
+----
+
+计算数学表达式。
+
+ math(EXPR <variable> "<expression>" [OUTPUT_FORMAT <format>])
+
+计算数学 ``<expression>`` 并将 ``<variable>`` 设置为结果值。
+表达式的结果必须可表示为64位有符号整数。
+
+数学表达式必须作为字符串给出（即用双引号括起来）。
+例如 ``"5 * (10 + 13)"``。
+支持的运算符有 ``+``、``-``、``*``、``/``、``%``、``|``、``&``、
+``^``、``~``、``<<``、``>>`` 和 ``(...)``；它们与C代码中的含义相同。
+
+十六进制数在以 ``0x`` 为前缀时被识别，如C代码中所示。
+
+结果根据选项 ``OUTPUT_FORMAT`` 格式化，
+其中 ``<format>`` 是以下之一：
+
+``HEXADECIMAL``
+  十六进制表示法，如C代码中，即以"0x"开头。
+``DECIMAL``
+  十进制表示法。如果未指定 ``OUTPUT_FORMAT`` 选项，也使用此表示法。
+
+例如
+
+ math(EXPR value "100 * 0xA" OUTPUT_FORMAT DECIMAL)      # value 被设置为 "1000"
+ math(EXPR value "100 * 0xA" OUTPUT_FORMAT HEXADECIMAL)  # value 被设置为 "0x3e8"

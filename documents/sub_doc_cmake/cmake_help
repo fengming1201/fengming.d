@@ -32,6 +32,8 @@ Options
   -E                           = CMake command mode.
   -L[A][H]                     = List non-advanced cached variables.
   --build <dir>                = Build a CMake-generated project binary tree.
+  --install <dir>              = Install a CMake-generated project binary
+                                 tree.
   --open <dir>                 = Open generated project in the associated
                                  application.
   -N                           = View mode only.
@@ -40,19 +42,33 @@ Options
   --graphviz=[file]            = Generate graphviz of dependencies, see
                                  CMakeGraphVizOptions.cmake for more.
   --system-information [file]  = Dump information about this system.
+  --log-level=<ERROR|WARNING|NOTICE|STATUS|VERBOSE|DEBUG|TRACE>
+                               = Set the verbosity of messages from CMake
+                                 files.  --loglevel is also accepted for
+                                 backward compatibility reasons.
+  --log-context                = Prepend log messages with context, if given
   --debug-trycompile           = Do not delete the try_compile build tree.
                                  Only useful on one try_compile at a time.
   --debug-output               = Put cmake in a debug mode.
+  --debug-find                 = Put cmake find in a debug mode.
   --trace                      = Put cmake in trace mode.
   --trace-expand               = Put cmake in trace mode with variable
                                  expansion.
+  --trace-format=<human|json-v1>
+                               = Set the output format of the trace.
   --trace-source=<file>        = Trace only this CMake file/module.  Multiple
                                  options allowed.
+  --trace-redirect=<file>      = Redirect trace output to a file instead of
+                                 stderr.
   --warn-uninitialized         = Warn about uninitialized values.
   --warn-unused-vars           = Warn about unused variables.
   --no-warn-unused-cli         = Don't warn about command line options.
   --check-system-vars          = Find problems with variable usage in system
                                  files.
+  --profiling-format=<fmt>     = Output data for profiling CMake scripts.
+                                 Supported formats: google-trace
+  --profiling-output=<file>    = Select an output path for the profiling data
+                                 enabled through --profiling-format.
   --help,-help,-usage,-h,-H,/? = Print usage information and exit.
   --version,-version,/V [<f>]  = Print version number and exit.
   --help-full [<f>]            = Print all help manuals and exit.
@@ -77,9 +93,12 @@ Options
 
 Generators
 
-The following generators are available on this platform:
-  Unix Makefiles               = Generates standard UNIX makefiles.
+The following generators are available on this platform (* marks default):
+* Unix Makefiles               = Generates standard UNIX makefiles.
+  Green Hills MULTI            = Generates Green Hills MULTI files
+                                 (experimental, work-in-progress).
   Ninja                        = Generates build.ninja files.
+  Ninja Multi-Config           = Generates build-<Config>.ninja files.
   Watcom WMake                 = Generates Watcom WMake makefiles.
   CodeBlocks - Ninja           = Generates CodeBlocks project files.
   CodeBlocks - Unix Makefiles  = Generates CodeBlocks project files.
@@ -93,80 +112,3 @@ The following generators are available on this platform:
   Eclipse CDT4 - Ninja         = Generates Eclipse CDT 4.0 project files.
   Eclipse CDT4 - Unix Makefiles= Generates Eclipse CDT 4.0 project files.
 
-=====================================================================
-用法
-  cmake [options] <path-to-source>
-  cmake [options] <path-to-existing-build>
-  cmake [options] -S <path-to-source> -B <path-to-build>
-指定源目录以在当前工作目录中为其（重新）生成构建系统。 指定现有构建目录以重新生成其构建系统。
-选项
-  -S <path-to-source>          = 显式指定源目录。
-  -B <path-to-build>           = 显式指定生成目录。
-  -C <initial-cache>           = 预加载脚本以填充缓存。
-  -D <var>[:<type>]=<value>    = 创建或更新 cmake 缓存条目。
-  -U <globbing_expr>           = 从 CMake 缓存中删除匹配的条目。
-  -G <generator-name>          = 指定生成系统生成器。
-  -T <toolset-name>            = 指定工具集名称（如果生成器支持）。
-  -A <platform-name>           = 如果生成器支持，请指定平台名称。
-  -Wdev                        = 启用开发人员警告。
-  -Wno-dev                     = 禁止显示开发人员警告。
-  -Werror=dev                  = 使开发人员警告错误。
-  -Wno-error=dev               = 使开发人员警告而不是错误。
-  -Wdeprecated                 = 启用弃用警告。
-  -Wno-deprecated              = 禁止显示弃用警告。
-  -Werror=deprecated           = 使已弃用的宏和函数警告错误。
-  -Wno-error=deprecated        = 使已弃用的宏和函数警告不出错。
-  -E                           = CMake 命令模式。
-  -L[A][H]                     = 列出非高级缓存变量。
-  --build <dir>                = 生成 CMake 生成的项目二叉树。
-  --open <dir>                 = 在关联的应用程序中打开生成的项目。
-  -N                           = 仅限查看模式。
-  -P <file>                    = 进程脚本模式。
-  --find-package               = 在类似 pkg 配置的模式下运行。
-  --graphviz=[file]            = 生成依赖项的图形可视化，请参阅 CMakeGraphVizOptions.cmake 了解更多信息。
-  --system-information [file]  = 转储有关此系统的信息。
-  --debug-trycompile           = 不要删除try_compile构建树。一次只对一个try_compile有用。
-  --debug-output               = 将 cmake 置于调试模式。
-  --trace                      = 将 cmake 置于跟踪模式。
-  --trace-expand               = 将 cmake 置于具有变量扩展的跟踪模式。
-  --trace-source=<file>        = 仅跟踪此 CMake 文件/模块。 允许多个选项。
-  --warn-uninitialized         = 警告未初始化的值。
-  --warn-unused-vars           = 警告未使用的变量。
-  --no-warn-unused-cli         = 不要警告命令行选项。
-  --check-system-vars          = 查找系统文件中变量使用情况的问题。
-  --help,-help,-usage,-h,-H,/? = 打印使用信息并退出。
-  --version,-version,/V [<f>]  = 打印版本号并退出。
-  --help-full [<f>]            = 打印所有帮助手册并退出。
-  --help-manual <man> [<f>]    = 打印一份帮助手册并退出。
-  --help-manual-list [<f>]     = 列出可用的帮助手册并退出。
-  --help-command <cmd> [<f>]   = 打印一个命令的帮助并退出。
-  --help-command-list [<f>]    = 列出具有可用帮助的命令并退出。
-  --help-commands [<f>]        = 手动打印 cmake 命令并退出。
-  --help-module <mod> [<f>]    = 打印一个模块的帮助并退出。
-  --help-module-list [<f>]     = 列出具有可用帮助的模块并退出。
-  --help-modules [<f>]         = 手动打印 cmake 模块并退出。
-  --help-policy <cmp> [<f>]    = 打印一个策略的帮助并退出。
-  --help-policy-list [<f>]     = 列出具有可用帮助的策略并退出。
-  --help-policies [<f>]        = 打印 cmake 策略手册并退出。
-  --help-property <prop> [<f>] = 打印一个属性的帮助并退出。
-  --help-property-list [<f>]   = 列出具有可用帮助的属性并退出。
-  --help-properties [<f>]      = 打印 cmake-属性手册并退出。
-  --help-variable var [<f>]    = 打印一个变量的帮助并退出。
-  --help-variable-list [<f>]   = 列出变量并提供帮助并退出。
-  --help-variables [<f>]       = 手动打印 cmake-variables 并退出。
-生成器
-此平台上提供以下生成器：
-  Unix Makefiles               = 生成标准 UNIX 生成文件。
-  Ninja                        = 生成 build.ninja 文件。
-  Watcom WMake                 = 生成 Watcom WMake makefiles。
-  CodeBlocks - Ninja           = Generates CodeBlocks project files.
-  CodeBlocks - Unix Makefiles  = Generates CodeBlocks project files.
-  CodeLite - Ninja             = Generates CodeLite project files.
-  CodeLite - Unix Makefiles    = Generates CodeLite project files.
-  Sublime Text 2 - Ninja       = Generates Sublime Text 2 project files.
-  Sublime Text 2 - Unix Makefiles
-                               = Generates Sublime Text 2 project files.
-  Kate - Ninja                 = 生成 Kate 项目文件。
-  Kate - Unix Makefiles        = 生成 Kate 项目文件。
-  Eclipse CDT4 - Ninja         = 生成 Eclipse CDT 4.0 项目文件。
-  Eclipse CDT4 - Unix Makefiles= 生成 Eclipse CDT 4.0 项目文件。

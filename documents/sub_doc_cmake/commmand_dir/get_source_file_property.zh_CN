@@ -1,0 +1,33 @@
+get_source_file_property
+------------------------
+
+获取源文件的属性。
+
+ get_source_file_property(<variable> <file>
+                          [DIRECTORY <dir> | TARGET_DIRECTORY <target>]
+                          <property>)
+
+从源文件获取属性。属性的值存储在指定的 ``<variable>`` 中。
+如果未找到源属性，行为取决于它是否已被定义为 ``INHERITED`` 属性
+（参见 ``define_property()``）。
+非继承属性会将 ``variable`` 设置为 ``NOTFOUND``，
+而继承属性将搜索相关父作用域，如 ``define_property()`` 命令中所述，
+如果仍然无法找到属性，则 ``variable`` 将设置为空字符串。
+
+默认情况下，源文件的属性将从当前源目录的作用域读取，
+但可以通过以下子选项之一覆盖：
+
+``DIRECTORY <dir>``
+  源文件属性将从 ``<dir>`` 目录的作用域读取。
+  CMake 必须已经知道该源目录，要么通过调用 ``add_subdirectory()`` 添加它，
+  要么 ``<dir>`` 是顶级源目录。相对路径被视为相对于当前源目录。
+
+``TARGET_DIRECTORY <target>``
+  源文件属性将从创建 ``<target>`` 的目录作用域读取
+  （因此 ``<target>`` 必须已经存在）。
+
+使用 ``set_source_files_properties()`` 设置属性值。
+源文件属性通常控制文件的构建方式。
+始终存在的一个属性是 ``LOCATION``。
+
+另请参见更通用的 ``get_property()`` 命令。

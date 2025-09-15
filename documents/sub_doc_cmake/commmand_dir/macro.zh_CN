@@ -1,0 +1,99 @@
+macro
+-----
+
+开始记录宏以供稍后作为命令调用。
+
+ macro(<name> [<arg1> ...])
+   <commands>
+ endmacro()
+
+定义名为 ``<name>`` 的宏，该宏接受名为 ``<arg1>`` 等的参数。macro 之后、匹配的 ``endmacro()`` 之前列出的命令在宏被调用之前不会执行。
+
+按传统，``endmacro()`` 命令接受可选的 ``<name>`` 参数。如果使用，它必须是开头 ``macro`` 命令参数的逐字重复。
+
+有关宏内策略的行为，请参阅 ``cmake_policy()`` 命令文档。
+
+有关 CMake 宏和 ``函数`` 之间的差异，请参阅下面的 :ref:`宏与函数` 部分。
+
+调用
+^^^^
+
+宏调用不区分大小写。定义为
+
+ macro(foo)
+   <commands>
+ endmacro()
+
+的宏可以通过以下方式调用
+
+ foo()
+ Foo()
+ FOO()
+ cmake_language(CALL foo)
+
+等等。然而，强烈建议坚持使用宏定义中选择的大小写。通常宏使用全小写名称。
+
+``cmake_language(CALL ...)`` 命令也可用于调用该宏。
+
+参数
+^^^^^
+
+当宏被调用时，宏中记录的命令首先通过用传递的参数替换形式参数（``${arg1}`` 等）进行修改，然后作为正常命令调用。
+
+除了引用形式参数外，还可以引用值 ``${ARGC}``，该值将设置为传递给函数的参数数量，
+以及 ``${ARGV0}``、``${ARGV1}``、``${ARGV2}`` 等，它们将具有传入的实际参数值。这有助于创建具有可选参数的宏。
+
+此外，``${ARGV}`` 保存给宏的所有参数列表，``${ARGN}`` 保存最后一个预期参数之后的参数列表。
+引用超出 ``${ARGC}`` 的 ``${ARGV#}`` 参数具有未定义行为。检查 ``${ARGC}`` 是否大于 ``#`` 是确保 ``${ARGV#}`` 作为额外参数传递给函数的唯一方法。
+
+宏与函数
+^^^^^^^^^
+
+``macro`` 命令与 ``function()`` 命令非常相似。
+然而，有一些重要差异。
+
+在函数中，``ARGN``、``ARGC``、``ARGV`` 和 ``ARGV0``、``ARGV1`` 等是通常 CMake 意义上的真实变量。
+在宏中，它们不是，它们类似于 C 预处理器对宏所做的字符串替换。这有许多后果，如下面 :ref:`参数注意事项` 部分中所述。
+
+宏和函数之间的另一个区别是控制流。
+函数通过将控制从调用语句转移到函数体来执行。宏的执行方式就像宏体被粘贴到调用语句的位置一样。
+这导致宏体中的 ``return()`` 不仅终止宏的执行；相反，控制从宏调用的作用域返回。为避免混淆，建议完全避免在宏中使用 ``return()``。
+
+与函数不同，``CMAKE_CURRENT_FUNCTION``、
+``CMAKE_CURRENT_FUNCTION_LIST_DIR``、
+``CMAKE_CURRENT_FUNCTION_LIST_FILE``、
+``CMAKE_CURRENT_FUNCTION_LIST_LINE`` 变量不会为宏设置。
+
+参数注意事项
+^^^^^^^^^^^^
+
+由于 ``ARGN``、``ARGC``、``ARGV``、``ARGV0`` 等不是变量，
+您将无法使用命令
+
+ if(ARGV1) # ARGV1 不是变量
+ if(DEFINED ARGV2) # ARGV2 不是变量
+ if(ARGC GREATER 2) # ARGC 不是变量
+ foreach(loop_var IN LISTS ARGN) # ARGN 不是变量
+
+在第一种情况下，您可以使用 ``if(${ARGV1})``。在第二种和第三种情况下，检查可选变量是否传递给宏的正确方法是使用 ``if(${ARGC} GREATER 2)``。
+在最后一种情况下，您可以使用 ``foreach(loop_var ${ARGN})``，但这将跳过空参数。如果需要包含它们，可以使用
+
+ set(list_var "${ARGN}")
+ foreach(loop_var IN LISTS list_var)
+
+请注意，如果宏调用作用域中有同名变量，使用未引用的名称将使用现有变量而不是参数。例如：
+
+ macro(bar)
+   foreach(arg IN LISTS ARGN)
+     <commands>
+   endforeach()
+ endmacro()
+
+ function(foo)
+   bar(x y z)
+ endfunction()
+
+ foo(a b c)
+
+将循环遍历 ``a;b;c`` 而不是人们可能预期的 ``x;y;z``。
+如果需要真正的 CMake 变量和/或更好的 CMake 作用域控制，应查看 function 命令。

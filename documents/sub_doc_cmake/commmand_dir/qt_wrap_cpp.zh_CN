@@ -1,0 +1,12 @@
+qt_wrap_cpp
+-----------
+
+手动创建Qt包装器。
+
+ qt_wrap_cpp(resultingLibraryName DestName SourceLists ...)
+
+为SourceLists中列出的所有.h文件生成moc文件。
+moc文件将使用 ``DestName`` 源列表添加到库中。
+
+考虑更新项目以使用 ``AUTOMOC`` 目标属性，
+以获得调用 ``moc`` 工具的更自动化方式。

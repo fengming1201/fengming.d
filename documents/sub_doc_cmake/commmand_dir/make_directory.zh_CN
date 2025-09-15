@@ -1,0 +1,9 @@
+make_directory
+--------------
+
+::
+
+ make_directory(directory)
+
+创建指定的目录。应给出完整路径。任何不存在的父目录也将被创建。
+请谨慎使用。

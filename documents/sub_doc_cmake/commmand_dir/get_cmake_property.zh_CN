@@ -1,0 +1,15 @@
+get_cmake_property
+------------------
+
+获取 CMake 实例的全局属性。
+
+ get_cmake_property(<var> <property>)
+
+从 CMake 实例获取全局属性。``<property>`` 的值存储在变量 ``<var>`` 中。
+如果未找到属性，``<var>`` 将被设置为 ``NOTFOUND``。
+有关可用属性，请参见 ``cmake-properties(7)`` 手册。
+
+另请参见 ``get_property()`` 命令的 ``GLOBAL`` 选项。
+
+除全局属性外，此命令（由于历史原因）还支持 ``VARIABLES`` 和 ``MACROS`` 目录属性。
+它还支持一个特殊的 ``COMPONENTS`` 全局属性，该属性列出提供给 ``install()`` 命令的组件。

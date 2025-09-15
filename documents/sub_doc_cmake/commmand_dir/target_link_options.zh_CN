@@ -1,0 +1,62 @@
+target_link_options
+-------------------
+
+为可执行文件、共享库或模块库目标添加链接步骤的选项。
+
+ target_link_options(<target> [BEFORE]
+   <INTERFACE|PUBLIC|PRIVATE> [items1...]
+   [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
+
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+
+此命令可用于添加任何链接选项，但存在用于添加库的替代命令
+（``target_link_libraries()``或``link_libraries()``）。
+请参见``directory``和``target`` ``LINK_OPTIONS``属性的文档。
+
+.. 注意::
+
+  此命令不能用于为静态库目标添加选项，因为它们不使用链接器。
+  要添加归档器或MSVC库管理员标志，请参见``STATIC_LIBRARY_OPTIONS``目标属性。
+
+如果指定了``BEFORE``，内容将被前置到属性中，而不是追加。
+
+需要``INTERFACE``、``PUBLIC``和``PRIVATE``关键字来指定后续参数的作用域。
+``PRIVATE``和``PUBLIC``项将填充``<target>``的``LINK_OPTIONS``属性。
+``PUBLIC``和``INTERFACE``项将填充``<target>``的``INTERFACE_LINK_OPTIONS``属性。
+(:ref:`IMPORTED targets <Imported Targets>`仅支持``INTERFACE``项。)
+后续参数指定链接选项。对同一``<target>``的重复调用将按调用顺序追加项。
+
+``target_link_options``的参数可以使用语法为``$<...>``的"生成器表达式"。
+请参见``cmake-generator-expressions(7)``手册以了解可用表达式。
+有关定义构建系统属性的更多信息，请参见``cmake-buildsystem(7)``手册。
+
+当涉及设备链接步骤时，该步骤由``CUDA_SEPARABLE_COMPILATION``和
+``CUDA_RESOLVE_DEVICE_SYMBOLS``属性以及策略``CMP0105``控制，
+原始选项将传递给主机和设备链接步骤（设备链接时包装在``-Xcompiler``或等效选项中）。
+包装在``$<DEVICE_LINK:...>`` ``生成器表达式``中的选项将仅用于设备链接步骤。
+包装在``$<HOST_LINK:...>`` ``生成器表达式``中的选项将仅用于主机链接步骤。
+
+用于目标的最终编译或链接选项集是通过累积当前目标及其依赖项的使用要求来构建的。
+该选项集会被去重以避免重复。虽然这对单个选项有益，但去重步骤可能会破坏选项组。
+例如，``-D A -D B``变为``-D A B``。可以使用类shell的引号加上``SHELL:``前缀来指定选项组。
+``SHELL:``前缀会被删除，其余选项字符串使用``separate_arguments()``的``UNIX_COMMAND``模式进行解析。
+例如，``"SHELL:-D A" "SHELL:-D B"``变为``-D A -D B``。
+
+要将选项传递给链接器工具，每个编译器驱动程序都有自己的语法。
+``LINKER:``前缀和``,``分隔符可用于以可移植的方式指定传递给链接器工具的选项。
+``LINKER:``会被适当的驱动程序选项替换，``,``会被适当的驱动程序分隔符替换。
+驱动程序前缀和驱动程序分隔符由``CMAKE_<LANG>_LINKER_WRAPPER_FLAG``和
+``CMAKE_<LANG>_LINKER_WRAPPER_FLAG_SEP``变量的值给出。
+
+例如，对于``Clang``，``"LINKER:-z,defs"``变为``-Xlinker -z -Xlinker defs``，
+对于``GNU GCC``，变为``-Wl,-z,defs``。
+
+``LINKER:``前缀可以指定为``SHELL:``前缀表达式的一部分。
+
+``LINKER:``前缀支持作为替代语法，使用``SHELL:``前缀和空格作为分隔符指定参数。
+前面的示例然后变为``"LINKER:SHELL:-z defs"``。
+
+.. 注意::
+
+  除``LINKER:``前缀的开头外，在任何位置指定``SHELL:``前缀均不受支持。

@@ -1,0 +1,23 @@
+export_library_dependencies
+---------------------------
+
+自版本 3.0 起已禁用。参见 CMake 策略 ``CMP0033``。
+
+使用 ``install(EXPORT)`` 或 ``export()`` 命令。
+
+此命令生成旧式库依赖文件。
+需要 CMake 2.6 或更高版本的项目不应使用该命令。
+请改用 ``install(EXPORT)`` 命令帮助从安装树导出目标，
+以及 ``export()`` 命令从构建树导出目标。
+
+旧式库依赖文件不考虑库的每配置名称或
+``LINK_INTERFACE_LIBRARIES`` 目标属性。
+
+::
+
+ export_library_dependencies(<file> [APPEND])
+
+创建一个名为 ``<file>`` 的文件，该文件可以通过 INCLUDE 命令包含到 CMake 列表文件中。
+文件将包含多个 SET 命令，这些命令将设置库依赖信息所需的所有变量。
+这应该是项目顶级 CMakeLists.txt 文件中的最后一个命令。
+如果指定了 ``APPEND`` 选项，SET 命令将被追加到给定文件而不是替换它。

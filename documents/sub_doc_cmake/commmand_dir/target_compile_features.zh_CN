@@ -1,0 +1,25 @@
+target_compile_features
+-----------------------
+
+为target添加预期的编译器特性。
+
+ target_compile_features(<target> <PRIVATE|PUBLIC|INTERFACE> <feature> [...])
+
+指定编译给定target所需的编译器特性。
+如果该特性未列在``CMAKE_C_COMPILE_FEATURES``、
+``CMAKE_CUDA_COMPILE_FEATURES``或``CMAKE_CXX_COMPILE_FEATURES``变量中，
+则CMake将报告错误。如果使用该特性需要额外的编译器标志（例如``-std=gnu++11``），
+该标志将自动添加。
+
+需要``INTERFACE``、``PUBLIC``和``PRIVATE``关键字来指定特性的作用域。
+``PRIVATE``和``PUBLIC``项将填充``<target>``的``COMPILE_FEATURES``属性。
+``PUBLIC``和``INTERFACE``项将填充``<target>``的``INTERFACE_COMPILE_FEATURES``属性。
+(:ref:`IMPORTED targets <Imported Targets>`仅支持``INTERFACE``项。)
+对同一``<target>``的重复调用将追加项。
+
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+
+``target_compile_features``的参数可以使用语法为``$<...>``的"生成器表达式"。
+请参见``cmake-generator-expressions(7)``手册以了解可用表达式。
+有关编译特性及支持的编译器列表的信息，请参见``cmake-compile-features(7)``手册。

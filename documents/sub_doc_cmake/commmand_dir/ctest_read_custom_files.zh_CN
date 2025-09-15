@@ -1,0 +1,12 @@
+ctest_read_custom_files
+-----------------------
+
+读取 CTestCustom 文件。
+
+::
+
+ ctest_read_custom_files( directory ... )
+
+从给定目录读取所有 CTestCustom.ctest 或 CTestCustom.cmake 文件。
+
+默认情况下，在没有脚本的情况下调用 ``ctest(1)`` 将从二进制目录读取自定义文件。

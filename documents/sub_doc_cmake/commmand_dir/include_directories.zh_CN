@@ -1,0 +1,30 @@
+include_directories
+-------------------
+
+向构建添加包含目录。
+
+ include_directories([AFTER|BEFORE] [SYSTEM] dir1 [dir2 ...])
+
+将给定目录添加到编译器用于搜索包含文件的目录中。
+相对路径被解释为相对于当前源目录。
+
+包含目录被添加到当前 ``CMakeLists`` 文件的 ``INCLUDE_DIRECTORIES`` 目录属性中。
+它们也被添加到当前 ``CMakeLists`` 文件中每个目标的 ``INCLUDE_DIRECTORIES`` 目标属性中。
+目标属性值是生成器使用的值。
+
+默认情况下，指定的目录被附加到当前目录列表的末尾。
+可以通过将 ``CMAKE_INCLUDE_DIRECTORIES_BEFORE`` 设置为 ``ON`` 来更改此默认行为。
+通过显式使用 ``AFTER`` 或 ``BEFORE``，您可以在附加和前置之间进行选择，独立于默认值。
+
+如果给定 ``SYSTEM`` 选项，则编译器将在某些平台上被告知这些目录是系统包含目录。
+发出此设置可能会实现诸如编译器跳过警告，
+或这些固定安装的系统文件不被视为依赖项计算等效果 - 请参见编译器文档。
+
+``include_directories`` 的参数可以使用语法为 "$<...>" 的"生成器表达式"。
+请参见 ``cmake-generator-expressions(7)`` 手册了解可用的表达式。
+请参见 ``cmake-buildsystem(7)`` 手册了解有关定义构建系统属性的更多信息。
+
+.. 注意::
+
+  优先使用 ``target_include_directories()`` 命令将包含目录添加到单个目标，
+  并可选择将它们传播/导出到依赖项。

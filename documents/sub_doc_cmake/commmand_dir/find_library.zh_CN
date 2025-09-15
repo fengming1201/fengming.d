@@ -1,0 +1,80 @@
+find_library
+------------
+
+简短签名：
+
+ find_library (<VAR> name1 [path1 path2 ...])
+
+通用签名：
+
+ find_library (
+           <VAR>
+           name | NAMES name1 [name2 ...] [NAMES_PER_DIR]
+           [HINTS path1 [path2 ... ENV var]]
+           [PATHS path1 [path2 ... ENV var]]
+           [PATH_SUFFIXES suffix1 [suffix2 ...]]
+           [DOC "cache documentation string"]
+           [REQUIRED]
+           [NO_DEFAULT_PATH]
+           [NO_PACKAGE_ROOT_PATH]
+           [NO_CMAKE_PATH]
+           [NO_CMAKE_ENVIRONMENT_PATH]
+           [NO_SYSTEM_ENVIRONMENT_PATH]
+           [NO_CMAKE_SYSTEM_PATH]
+           [CMAKE_FIND_ROOT_PATH_BOTH |
+            ONLY_CMAKE_FIND_ROOT_PATH |
+            NO_CMAKE_FIND_ROOT_PATH]
+          )
+
+此命令用于查找库。
+将创建一个名为 ``<VAR>`` 的缓存条目来存储此命令的结果。
+如果找到库，结果将存储在变量中，
+除非清除变量，否则不会重复搜索。
+如果未找到任何内容，结果将是 ``<VAR>-NOTFOUND``。
+``REQUIRED`` 选项会在找不到任何内容时停止处理并显示错误消息，
+否则下次使用相同变量调用 find_library 时将再次尝试搜索。
+
+选项包括：
+
+``NAMES``
+  指定库的一个或多个可能名称。
+
+  使用此选项指定带版本后缀和不带版本后缀的名称时，
+  我们建议先指定不带版本后缀的名称，
+  以便在发行版提供的库之前找到本地构建的包。
+
+``HINTS``, ``PATHS``
+  指定除默认位置外要搜索的目录。
+  ``ENV var`` 子选项从系统环境变量中读取路径。
+
+``PATH_SUFFIXES``
+  指定在每个目录位置下方要检查的其他子目录。
+
+``DOC``
+  为 ``<VAR>`` 缓存条目指定文档字符串。
+
+``REQUIRED``
+  如果找不到任何内容，则停止处理并显示错误消息。
+
+如果指定了 ``NO_DEFAULT_PATH``，则不会向搜索添加其他路径。
+如果未指定 ``NO_DEFAULT_PATH``，则搜索过程与 find_file 类似，
+但搜索的目录包括 lib 目录而不是 include 目录，
+并使用 CMAKE_LIBRARY_PATH 和 CMAKE_SYSTEM_LIBRARY_PATH 而不是 CMAKE_INCLUDE_PATH 和 CMAKE_SYSTEM_INCLUDE_PATH。
+
+交叉编译时的行为与 find_file 相同，使用 CMAKE_FIND_ROOT_PATH_MODE_LIBRARY 而不是 CMAKE_FIND_ROOT_PATH_MODE_INCLUDE。
+
+当向 ``NAMES`` 选项提供多个值时，此命令默认一次考虑一个名称并搜索每个目录。
+``NAMES_PER_DIR`` 选项告诉此命令一次考虑一个目录并在其中搜索所有名称。
+
+提供给 ``NAMES`` 选项的每个库名称首先被视为库文件名，
+然后被视为带有平台特定前缀（例如 ``lib``）和后缀（例如 ``.so``）的名称。
+因此可以直接指定库文件名，如 ``libfoo.a``。
+这可用于在类 UNIX 系统上定位静态库。
+
+如果找到的库是框架，则 ``<VAR>`` 将设置为框架的完整路径 ``<fullPath>/A.framework``。
+当将框架的完整路径用作库时，CMake 将使用 ``-framework A`` 和 ``-F<fullPath>`` 将框架链接到目标。
+
+如果设置了 ``CMAKE_FIND_LIBRARY_CUSTOM_LIB_SUFFIX`` 变量，
+所有搜索路径将按正常方式测试，并附加后缀，
+并将 ``lib/`` 的所有匹配项替换为 ``lib${CMAKE_FIND_LIBRARY_CUSTOM_LIB_SUFFIX}/``。
+此变量覆盖 ``FIND_LIBRARY_USE_LIB32_PATHS`` 等变量的行为。

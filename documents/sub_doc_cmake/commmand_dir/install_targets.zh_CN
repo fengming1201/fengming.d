@@ -1,0 +1,12 @@
+install_targets
+---------------
+
+此命令已被 ``install()`` 命令取代。它是为了与旧版CMake代码兼容而提供的。
+
+::
+
+ install_targets(<dir> [RUNTIME_DIRECTORY dir] target target)
+
+创建规则以将列出的目标安装到给定目录中。
+目录 ``<dir>`` 相对于安装前缀，该前缀存储在变量 ``CMAKE_INSTALL_PREFIX`` 中。
+如果指定了 ``RUNTIME_DIRECTORY``，则在具有特殊运行时文件的系统（Windows DLL）上，文件将被复制到该目录。

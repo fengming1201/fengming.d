@@ -1,0 +1,13 @@
+set_directory_properties
+------------------------
+
+设置当前目录和子目录的属性。
+
+ set_directory_properties(PROPERTIES prop1 value1 [prop2 value2] ...)
+
+以键值对的形式设置当前目录及其子目录的属性。
+
+另请参见 ``set_property(DIRECTORY)`` 命令。
+
+参见 :ref:`Directory Properties` 了解CMake已知的属性列表
+以及每个属性的单独文档以了解每个属性的行为。

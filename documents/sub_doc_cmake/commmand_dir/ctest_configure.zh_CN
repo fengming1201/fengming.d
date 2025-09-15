@@ -1,0 +1,43 @@
+ctest_configure
+---------------
+
+执行 :ref:`CTest 配置步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_configure([BUILD <build-dir>] [SOURCE <source-dir>] [APPEND]
+                 [OPTIONS <options>] [RETURN_VALUE <result-var>] [QUIET]
+                 [CAPTURE_CMAKE_ERROR <result-var>])
+
+配置项目构建树并将结果记录在 ``Configure.xml`` 中，
+用于与 ``ctest_submit()`` 命令一起提交。
+
+选项为：
+
+``BUILD <build-dir>``
+  指定顶级构建目录。如果未给定，
+  使用 ``CTEST_BINARY_DIRECTORY`` 变量。
+
+``SOURCE <source-dir>``
+  指定源代码目录。如果未给定，
+  使用 ``CTEST_SOURCE_DIRECTORY`` 变量。
+
+``APPEND``
+  将 ``Configure.xml`` 标记为追加到自上次 ``ctest_start()`` 调用以来
+  先前提交到仪表板服务器的结果。
+  追加语义由使用的仪表板服务器定义。
+  这*不会*导致结果追加到先前调用此命令产生的 ``.xml`` 文件。
+
+``OPTIONS <options>``
+  指定要传递给配置工具的命令行参数。
+
+``RETURN_VALUE <result-var>``
+  在本机配置工具的返回值中存储 ``<result-var>`` 变量。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。
+
+``QUIET``
+  抑制否则会打印到控制台的任何 CTest 特定的非错误消息。
+  来自底层配置命令的输出不受影响。

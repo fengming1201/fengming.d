@@ -1,0 +1,52 @@
+define_property
+---------------
+
+定义和记录自定义属性。
+
+ define_property(<GLOBAL | DIRECTORY | TARGET | SOURCE |
+                  TEST | VARIABLE | CACHED_VARIABLE>
+                  PROPERTY <name> [INHERITED]
+                  BRIEF_DOCS <brief-doc> [docs...]
+                  FULL_DOCS <full-doc> [docs...])
+
+在一个作用域中定义一个属性，用于 ``set_property()`` 和
+``get_property()`` 命令。这主要用于将文档与属性名称关联，
+这些属性名称可以通过 ``get_property()`` 命令检索。
+第一个参数确定属性应该在哪种作用域中使用。
+它必须是以下之一：
+
+::
+
+ GLOBAL    = 与全局命名空间关联
+ DIRECTORY = 与一个目录关联
+ TARGET    = 与一个目标关联
+ SOURCE    = 与一个源文件关联
+ TEST      = 与使用 add_test 命名的测试关联
+ VARIABLE  = 记录 CMake 语言变量
+ CACHED_VARIABLE = 记录 CMake 缓存变量
+
+请注意，与 ``set_property()`` 和 ``get_property()`` 不同，
+不需要给出实际的作用域；只需要作用域的类型。
+
+必需的 ``PROPERTY`` 选项后面紧跟着被定义的属性的名称。
+
+如果给出了 ``INHERITED`` 选项，那么当请求的属性在命令给定作用域中
+未设置时，``get_property()`` 命令将链接到下一个更高级别的作用域。
+
+* ``DIRECTORY`` 作用域链接到其父目录的作用域，继续向上遍历父目录，
+  直到目录设置了属性或没有更多父目录为止。
+  如果在顶级目录仍未找到，则链接到 ``GLOBAL`` 作用域。
+* ``TARGET``、``SOURCE`` 和 ``TEST`` 属性链接到 ``DIRECTORY`` 作用域，
+  包括根据需要进一步向上链接目录等。
+
+请注意，此作用域链接行为仅适用于对 ``get_property()``、
+``get_directory_property()``、
+``get_target_property()``、``get_source_file_property()`` 和
+``get_test_property()`` 的调用。
+在 *设置* 属性时没有继承行为，因此使用
+``APPEND`` 或 ``APPEND_STRING`` 与 ``set_property()`` 命令一起使用时，
+在确定要附加的内容时不会考虑继承的值。
+
+``BRIEF_DOCS`` 和 ``FULL_DOCS`` 选项后面跟着要与属性关联的字符串，
+作为其简要文档和完整文档。
+``get_property()`` 命令的相应选项将检索文档。

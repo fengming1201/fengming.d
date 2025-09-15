@@ -1,0 +1,21 @@
+load_command
+------------
+
+自3.0版本起已禁用。请参见CMake策略 ``CMP0031``。
+
+将命令加载到正在运行的CMake中。
+
+::
+
+ load_command(COMMAND_NAME <loc1> [loc2 ...])
+
+在给定位置搜索名为cmCOMMAND_NAME的库。如果找到，
+将其作为模块加载，并将命令添加到可用CMake命令集中。
+通常，在此命令之前使用 ``try_compile()`` 来编译模块。
+如果命令成功加载，名为
+
+::
+
+ CMAKE_LOADED_COMMAND_<COMMAND_NAME>
+
+的变量将被设置为加载的模块的完整路径。否则该变量将不会被设置。

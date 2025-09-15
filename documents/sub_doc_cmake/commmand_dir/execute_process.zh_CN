@@ -1,0 +1,113 @@
+execute_process
+---------------
+
+执行一个或多个子进程。
+
+ execute_process(COMMAND <cmd1> [<arguments>]
+                 [COMMAND <cmd2> [<arguments>]]...
+                 [WORKING_DIRECTORY <directory>]
+                 [TIMEOUT <seconds>]
+                 [RESULT_VARIABLE <variable>]
+                 [RESULTS_VARIABLE <variable>]
+                 [OUTPUT_VARIABLE <variable>]
+                 [ERROR_VARIABLE <variable>]
+                 [INPUT_FILE <file>]
+                 [OUTPUT_FILE <file>]
+                 [ERROR_FILE <file>]
+                 [OUTPUT_QUIET]
+                 [ERROR_QUIET]
+                 [COMMAND_ECHO <where>]
+                 [OUTPUT_STRIP_TRAILING_WHITESPACE]
+                 [ERROR_STRIP_TRAILING_WHITESPACE]
+                 [ENCODING <name>]
+                 [ECHO_OUTPUT_VARIABLE]
+                 [ECHO_ERROR_VARIABLE])
+
+运行给定的一个或多个命令序列。
+
+命令作为管道并发执行，每个进程的标准输出管道连接到下一个的标准输入。
+所有进程使用单个标准错误管道。
+
+选项：
+
+``COMMAND``
+ 子进程命令行。
+
+ CMake 使用操作系统 API 直接执行子进程。
+ 所有参数都按字面传递给子进程。
+ 不使用中间 shell，因此 shell 运算符如 ``>``
+ 被视为普通参数。
+ （使用 ``INPUT_*``、``OUTPUT_*`` 和 ``ERROR_*`` 选项来
+ 重定向 stdin、stdout 和 stderr。）
+
+ 如果需要顺序执行多个命令，请使用多个带有单个 ``COMMAND`` 参数的
+ ``execute_process()`` 调用。
+
+``WORKING_DIRECTORY``
+ 指定目录将被设置为子进程的当前工作目录。
+
+``TIMEOUT``
+ 在指定的秒数（允许小数）后，所有未完成的子进程将被终止，
+ 并且 ``RESULT_VARIABLE`` 将被设置为提及"超时"的字符串。
+
+``RESULT_VARIABLE``
+ 变量将被设置为包含最后一个子进程的结果。
+ 这将是来自最后一个子进程的整数返回码或描述错误条件的字符串。
+
+``RESULTS_VARIABLE <variable>``
+ 变量将被设置为包含所有进程的结果作为
+ :ref:`分号分隔列表 <CMake Language Lists>`，按给定 ``COMMAND`` 参数的顺序。
+ 每个条目将是来自相应子进程的整数返回码或描述错误条件的字符串。
+
+``OUTPUT_VARIABLE``、``ERROR_VARIABLE``
+ 命名的变量将分别设置为标准输出和标准错误管道的内容。
+ 如果为两个管道命名了相同的变量，它们的输出将按产生的顺序合并。
+
+``INPUT_FILE, OUTPUT_FILE``、``ERROR_FILE``
+ 命名的文件将分别附加到第一个进程的标准输入、最后一个进程的标准输出
+ 或所有进程的标准错误。
+ 如果为输出和错误命名了相同的文件，则它将用于两者。
+
+``OUTPUT_QUIET``、``ERROR_QUIET``
+ 标准输出或标准错误结果将被静默忽略。
+
+``COMMAND_ECHO <where>``
+ 正在运行的命令将被回显到 ``<where>``，其中 ``<where>``
+ 设置为 ``STDERR``、``STDOUT`` 或 ``NONE`` 之一。
+ 参见 ``CMAKE_EXECUTE_PROCESS_COMMAND_ECHO`` 变量以了解当此选项不存在时
+ 控制默认行为的方法。
+
+``ENCODING <name>``
+ 在 Windows 上，用于解码进程输出的编码。
+ 在其他平台上忽略。
+ 有效的编码名称为：
+
+ ``NONE``
+   不执行解码。假设进程输出编码与 CMake 的内部编码（UTF-8）相同。
+   这是默认值。
+ ``AUTO``
+   使用当前活动控制台的代码页，如果不可用则使用 ANSI。
+ ``ANSI``
+   使用 ANSI 代码页。
+ ``OEM``
+   使用原始设备制造商（OEM）代码页。
+ ``UTF8`` 或 ``UTF-8``
+   使用 UTF-8 代码页。在 CMake 3.11.0 之前，仅接受 ``UTF8``
+   用于此编码。在 CMake 3.11.0 中，为了与 UTF-8 RFC 命名约定保持一致，添加了 ``UTF-8``。
+
+``ECHO_OUTPUT_VARIABLE``、``ECHO_ERROR_VARIABLE``
+  标准输出或标准错误不会被专门重定向到配置的变量。
+
+  输出将被复制，它将被发送到配置的变量，
+  同时也发送到标准输出或标准错误。
+
+  这类似于 Unix 的 ``tee`` 命令。
+
+如果为同一管道给出多个 ``OUTPUT_*`` 或 ``ERROR_*`` 选项，
+优先级未指定。
+如果没有给出 ``OUTPUT_*`` 或 ``ERROR_*`` 选项，输出将与 CMake 进程本身的相应管道共享。
+
+``execute_process()`` 命令是 ``exec_program()`` 的更新更强大的版本，
+但旧命令已保留以保持兼容性。
+两个命令都在 CMake 处理项目期间运行，在构建系统生成之前。
+使用 ``add_custom_target()`` 和 ``add_custom_command()`` 创建在构建时运行的自定义命令。

@@ -1,0 +1,14 @@
+ctest_run_script
+----------------
+
+运行 ctest -S 脚本
+
+::
+
+ ctest_run_script([NEW_PROCESS] script_file_name script_file_name1
+             script_file_name2 ... [RETURN_VALUE var])
+
+运行一个或多个脚本，就像从 ctest -S 运行一样。如果没有
+提供参数，则使用变量的当前设置运行当前脚本。
+如果指定了 ``NEW_PROCESS``，则每个脚本将在单独的进程中运行。
+如果指定了 ``RETURN_VALUE``，则最后运行的脚本的返回值将被放入 ``var``。

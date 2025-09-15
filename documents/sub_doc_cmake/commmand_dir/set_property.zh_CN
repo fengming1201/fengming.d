@@ -1,0 +1,86 @@
+set_property
+------------
+
+在给定作用域中设置命名属性。
+
+ set_property(<GLOBAL                      |
+               DIRECTORY [<dir>]           |
+               TARGET    [<target1> ...]   |
+               SOURCE    [<src1> ...]
+                         [DIRECTORY <dirs> ...] |
+                         [TARGET_DIRECTORY <targets> ...]
+               INSTALL   [<file1> ...]     |
+               TEST      [<test1> ...]     |
+               CACHE     [<entry1> ...]    >
+              [APPEND] [APPEND_STRING]
+              PROPERTY <name> [<value1> ...])
+
+在作用域的一个或多个对象上设置一个属性。
+
+第一个参数确定设置属性的作用域。
+它必须是以下之一：
+
+``GLOBAL``
+  作用域是唯一的，不接受名称。
+
+``DIRECTORY``
+  作用域默认为当前目录，但可以通过完整或相对路径命名另一个目录
+  （已由CMake处理）。
+  另请参见 ``set_directory_properties()`` 命令。
+
+``TARGET``
+  作用域可以命名零个或多个现有目标。
+  另请参见 ``set_target_properties()`` 命令。
+
+``SOURCE``
+  作用域可以命名零个或多个源文件。默认情况下，源文件属性
+  仅对同一目录（``CMakeLists.txt``）中添加的目标可见。
+  可以使用以下一个或两个子选项在其他目录作用域中设置可见性：
+
+  ``DIRECTORY <dirs>...``
+    源文件属性将在每个 ``<dirs>`` 目录的作用域中设置。
+    CMake必须已经知道这些源目录中的每一个，
+    要么通过调用 ``add_subdirectory()`` 添加它们，要么是顶级源目录。
+    相对路径被视为相对于当前源目录。
+
+  ``TARGET_DIRECTORY <targets>...``
+    源文件属性将在创建任何指定 ``<targets>`` 的目录作用域中设置
+    （因此 ``<targets>`` 必须已经存在）。
+
+  另请参见 ``set_source_files_properties()`` 命令。
+
+``INSTALL``
+  作用域可以命名零个或多个已安装的文件路径。
+  这些对CPack可用以影响部署。
+
+  属性键和值都可以使用生成器表达式。
+  特定属性可能适用于已安装的文件和/或目录。
+
+  路径组件必须用正斜杠分隔，
+  必须规范化且区分大小写。
+
+  要使用相对路径引用安装前缀本身，请使用 ``.``。
+
+  当前已安装文件属性仅为WIX生成器定义，
+  其中给定路径相对于安装前缀。
+
+``TEST``
+  作用域可以命名零个或多个现有测试。
+  另请参见 ``set_tests_properties()`` 命令。
+
+``CACHE``
+  作用域必须命名零个或多个现有缓存条目。
+
+必需的 ``PROPERTY`` 选项紧接要设置的属性名称。
+剩余参数用于以分号分隔列表的形式组成属性值。
+
+如果给出 ``APPEND`` 选项，列表将附加到任何现有属性值
+（空值被忽略且不会附加）。
+如果给出 ``APPEND_STRING`` 选项，字符串将作为字符串附加到任何现有属性值，
+即它导致更长的字符串而不是字符串列表。
+当使用 ``APPEND`` 或 ``APPEND_STRING`` 与支持 ``INHERITED`` 行为的属性
+（参见 ``define_property()``）一起使用时，在查找要附加的初始值时不发生继承。
+如果属性尚未直接在指定作用域中设置，
+则命令将表现为未给出 ``APPEND`` 或 ``APPEND_STRING``。
+
+参见 ``cmake-properties(7)`` 手册了解每个作用域中的属性列表。

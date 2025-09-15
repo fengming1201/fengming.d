@@ -1,0 +1,14 @@
+qt_wrap_ui
+----------
+
+手动创建Qt用户界面包装器。
+
+ qt_wrap_ui(resultingLibraryName HeadersDestName
+            SourcesDestName SourceLists ...)
+
+为SourceLists中列出的所有.ui文件生成.h和.cxx文件。
+.h文件将使用 ``HeadersDestNamesource`` 列表添加到库中。
+.cxx文件将使用 ``SourcesDestNamesource`` 列表添加到库中。
+
+考虑更新项目以使用 ``AUTOUIC`` 目标属性，
+以获得调用 ``uic`` 工具的更自动化方式。

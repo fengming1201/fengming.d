@@ -1,0 +1,39 @@
+cmake_minimum_required
+----------------------
+
+要求 cmake 的最低版本。
+
+ cmake_minimum_required(VERSION <min>[...<max>] [FATAL_ERROR])
+
+为项目设置 cmake 所需的最低版本。还会更新策略设置，如下所述。
+
+``<min>`` 和可选的 ``<max>`` 都是形式为 ``major.minor[.patch[.tweak]]`` 的 CMake 版本，``...`` 是字面量。
+
+如果运行的 CMake 版本低于所需的 ``<min>`` 版本，它将停止处理项目并报告错误。
+可选的 ``<max>`` 版本（如果指定）必须至少是 ``<min>`` 版本，并按如下所述影响策略设置。
+如果运行的 CMake 版本早于 3.12，额外的 ``...`` 点将被视为版本组件分隔符，导致 ``...<max>`` 部分被忽略，并保留基于 ``<min>`` 的策略的 3.12 之前行为。
+
+``FATAL_ERROR`` 选项被 CMake 2.6 及更高版本接受但忽略。应指定它，以便 CMake 2.4 及更低版本以错误而非仅警告失败。
+
+.. 注意::
+  在顶层 ``CMakeLists.txt`` 文件的开头调用 ``cmake_minimum_required()`` 命令，甚至在调用 ``project()`` 命令之前。
+  重要的是在调用其他命令之前建立版本和策略设置，这些命令的行为可能会受到影响。另请参阅策略 ``CMP0000``。
+
+  在 ``function()`` 内部调用 ``cmake_minimum_required()`` 会在调用时将某些效果限制在函数作用域内。此类调用不应出于具有全局效果的意图进行。
+
+策略设置
+^^^^^^^^^
+
+``cmake_minimum_required(VERSION)`` 命令隐式调用 ``cmake_policy(VERSION)`` 命令，以指定当前项目代码是为给定范围的 CMake 版本编写的。
+所有已知于运行的 CMake 版本且在 ``<min>``（或 ``<max>``，如果指定）版本或更早版本中引入的策略都将设置为使用 ``NEW`` 行为。
+所有在后续版本中引入的策略都将取消设置。这实际上请求给定 CMake 版本的首选行为，并告诉较新的 CMake 版本警告其新策略。
+
+当指定高于 2.4 的 ``<min>`` 版本时，命令隐式调用
+
+ cmake_policy(VERSION <min>[...<max>])
+
+这根据指定的版本范围设置 CMake 策略。当给定 2.4 或更低的 ``<min>`` 版本时，命令隐式调用
+
+ cmake_policy(VERSION 2.4[...<max>])
+
+这为 CMake 2.4 及更低版本启用兼容性特性。

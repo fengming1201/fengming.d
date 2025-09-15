@@ -1,0 +1,149 @@
+find_program
+------------
+
+简短签名：
+
+ find_program (<VAR> name1 [path1 path2 ...])
+
+通用签名：
+
+ find_program (
+           <VAR>
+           name | NAMES name1 [name2 ...] [NAMES_PER_DIR]
+           [HINTS path1 [path2 ... ENV var]]
+           [PATHS path1 [path2 ... ENV var]]
+           [PATH_SUFFIXES suffix1 [suffix2 ...]]
+           [DOC "cache documentation string"]
+           [REQUIRED]
+           [NO_DEFAULT_PATH]
+           [NO_PACKAGE_ROOT_PATH]
+           [NO_CMAKE_PATH]
+           [NO_CMAKE_ENVIRONMENT_PATH]
+           [NO_SYSTEM_ENVIRONMENT_PATH]
+           [NO_CMAKE_SYSTEM_PATH]
+           [CMAKE_FIND_ROOT_PATH_BOTH |
+            ONLY_CMAKE_FIND_ROOT_PATH |
+            NO_CMAKE_FIND_ROOT_PATH]
+          )
+
+此命令用于查找程序。
+将创建一个名为 ``<VAR>`` 的缓存条目来存储此命令的结果。
+如果找到程序，结果将存储在变量中，
+除非清除变量，否则不会重复搜索。
+如果未找到任何内容，结果将是 ``<VAR>-NOTFOUND``。
+``REQUIRED`` 选项会在找不到任何内容时停止处理并显示错误消息，
+否则下次使用相同变量调用 find_program 时将再次尝试搜索。
+
+选项包括：
+
+``NAMES``
+  指定程序的一个或多个可能名称。
+
+  使用此选项指定带版本后缀和不带版本后缀的名称时，
+  我们建议先指定不带版本后缀的名称，
+  以便在发行版提供的程序之前找到本地构建的包。
+
+``HINTS``, ``PATHS``
+  指定除默认位置外要搜索的目录。
+  ``ENV var`` 子选项从系统环境变量中读取路径。
+
+``PATH_SUFFIXES``
+  指定在每个目录位置下方要检查的其他子目录。
+
+``DOC``
+  为 ``<VAR>`` 缓存条目指定文档字符串。
+
+``REQUIRED``
+  如果找不到任何内容，则停止处理并显示错误消息。
+
+如果指定了 ``NO_DEFAULT_PATH``，则不会向搜索添加其他路径。
+如果未指定 ``NO_DEFAULT_PATH``，则搜索过程如下：
+
+1. 如果从 find 模块或任何其他由对 ``find_package(<PackageName>)`` 的调用加载的脚本中调用，
+   则搜索当前正在查找的包唯一的搜索前缀。
+   具体来说，查找 ``<PackageName>_ROOT`` CMake 变量和 ``<PackageName>_ROOT`` 环境变量。
+   包根变量维护为堆栈，因此如果从嵌套的 find 模块或配置包中调用，
+   则父 find 模块或配置包的根路径将在当前模块或包的路径之后搜索。
+   换句话说，搜索顺序将是 ``<CurrentPackage>_ROOT``、``ENV{<CurrentPackage>_ROOT}``、
+   ``<ParentPackage>_ROOT``、``ENV{<ParentPackage>_ROOT}`` 等。
+   如果传递了 ``NO_PACKAGE_ROOT_PATH`` 或通过将 ``CMAKE_FIND_USE_PACKAGE_ROOT_PATH`` 设置为 ``FALSE``，则可以跳过此操作。
+   参见策略 ``CMP0074``。
+
+   * 对于每个 ``<prefix>`` 在 ``<PackageName>_ROOT`` CMake 变量和 ``<PackageName>_ROOT`` 环境变量中的 ``<prefix>/[s]bin``，
+   如果从由 ``find_package(<PackageName>)`` 加载的 find 模块中调用
+
+2. 搜索在 cmake 特定缓存变量中指定的路径。
+   这些路径旨在与命令行上的 ``-DVAR=value`` 一起使用。
+   这些值被解释为：ref:`分号分隔列表 <CMake Language Lists>`。
+   如果传递了 ``NO_CMAKE_PATH`` 或通过将 ``CMAKE_FIND_USE_CMAKE_PATH`` 设置为 ``FALSE``，则可以跳过此操作。
+
+   * 对于每个 ``<prefix>`` 在 ``CMAKE_PREFIX_PATH`` 中的 ``<prefix>/[s]bin``，``CMAKE_PROGRAM_PATH``，``CMAKE_APPBUNDLE_PATH``
+
+3. 搜索在 cmake 特定环境变量中指定的路径。
+   这些路径旨在在用户的 shell 配置中设置，
+   因此使用主机的本机路径分隔符（Windows 上为 ``;``，UNIX 上为 ``:``）。
+   如果传递了 ``NO_CMAKE_ENVIRONMENT_PATH`` 或通过将 ``CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH`` 设置为 ``FALSE``，则可以跳过此操作。
+
+   * 对于每个 ``<prefix>`` 在 ``CMAKE_PREFIX_PATH`` 中的 ``<prefix>/[s]bin``，``CMAKE_PROGRAM_PATH``，``CMAKE_APPBUNDLE_PATH``
+
+4. 搜索由 ``HINTS`` 选项指定的路径。
+   这些路径应通过系统内省计算，例如由另一个已找到项的位置提供的提示。
+   硬编码猜测应使用 ``PATHS`` 选项指定。
+
+5. 搜索标准系统环境变量。
+   如果传递了 ``NO_SYSTEM_ENVIRONMENT_PATH`` 或通过将 ``CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH`` 设置为 ``FALSE``，则可以跳过此操作。
+
+   * ``PATH`` 本身中的目录。
+   * 在 Windows 主机上不包括额外的搜索路径
+
+6. 搜索为当前系统在平台文件中定义的 cmake 变量。
+   如果传递了 ``NO_CMAKE_SYSTEM_PATH`` 或通过将 ``CMAKE_FIND_USE_CMAKE_SYSTEM_PATH`` 设置为 ``FALSE``，则可以跳过此操作。
+
+   * 对于每个 ``<prefix>`` 在 ``CMAKE_SYSTEM_PREFIX_PATH`` 中的 ``<prefix>/[s]bin``，``CMAKE_SYSTEM_PROGRAM_PATH``，``CMAKE_SYSTEM_APPBUNDLE_PATH``
+
+   这些变量包含的平台路径通常是包含已安装软件的位置。
+   例如，基于 UNIX 的平台上的 ``/usr/local``。
+
+7. 搜索由 PATHS 选项或命令的简短版本指定的路径。
+   这些路径通常是硬编码猜测。
+
+在 macOS 上，``CMAKE_FIND_FRAMEWORK`` 和 ``CMAKE_FIND_APPBUNDLE`` 变量确定 Apple 风格和 unix 风格包组件之间的优先顺序。
+
+CMake 变量 ``CMAKE_FIND_ROOT_PATH`` 指定一个或多个目录，
+这些目录将添加到所有其他搜索目录的前面。
+这有效地在给定位置下重新根化整个搜索。
+``CMAKE_STAGING_PREFIX`` 的后代路径被排除在此重新根化之外，
+因为该变量始终是主机系统上的路径。
+默认情况下，``CMAKE_FIND_ROOT_PATH`` 为空。
+
+``CMAKE_SYSROOT`` 变量也可用于指定恰好一个目录作为前缀。
+设置 ``CMAKE_SYSROOT`` 还具有其他效果。
+有关详细信息，请参见该变量的文档。
+
+这些变量在交叉编译时特别有用，
+指向目标环境的根目录，CMake 也将在那里搜索。
+默认情况下，首先搜索 ``CMAKE_FIND_ROOT_PATH`` 中列出的目录，
+然后搜索 ``CMAKE_SYSROOT`` 目录，然后搜索非根目录。
+可以通过设置 ``CMAKE_FIND_ROOT_PATH_MODE_PROGRAM`` 来调整默认行为。
+可以使用选项在每次调用的基础上手动覆盖此行为：
+
+``CMAKE_FIND_ROOT_PATH_BOTH``
+  按上述顺序搜索。
+
+``NO_CMAKE_FIND_ROOT_PATH``
+  不使用 ``CMAKE_FIND_ROOT_PATH`` 变量。
+
+``ONLY_CMAKE_FIND_ROOT_PATH``
+  仅搜索重新根化的目录和 ``CMAKE_STAGING_PREFIX`` 下方的目录。
+
+默认搜索顺序旨在针对常见用例从最具体到最不具体。
+项目可以通过简单地多次调用命令并使用 ``NO_*`` 选项来覆盖顺序：
+
+ find_program (<VAR> NAMES name PATHS paths... NO_DEFAULT_PATH)
+ find_program (<VAR> NAMES name)
+
+一旦其中一个调用成功，结果变量将被设置并存储在缓存中，
+以便任何调用都不会再次搜索。
+
+当向 ``NAMES`` 选项提供多个值时，此命令默认一次考虑一个名称并搜索每个目录。
+``NAMES_PER_DIR`` 选项告诉此命令一次考虑一个目录并在其中搜索所有名称。

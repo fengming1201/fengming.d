@@ -1,0 +1,17 @@
+create_test_sourcelist
+----------------------
+
+创建测试驱动程序和用于构建测试程序的源文件列表。
+
+ create_test_sourcelist(sourceListName driverName
+                        test1 test2 test3
+                        EXTRA_INCLUDE include.h
+                        FUNCTION function)
+
+测试驱动程序是将许多小测试链接在一起形成单个可执行文件的程序。这在构建带有大型库的静态可执行文件以缩小总所需大小时很有用。
+构建测试驱动程序所需的源文件列表将位于 ``sourceListName`` 中。``driverName`` 是测试驱动程序的名称。
+其余参数由测试源文件列表组成，可以用分号分隔。每个测试源文件应该有一个与文件名相同但没有扩展名的函数（foo.cxx 应该有 int foo(int, char*[]);）。
+``driverName`` 将能够通过命令行按名称调用每个测试。如果指定了 ``EXTRA_INCLUDE``，则下一个参数包含在生成的文件中。
+如果指定了 ``FUNCTION``，则下一个参数被视为传递给 ac 和 av 指针的函数名。这可用于为每个测试添加额外的命令行处理。
+可以设置 ``CMAKE_TESTDRIVER_BEFORE_TESTMAIN`` cmake 变量，使代码直接放置在调用测试主函数之前。
+可以设置 ``CMAKE_TESTDRIVER_AFTER_TESTMAIN``，使代码直接放置在调用测试主函数之后。

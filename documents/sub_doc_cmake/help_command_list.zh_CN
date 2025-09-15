@@ -1,0 +1,154 @@
+## 编译配置相关命令
+add_compile_definitions -- 为编译目标添加预处理器定义
+add_compile_options -- 为编译器添加通用编译选项
+add_definitions -- 添加预处理器定义（旧版，建议使用add_compile_definitions）
+add_link_options -- 为链接器添加通用链接选项
+
+## 目标创建与管理命令
+add_executable -- 创建可执行文件目标
+add_library -- 创建库目标（静态库或动态库）
+add_dependencies -- 为顶层目标添加依赖关系
+add_custom_command -- 添加自定义构建规则
+add_custom_target -- 添加自定义构建目标
+
+## 项目结构命令
+add_subdirectory -- 添加子目录到构建中
+aux_source_directory -- 查找目录中的所有源文件
+
+## 测试相关命令
+add_test -- 添加测试用例
+enable_testing -- 启用测试功能
+
+## CTest命令
+ctest_build -- 构建项目用于测试
+ctest_configure -- 配置项目用于测试
+ctest_coverage -- 运行代码覆盖率测试
+ctest_empty_binary_directory -- 清空构建目录
+ctest_memcheck -- 运行内存检查测试
+ctest_read_custom_files -- 读取自定义测试文件
+ctest_run_script -- 运行测试脚本
+ctest_sleep -- 测试间休眠
+ctest_start -- 启动测试会话
+ctest_submit -- 提交测试结果
+ctest_test -- 运行测试
+ctest_update -- 更新测试数据
+ctest_upload -- 上传测试文件
+
+## 文件和配置命令
+configure_file -- 配置文件，替换变量
+file -- 文件系统操作（读写、复制、删除等）
+install -- 定义安装规则
+install_files -- 安装文件（已弃用，使用install）
+install_programs -- 安装程序（已弃用，使用install）
+install_targets -- 安装目标（已弃用，使用install）
+
+## 查找命令
+find_package -- 查找和加载外部包
+find_file -- 查找文件
+find_library -- 查找库文件
+find_path -- 查找包含目录
+find_program -- 查找可执行程序
+
+## 目标属性命令
+target_compile_definitions -- 为特定目标添加编译定义
+target_compile_features -- 为特定目标添加编译特性要求
+target_compile_options -- 为特定目标添加编译选项
+target_include_directories -- 为特定目标添加包含目录
+target_link_directories -- 为特定目标添加链接目录
+target_link_libraries -- 为特定目标链接库
+target_link_options -- 为特定目标添加链接选项
+target_precompile_headers -- 为目标添加预编译头文件
+target_sources -- 为特定目标添加源文件
+
+## 条件控制命令
+if -- 条件判断
+elseif -- 条件判断的elseif分支
+else -- 条件判断的else分支
+endif -- 结束条件判断
+
+## 循环命令
+foreach -- 循环遍历列表
+endforeach -- 结束foreach循环
+while -- 条件循环
+endwhile -- 结束while循环
+break -- 跳出循环
+continue -- 跳过当前循环迭代
+
+## 函数和宏命令
+function -- 定义函数
+endfunction -- 结束函数定义
+macro -- 定义宏
+endmacro -- 结束宏定义
+return -- 从函数或宏返回
+
+## 变量和属性命令
+set -- 设置变量
+unset -- 取消设置变量
+get_cmake_property -- 获取CMake属性
+get_directory_property -- 获取目录属性
+get_filename_component -- 获取文件名组件
+get_property -- 获取属性值
+get_source_file_property -- 获取源文件属性
+get_target_property -- 获取目标属性
+get_test_property -- 获取测试属性
+set_directory_properties -- 设置目录属性
+set_property -- 设置属性值
+set_source_files_properties -- 设置源文件属性
+set_target_properties -- 设置目标属性
+set_tests_properties -- 设置测试属性
+
+## 包含和模块命令
+include -- 包含其他CMake文件或模块
+include_directories -- 添加包含目录（全局，建议使用target_include_directories）
+include_external_msproject -- 包含外部MSVC项目
+include_guard -- 防止头文件重复包含
+include_regular_expression -- 设置包含正则表达式（已弃用）
+
+## 链接命令
+link_directories -- 添加库搜索路径（全局，建议使用target_link_directories）
+link_libraries -- 链接库（全局，建议使用target_link_libraries）
+
+## 系统信息命令
+cmake_host_system_information -- 查询主机系统信息
+cmake_language -- 控制CMake语言处理
+cmake_minimum_required -- 设置最低CMake版本要求
+cmake_parse_arguments -- 解析函数参数
+cmake_policy -- 设置CMake策略
+project -- 定义项目名称和版本
+
+## 构建命令
+build_command -- 获取构建命令
+build_name -- 获取构建名称（已弃用）
+
+## 工具和实用命令
+fltk_wrap_ui -- 包装FLTK UI文件
+make_directory -- 创建目录（已弃用，使用file(MAKE_DIRECTORY)))
+mark_as_advanced -- 标记变量为高级选项
+math -- 数学表达式计算
+message -- 输出消息
+option -- 定义布尔选项
+output_required_files -- 输出必需文件
+qt_wrap_cpp -- 包装Qt C++文件
+qt_wrap_ui -- 包装Qt UI文件
+remove -- 删除文件（已弃用，使用file(REMOVE)))
+remove_definitions -- 移除预处理器定义
+return -- 从函数返回
+separate_arguments -- 分割参数字符串
+site_name -- 获取站点名称
+source_group -- 设置源文件分组
+string -- 字符串操作
+subdir_depends -- 子目录依赖（已弃用）
+subdirs -- 添加子目录（已弃用，使用add_subdirectory）
+
+## 编译和运行命令
+try_compile -- 尝试编译代码
+try_run -- 尝试编译并运行代码
+
+## 变量操作命令
+unset -- 取消设置变量
+use_mangled_mesa -- 使用修改的Mesa头文件（已弃用）
+utility_source -- 指定第三方实用程序源码（已弃用）
+variable_requires -- 断言变量需求（已弃用）
+variable_watch -- 监视变量变化
+while -- 条件循环
+write_file -- 写入文件（已弃用，使用file(WRITE)))

@@ -1,0 +1,43 @@
+cmake_host_system_information
+-----------------------------
+
+查询主机系统特定信息。
+
+ cmake_host_system_information(RESULT <variable> QUERY <key> ...)
+
+查询运行cmake的主机系统的系统信息。
+可以提供一个或多个``<key>``来选择要查询的信息。查询的值列表存储在``<variable>``中。
+
+``<key>``可以是以下值之一：
+
+============================= ================================================
+键                            描述
+============================= ================================================
+``NUMBER_OF_LOGICAL_CORES``   逻辑核心数量
+``NUMBER_OF_PHYSICAL_CORES``  物理核心数量
+``HOSTNAME``                  主机名
+``FQDN``                      完全限定域名
+``TOTAL_VIRTUAL_MEMORY``      总虚拟内存（以MiB为单位）[#mebibytes]_
+``AVAILABLE_VIRTUAL_MEMORY``  可用虚拟内存（以MiB为单位）[#mebibytes]_
+``TOTAL_PHYSICAL_MEMORY``     总物理内存（以MiB为单位）[#mebibytes]_
+``AVAILABLE_PHYSICAL_MEMORY`` 可用物理内存（以MiB为单位）[#mebibytes]_
+``IS_64BIT``                  如果处理器是64位则为1
+``HAS_FPU``                   如果处理器有浮点单元则为1
+``HAS_MMX``                   如果处理器支持MMX指令则为1
+``HAS_MMX_PLUS``              如果处理器支持扩展MMX指令则为1
+``HAS_SSE``                   如果处理器支持SSE指令则为1
+``HAS_SSE2``                  如果处理器支持SSE2指令则为1
+``HAS_SSE_FP``                如果处理器支持SSE FP指令则为1
+``HAS_SSE_MMX``               如果处理器支持SSE MMX指令则为1
+``HAS_AMD_3DNOW``             如果处理器支持3DNow指令则为1
+``HAS_AMD_3DNOW_PLUS``        如果处理器支持3DNow+指令则为1
+``HAS_IA64``                  如果是IA64处理器模拟x86则为1
+``HAS_SERIAL_NUMBER``         如果处理器有序列号则为1
+``PROCESSOR_SERIAL_NUMBER``   处理器序列号
+``PROCESSOR_NAME``            人类可读的处理器名称
+``PROCESSOR_DESCRIPTION``     人类可读的完整处理器描述
+``OS_NAME``                   参见``CMAKE_HOST_SYSTEM_NAME``
+``OS_RELEASE``                操作系统子类型，例如在Windows上为``Professional``
+``OS_VERSION``                操作系统构建ID
+``OS_PLATFORM``               参见``CMAKE_HOST_SYSTEM_PROCESSOR``
+============================= ================================================

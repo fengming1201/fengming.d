@@ -1,0 +1,12 @@
+build_name
+----------
+
+自 3.0 版本起已禁用。请参阅 CMake 策略 ``CMP0036``。
+
+请改用 ``${CMAKE_SYSTEM}`` 和 ``${CMAKE_CXX_COMPILER}``。
+
+::
+
+ build_name(variable)
+
+将指定变量设置为表示平台和编译器设置的字符串。这些值现在通过 ``CMAKE_SYSTEM`` 和 ``CMAKE_CXX_COMPILER`` 变量可用。

@@ -1,0 +1,209 @@
+target_link_libraries
+---------------------
+
+指定链接给定目标及其依赖项时要使用的库或标志。
+来自链接库目标的:ref:`使用要求 <Target Usage Requirements>`将被传播。
+目标依赖项的使用要求会影响其自身源的编译。
+
+概述
+^^^^
+
+此命令具有如下小节中详述的几种签名。所有签名都具有一般形式
+
+ target_link_libraries(<target> ... <item>... ...)
+
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+如果策略``CMP0079``未设置为``NEW``，则该目标必须在当前目录中创建。
+对同一``<target>``的重复调用将按调用顺序追加项目。
+
+每个``<item>``可以是：
+
+* **库目标名称**：生成的链接行将具有与目标关联的可链接库文件的完整路径。
+  如果库文件更改，构建系统将具有重新链接``<target>``的依赖项。
+
+  命名的目标必须由项目中的``add_library()``创建或作为:ref:`IMPORTED library <Imported Targets>`。
+  如果它在项目中创建，则构建系统将自动添加排序依赖项，以确保在``<target>``链接之前命名的库目标是最新的。
+
+  如果导入的库设置了``IMPORTED_NO_SONAME``目标属性，
+  CMake可能会要求链接器搜索库而不是使用完整路径（例如``/usr/lib/libfoo.so``变为``-lfoo``）。
+
+  目标构件的完整路径将自动为shell引用/转义。
+
+* **库文件的完整路径**：生成的链接行通常会保留文件的完整路径。
+  如果库文件更改，构建系统将具有重新链接``<target>``的依赖项。
+
+  在某些情况下，CMake可能会要求链接器搜索库（例如``/usr/lib/libfoo.so``变为``-lfoo``），
+  例如当检测到共享库没有``SONAME``字段时。请参见策略``CMP0060``以讨论另一种情况。
+
+  如果库文件位于macOS框架中，则框架的``Headers``目录也将被处理为:ref:`使用要求 <Target Usage Requirements>`。
+  这与将框架目录作为包含目录传递具有相同的效果。
+
+  在VS 2010及以上版本的:ref:`Visual Studio Generators`上，以``.targets``结尾的库文件将被视为MSBuild目标文件并导入到生成的项目文件中。
+  其他生成器不支持此功能。
+
+  库文件的完整路径将自动为shell引用/转义。
+
+* **纯库名称**：生成的链接行将要求链接器搜索库（例如``foo``变为``-lfoo``或``foo.lib``）。
+
+  库名称/标志被视为命令行字符串片段，将不经过额外引用或转义而使用。
+
+* **链接标志**：以``-``开头但不是``-l``或``-framework``的项目被视为链接器标志。
+  请注意，这些标志将像任何其他库链接项目一样处理传递依赖项，因此通常仅作为不会传播到依赖项的私有链接项目指定是安全的。
+
+  此处指定的链接标志将插入到链接命令中与链接库相同的位置。这可能不正确，具体取决于链接器。
+  使用``LINK_OPTIONS``目标属性或``target_link_options()``命令来显式添加链接标志。
+  然后，这些标志将被放置在链接命令中工具链定义的标记位置。
+
+  链接标志被视为命令行字符串片段，将不经过额外引用或转义而使用。
+
+* **生成器表达式**：``$<...>`` :manual:`生成器表达式 <cmake-generator-expressions(7)>`可以评估为上述任何项目或它们的:ref:`分号分隔列表 <CMake Language Lists>`。
+  如果``...``包含任何``;``字符，例如在``${list}``变量评估之后，请确保使用显式引用的参数``"$<...>"``，以便此命令将其作为单个``<item>``接收。
+
+  此外，生成器表达式可以用作上述任何项目的片段，例如``foo$<1:_d>``。
+
+  请注意，生成器表达式不会在策略``CMP0003``或策略``CMP0004``的旧处理中使用。
+
+* 后面紧跟另一个``<item>``的``debug``、``optimized``或``general``关键字。
+  此类关键字后面的项目将仅用于相应的构建配置。
+  ``debug``关键字对应于``Debug``配置（或对应于``DEBUG_CONFIGURATIONS``全局属性中命名的配置（如果已设置））。
+  ``optimized``关键字对应于所有其他配置。``general``关键字对应于所有配置，并且是纯粹可选的。
+  可以通过创建和链接到:ref:`IMPORTED library targets <Imported Targets>`来实现更高粒度的每配置规则。
+  这些关键字由该命令立即解释，因此当由生成器表达式产生时没有特殊含义。
+
+包含``::``的项目（例如``Foo::Bar``）被假定为:ref:`IMPORTED <Imported Targets>`或:ref:`ALIAS <Alias Targets>`库目标名称，
+如果不存在此类目标，则将导致错误。请参见策略``CMP0028``。
+
+有关定义构建系统属性的更多信息，请参见``cmake-buildsystem(7)``手册。
+
+目标及其依赖项的库
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ target_link_libraries(<target>
+                       <PRIVATE|PUBLIC|INTERFACE> <item>...
+                      [<PRIVATE|PUBLIC|INTERFACE> <item>...]...)
+
+``PUBLIC``、``PRIVATE``和``INTERFACE``关键字可用于在一个命令中同时指定链接依赖项和链接接口。
+跟随``PUBLIC``的库和目标将被链接并成为链接接口的一部分。
+跟随``PRIVATE``的库和目标将被链接但不成为链接接口的一部分。
+跟随``INTERFACE``的库将被追加到链接接口中，而不用于链接``<target>``。
+
+目标和其依赖项的库
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ target_link_libraries(<target> <item>...)
+
+库依赖项默认情况下是传递的。当此目标链接到另一个目标时，
+链接到此目标的库也将出现在另一个目标的链接行中。
+此传递"链接接口"存储在``INTERFACE_LINK_LIBRARIES``目标属性中，
+可以通过直接设置属性来覆盖。当``CMP0022``未设置为``NEW``时，
+传递链接是内置的，但可能被``LINK_INTERFACE_LIBRARIES``属性覆盖。
+对此命令的其他签名的调用可能会设置该属性，使此签名专有的任何库变为私有。
+
+目标及其依赖项的库（旧版）
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ target_link_libraries(<target>
+                       <LINK_PRIVATE|LINK_PUBLIC> <lib>...
+                      [<LINK_PRIVATE|LINK_PUBLIC> <lib>...]...)
+
+``LINK_PUBLIC``和``LINK_PRIVATE``模式可用于在一个命令中同时指定链接依赖项和链接接口。
+
+此签名仅用于兼容性。请优先使用``PUBLIC``或``PRIVATE``关键字。
+
+跟随``LINK_PUBLIC``的库和目标将被链接并成为``INTERFACE_LINK_LIBRARIES``的一部分。
+如果策略``CMP0022``不是``NEW``，它们也将成为``LINK_INTERFACE_LIBRARIES``的一部分。
+跟随``LINK_PRIVATE``的库和目标将被链接，但不成为``INTERFACE_LINK_LIBRARIES``（或``LINK_INTERFACE_LIBRARIES``）的一部分。
+
+仅用于依赖项的库（旧版）
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ target_link_libraries(<target> LINK_INTERFACE_LIBRARIES <item>...)
+
+``LINK_INTERFACE_LIBRARIES``模式将库追加到``INTERFACE_LINK_LIBRARIES``目标属性中，而不是用于链接。
+如果策略``CMP0022``不是``NEW``，则此模式还将库追加到``LINK_INTERFACE_LIBRARIES``及其每配置等效项。
+
+此签名仅用于兼容性。请优先使用``INTERFACE``模式。
+
+指定为``debug``的库被包装在生成器表达式中以对应于调试构建。
+如果策略``CMP0022``不是``NEW``，库还将被追加到``LINK_INTERFACE_LIBRARIES_DEBUG``属性
+（或被追加到``DEBUG_CONFIGURATIONS``全局属性中列出的配置对应的属性（如果已设置））。
+指定为``optimized``的库被追加到``INTERFACE_LINK_LIBRARIES``属性。
+如果策略``CMP0022``不是``NEW``，它们还被追加到``LINK_INTERFACE_LIBRARIES``属性。
+指定为``general``（或没有任何关键字）的库被视为同时为``debug``和``optimized``指定。
+
+链接对象库
+^^^^^^^^^^^^^^^^^
+
+:ref:`对象库`可以用作``target_link_libraries``的``<target>``（第一个）参数，
+以指定其源对其他库的依赖项。例如，代码
+
+ add_library(A SHARED a.c)
+ target_compile_definitions(A PUBLIC A)
+
+ add_library(obj OBJECT obj.c)
+ target_compile_definitions(obj PUBLIC OBJ)
+ target_link_libraries(obj PUBLIC A)
+
+使用``-DA -DOBJ``编译``obj.c``并为``obj``建立传播到其依赖项的使用要求。
+
+普通库和可执行文件可以链接到:ref:`对象库`以获取其对象和使用要求。
+继续上面的示例，代码
+
+ add_library(B SHARED b.c)
+ target_link_libraries(B PUBLIC obj)
+
+使用``-DA -DOBJ``编译``b.c``，使用来自``b.c``和``obj.c``的目标文件创建共享库``B``，
+并将``B``链接到``A``。此外，代码
+
+ add_executable(main main.c)
+ target_link_libraries(main B)
+
+使用``-DA -DOBJ``编译``main.c``并将可执行文件``main``链接到``B``和``A``。
+对象库的使用要求通过``B``传递，但其目标文件不会。
+
+:ref:`对象库`可以"链接"到其他对象库以获取使用要求，
+但由于它们没有链接步骤，因此不会对它们的目标文件执行任何操作。
+继续上面的示例，代码：
+
+ add_library(obj2 OBJECT obj2.c)
+ target_link_libraries(obj2 PUBLIC obj)
+
+ add_executable(main2 main2.c)
+ target_link_libraries(main2 obj2)
+
+使用``-DA -DOBJ``编译``obj2.c``，使用来自``main2.c``和``obj2.c``的目标文件创建可执行文件``main2``，
+并将``main2``链接到``A``。
+
+换句话说，当:ref:`对象库`出现在目标的``INTERFACE_LINK_LIBRARIES``属性中时，
+它们将被视为:ref:`接口库`，但当它们出现在目标的``LINK_LIBRARIES``属性中时，
+它们的目标文件也将包含在链接中。
+
+静态库的循环依赖
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+库依赖图通常是无环的（DAG），但在相互依赖的``STATIC``库的情况下，
+CMake允许图包含循环（强连接组件）。当另一个目标链接到其中一个库时，
+CMake会重复整个连接组件。例如，代码
+
+ add_library(A STATIC a.c)
+ add_library(B STATIC b.c)
+ target_link_libraries(A B)
+ target_link_libraries(B A)
+ add_executable(main main.c)
+ target_link_libraries(main A)
+
+将``main``链接到``A B A B``。虽然一次重复通常就足够了，
+但病态的对象文件和符号排列可能需要更多。
+可以通过使用``LINK_INTERFACE_MULTIPLICITY``目标属性或通过手动在最后一次``target_link_libraries``调用中重复组件来处理此类情况。
+但是，如果两个存档确实如此相互依赖，它们可能应该合并为单个存档，
+也许通过使用:ref:`对象库`。
+
+创建可重定位包
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+请注意，不建议用依赖项的绝对路径填充目标的``INTERFACE_LINK_LIBRARIES``。
+这会将依赖项的库文件路径硬编码到已安装的包中**就像制作包的机器上找到的那样**。
+
+请参见``cmake-packages(7)``手册的:ref:`创建可重定位包`部分，
+以讨论在创建用于重新分发的包时指定使用要求时必须采取的额外注意事项。

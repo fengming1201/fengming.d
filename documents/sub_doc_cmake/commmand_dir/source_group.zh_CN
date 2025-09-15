@@ -1,0 +1,48 @@
+source_group
+------------
+
+在IDE项目生成中为源文件定义分组。
+有两种不同的签名来创建源组。
+
+ source_group(<name> [FILES <src>...] [REGULAR_EXPRESSION <regex>])
+ source_group(TREE <root> [PREFIX <prefix>] [FILES <src>...])
+
+定义一个组，源文件将被放置在项目文件中的该组内。
+这是为了在Visual Studio中设置文件标签页。
+选项包括：
+
+``TREE``
+ CMake将自动从``<src>``文件路径检测需要创建的源组，
+ 以保持源组的结构与项目中实际的文件和目录结构类似。
+ ``<src>``文件的路径将被截断为相对于``<root>``的路径。
+
+``PREFIX``
+ 位于``<root>``路径中的源组和文件将被放置在
+ ``<prefix>``源组中。
+
+``FILES``
+ 任何明确指定的源文件将被放置在组``<name>``中。
+ 相对路径是相对于当前源目录解释的。
+
+``REGULAR_EXPRESSION``
+ 任何名称与正则表达式匹配的源文件将被
+ 放置在组``<name>``中。
+
+如果一个源文件匹配多个组，则明确使用``FILES``
+列出该文件的*最后一个*组将被优先选择（如果有的话）。
+如果没有组明确列出该文件，则其正则表达式匹配该文件的*最后一个*组将被优先选择。
+
+组``<name>``和``<prefix>``参数可以包含正斜杠或反斜杠来指定子组。
+反斜杠需要适当转义：
+
+ source_group(base/subdir ...)
+ source_group(outer\\inner ...)
+ source_group(TREE <root> PREFIX sources\\inc ...)
+
+为了向后兼容，简写签名
+
+ source_group(<name> <regex>)
+
+等价于
+
+ source_group(<name> REGULAR_EXPRESSION <regex>)

@@ -1,0 +1,25 @@
+target_sources
+--------------
+
+为target添加源文件。
+
+ target_sources(<target>
+   <INTERFACE|PUBLIC|PRIVATE> [items1...]
+   [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
+
+指定编译给定目标时要使用的源文件。
+相对源文件路径被解释为相对于当前源目录（即``CMAKE_CURRENT_SOURCE_DIR``）。
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+
+需要``INTERFACE``、``PUBLIC``和``PRIVATE``关键字来指定后续参数的作用域。
+``PRIVATE``和``PUBLIC``项将填充``<target>``的``SOURCES``属性。
+``PUBLIC``和``INTERFACE``项将填充``<target>``的``INTERFACE_SOURCES``属性。
+(:ref:`IMPORTED targets <Imported Targets>`仅支持``INTERFACE``项。)
+后续参数指定源文件。对同一``<target>``的重复调用将按调用顺序追加项。
+
+``target_sources``的参数可以使用语法为``$<...>``的"生成器表达式"。
+请参见``cmake-generator-expressions(7)``手册以了解可用表达式。
+有关定义构建系统属性的更多信息，请参见``cmake-buildsystem(7)``手册。
+
+另请参见有关处理相对源文件路径的旧行为的``CMP0076``策略。

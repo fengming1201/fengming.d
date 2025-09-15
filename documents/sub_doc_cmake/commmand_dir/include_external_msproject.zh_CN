@@ -1,0 +1,21 @@
+include_external_msproject
+--------------------------
+
+在工作区中包含外部Microsoft项目文件。
+
+ include_external_msproject(projectname location
+                            [TYPE projectTypeGUID]
+                            [GUID projectGUID]
+                            [PLATFORM platformName]
+                            dep1 dep2 ...)
+
+在生成的workspace文件中包含外部Microsoft项目。
+目前在UNIX上不起作用。这将创建一个名为 ``[projectname]`` 的目标。
+这可以在 ``add_dependencies()`` 命令中使用，使事物依赖于外部项目。
+
+``TYPE``、``GUID`` 和 ``PLATFORM`` 是可选参数，允许指定项目类型、
+项目的id（``GUID``）和目标平台名称。这对于需要非默认值的项目很有用
+（例如WIX项目）。
+
+如果导入的项目具有与当前项目不同的配置名称，
+请设置 ``MAP_IMPORTED_CONFIG_<CONFIG>`` 目标属性以指定映射。

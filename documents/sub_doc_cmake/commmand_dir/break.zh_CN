@@ -1,0 +1,10 @@
+break
+-----
+
+从封闭的 foreach 或 while 循环中跳出。
+
+ break()
+
+从封闭的 ``foreach()`` 或 ``while()`` 循环中跳出。
+
+另请参阅 ``continue()`` 命令。

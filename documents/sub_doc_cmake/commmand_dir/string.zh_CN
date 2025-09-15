@@ -1,0 +1,47 @@
+string
+------
+
+字符串操作。
+
+概要
+^^^^
+
+ 搜索和替换
+   string(FIND <string> <substring> <out-var> [...])
+   string(REPLACE <match-string> <replace-string> <out-var> <input>...)
+   string(REGEX MATCH <match-regex> <out-var> <input>...)
+   string(REGEX MATCHALL <match-regex> <out-var> <input>...)
+   string(REGEX REPLACE <match-regex> <replace-expr> <out-var> <input>...)
+
+ 操作
+   string(APPEND <string-var> [<input>...])
+   string(PREPEND <string-var> [<input>...])
+   string(CONCAT <out-var> [<input>...])
+   string(JOIN <glue> <out-var> [<input>...])
+   string(TOLOWER <string> <out-var>)
+   string(TOUPPER <string> <out-var>)
+   string(LENGTH <string> <out-var>)
+   string(SUBSTRING <string> <begin> <length> <out-var>)
+   string(STRIP <string> <out-var>)
+   string(GENEX_STRIP <string> <out-var>)
+   string(REPEAT <string> <count> <out-var>)
+
+ 比较
+   string(COMPARE <op> <string1> <string2> <out-var>)
+
+ 哈希
+   string(<HASH> <out-var> <input>)
+
+ 生成
+   string(ASCII <number>... <out-var>)
+   string(HEX <string> <out-var>)
+   string(CONFIGURE <string> <out-var> [...])
+   string(MAKE_C_IDENTIFIER <string> <out-var>)
+   string(RANDOM [<option>...] <out-var>)
+   string(TIMESTAMP <out-var> [<format string>] [UTC])
+   string(UUID <out-var> ...)
+
+搜索和替换
+^^^^^^^^^^
+
+使用普通字符串搜索和替换

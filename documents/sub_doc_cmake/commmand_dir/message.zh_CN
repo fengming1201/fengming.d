@@ -1,0 +1,151 @@
+message
+-------
+
+记录消息。
+
+简介
+^^^^^^^^
+
+ 一般消息
+   message([<mode>] "message text" ...)
+
+ 报告检查
+   message(<checkState> "message text" ...)
+
+一般消息
+^^^^^^^^^^^^^^^^
+
+ message([<mode>] "message text" ...)
+
+记录指定的消息文本到日志中。如果给出多个消息字符串，
+它们将被连接成单个消息，字符串之间没有分隔符。
+
+可选的 ``<mode>`` 关键字决定消息类型，这会影响消息的处理方式：
+
+``FATAL_ERROR``
+  CMake错误，停止处理和生成。
+
+``SEND_ERROR``
+  CMake错误，继续处理，但跳过生成。
+
+``WARNING``
+  CMake警告，继续处理。
+
+``AUTHOR_WARNING``
+  CMake警告（开发者），继续处理。
+
+``DEPRECATION``
+  CMake弃用错误或警告，如果变量
+  ``CMAKE_ERROR_DEPRECATED`` 或 ``CMAKE_WARN_DEPRECATED``
+  分别启用，否则不显示消息。
+
+（无）或 ``NOTICE``
+  重要消息打印到stderr以吸引用户注意。
+
+``STATUS``
+  项目用户可能感兴趣的主要消息。
+  理想情况下，这些应该简洁，不超过一行，但仍然提供信息。
+
+``VERBOSE``
+  面向项目用户的详细信息消息。这些消息应提供在大多数情况下用户不会感兴趣的额外详细信息，
+  但对于那些想要深入了解构建过程的用户可能有用。
+
+``DEBUG``
+  面向项目开发者而非仅想构建项目的用户的详细信息消息。
+  这些消息通常不会对构建项目的其他用户感兴趣，
+  并且通常会与内部实现细节密切相关。
+
+``TRACE``
+  具有非常低级实现细节的精细消息。使用此日志级别的消息通常是临时的，
+  并且预计在发布项目、打包文件等之前会被删除。
+
+CMake命令行工具将 ``STATUS`` 到 ``TRACE`` 消息显示在stdout上，
+消息前有两个连字符和一个空格。所有其他消息类型发送到stderr，不带有连字符前缀。
+``CMake GUI`` 在其日志区域显示所有消息。
+``curses界面`` 一次在状态行上显示 ``STATUS`` 到 ``TRACE`` 消息，
+其他消息在交互式弹出框中显示。这些工具的 ``--log-level`` 命令行选项可用于控制将显示哪些消息。
+要使日志级别在CMake运行之间保持，可以设置 ``CMAKE_MESSAGE_LOG_LEVEL`` 变量。
+请注意，命令行选项优先于缓存变量。
+
+日志级别为 ``NOTICE`` 及以下的消息的每一行前面将有 ``CMAKE_MESSAGE_INDENT`` 变量的内容
+（通过连接其列表项转换为单个字符串）。
+对于 ``STATUS`` 到 ``TRACE`` 消息，此缩进内容将插入在连字符之后。
+
+日志级别为 ``NOTICE`` 及以下的消息还可以让每一行前面带有形如 ``[some.context.example]`` 的上下文。
+方括号之间的内容通过将 ``CMAKE_MESSAGE_CONTEXT`` 列表变量转换为点分隔字符串获得。
+消息上下文将始终出现在任何缩进内容之前，但在任何自动添加的前导连字符之后。
+默认情况下，不显示消息上下文，必须通过给出 ``cmake`` ``--log-context`` 命令行选项
+或设置 ``CMAKE_MESSAGE_CONTEXT_SHOW`` 变量为true来显式启用。
+参见 ``CMAKE_MESSAGE_CONTEXT`` 文档以获取使用示例。
+
+CMake警告和错误消息文本使用简单的标记语言显示。
+非缩进文本格式化为由换行符分隔的换行段落。
+缩进文本被视为预格式化的。
+
+报告检查
+^^^^^^^^^^^^^^^^
+
+CMake输出中的常见模式是消息指示某种检查的开始，
+随后是另一条消息报告该检查的结果。
+例如：
+
+ message(STATUS "Looking for someheader.h")
+ #... 进行检查，用结果设置 checkSuccess
+ if(checkSuccess)
+   message(STATUS "Looking for someheader.h - found")
+ else()
+   message(STATUS "Looking for someheader.h - not found")
+ endif()
+
+这可以使用 ``message()`` 命令的 ``CHECK_...`` 关键字形式更健壮和方便地表达：
+
+ message(<checkState> "message" ...)
+
+其中 ``<checkState>`` 必须是以下之一：
+
+  ``CHECK_START``
+    记录关于即将执行的检查的简洁消息。
+
+  ``CHECK_PASS``
+    记录检查的成功结果。
+
+  ``CHECK_FAIL``
+    记录检查的不成功结果。
+
+当记录检查结果时，命令重复最近开始的检查的消息，
+该检查尚未报告结果，然后是一些分隔符，
+然后是 ``CHECK_PASS`` 或 ``CHECK_FAIL`` 关键字之后提供的消息文本。
+检查消息始终以 ``STATUS`` 日志级别报告。
+
+检查可以嵌套，每个 ``CHECK_START`` 应该恰好有一个匹配的 ``CHECK_PASS`` 或 ``CHECK_FAIL``。
+如果需要，``CMAKE_MESSAGE_INDENT`` 变量也可用于向嵌套检查添加缩进。
+例如：
+
+ message(CHECK_START "Finding my things")
+ list(APPEND CMAKE_MESSAGE_INDENT "  ")
+ unset(missingComponents)
+
+ message(CHECK_START "Finding partA")
+ # ... 进行检查，假设我们找到 A
+ message(CHECK_PASS "found")
+
+ message(CHECK_START "Finding partB")
+ # ... 进行检查，假设我们没有找到 B
+ list(APPEND missingComponents B)
+ message(CHECK_FAIL "not found")
+
+ list(POP_BACK CMAKE_MESSAGE_INDENT)
+ if(missingComponents)
+   message(CHECK_FAIL "missing components: ${missingComponents}")
+ else()
+   message(CHECK_PASS "all components found")
+ endif()
+
+上述输出将显示为类似以下内容：
+
+ -- Finding my things
+ --   Finding partA
+ --   Finding partA - found
+ --   Finding partB
+ --   Finding partB - not found
+ -- Finding my things - missing components: B

@@ -1,0 +1,73 @@
+ctest_build
+-----------
+
+执行 :ref:`CTest 构建步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_build([BUILD <build-dir>] [APPEND]
+             [CONFIGURATION <config>]
+             [FLAGS <flags>]
+             [PROJECT_NAME <project-name>]
+             [TARGET <target-name>]
+             [NUMBER_ERRORS <num-err-var>]
+             [NUMBER_WARNINGS <num-warn-var>]
+             [RETURN_VALUE <result-var>]
+             [CAPTURE_CMAKE_ERROR <result-var>]
+             )
+
+构建项目并将结果存储在 ``Build.xml`` 中，
+用于与 ``ctest_submit()`` 命令一起提交。
+
+可以设置 ``CTEST_BUILD_COMMAND`` 变量以显式
+指定构建命令行。否则，基于给定选项自动计算构建命令行。
+
+选项为：
+
+``BUILD <build-dir>``
+  指定顶级构建目录。如果未给定，
+  使用 ``CTEST_BINARY_DIRECTORY`` 变量。
+
+``APPEND``
+  将 ``Build.xml`` 标记为追加到自上次 ``ctest_start()`` 调用以来
+  先前提交到仪表板服务器的结果。
+  追加语义由使用的仪表板服务器定义。
+  这*不会*导致结果追加到先前调用此命令产生的 ``.xml`` 文件。
+
+``CONFIGURATION <config>``
+  指定构建配置（例如 ``Debug``）。如果未
+  指定，将检查 ``CTEST_BUILD_CONFIGURATION`` 变量。
+  否则，将使用给 ``ctest(1)``
+  命令的 ``-C <cfg>`` 选项（如果有）。
+
+``FLAGS <flags>``
+  向底层构建命令传递附加参数。
+  如果未指定，将检查 ``CTEST_BUILD_FLAGS`` 变量。
+  这可以，例如，使用 make 的 ``-j`` 选项触发并行构建。请参阅 ``ProcessorCount`` 模块
+  获取示例。
+
+``PROJECT_NAME <project-name>``
+  已忽略。这曾经使用过但不再需要。
+
+``TARGET <target-name>``
+  指定要构建的目标名称。如果未指定，
+  将检查 ``CTEST_BUILD_TARGET`` 变量。否则，
+  将构建默认目标。这是 "all" 目标
+  （在 :ref:`Visual Studio 生成器` 中称为 ``ALL_BUILD``）。
+
+``NUMBER_ERRORS <num-err-var>``
+  在给定变量中存储检测到的构建错误数量。
+
+``NUMBER_WARNINGS <num-warn-var>``
+  在给定变量中存储检测到的构建警告数量。
+
+``RETURN_VALUE <result-var>``
+  在给定变量中存储本机构建工具的返回值。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。
+
+``QUIET``
+  抑制否则会打印到控制台的任何 CTest 特定的非错误输出。
+  警告/错误摘要以及来自本机构建工具的输出不受此选项影响。

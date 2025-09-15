@@ -1,0 +1,80 @@
+cmake_language
+--------------
+
+对 CMake 命令调用元操作。
+
+简介
+^^^^
+
+ cmake_language(CALL <command> [<args>...])
+ cmake_language(EVAL CODE <code>...)
+
+介绍
+^^^^
+
+此命令将对内置 CMake 命令或通过 ``macro()`` 或 ``function()`` 命令创建的命令调用元操作。
+
+``cmake_language`` 不会引入新的变量或策略作用域。
+
+调用命令
+^^^^^^^^
+
+ cmake_language(CALL <command> [<args>...])
+
+用给定的参数（如果有）调用命名的 ``<command>``。
+例如，代码：
+
+ set(message_command "message")
+ cmake_language(CALL ${message_command} STATUS "Hello World!")
+
+等价于
+
+ message(STATUS "Hello World!")
+
+.. 注意::
+  为确保代码一致性，不允许以下命令：
+
+  * ``if`` / ``elseif`` / ``else`` / ``endif``
+  * ``while`` / ``endwhile``
+  * ``foreach`` / ``endforeach``
+  * ``function`` / ``endfunction``
+  * ``macro`` / ``endmacro``
+
+评估代码
+^^^^^^^^
+
+ cmake_language(EVAL CODE <code>...)
+
+将 ``<code>...`` 评估为 CMake 代码。
+
+例如，代码：
+
+ set(A TRUE)
+ set(B TRUE)
+ set(C TRUE)
+ set(condition "(A AND B) OR C")
+
+ cmake_language(EVAL CODE "
+   if (${condition})
+     message(STATUS TRUE)
+   else()
+     message(STATUS FALSE)
+   endif()"
+ )
+
+等价于
+
+ set(A TRUE)
+ set(B TRUE)
+ set(C TRUE)
+ set(condition "(A AND B) OR C")
+
+ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/eval.cmake "
+   if (${condition})
+     message(STATUS TRUE)
+   else()
+     message(STATUS FALSE)
+   endif()"
+ )
+
+ include(${CMAKE_CURRENT_BINARY_DIR}/eval.cmake)

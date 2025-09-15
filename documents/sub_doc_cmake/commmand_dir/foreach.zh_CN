@@ -1,0 +1,105 @@
+foreach
+-------
+
+对列表中的每个值评估一组命令。
+
+ foreach(<loop_var> <items>)
+   <commands>
+ endforeach()
+
+其中 ``<items>`` 是由分号或空格分隔的项目列表。
+``foreach`` 和匹配的 ``endforeach`` 之间的所有命令都会被记录而不被调用。
+一旦 ``endforeach`` 被评估，记录的命令列表会对 ``<items>`` 中的每个项目调用一次。
+在每次迭代开始时，变量 ``loop_var`` 将设置为当前项目的值。
+
+命令 ``break()`` 和 ``continue()`` 提供了逃离正常控制流的手段。
+
+按传统，``endforeach()`` 命令接受
+可选的 ``<loop_var>`` 参数。
+如果使用，它必须是开头
+``foreach`` 命令参数的逐字
+重复。
+
+ foreach(<loop_var> RANGE <stop>)
+
+在此变体中，``foreach`` 迭代数字
+0, 1, ... 直到（并包括）非负整数 ``<stop>``。
+
+ foreach(<loop_var> RANGE <start> <stop> [<step>])
+
+在此变体中，``foreach`` 以 ``<step>`` 为步长迭代数字从
+``<start>`` 到最多 ``<stop>``。
+如果未指定 ``<step>``，则步长为 1。
+三个参数 ``<start>`` ``<stop>`` ``<step>`` 必须
+都是非负整数，且 ``<stop>`` 不得
+小于 ``<start>``；否则您将进入
+未来版本中可能更改的未记录行为的危险区域。
+
+ foreach(<loop_var> IN [LISTS [<lists>]] [ITEMS [<items>]])
+
+在此变体中，``<lists>`` 是由空格或分号
+分隔的列表值变量列表。``foreach``
+命令迭代每个给定列表中的每个项目。
+``ITEMS`` 关键字后面的 ``<items>`` 的处理方式
+与 ``foreach`` 命令的第一个变体相同。
+形式 ``LISTS A`` 和 ``ITEMS ${A}``
+是等效的。
+
+以下示例显示了 ``LISTS`` 选项的处理方式：
+
+ set(A 0;1)
+ set(B 2 3)
+ set(C "4 5")
+ set(D 6;7 8)
+ set(E "")
+ foreach(X IN LISTS A B C D E)
+     message(STATUS "X=${X}")
+ endforeach()
+
+产生：
+::
+
+ -- X=0
+ -- X=1
+ -- X=2
+ -- X=3
+ -- X=4 5
+ -- X=6
+ -- X=7
+ -- X=8
+
+ foreach(<loop_var>... IN ZIP_LISTS <lists>)
+
+在此变体中，``<lists>`` 是由空格或分号
+分隔的列表值变量列表。``foreach``
+命令同时迭代每个列表，设置迭代变量如下：
+
+- 如果只给出 ``loop_var``，则它会设置一系列
+  ``loop_var_N`` 变量，对应列表中的当前项目；
+- 如果传递了多个变量名，它们的计数应匹配
+  列表变量计数；
+- 如果任何列表较短，相应的迭代
+  变量在当前迭代中未定义。
+
+ list(APPEND English one two three four)
+ list(APPEND Bahasa satu dua tiga)
+
+ foreach(num IN ZIP_LISTS English Bahasa)
+     message(STATUS "num_0=${num_0}, num_1=${num_1}")
+ endforeach()
+
+ foreach(en ba IN ZIP_LISTS English Bahasa)
+     message(STATUS "en=${en}, ba=${ba}")
+ endforeach()
+
+产生：
+::
+
+ -- num_0=one, num_1=satu
+ -- num_0=two, num_1=dua
+ -- num_0=three, num_1=tiga
+ -- num_0=four, num_1=
+ -- en=one, ba=satu
+ -- en=two, ba=dua
+ -- en=three, ba=tiga
+ -- en=four, ba=

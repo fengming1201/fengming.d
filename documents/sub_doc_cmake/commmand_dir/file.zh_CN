@@ -1,0 +1,143 @@
+file
+----
+
+文件操作命令。
+
+概要
+^^^^
+
+读取
+  file(READ <filename> <out-var> [...])
+  file(STRINGS <filename> <out-var> [...])
+  file(<HASH> <filename> <out-var>)
+  file(TIMESTAMP <filename> <out-var> [...])
+  file(GET_RUNTIME_DEPENDENCIES [...])
+
+写入
+  file({WRITE | APPEND} <filename> <content>...)
+  file({TOUCH | TOUCH_NOCREATE} [<file>...])
+  file(GENERATE OUTPUT <output-file> [...])
+  file(CONFIGURE OUTPUT <output-file> CONTENT <content> [...])
+
+文件系统
+  file({GLOB | GLOB_RECURSE} <out-var> [...] [<globbing-expr>...])
+  file(RENAME <oldname> <newname>)
+  file({REMOVE | REMOVE_RECURSE } [<files>...])
+  file(MAKE_DIRECTORY [<dir>...])
+  file({COPY | INSTALL} <file>... DESTINATION <dir> [...])
+  file(SIZE <filename> <out-var>)
+  file(READ_SYMLINK <linkname> <out-var>)
+  file(CREATE_LINK <original> <linkname> [...])
+
+路径转换
+  file(RELATIVE_PATH <out-var> <directory> <file>)
+  file({TO_CMAKE_PATH | TO_NATIVE_PATH} <path> <out-var>)
+
+传输
+  file(DOWNLOAD <url> <file> [...])
+  file(UPLOAD <file> <url> [...])
+
+锁定
+  file(LOCK <path> [...])
+
+归档
+  file(ARCHIVE_CREATE OUTPUT <archive> PATHS <paths>... [...])
+  file(ARCHIVE_EXTRACT INPUT <archive> [...])
+
+读取
+^^^^
+
+ file(READ <filename> <variable>
+      [OFFSET <offset>] [LIMIT <max-in>] [HEX])
+
+从名为 ``<filename>`` 的文件读取内容并将其存储在 ``<variable>`` 中。
+可选择从给定的 ``<offset>`` 开始，最多读取 ``<max-in>`` 字节。
+``HEX`` 选项使数据转换为十六进制表示（对二进制数据有用）。
+
+ file(STRINGS <filename> <variable> [<options>...])
+
+从 ``<filename>`` 解析 ASCII 字符串列表并将其存储在 ``<variable>`` 中。
+文件中的二进制数据被忽略。回车符（``\r``，CR）字符被忽略。
+选项包括：
+
+- LENGTH_MAXIMUM <max-len>: 仅考虑最多给定长度的字符串
+- LENGTH_MINIMUM <min-len>: 仅考虑至少给定长度的字符串
+- LIMIT_COUNT <max-num>: 限制要提取的不同字符串数量
+- LIMIT_INPUT <max-in>: 限制从文件读取的输入字节数
+- LIMIT_OUTPUT <max-out>: 限制存储在变量中的总字节数
+- NEWLINE_CONSUME: 将换行符视为字符串内容的一部分
+- REGEX <regex>: 仅考虑匹配给定正则表达式的字符串
+- ENCODING <encoding-type>: 考虑给定编码的字符串
+
+ file(<HASH> <filename> <variable>)
+
+计算 ``<filename>`` 内容的加密哈希并将其存储在 ``<variable>`` 中。
+支持的算法包括 MD5、SHA1、SHA224、SHA256、SHA384、SHA512 等。
+
+ file(TIMESTAMP <filename> <variable> [<format>] [UTC])
+
+计算 ``<filename>`` 修改时间的字符串表示并将其存储在 ``<variable>`` 中。
+
+写入
+^^^^
+
+ file(WRITE <filename> <content>...)
+ file(APPEND <filename> <content>...)
+
+将 ``<content>`` 写入名为 ``<filename>`` 的文件。
+如果文件不存在，将创建它。如果文件已存在，WRITE 模式将覆盖它，
+APPEND 模式将追加到末尾。
+
+文件系统
+^^^^^^^^
+
+ file(GLOB <out-var> [...] [<globbing-expr>...])
+ file(GLOB_RECURSE <out-var> [...] [<globbing-expr>...])
+
+生成匹配 ``<globbing-expr>`` 的文件列表并将其存储在 ``<out-var>`` 中。
+GLOB_RECURSE 将递归到子目录。
+
+ file(RENAME <oldname> <newname>)
+
+将文件或目录从 ``<oldname>`` 重命名为 ``<newname>``。
+
+ file(REMOVE [<files>...])
+ file(REMOVE_RECURSE [<files>...])
+
+删除给定的文件和目录。REMOVE_RECURSE 将递归删除。
+
+ file(MAKE_DIRECTORY [<dir>...])
+
+创建给定的目录（如有必要，包括父目录）。
+
+ file(COPY <file>... DESTINATION <dir> [...])
+ file(INSTALL <file>... DESTINATION <dir> [...])
+
+将文件复制或安装到目标位置。
+
+路径转换
+^^^^^^^^
+
+ file(RELATIVE_PATH <out-var> <directory> <file>)
+
+计算从 ``<directory>`` 到 ``<file>`` 的相对路径。
+
+ file(TO_CMAKE_PATH <path> <out-var>)
+ file(TO_NATIVE_PATH <path> <out-var>)
+
+在 CMake 路径和本机路径约定之间转换路径。
+
+传输
+^^^^
+
+ file(DOWNLOAD <url> <file> [...])
+ file(UPLOAD <file> <url> [...])
+
+从 URL 下载文件或上传文件到 URL。
+
+锁定
+^^^^
+
+ file(LOCK <path> [...])
+
+对文件或目录设置咨询锁定。

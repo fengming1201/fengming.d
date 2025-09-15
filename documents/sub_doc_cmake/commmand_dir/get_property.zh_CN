@@ -1,0 +1,74 @@
+get_property
+------------
+
+获取属性。
+
+ get_property(<variable>
+              <GLOBAL             |
+               DIRECTORY [<dir>]  |
+               TARGET    <target> |
+               SOURCE    <source> |
+                         [DIRECTORY <dir> | TARGET_DIRECTORY <target>] |
+               INSTALL   <file>   |
+               TEST      <test>   |
+               CACHE     <entry>  |
+               VARIABLE           >
+              PROPERTY <name>
+              [SET | DEFINED | BRIEF_DOCS | FULL_DOCS])
+
+从作用域中的一个对象获取一个属性。
+
+第一个参数指定用于存储结果的变量。
+第二个参数确定从中获取属性的作用域。
+它必须是以下之一：
+
+``GLOBAL``
+  作用域是唯一的，不接受名称。
+
+``DIRECTORY``
+  作用域默认为当前目录，但可以通过完整或相对路径 ``<dir>`` 命名另一个
+  目录（已由 CMake 处理）。
+  另请参见 ``get_directory_property()`` 命令。
+
+``TARGET``
+  作用域必须命名一个现有目标。
+  另请参见 ``get_target_property()`` 命令。
+
+``SOURCE``
+  作用域必须命名一个源文件。默认情况下，源文件的属性
+  将从当前源目录的作用域读取，但可以通过以下子选项之一覆盖：
+
+  ``DIRECTORY <dir>``
+    源文件属性将从 ``<dir>`` 目录的作用域读取。
+    CMake 必须已经知道该源目录，要么通过调用 ``add_subdirectory()`` 添加它，
+    要么 ``<dir>`` 是顶级源目录。相对路径被视为相对于当前源目录。
+
+  ``TARGET_DIRECTORY <target>``
+    源文件属性将从创建 ``<target>`` 的目录作用域读取
+    （因此 ``<target>`` 必须已经存在）。
+
+  另请参见 ``get_source_file_property()`` 命令。
+
+``INSTALL``
+  作用域必须命名一个已安装的文件路径。
+
+``TEST``
+  作用域必须命名一个现有测试。
+  另请参见 ``get_test_property()`` 命令。
+
+``CACHE``
+  作用域必须命名一个缓存条目。
+
+``VARIABLE``
+  作用域是唯一的，不接受名称。
+
+必需的 ``PROPERTY`` 选项紧跟要获取的属性名称。
+如果未设置属性，则返回空值，尽管某些属性支持从父作用域继承
+（如果定义为以这种方式行为）（参见 ``define_property()``）。
+
+如果给定 ``SET`` 选项，则变量设置为布尔值，指示是否已设置属性。
+如果给定 ``DEFINED`` 选项，则变量设置为布尔值，指示是否已定义属性，
+例如使用 ``define_property()`` 命令。
+
+如果给定 ``BRIEF_DOCS`` 或 ``FULL_DOCS``，则变量设置为包含请求属性的文档的字符串。
+如果为未定义的属性请求文档，则返回 ``NOTFOUND``。

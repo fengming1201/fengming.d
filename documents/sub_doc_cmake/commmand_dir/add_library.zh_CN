@@ -1,0 +1,112 @@
+add_library
+-----------
+
+使用指定的源文件向项目添加库。
+
+普通库
+^^^^^^^^^^^^^^^
+
+ add_library(<名称> [STATIC | SHARED | MODULE]
+             [EXCLUDE_FROM_ALL]
+             [源文件1] [源文件2 ...])
+
+添加一个名为 ``<名称>`` 的库目标，由命令调用中列出的源文件构建。（如果源文件稍后使用 ``target_sources()`` 添加，这里可以省略。）
+``<名称>`` 对应于逻辑目标名称，必须在项目中全局唯一。构建的库的实际文件名基于本地平台的约定构建（如 ``lib<名称>.a`` 或 ``<名称>.lib``）。
+
+可以给出 ``STATIC``、``SHARED`` 或 ``MODULE`` 来指定要创建的库类型。
+``STATIC`` 库是目标文件的归档，用于链接其他目标。``SHARED`` 库是动态链接并在运行时加载。
+``MODULE`` 库是插件，不链接到其他目标，但可以使用类似 dlopen 的功能在运行时动态加载。
+如果没有显式给出类型，则类型基于变量 ``BUILD_SHARED_LIBS`` 的当前值是 ``ON`` 还是 ``OFF`` 来决定是 ``STATIC`` 还是 ``SHARED``。
+对于 ``SHARED`` 和 ``MODULE`` 库，``POSITION_INDEPENDENT_CODE`` 目标属性会自动设置为 ``ON``。
+``SHARED`` 或 ``STATIC`` 库可以用 ``FRAMEWORK`` 目标属性标记以创建 macOS Framework。
+
+如果库不导出任何符号，它不能被声明为 ``SHARED`` 库。例如，Windows 资源 DLL 或导出非托管符号的托管 C++/CLI DLL 需要是 ``MODULE`` 库。
+这是因为 CMake 期望 ``SHARED`` 库在 Windows 上始终具有关联的导入库。
+
+默认情况下，库文件将在与调用命令的源树目录对应的构建树目录中创建。
+有关更改此位置的信息，请参阅 ``ARCHIVE_OUTPUT_DIRECTORY``、
+``LIBRARY_OUTPUT_DIRECTORY`` 和 ``RUNTIME_OUTPUT_DIRECTORY`` 目标属性的文档。
+有关更改最终文件名中 ``<名称>`` 部分的信息，请参阅 ``OUTPUT_NAME`` 目标属性的文档。
+
+如果给出 ``EXCLUDE_FROM_ALL``，将在创建的目标上设置相应的属性。有关 ``EXCLUDE_FROM_ALL`` 目标属性的详细信息，请参阅其文档。
+
+``add_library`` 的源参数可以使用语法为 ``$<...>`` 的"生成器表达式"。有关可用表达式，请参阅 ``cmake-generator-expressions(7)`` 手册。
+有关定义构建系统属性的更多信息，请参阅 ``cmake-buildsystem(7)`` 手册。
+
+另请参阅 ``HEADER_FILE_ONLY``，了解如果某些源文件经过预处理，而您希望原始源文件在 IDE 中可访问时该怎么做。
+
+导入的库
+^^^^^^^^^^^^^^
+
+ add_library(<名称> <SHARED|STATIC|MODULE|OBJECT|UNKNOWN> IMPORTED
+             [GLOBAL])
+
+:ref:`导入的库目标 <Imported Targets>` 引用位于项目外部的库文件。不会生成构建它的规则，且 ``IMPORTED`` 目标属性为 ``True``。
+目标名称具有创建它的目录及其子目录的作用域，但 ``GLOBAL`` 选项扩展了可见性。它可以像项目中构建的任何目标一样被引用。
+``IMPORTED`` 库对于从 ``target_link_libraries()`` 等命令中方便引用很有用。
+有关导入库的详细信息通过设置以 ``IMPORTED_`` 和 ``INTERFACE_`` 开头的属性指定。
+
+最重要的属性有：
+
+* ``IMPORTED_LOCATION``（及其按配置变体 ``IMPORTED_LOCATION_<CONFIG>``），它指定磁盘上主库文件的位置。
+* 对于对象库，``IMPORTED_OBJECTS``（和 ``IMPORTED_OBJECTS_<CONFIG>``）指定磁盘上目标文件的位置。
+* 要在 ``install()`` 调用期间安装的 ``PUBLIC_HEADER`` 文件
+
+有关更多信息，请参阅 ``IMPORTED_*`` 和 ``INTERFACE_*`` 属性的文档。
+
+``UNKNOWN`` 库类型通常仅在 :ref:`查找模块 <Find Modules>` 的实现中使用。
+它允许使用导入库的路径（通常使用 ``find_library()`` 命令找到），而无需知道它是什么类型的库。
+这在 Windows 上特别有用，因为静态库和 DLL 的导入库都具有相同的文件扩展名。
+
+对象库
+^^^^^^^^^^^^^^
+
+ add_library(<名称> OBJECT <源文件>...)
+
+创建 :ref:`对象库 <Object Libraries>`。对象库编译源文件，但不将其目标文件归档或链接到库中。
+相反，由 ``add_library()`` 或 ``add_executable()`` 创建的其他目标可以使用形式为 ``$<TARGET_OBJECTS:objlib>`` 的表达式引用对象，其中 ``objlib`` 是对象库名称。例如：
+
+ add_library(... $<TARGET_OBJECTS:objlib> ...)
+ add_executable(... $<TARGET_OBJECTS:objlib> ...)
+
+将在库和可执行文件中包含 objlib 的目标文件以及它们自己的源文件编译的文件。
+对象库可以仅包含编译的源文件、头文件和其他不会影响普通库链接的文件（例如 ``.txt``）。
+它们可以包含生成此类源的自定义命令，但不能包含 ``PRE_BUILD``、``PRE_LINK`` 或 ``POST_BUILD`` 命令。
+某些原生构建系统（如 Xcode）可能不喜欢只有对象文件的目标，因此考虑向引用 ``$<TARGET_OBJECTS:objlib>`` 的任何目标添加至少一个真正的源文件。
+
+别名库
+^^^^^^^^^^^^^^^
+
+ add_library(<名称> ALIAS <目标>)
+
+创建 :ref:`别名目标 <Alias Targets>`，使得 ``<名称>`` 可以在后续命令中用于引用 ``<目标>``。
+``<名称>`` 不会作为 make 目标出现在生成的构建系统中。``<目标>`` 不能是 ``ALIAS``。
+
+对非 ``GLOBAL`` :ref:`导入目标 <Imported Targets>` 的 ``ALIAS`` 具有创建别名的目录及其子目录的作用域。
+``ALIAS_GLOBAL`` 目标属性可用于检查别名是否为全局。
+
+``ALIAS`` 目标可以用作可链接目标以及从中读取属性的目标。它们也可以用常规 ``if(TARGET)`` 子命令测试是否存在。
+``<名称>`` 不能用于修改 ``<目标>`` 的属性，也就是说，它不能用作 ``set_property()``、
+``set_target_properties()``、``target_link_libraries()`` 等的操作数。``ALIAS`` 目标不能被安装或导出。
+
+接口库
+^^^^^^^^^^^^^^^
+
+ add_library(<名称> INTERFACE [IMPORTED [GLOBAL]])
+
+创建 :ref:`接口库 <Interface Libraries>`。``INTERFACE`` 库目标不直接创建构建输出，尽管它可以在其上设置属性，并且它可以被安装、导出和导入。
+通常使用以下命令在接口目标上填充 ``INTERFACE_*`` 属性：
+
+* ``set_property()``,
+* ``target_link_libraries(INTERFACE)``,
+* ``target_link_options(INTERFACE)``,
+* ``target_include_directories(INTERFACE)``,
+* ``target_compile_options(INTERFACE)``,
+* ``target_compile_definitions(INTERFACE)``, 和
+* ``target_sources(INTERFACE)``,
+
+然后它像任何其他目标一样用作 ``target_link_libraries()`` 的参数。
+
+``INTERFACE`` :ref:`导入目标 <Imported Targets>` 也可以用此签名创建。
+导入的库目标引用在项目外部定义的库。目标名称具有创建它的目录及其子目录的作用域，但 ``GLOBAL`` 选项扩展了可见性。
+它可以像项目中构建的任何目标一样被引用。``IMPORTED`` 库对于从 ``target_link_libraries()`` 等命令中方便引用很有用。

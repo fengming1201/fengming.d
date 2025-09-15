@@ -1,0 +1,8 @@
+remove_definitions
+------------------
+
+移除由 ``add_definitions()`` 添加的 -D 定义标志。
+
+ remove_definitions(-DFOO -DBAR ...)
+
+从当前目录及以下目录的源文件的编译器命令行中移除标志（由 ``add_definitions()`` 添加）。

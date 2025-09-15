@@ -1,0 +1,43 @@
+get_filename_component
+----------------------
+
+获取完整文件名的特定组件。
+
+ get_filename_component(<var> <FileName> <mode> [CACHE])
+
+将 ``<var>`` 设置为 ``<FileName>`` 的一个组件，其中 ``<mode>`` 是以下之一：
+
+::
+
+ DIRECTORY = 不带文件名的目录
+ NAME      = 不带目录的文件名
+ EXT       = 文件名的最长扩展名（从 d/a.b.c 得到 .b.c）
+ NAME_WE   = 不带目录或最长扩展名的文件名
+ LAST_EXT  = 文件名的最后一个扩展名（从 d/a.b.c 得到 .c）
+ NAME_WLE  = 不带目录或最后一个扩展名的文件名
+ PATH      = DIRECTORY 的旧别名（用于 CMake <= 2.8.11）
+
+路径以正斜杠返回，没有尾部斜杠。
+如果指定了可选的 ``CACHE`` 参数，则将结果变量添加到缓存中。
+
+ get_filename_component(<var> <FileName> <mode> [BASE_DIR <dir>] [CACHE])
+
+将 ``<var>`` 设置为 ``<FileName>`` 的绝对路径，其中 ``<mode>`` 是以下之一：
+
+::
+
+ ABSOLUTE  = 文件的完整路径
+ REALPATH  = 解析符号链接后的现有文件的完整路径
+
+如果提供的 ``<FileName>`` 是相对路径，则相对于给定的基目录 ``<dir>`` 进行评估。
+如果没有提供基目录，默认基目录将是 ``CMAKE_CURRENT_SOURCE_DIR``。
+
+路径以正斜杠返回，没有尾部斜杠。
+如果指定了可选的 ``CACHE`` 参数，则将结果变量添加到缓存中。
+
+ get_filename_component(<var> <FileName> PROGRAM [PROGRAM_ARGS <arg_var>] [CACHE])
+
+将在系统搜索路径中找到 ``<FileName>`` 中的程序，或保留为完整路径。
+如果 ``PROGRAM_ARGS`` 与 ``PROGRAM`` 一起存在，
+则 ``<FileName>`` 字符串中存在的任何命令行参数将从程序名称中分离出来并存储在 ``<arg_var>`` 中。
+这用于从命令行字符串中分离程序名称与其参数。

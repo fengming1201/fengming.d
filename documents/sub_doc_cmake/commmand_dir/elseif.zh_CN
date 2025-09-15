@@ -1,0 +1,8 @@
+elseif
+------
+
+开始 if 块的 elseif 部分。
+
+ elseif(<condition>)
+
+参见 ``if()`` 命令，特别是关于 ``<condition>`` 的语法和逻辑。

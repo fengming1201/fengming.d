@@ -1,0 +1,91 @@
+cmake_parse_arguments
+---------------------
+
+解析函数或宏的参数。
+
+ cmake_parse_arguments(<prefix> <options> <one_value_keywords>
+                       <multi_value_keywords> <args>...)
+
+ cmake_parse_arguments(PARSE_ARGV <N> <prefix> <options>
+                       <one_value_keywords> <multi_value_keywords>)
+
+此命令用于宏或函数中。
+它处理传递给该宏或函数的参数，
+并定义一组变量，这些变量保存相应选项的值。
+
+第一种签名读取处理传递在 ``<args>...`` 中的参数。
+这可以在 ``macro()`` 或 ``function()`` 中使用。
+
+``PARSE_ARGV`` 签名仅用于 ``function()``
+主体。在这种情况下，要解析的参数来自调用函数的
+``ARGV#`` 变量。解析从第 ``<N>`` 个参数开始，其中 ``<N>`` 是无符号整数。这允许
+值中包含特殊字符如 ``;``。
+
+``<options>`` 参数包含相应宏的所有选项，
+即调用宏时可以使用的关键字，后面不跟任何值，
+例如 ``install()`` 命令的 ``OPTIONAL`` 关键字。
+
+``<one_value_keywords>`` 参数包含此宏的所有关键字，
+这些关键字后面跟一个值，例如 ``install()`` 命令的 ``DESTINATION`` 关键字。
+
+``<multi_value_keywords>`` 参数包含此宏的所有关键字，
+这些关键字后面可以跟多个值，例如 ``install()`` 命令的
+``TARGETS`` 或 ``FILES`` 关键字。
+
+.. 注意::
+
+   所有关键字都应是唯一的。即每个关键字只能在 ``<options>``、
+   ``<one_value_keywords>`` 或 ``<multi_value_keywords>`` 中指定一次。如果违反唯一性，将发出警告。
+
+完成后，``cmake_parse_arguments`` 将为
+在 ``<options>``、``<one_value_keywords>`` 和 ``<multi_value_keywords>`` 中列出的每个关键字
+考虑一个由给定 ``<prefix>``
+后跟 ``"_"`` 和相应关键字的名称组成的变量。
+这些变量将保存来自参数列表的相应值，
+如果找不到关联的选项，则未定义。
+对于 ``<options>`` 关键字，这些变量将始终被定义，
+为 ``TRUE`` 或 ``FALSE``，取决于选项是否在参数列表中。
+
+所有剩余的参数都收集在变量
+``<prefix>_UNPARSED_ARGUMENTS`` 中，如果所有参数都被识别，则此变量未定义。这可以在之后检查，以查看
+您的宏是否用未识别的参数调用。
+
+完全没有给出值的 ``<one_value_keywords>`` 和 ``<multi_value_keywords>`` 收集在变量 ``<prefix>_KEYWORDS_MISSING_VALUES`` 中，
+如果所有关键字都收到值，则此变量未定义。这可以检查是否有未给出任何值的关键字。
+
+考虑以下示例宏 ``my_install()``，它接受与真实 ``install()`` 命令类似的参数：
+
+ macro(my_install)
+     set(options OPTIONAL FAST)
+     set(oneValueArgs DESTINATION RENAME)
+     set(multiValueArgs TARGETS CONFIGURATIONS)
+     cmake_parse_arguments(MY_INSTALL "${options}" "${oneValueArgs}"
+                           "${multiValueArgs}" ${ARGN} )
+
+     # ...
+
+假设 ``my_install()`` 这样调用：
+
+ my_install(TARGETS foo bar DESTINATION bin OPTIONAL blub CONFIGURATIONS)
+
+在 ``cmake_parse_arguments`` 调用后，宏将设置或未定义以下变量：
+
+ MY_INSTALL_OPTIONAL = TRUE
+ MY_INSTALL_FAST = FALSE # 在调用 my_install 时未使用
+ MY_INSTALL_DESTINATION = "bin"
+ MY_INSTALL_RENAME <未定义> # 未使用
+ MY_INSTALL_TARGETS = "foo;bar"
+ MY_INSTALL_CONFIGURATIONS <未定义> # 未使用
+ MY_INSTALL_UNPARSED_ARGUMENTS = "blub" # "OPTIONAL" 后没有期望的内容
+ MY_INSTALL_KEYWORDS_MISSING_VALUES = "CONFIGURATIONS"
+          # 没有为 "CONFIGURATIONS" 给定值
+
+然后您可以继续处理这些变量。
+
+关键字终止值列表，例如如果直接在
+``one_value_keyword`` 后跟随另一个识别的关键字，这被
+解释为新的选项的开始。例如
+``my_install(TARGETS foo DESTINATION OPTIONAL)`` 将导致
+``MY_INSTALL_DESTINATION`` 设置为 ``"OPTIONAL"``，但由于 ``OPTIONAL``
+本身是关键字，``MY_INSTALL_DESTINATION`` 将为空（但添加到
+``MY_INSTALL_KEYWORDS_MISSING_VALUES``），因此 ``MY_INSTALL_OPTIONAL`` 将被设置为 ``TRUE``。

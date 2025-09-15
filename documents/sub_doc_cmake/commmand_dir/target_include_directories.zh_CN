@@ -1,0 +1,53 @@
+target_include_directories
+--------------------------
+
+为target添加包含目录。
+
+ target_include_directories(<target> [SYSTEM] [BEFORE]
+   <INTERFACE|PUBLIC|PRIVATE> [items1...]
+   [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
+
+指定编译给定目标时要使用的包含目录。
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+
+如果指定了``BEFORE``，内容将被前置到属性中，而不是追加。
+
+需要``INTERFACE``、``PUBLIC``和``PRIVATE``关键字来指定后续参数的作用域。
+``PRIVATE``和``PUBLIC``项将填充``<target>``的``INCLUDE_DIRECTORIES``属性。
+``PUBLIC``和``INTERFACE``项将填充``<target>``的``INTERFACE_INCLUDE_DIRECTORIES``属性。
+(:ref:`IMPORTED targets <Imported Targets>`仅支持``INTERFACE``项。)
+后续参数指定包含目录。
+
+指定的包含目录可以是绝对路径或相对路径。对同一<target>的重复调用将按调用顺序追加项。
+如果指定了``SYSTEM``，在某些平台上编译器将被告知这些目录被视为系统包含目录
+（此设置可能会产生诸如编译器跳过警告，或这些固定安装的系统文件不被考虑在依赖计算中等效果-请参见编译器文档）。
+如果``SYSTEM``与``PUBLIC``或``INTERFACE``一起使用，则指定的目录将填充
+``INTERFACE_SYSTEM_INCLUDE_DIRECTORIES``目标属性。
+
+``target_include_directories``的参数可以使用语法为``$<...>``的"生成器表达式"。
+请参见``cmake-generator-expressions(7)``手册以了解可用表达式。
+有关定义构建系统属性的更多信息，请参见``cmake-buildsystem(7)``手册。
+
+包含目录的使用要求在构建树和安装树之间通常不同。
+``BUILD_INTERFACE``和``INSTALL_INTERFACE``生成器表达式可用于根据使用位置描述单独的使用要求。
+``INSTALL_INTERFACE``表达式内允许相对路径，并且相对于安装前缀进行解释。例如：
+
+ target_include_directories(mylib PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/mylib>
+   $<INSTALL_INTERFACE:include/mylib>  # <prefix>/include/mylib
+ )
+
+创建可重定位包
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+请注意，不建议用依赖项包含目录的绝对路径填充目标``INTERFACE_INCLUDE_DIRECTORIES``的
+``INSTALL_INTERFACE``。这会将依赖项的包含目录路径硬编码到已安装的包中
+**就像制作包的机器上找到的那样**。
+
+``INTERFACE_INCLUDE_DIRECTORIES``的``INSTALL_INTERFACE``仅适合指定与目标本身一起提供的头文件所需的包含目录，
+而不适合指定其``INTERFACE_LINK_LIBRARIES``目标属性中列出的传递依赖项提供的头文件。
+这些依赖项本身应该是指定其自身头文件位置在``INTERFACE_INCLUDE_DIRECTORIES``中的目标。
+
+有关在创建用于重新分发的包时指定使用要求时必须采取的额外注意事项的讨论，
+请参见``cmake-packages(7)``手册的:ref:`创建可重定位包`部分。

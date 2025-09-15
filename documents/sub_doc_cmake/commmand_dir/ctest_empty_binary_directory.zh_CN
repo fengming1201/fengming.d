@@ -1,0 +1,11 @@
+ctest_empty_binary_directory
+----------------------------
+
+清空二进制目录
+
+::
+
+ ctest_empty_binary_directory( directory )
+
+删除二进制目录。此命令将在尝试删除目录之前执行一些检查，
+以避免恶意或意外删除目录。

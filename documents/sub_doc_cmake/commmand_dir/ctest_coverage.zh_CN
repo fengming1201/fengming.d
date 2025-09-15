@@ -1,0 +1,43 @@
+ctest_coverage
+--------------
+
+执行 :ref:`CTest 覆盖步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_coverage([BUILD <build-dir>] [APPEND]
+                [LABELS <label>...]
+                [RETURN_VALUE <result-var>]
+                [CAPTURE_CMAKE_ERROR <result-var>]
+                [QUIET]
+                )
+
+收集覆盖工具结果并将其存储在 ``Coverage.xml`` 中，
+用于与 ``ctest_submit()`` 命令一起提交。
+
+选项为：
+
+``BUILD <build-dir>``
+  指定顶级构建目录。如果未给定，
+  使用 ``CTEST_BINARY_DIRECTORY`` 变量。
+
+``APPEND``
+  将 ``Coverage.xml`` 标记为追加到自上次 ``ctest_start()`` 调用以来
+  先前提交到仪表板服务器的结果。
+  追加语义由使用的仪表板服务器定义。
+  这*不会*导致结果追加到先前调用此命令产生的 ``.xml`` 文件。
+
+``LABELS``
+  过滤覆盖报告，仅包括标记为至少具有指定标签之一的源文件。
+
+``RETURN_VALUE <result-var>``
+  如果覆盖工具无错误运行，则在 ``<result-var>`` 变量中存储 ``0``，
+  否则存储非零值。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。
+
+``QUIET``
+  抑制否则会打印到控制台的任何 CTest 特定的非错误输出。
+  指示多少行代码被覆盖的摘要不受此选项影响。

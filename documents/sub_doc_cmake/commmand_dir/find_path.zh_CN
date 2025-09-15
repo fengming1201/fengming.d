@@ -1,0 +1,64 @@
+find_path
+---------
+
+简短签名：
+
+ find_path (<VAR> name1 [path1 path2 ...])
+
+通用签名：
+
+ find_path (
+           <VAR>
+           name | NAMES name1 [name2 ...]
+           [HINTS path1 [path2 ... ENV var]]
+           [PATHS path1 [path2 ... ENV var]]
+           [PATH_SUFFIXES suffix1 [suffix2 ...]]
+           [DOC "cache documentation string"]
+           [REQUIRED]
+           [NO_DEFAULT_PATH]
+           [NO_PACKAGE_ROOT_PATH]
+           [NO_CMAKE_PATH]
+           [NO_CMAKE_ENVIRONMENT_PATH]
+           [NO_SYSTEM_ENVIRONMENT_PATH]
+           [NO_CMAKE_SYSTEM_PATH]
+           [CMAKE_FIND_ROOT_PATH_BOTH |
+            ONLY_CMAKE_FIND_ROOT_PATH |
+            NO_CMAKE_FIND_ROOT_PATH]
+          )
+
+此命令用于查找包含命名文件的目录。
+将创建一个名为 ``<VAR>`` 的缓存条目来存储此命令的结果。
+如果在目录中找到文件，结果将存储在变量中，
+除非清除变量，否则不会重复搜索。
+如果未找到任何内容，结果将是 ``<VAR>-NOTFOUND``。
+``REQUIRED`` 选项会在找不到任何内容时停止处理并显示错误消息，
+否则下次使用相同变量调用 find_path 时将再次尝试搜索。
+
+选项包括：
+
+``NAMES``
+  指定目录中文件的一个或多个可能名称。
+
+  使用此选项指定带版本后缀和不带版本后缀的名称时，
+  我们建议先指定不带版本后缀的名称，
+  以便在发行版提供的包之前找到本地构建的包。
+
+``HINTS``, ``PATHS``
+  指定除默认位置外要搜索的目录。
+  ``ENV var`` 子选项从系统环境变量中读取路径。
+
+``PATH_SUFFIXES``
+  指定在每个目录位置下方要检查的其他子目录。
+
+``DOC``
+  为 ``<VAR>`` 缓存条目指定文档字符串。
+
+``REQUIRED``
+  如果找不到任何内容，则停止处理并显示错误消息。
+
+如果指定了 ``NO_DEFAULT_PATH``，则不会向搜索添加其他路径。
+如果未指定 ``NO_DEFAULT_PATH``，则搜索过程与 find_file 相同。
+
+当搜索框架时，如果文件指定为 ``A/b.h``，则框架搜索将查找 ``A.framework/Headers/b.h``。
+如果找到该文件，路径将设置为框架的路径。
+CMake 会将其转换为正确的 ``-F`` 选项以包含该文件。

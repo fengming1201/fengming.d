@@ -1,0 +1,125 @@
+project
+-------
+
+设置项目名称。
+
+简介
+^^^^^^^^
+
+ project(<PROJECT-NAME> [<language-name>...])
+ project(<PROJECT-NAME>
+         [VERSION <major>[.<minor>[.<patch>[.<tweak>]]]]
+         [DESCRIPTION <project-description-string>]
+         [HOMEPAGE_URL <url-string>]
+         [LANGUAGES <language-name>...])
+
+设置项目名称，并将其存储在变量
+``PROJECT_NAME`` 中。当从顶层
+``CMakeLists.txt`` 调用时，还将项目名称存储在
+变量 ``CMAKE_PROJECT_NAME`` 中。
+
+还设置变量
+
+* ``PROJECT_SOURCE_DIR``,
+  ``<PROJECT-NAME>_SOURCE_DIR``
+* ``PROJECT_BINARY_DIR``,
+  ``<PROJECT-NAME>_BINARY_DIR``
+
+其他变量由以下描述的可选参数设置。
+如果未使用这些参数中的任何一个，则相应的变量
+设置为空字符串。
+
+选项
+^^^^^^^
+
+选项有：
+
+``VERSION <version>``
+  可选；除非策略 ``CMP0048`` 设置为 ``NEW``，否则不能使用。
+
+  采用由非负整数组件组成的 ``<version>`` 参数，
+  即 ``<major>[.<minor>[.<patch>[.<tweak>]]]``，
+  并设置变量
+
+  * ``PROJECT_VERSION``,
+    ``<PROJECT-NAME>_VERSION``
+  * ``PROJECT_VERSION_MAJOR``,
+    ``<PROJECT-NAME>_VERSION_MAJOR``
+  * ``PROJECT_VERSION_MINOR``,
+    ``<PROJECT-NAME>_VERSION_MINOR``
+  * ``PROJECT_VERSION_PATCH``,
+    ``<PROJECT-NAME>_VERSION_PATCH``
+  * ``PROJECT_VERSION_TWEAK``,
+    ``<PROJECT-NAME>_VERSION_TWEAK``。
+
+  当从顶层 ``CMakeLists.txt`` 调用 ``project()`` 命令时，
+  版本也存储在变量 ``CMAKE_PROJECT_VERSION`` 中。
+
+``DESCRIPTION <project-description-string>``
+  可选。
+  设置变量
+
+  * ``PROJECT_DESCRIPTION``, ``<PROJECT-NAME>_DESCRIPTION``
+
+  为 ``<project-description-string>``。
+  建议此描述是相对较短的字符串，通常不超过几个词。
+
+  当从顶层 ``CMakeLists.txt`` 调用 ``project()`` 命令时，
+  描述也存储在变量 ``CMAKE_PROJECT_DESCRIPTION`` 中。
+
+``HOMEPAGE_URL <url-string>``
+  可选。
+  设置变量
+
+  * ``PROJECT_HOMEPAGE_URL``, ``<PROJECT-NAME>_HOMEPAGE_URL``
+
+  为 ``<url-string>``，这应该是项目的规范主页URL。
+
+  当从顶层 ``CMakeLists.txt`` 调用 ``project()`` 命令时，
+  URL也存储在变量 ``CMAKE_PROJECT_HOMEPAGE_URL`` 中。
+
+``LANGUAGES <language-name>...``
+  可选。
+  也可以不使用 ``LANGUAGES`` 关键字，按照第一个简短签名指定。
+
+  选择构建项目所需的编程语言。
+  支持的语言包括 ``C``、``CXX``（即C++）、``CUDA``、
+  ``OBJC``（即Objective-C）、``OBJCXX``、``Fortran`` 和 ``ASM``。
+  如果未给出语言选项，默认启用 ``C`` 和 ``CXX``。
+  指定语言 ``NONE``，或使用 ``LANGUAGES`` 关键字并列出无语言，
+  以跳过启用任何语言。
+
+  如果启用 ``ASM``，请最后列出它，以便CMake可以检查
+  其他语言（如 ``C``）的编译器是否也适用于汇编。
+
+通过 ``VERSION``、``DESCRIPTION`` 和 ``HOMEPAGE_URL``
+选项设置的变量旨在用作包元数据和文档中的默认值。
+
+代码注入
+^^^^^^^^^^^^^^
+
+如果设置了 ``CMAKE_PROJECT_INCLUDE_BEFORE`` 或
+``CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE_BEFORE`` 变量，
+它们指向的文件将作为 ``project()`` 命令的第一步包含。
+如果两者都设置，则 ``CMAKE_PROJECT_INCLUDE_BEFORE`` 将包含在
+``CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE_BEFORE`` 之前。
+
+如果设置了 ``CMAKE_PROJECT_INCLUDE`` 或
+``CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE`` 变量，它们指向的文件
+将作为 ``project()`` 命令的最后一步包含。
+如果两者都设置，则 ``CMAKE_PROJECT_INCLUDE`` 将包含在
+``CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE`` 之前。
+
+用法
+^^^^^
+
+项目的顶层 ``CMakeLists.txt`` 文件必须包含
+对 ``project()`` 命令的文字、直接调用；通过 ``include()`` 命令加载
+是不够的。如果不存在这样的调用，CMake将发出警告并假装在顶部有
+``project(Project)`` 以启用默认语言（``C`` 和 ``CXX``）。
+
+.. 注意::
+  在顶层 ``CMakeLists.txt`` 的顶部附近调用 ``project()`` 命令，
+  但 *在* 调用 ``cmake_minimum_required()`` 之后。
+  重要的是在调用其行为可能受影响的其他命令之前建立版本和策略设置。
+  另请参见策略 ``CMP0000``。

@@ -1,0 +1,18 @@
+subdirs
+-------
+
+将子目录列表添加到构建中。
+
+::
+
+ subdirs(dir1 dir2 ...[EXCLUDE_FROM_ALL exclude_dir1 exclude_dir2 ...]
+         [PREORDER] )
+
+将子目录列表添加到构建中。应使用``add_subdirectory()``命令
+代替``subdirs``，尽管``subdirs``仍然可以工作。这将导致子目录中的
+任何CMakeLists.txt文件被CMake处理。在``PREORDER``标志之后的任何目录
+将由makefile构建首先遍历，``PREORDER``标志对IDE项目没有影响。
+在``EXCLUDE_FROM_ALL``标记之后的任何目录将不会包含在顶级makefile或项目文件中。
+这对于让CMake为项目中的一组示例创建makefile或项目很有用。
+您会希望CMake同时为所有示例生成makefile或项目文件，但您不希望它们
+出现在顶级项目中或在每次从顶级运行make时被构建。

@@ -1,0 +1,18 @@
+exec_program
+------------
+
+在处理 CMakeList.txt 文件期间运行可执行程序。
+
+::
+
+ exec_program(Executable [directory in which to run]
+              [ARGS <arguments to executable>]
+              [OUTPUT_VARIABLE <var>]
+              [RETURN_VALUE <var>])
+
+可执行文件在可选指定的目录中运行。可执行文件可以包含参数，
+如果它是双引号的，但最好使用可选的 ``ARGS`` 参数来指定程序的参数。
+这是因为 cmake 将能够转义可执行文件路径中的空格。
+可选参数 ``OUTPUT_VARIABLE`` 指定一个变量来存储输出。
+要捕获执行的返回值，请提供 ``RETURN_VALUE``。
+如果指定了 ``OUTPUT_VARIABLE``，则不会有输出到运行 cmake 的控制台的 stdout/stderr。

@@ -1,0 +1,18 @@
+while
+-----
+
+当条件为真时评估一组命令。
+
+ while(<condition>)
+   <commands>
+ endwhile()
+
+``while`` 和匹配的 ``endwhile()`` 之间的所有命令都会被记录而不被调用。
+一旦 ``endwhile()`` 被评估，记录的命令列表会在 ``<condition>`` 为真时持续调用。
+
+``<condition>`` 具有与 ``if()`` 命令中详细描述的相同语法，并使用相同的逻辑进行评估。
+
+命令 ``break()`` 和 ``continue()`` 提供了逃离正常控制流的手段。
+
+按传统，``endwhile()`` 命令接受可选的 ``<condition>`` 参数。
+如果使用，它必须是开头 ``while`` 命令参数的逐字重复。

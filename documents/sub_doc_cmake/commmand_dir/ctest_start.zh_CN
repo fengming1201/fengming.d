@@ -1,0 +1,68 @@
+ctest_start
+-----------
+
+为给定模型启动测试
+
+::
+
+ ctest_start(<model> [<source> [<binary>]] [GROUP <group>] [QUIET])
+
+ ctest_start([<model> [<source> [<binary>]]] [GROUP <group>] APPEND [QUIET])
+
+为给定模型启动测试。应在二进制目录初始化后调用该命令。
+
+参数如下：
+
+``<model>``
+  设置仪表板模型。必须是 ``Experimental``、``Continuous`` 或
+  ``Nightly`` 之一。除非指定了 ``APPEND``，否则此参数是必需的。
+
+``<source>``
+  设置源代码目录。如果未指定，则使用
+  ``CTEST_SOURCE_DIRECTORY`` 的值。
+
+``<binary>``
+  设置二进制目录。如果未指定，则使用
+  ``CTEST_BINARY_DIRECTORY`` 的值。
+
+``GROUP <group>``
+  如果使用 ``GROUP``，提交将转到 CDash 服务器上的指定组。如果未指定 ``GROUP``，
+  默认使用模型的名称。这替换了已弃用的选项 ``TRACK``。尽管名称更改，其行为保持不变。
+
+``APPEND``
+  如果使用 ``APPEND``，则使用现有的 ``TAG`` 而不是基于当前时间戳创建新的。
+  如果使用 ``APPEND``，可以省略 ``<model>`` 和 ``GROUP <group>`` 参数，因为它们将从
+  生成的 ``TAG`` 文件中读取。例如：
+
+  .. code-block:: cmake
+
+    ctest_start(Experimental GROUP GroupExperimental)
+
+  稍后，在另一个 ``ctest -S`` 脚本中：
+
+  .. code-block:: cmake
+
+    ctest_start(APPEND)
+
+  当第二个脚本运行 ``ctest_start(APPEND)`` 时，它将从第一个 ``ctest_start()`` 命令生成的 ``TAG`` 文件中读取 ``Experimental`` 模型和 ``GroupExperimental`` 组。
+  请注意，如果调用 ``ctest_start(APPEND)`` 并指定与第一个 ``ctest_start()`` 命令不同的模型或组，将发出警告，并将使用新的模型和组。
+
+``QUIET``
+  如果使用 ``QUIET``，CTest 将抑制其否则会打印到控制台的任何非错误消息。
+
+``ctest_start()`` 的参数可以按任何顺序发出，
+除了 ``<model>``、``<source>`` 和 ``<binary>`` 必须相对于彼此按该顺序出现。
+以下所有都是有效且等效的：
+
+ ctest_start(Experimental path/to/source path/to/binary GROUP SomeGroup QUIET APPEND)
+
+ ctest_start(GROUP SomeGroup Experimental QUIET path/to/source APPEND path/to/binary)
+
+ ctest_start(APPEND QUIET Experimental path/to/source GROUP SomeGroup path/to/binary)
+
+然而，为了可读性，建议您按照本页面顶部列出的顺序对参数进行排序。
+
+如果设置了 ``CTEST_CHECKOUT_COMMAND`` 变量（或
+``CTEST_CVS_CHECKOUT`` 变量），其内容被视为命令行。
+即使源代码目录已存在，也会使用当前工作目录设置为源代码目录的父目录来调用该命令。
+这可用于从版本控制存储库创建源代码树。

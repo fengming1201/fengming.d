@@ -1,0 +1,17 @@
+add_dependencies
+----------------
+
+添加顶层目标之间的依赖关系。
+
+ add_dependencies(<目标> [<依赖目标>]...)
+
+使顶层 ``<目标>`` 依赖于其他顶层目标，以确保它们在其他目标之前构建。顶层目标是由 ``add_executable()``、
+``add_library()`` 或 ``add_custom_target()`` 命令创建的目标
+（但不包括由CMake生成的目标如 ``install``）。
+
+添加到 :ref:`导入目标 <Imported Targets>`
+或 :ref:`接口库 <Interface Libraries>` 的依赖关系会被传递性地替代，因为这些目标本身并不构建。
+
+有关在自定义规则中添加文件级依赖关系的信息，请参阅 ``add_custom_target()`` 和
+``add_custom_command()`` 命令的 ``DEPENDS`` 选项。有关向对象文件添加文件级依赖关系的信息，请参阅 ``OBJECT_DEPENDS``
+源文件属性。

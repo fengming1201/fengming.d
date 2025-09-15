@@ -1,0 +1,15 @@
+add_compile_definitions
+-----------------------
+
+为源文件的编译添加预处理器定义。
+
+ add_compile_definitions(<definition> ...)
+
+将预处理器定义添加到编译器命令行。
+
+这些预处理器定义会被添加到当前CMakeLists文件的COMPILE_DEFINITIONS目录属性中。它们也会被添加到当前CMakeLists文件中每个目标的COMPILE_DEFINITIONS目标属性中。
+
+定义使用语法VAR或VAR=value来指定。不支持函数式定义。CMake会自动为原生构建系统正确转义值（注意CMake语言语法可能需要转义来指定某些值）。
+
+add_compile_definitions的参数可以使用语法为$<...>的"生成器表达式"。
+有关可用的表达式，请参见cmake-generator-expressions(7)手册。有关定义构建系统属性的更多信息，请参见cmake-buildsystem(7)手册。

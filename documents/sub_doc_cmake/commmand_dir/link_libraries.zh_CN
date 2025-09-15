@@ -1,0 +1,15 @@
+link_libraries
+--------------
+
+将库链接到稍后添加的所有目标。
+
+ link_libraries([item1 [item2 [...]]]
+                [[debug|optimized|general] <item>] ...)
+
+指定库或标志，用于链接当前目录或其子目录中稍后由 ``add_executable()``
+或 ``add_library()`` 等命令创建的任何目标。
+有关参数的含义，请参见 ``target_link_libraries()`` 命令。
+
+.. 注意::
+  只要有可能，应优先使用 ``target_link_libraries()`` 命令。
+  库依赖项会自动链接，因此很少需要目录范围的库链接规范。

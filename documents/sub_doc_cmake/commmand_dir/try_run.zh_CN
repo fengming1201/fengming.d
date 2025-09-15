@@ -1,0 +1,76 @@
+try_run
+-------
+
+尝试编译并运行一些代码。
+
+尝试编译并运行源文件
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ try_run(<runResultVar> <compileResultVar>
+         <bindir> <srcfile> [CMAKE_FLAGS <flags>...]
+         [COMPILE_DEFINITIONS <defs>...]
+         [LINK_OPTIONS <options>...]
+         [LINK_LIBRARIES <libs>...]
+         [COMPILE_OUTPUT_VARIABLE <var>]
+         [RUN_OUTPUT_VARIABLE <var>]
+         [OUTPUT_VARIABLE <var>]
+         [ARGS <args>...])
+
+尝试编译一个``<srcfile>``。在``<compileResultVar>``中返回``TRUE``或``FALSE``表示成功或失败。
+如果编译成功，则运行可执行文件，并在``<runResultVar>``中返回其退出代码。
+如果可执行文件已构建但运行失败，则``<runResultVar>``将被设置为``FAILED_TO_RUN``。
+有关如何构建测试项目以构建源文件的信息，请参见``try_compile()``命令。
+
+选项包括：
+
+``CMAKE_FLAGS <flags>...``
+  指定形式为``-DVAR:TYPE=VALUE``的标志，这些标志将传递给用于驱动测试构建的``cmake``命令行。
+  ``try_compile()``中的示例显示了如何使用变量``INCLUDE_DIRECTORIES``、``LINK_DIRECTORIES``和``LINK_LIBRARIES``的值。
+
+``COMPILE_DEFINITIONS <defs>...``
+  指定要传递给生成的测试项目中``add_definitions()``的``-Ddefinition``参数。
+
+``COMPILE_OUTPUT_VARIABLE <var>``
+  在给定变量中报告编译步骤的构建输出。
+
+``LINK_LIBRARIES <libs>...``
+  指定要在生成的项目中链接的库。
+  库列表可以引用系统库和调用项目中的:ref:`导入目标 <Imported Targets>`。
+
+  如果指定了此选项，则给予``CMAKE_FLAGS``选项的任何``-DLINK_LIBRARIES=...``值都将被忽略。
+
+``LINK_OPTIONS <options>...``
+  指定要传递给生成的项目中``target_link_options()``的链接步骤选项。
+
+``OUTPUT_VARIABLE <var>``
+  在给定变量中报告编译构建输出以及运行可执行文件的输出。
+  此选项由于遗留原因而存在。建议使用``COMPILE_OUTPUT_VARIABLE``和``RUN_OUTPUT_VARIABLE``。
+
+``RUN_OUTPUT_VARIABLE <var>``
+  在给定变量中报告运行可执行文件的输出。
+
+其他行为设置
+^^^^^^^^^^^^^^^^^^^^^^^
+
+设置``CMAKE_TRY_COMPILE_CONFIGURATION``变量以选择构建配置。
+
+交叉编译时的行为
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+交叉编译时，第一步编译的可执行文件通常无法在构建主机上运行。
+``try_run``命令检查``CMAKE_CROSSCOMPILING``变量以检测CMake是否处于交叉编译模式。
+如果是这种情况，它仍会尝试编译可执行文件，但除非设置了``CMAKE_CROSSCOMPILING_EMULATOR``变量，否则不会尝试运行可执行文件。
+相反，它将创建缓存变量，这些变量必须由用户填写或通过某些CMake脚本文件预设为可执行文件在实际目标平台上运行时会产生的结果值。
+这些缓存条目是：
+
+``<runResultVar>``
+  如果在目标平台上运行可执行文件，则为退出代码。
+
+``<runResultVar>__TRYRUN_OUTPUT``
+  如果在目标平台上运行可执行文件，则为stdout和stderr的输出。
+  仅当使用了``RUN_OUTPUT_VARIABLE``或``OUTPUT_VARIABLE``选项时才会创建此变量。
+
+为了使交叉编译项目更容易，请仅在确实需要时使用``try_run``。
+如果使用``try_run``，请仅在确实需要时使用``RUN_OUTPUT_VARIABLE``或``OUTPUT_VARIABLE``选项。
+使用它们将要求在交叉编译时，必须手动将缓存变量设置为可执行文件的输出。
+你还可以使用``if()``块检查``CMAKE_CROSSCOMPILING``变量来"保护"对``try_run``的调用，并为此情况提供易于预设的替代方案。

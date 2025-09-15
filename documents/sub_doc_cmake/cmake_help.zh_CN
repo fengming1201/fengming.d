@@ -1,0 +1,100 @@
+用法
+
+  cmake [选项] <源码路径>
+  cmake [选项] <现有构建路径>
+  cmake [选项] -S <源码路径> -B <构建路径>
+
+为当前工作目录中的源码目录指定（重新）生成构建系统。为现有构建目录重新生成其构建系统。
+
+选项
+  -S <源码路径>          = 显式指定源码目录。
+  -B <构建路径>           = 显式指定构建目录。
+  -C <初始缓存>           = 预加载脚本以填充缓存。
+  -D <变量>[:<类型>]=<值>  = 创建或更新cmake缓存条目。
+  -U <通配符表达式>       = 从CMake缓存中删除匹配的条目。
+  -G <生成器名称>          = 指定构建系统生成器。
+  -T <工具集名称>          = 如果生成器支持，指定工具集名称。
+  -A <平台名称>           = 如果生成器支持，指定平台名称。
+  -Wdev                    = 启用开发者警告。
+  -Wno-dev                 = 抑制开发者警告。
+  -Werror=dev              = 将开发者警告视为错误。
+  -Wno-error=dev           = 使开发者警告不视为错误。
+  -Wdeprecated             = 启用弃用警告。
+  -Wno-deprecated          = 抑制弃用警告。
+  -Werror=deprecated       = 将弃用的宏和函数警告视为错误。
+  -Wno-error=deprecated    = 使弃用的宏和函数警告不视为错误。
+  -E                       = CMake命令模式。
+  -L[A][H]                 = 列出非高级缓存变量。
+  --build <目录>            = 构建CMake生成的项目二进制树。
+  --install <目录>          = 安装CMake生成的项目二进制树。
+  --open <目录>             = 在关联应用程序中打开生成的项目。
+  -N                       = 仅查看模式。
+  -P <文件>                = 处理脚本模式。
+  --find-package           = 以pkg-config类似模式运行。
+  --graphviz=[文件]        = 生成依赖关系的graphviz图，参见
+                             CMakeGraphVizOptions.cmake了解更多信息。
+  --system-information [文件] = 转储关于此系统的信息。
+  --log-level=<ERROR|WARNING|NOTICE|STATUS|VERBOSE|DEBUG|TRACE>
+                           = 设置CMake文件中消息的详细程度。
+                             为了向后兼容，也接受--loglevel。
+  --log-context            = 在日志消息前加上上下文（如果提供）。
+  --debug-trycompile       = 不要删除try_compile构建树。
+                             一次只能对一个try_compile有用。
+  --debug-output           = 将cmake置于调试模式。
+  --debug-find             = 将cmake查找置于调试模式。
+  --trace                  = 将cmake置于跟踪模式。
+  --trace-expand           = 将cmake置于带变量扩展的跟踪模式。
+  --trace-format=<human|json-v1>
+                           = 设置跟踪的输出格式。
+  --trace-source=<文件>    = 仅跟踪此CMake文件/模块。允许使用多个
+                             选项。
+  --trace-redirect=<文件>  = 将跟踪输出重定向到文件而不是stderr。
+  --warn-uninitialized     = 警告未初始化的值。
+  --warn-unused-vars       = 警告未使用的变量。
+  --no-warn-unused-cli     = 不要警告命令行选项。
+  --check-system-vars      = 在系统文件中发现变量使用问题。
+  --profiling-format=<fmt> = 输出用于分析CMake脚本的数据。
+                             支持的格式：google-trace
+  --profiling-output=<文件> = 选择通过--profiling-format启用的分析数据的
+                             输出路径。
+  --help,-help,-usage,-h,-H,/? = 打印用法信息并退出。
+  --version,-version,/V [<f>] = 打印版本号并退出。
+  --help-full [<f>]        = 打印所有帮助手册并退出。
+  --help-manual <手册> [<f>] = 打印一个帮助手册并退出。
+  --help-manual-list [<f>] = 列出可用的帮助手册并退出。
+  --help-command <命令> [<f>] = 打印一个命令的帮助并退出。
+  --help-command-list [<f>] = 列出可用的命令帮助并退出。
+  --help-commands [<f>]    = 打印cmake-commands手册并退出。
+  --help-module <模块> [<f>] = 打印一个模块的帮助并退出。
+  --help-module-list [<f>] = 列出可用的模块帮助并退出。
+  --help-modules [<f>]     = 打印cmake-modules手册并退出。
+  --help-policy <策略> [<f>] = 打印一个策略的帮助并退出。
+  --help-policy-list [<f>] = 列出可用的策略帮助并退出。
+  --help-policies [<f>]    = 打印cmake-policies手册并退出。
+  --help-property <属性> [<f>] = 打印一个属性的帮助并退出。
+  --help-property-list [<f>] = 列出可用的属性帮助并退出。
+  --help-properties [<f>]  = 打印cmake-properties手册并退出。
+  --help-variable <变量> [<f>] = 打印一个变量的帮助并退出。
+  --help-variable-list [<f>] = 列出可用的变量帮助并退出。
+  --help-variables [<f>]   = 打印cmake-variables手册并退出。
+
+生成器
+
+以下生成器在此平台上可用（*标记为默认）：
+* Unix Makefiles               = 生成标准UNIX makefile。
+  Green Hills MULTI            = 生成Green Hills MULTI文件
+                                 （实验性，正在进行中）。
+  Ninja                        = 生成build.ninja文件。
+  Ninja Multi-Config           = 生成build-<Config>.ninja文件。
+  Watcom WMake                 = 生成Watcom WMake makefile。
+  CodeBlocks - Ninja           = 生成CodeBlocks项目文件。
+  CodeBlocks - Unix Makefiles  = 生成CodeBlocks项目文件。
+  CodeLite - Ninja             = 生成CodeLite项目文件。
+  CodeLite - Unix Makefiles    = 生成CodeLite项目文件。
+  Sublime Text 2 - Ninja       = 生成Sublime Text 2项目文件。
+  Sublime Text 2 - Unix Makefiles
+                               = 生成Sublime Text 2项目文件。
+  Kate - Ninja                 = 生成Kate项目文件。
+  Kate - Unix Makefiles        = 生成Kate项目文件。
+  Eclipse CDT4 - Ninja         = 生成Eclipse CDT 4.0项目文件。
+  Eclipse CDT4 - Unix Makefiles= 生成Eclipse CDT 4.0项目文件。

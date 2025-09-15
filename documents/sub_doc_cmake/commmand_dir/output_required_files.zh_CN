@@ -1,0 +1,18 @@
+output_required_files
+---------------------
+
+自3.0版本起被禁用。参见CMake策略 ``CMP0032``。
+
+近似C预处理器依赖扫描。
+
+此命令仅因为古老的CMake版本提供了它而存在。
+CMake使用更高级的扫描器自动处理预处理器依赖扫描。
+
+::
+
+ output_required_files(srcfile outputfile)
+
+输出指定 ``srcfile`` 所需的所有源文件列表。
+此列表写入 ``outputfile``。
+这类似于写出 ``srcfile`` 的依赖项，不同之处在于如果可能，
+它会从 ``.h`` 文件跳转到 ``.cxx``、``.c`` 和 ``.cpp`` 文件。

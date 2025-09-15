@@ -1,0 +1,239 @@
+list
+----
+
+列表操作。
+
+简介
+^^^^
+
+ 读取
+   list(LENGTH <list> <out-var>)
+   list(GET <list> <element index> [<index> ...] <out-var>)
+   list(JOIN <list> <glue> <out-var>)
+   list(SUBLIST <list> <begin> <length> <out-var>)
+
+ 搜索
+   list(FIND <list> <value> <out-var>)
+
+ 修改
+   list(APPEND <list> [<element>...])
+   list(FILTER <list> {INCLUDE | EXCLUDE} REGEX <regex>)
+   list(INSERT <list> <index> [<element>...])
+   list(POP_BACK <list> [<out-var>...])
+   list(POP_FRONT <list> [<out-var>...])
+   list(PREPEND <list> [<element>...])
+   list(REMOVE_ITEM <list> <value>...)
+   list(REMOVE_AT <list> <index>...)
+   list(REMOVE_DUPLICATES <list>)
+   list(TRANSFORM <list> <ACTION> [...])
+
+ 排序
+   list(REVERSE <list>)
+   list(SORT <list> [...])
+
+介绍
+^^^^
+
+列表子命令 ``APPEND``、``INSERT``、``FILTER``、``PREPEND``、
+``POP_BACK``、``POP_FRONT``、``REMOVE_AT``、``REMOVE_ITEM``、
+``REMOVE_DUPLICATES``、``REVERSE`` 和 ``SORT`` 可能会在当前CMake变量作用域中为列表创建新值。
+类似于 ``set()`` 命令，LIST命令在当前作用域中创建新的变量值，
+即使列表本身实际上是在父作用域中定义的。
+为了向上传播这些操作的结果，请使用带有 ``PARENT_SCOPE`` 的 ``set()``、
+带有 ``CACHE INTERNAL`` 的 ``set()`` 或其他值传播方式。
+
+.. 注意::
+
+  CMake中的列表是由 ``;`` 分隔的字符串组。要创建列表，可以使用set命令。
+  例如，``set(var a b c d e)`` 创建一个包含 ``a;b;c;d;e`` 的列表，
+  而 ``set(var "a b c d e")`` 创建一个字符串或一个包含一个项目的列表。
+  （注意宏参数不是变量，因此不能在LIST命令中使用。）
+
+.. 注意::
+
+  指定索引值时，如果 ``<element index>`` 为0或更大，则从列表开头索引，
+  0表示第一个列表元素。如果 ``<element index>`` 为-1或更小，则从列表末尾索引，
+  -1表示最后一个列表元素。使用负索引计数时要小心：它们不从0开始。
+  -0等同于0，即第一个列表元素。
+
+读取
+^^^^^
+
+ list(LENGTH <list> <output variable>)
+
+返回列表的长度。
+
+ list(GET <list> <element index> [<element index> ...] <output variable>)
+
+返回列表中由索引指定的元素列表。
+
+ list(JOIN <list> <glue> <output variable>)
+
+返回使用连接字符串连接所有列表元素的字符串。
+要连接多个不是列表一部分的字符串，请使用 ``string()`` 命令的 ``JOIN`` 运算符。
+
+ list(SUBLIST <list> <begin> <length> <output variable>)
+
+返回给定列表的子列表。
+如果 ``<length>`` 为0，将返回空列表。
+如果 ``<length>`` 为-1或列表小于 ``<begin>+<length>``，
+则将返回从 ``<begin>`` 开始的列表的剩余元素。
+
+搜索
+^^^^^
+
+ list(FIND <list> <value> <output variable>)
+
+返回列表中指定元素的索引，如果未找到则为-1。
+
+修改
+^^^^^
+
+ list(APPEND <list> [<element> ...])
+
+将元素追加到列表。
+
+ list(FILTER <list> <INCLUDE|EXCLUDE> REGEX <regular_expression>)
+
+包括或从列表中删除与模式的正则表达式匹配的项目。
+在 ``REGEX`` 模式下，项目将与给定的正则表达式匹配。
+
+有关正则表达式的更多信息，请参见 ``string()`` 命令。
+
+ list(INSERT <list> <element_index> <element> [<element> ...])
+
+将元素插入到列表的指定位置。
+
+ list(POP_BACK <list> [<out-var>...])
+
+如果未给出变量名，则删除一个元素。否则，
+将最后一个元素的值赋给给定变量并删除它，直到最后一个变量名为止。
+
+ list(POP_FRONT <list> [<out-var>...])
+
+如果未给出变量名，则删除一个元素。否则，
+将第一个元素的值赋给给定变量并删除它，直到最后一个变量名为止。
+
+ list(PREPEND <list> [<element> ...])
+
+将元素插入到列表的第0个位置。
+
+ list(REMOVE_ITEM <list> <value> [<value> ...])
+
+从列表中删除给定项目的所有实例。
+
+ list(REMOVE_AT <list> <index> [<index> ...])
+
+从列表中删除给定索引处的项目。
+
+ list(REMOVE_DUPLICATES <list>)
+
+删除列表中的重复项目。保留项目的相对顺序，
+但如果遇到重复项，仅保留第一个实例。
+
+ list(TRANSFORM <list> <ACTION> [<SELECTOR>]
+                       [OUTPUT_VARIABLE <output variable>])
+
+通过将操作应用于所有元素或通过指定 ``<SELECTOR>`` 应用于列表的选定元素来转换列表，
+将结果就地存储或在指定的输出变量中存储。
+
+.. 注意::
+
+   ``TRANSFORM`` 子命令不会更改列表中元素的数量。
+   如果指定了 ``<SELECTOR>``，则只有一些元素会被更改，
+   其他元素将保持与转换前相同。
+
+``<ACTION>`` 指定要应用于列表元素的操作。
+这些操作与 ``string()`` 命令的子命令具有完全相同的语义。
+``<ACTION>`` 必须是以下之一：
+
+``APPEND``、``PREPEND``：将指定值追加、前置到列表的每个元素。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> <APPEND|PREPEND> <value> ...)
+
+``TOUPPER``、``TOLOWER``：将列表的每个元素转换为大写、小写字符。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> <TOLOWER|TOUPPER> ...)
+
+``STRIP``：从列表的每个元素中删除前导和尾随空格。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> STRIP ...)
+
+``GENEX_STRIP``：从列表的每个元素中删除任何
+``生成器表达式``。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> GENEX_STRIP ...)
+
+``REPLACE``：尽可能多次匹配正则表达式，
+并用匹配项的替换表达式替换列表的每个元素的匹配项
+（与 ``string()`` 命令的 ``REGEX REPLACE`` 具有相同的语义）。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> REPLACE <regular_expression>
+                                  <replace_expression> ...)
+
+``<SELECTOR>`` 确定列表的哪些元素将被转换。
+一次只能指定一种类型的选择器。给出时，
+``<SELECTOR>`` 必须是以下之一：
+
+``AT``：指定索引列表。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> <ACTION> AT <index> [<index> ...] ...)
+
+``FOR``：指定一个范围，可选地带有用于迭代范围的增量。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> <ACTION> FOR <start> <stop> [<step>] ...)
+
+``REGEX``：指定正则表达式。只有与正则表达式匹配的元素才会被转换。
+
+  .. code-block:: cmake
+
+    list(TRANSFORM <list> <ACTION> REGEX <regular_expression> ...)
+
+排序
+^^^^
+
+ list(REVERSE <list>)
+
+就地反转列表的内容。
+
+ list(SORT <list> [COMPARE <compare>] [CASE <case>] [ORDER <order>])
+
+就地按字母顺序排序列表。
+使用 ``COMPARE`` 关键字选择排序的比较方法。
+``<compare>`` 选项应为以下之一：
+
+* ``STRING``：按字母顺序排序字符串列表。这是默认行为，如果未给出 ``COMPARE`` 选项。
+* ``FILE_BASENAME``：按其基本名称排序文件路径名列表。
+* ``NATURAL``：使用自然顺序排序字符串列表
+  （请参见 ``strverscmp(3)`` 手册），即连续数字
+  作为整个数字进行比较。
+  例如：以下列表 `10.0 1.1 2.1 8.0 2.0 3.1`
+  如果选择 ``NATURAL`` 比较，将排序为 `1.1 2.0 2.1 3.1 8.0 10.0`，
+  而如果选择 ``STRING`` 比较，将排序为 `1.1 10.0 2.0 2.1 3.1 8.0`。
+
+使用 ``CASE`` 关键字选择区分大小写或不区分大小写的排序模式。
+``<case>`` 选项应为以下之一：
+
+* ``SENSITIVE``：列表项以区分大小写的方式排序。这是默认行为，如果未给出 ``CASE`` 选项。
+* ``INSENSITIVE``：列表项以不区分大小写的方式排序。
+  仅由大小写不同的项的顺序未指定。
+
+要控制排序顺序，可以给出 ``ORDER`` 关键字。
+``<order>`` 选项应为以下之一：
+
+* ``ASCENDING``：按升序排序列表。这是默认行为，当未给出 ``ORDER`` 选项时。
+* ``DESCENDING``：按降序排序列表。

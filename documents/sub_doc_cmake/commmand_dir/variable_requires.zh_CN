@@ -1,0 +1,18 @@
+variable_requires
+-----------------
+
+自3.0版本起已弃用。参见CMake策略``CMP0035``。
+
+请改用``if()``命令。
+
+断言选项的必需变量是否满足。
+
+::
+
+ variable_requires(TEST_VARIABLE RESULT_VARIABLE
+                   REQUIRED_VARIABLE1
+                   REQUIRED_VARIABLE2 ...)
+
+第一个参数（``TEST_VARIABLE``）是要测试的变量名称，如果该变量为false，则不执行任何其他操作。
+如果``TEST_VARIABLE``为true，则下一个参数（``RESULT_VARIABLE``）是一个变量，如果所有必需变量都已设置，则该变量被设置为true。
+其余参数是必须为true或不能设置为``NOTFOUND``以避免错误的变量。如果有任何变量不为true，则会报告错误。

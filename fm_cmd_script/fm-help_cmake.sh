@@ -65,7 +65,7 @@ function usage
 ##
 function func_cmake_help
 {
-    if [ $# -lt 1 ];then tree -FhL 1 ${target_dir};usage; return 1; fi
+    if [ $# -lt 1 ];then tree -FhL 1 ${target_dir} | grep -v ".zh_CN";usage; return 1; fi
     local debug=false
     local test=false
     local realdo=false
@@ -197,7 +197,7 @@ function func_cmake_help
     elif [ -f ${target_dir}/${remaining_args[0]} ];then
         if [ ${debug} = true ];then echo "DEBUG:file=${target_dir}/${remaining_args[0]}";fi
         #complete filename
-        file_list+=(${target_dir}/${remaining_args[0]})
+        file_list+=(${target_dir}/${remaining_args[0]} ${target_dir}/${remaining_args[0]}.zh_CN)
     else
         if [ ${debug} = true ];then echo "DEBUG:borth not dir and file";fi
         #borth not dir and file

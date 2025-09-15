@@ -1,0 +1,30 @@
+build_command
+-------------
+
+获取构建当前项目的命令行。主要用于 ``CTest`` 模块内部使用。
+
+ build_command(<variable>
+               [CONFIGURATION <config>]
+               [TARGET <target>]
+               [PROJECT_NAME <projname>] # 旧版，导致警告
+              )
+
+将给定的 ``<variable>`` 设置为形式如下的命令行字符串：
+
+ <cmake> --build . [--config <config>] [--target <target>...] [-- -i]
+
+其中 ``<cmake>`` 是 ``cmake(1)`` 命令行工具的位置，``<config>`` 和 ``<target>`` 是提供给 ``CONFIGURATION`` 和 ``TARGET`` 选项的值（如果有）。
+如果策略 ``CMP0061`` 未设置为 ``NEW``，则尾随的 ``-- -i`` 选项会添加给 :ref:`Makefile 生成器`。
+
+调用时，此 ``cmake --build`` 命令行将启动底层构建系统工具。
+
+ build_command(<cachevariable> <makecommand>)
+
+此第二个签名已弃用，但出于向后兼容性仍然可用。请改用第一个签名。
+
+它将给定的 ``<cachevariable>`` 设置为如上所述的命令行字符串，但不带 ``--target`` 选项。
+``<makecommand>`` 被忽略，但应该是 devenv、nmake、make 或最终用户构建工具的完整路径，用于旧版调用。
+
+.. 注意::
+ 在 3.0 之前的 CMake 版本中，此命令返回直接调用当前生成器的原生构建工具的命令行。
+ 其 ``PROJECT_NAME`` 选项的实现没有有用的效果，因此 CMake 现在在使用该选项时会发出警告。

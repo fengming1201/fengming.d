@@ -1,0 +1,11 @@
+endforeach
+----------
+
+结束 foreach 块中的命令列表。
+
+ endforeach([<loop_var>])
+
+参见 ``foreach()`` 命令。
+
+可选的 ``<loop_var>`` 参数仅为了向后兼容而支持。
+如果使用，它必须是开头 ``foreach`` 子句的 ``<loop_var>`` 参数的字面重复。

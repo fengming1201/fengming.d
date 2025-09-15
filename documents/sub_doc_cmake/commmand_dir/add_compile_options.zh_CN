@@ -1,0 +1,42 @@
+add_compile_options
+-------------------
+
+为源文件的编译添加选项。
+
+ add_compile_options(<option> ...)
+
+将选项添加到COMPILE_OPTIONS目录属性中。
+这些选项在编译当前目录及其子目录中的目标时使用。
+
+参数
+^^^^^
+
+add_compile_options的参数可以使用语法为$<...>的"生成器表达式"。
+有关可用的表达式，请参见cmake-generator-expressions(7)手册。有关定义构建系统属性的更多信息，请参见cmake-buildsystem(7)手册。
+
+用于目标的最终编译或链接选项集是通过累积来自当前目标及其依赖项的使用需求来构建的。选项集会去重以避免重复。
+虽然这对单个选项有益，但去重步骤可能会破坏选项组。例如，-D A -D B会变成-D A B。
+可以使用类似shell的引号加上SHELL:前缀来指定选项组。SHELL:前缀会被删除，其余选项字符串会使用separate_arguments()的UNIX_COMMAND模式进行解析。
+例如，"SHELL:-D A" "SHELL:-D B"会变成-D A -D B。
+
+示例
+^^^^^
+
+由于不同编译器支持不同选项，此命令的典型用法是在特定于编译器的条件子句中：
+
+ if (MSVC)
+     # 警告级别4，所有警告视为错误
+     add_compile_options(/W4 /WX)
+ else()
+     # 大量警告，所有警告视为错误
+     add_compile_options(-Wall -Wextra -pedantic -Werror)
+ endif()
+
+另请参见
+^^^^^^^^
+
+此命令可用于添加任何选项。然而，对于添加预处理器定义和包含目录，建议使用更具体的命令add_compile_definitions()和include_directories()。
+
+target_compile_options()命令添加特定于目标的选项。
+
+源文件属性COMPILE_OPTIONS向单个源文件添加选项。

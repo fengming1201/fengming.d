@@ -1,0 +1,20 @@
+include
+-------
+
+从文件或模块加载并运行CMake代码。
+
+ include(<file|module> [OPTIONAL] [RESULT_VARIABLE <var>]
+                       [NO_POLICY_SCOPE])
+
+从给定文件加载并运行CMake代码。变量的读取和写入访问调用者的作用域（动态作用域）。
+如果存在 ``OPTIONAL``，则如果文件不存在，不会引发错误。
+如果给定 ``RESULT_VARIABLE``，则变量 ``<var>`` 将设置为已包含的完整文件名，
+如果失败，则设置为 ``NOTFOUND``。
+
+如果指定的是模块而不是文件，则首先在 ``CMAKE_MODULE_PATH`` 中搜索名为
+``<modulename>.cmake`` 的文件，然后在CMake模块目录中搜索。
+对此有一个例外：如果调用 ``include()`` 的文件本身位于CMake内置模块目录中，
+则首先搜索CMake内置模块目录，然后搜索 ``CMAKE_MODULE_PATH``。
+另请参见策略 ``CMP0017``。
+
+有关 ``NO_POLICY_SCOPE`` 选项的讨论，请参见 ``cmake_policy()`` 命令文档。

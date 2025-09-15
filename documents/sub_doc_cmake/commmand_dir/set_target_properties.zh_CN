@@ -1,0 +1,17 @@
+set_target_properties
+-------------------
+
+目标可以具有影响其构建方式的属性。
+
+ set_target_properties(target1 target2 ...
+                       PROPERTIES prop1 value1
+                       prop2 value2 ...)
+
+在目标上设置属性。命令的语法是列出所有
+要更改的目标，然后提供要设置的值。
+您可以使用任何您想要的prop值对，并稍后使用
+``get_property()`` 或 ``get_target_property()`` 命令提取它。
+
+另请参见 ``set_property(TARGET)`` 命令。
+
+参见 :ref:`Target Properties` 了解CMake已知的属性列表。

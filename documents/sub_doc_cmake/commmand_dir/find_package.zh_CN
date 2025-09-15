@@ -1,0 +1,162 @@
+find_package
+------------
+
+查找外部项目并加载其设置。
+
+基本签名和模块模式
+^^^^^^^^^^^^^^^^^^^^
+
+ find_package(<PackageName> [version] [EXACT] [QUIET] [MODULE]
+              [REQUIRED] [[COMPONENTS] [components...]]
+              [OPTIONAL_COMPONENTS components...]
+              [NO_POLICY_SCOPE])
+
+查找并加载外部项目的设置。``<PackageName>_FOUND``
+将被设置为指示是否找到包。当找到包时，
+包特定的信息通过变量和：ref:`导入目标 <Imported Targets>` 提供，
+这些变量和导入目标由包本身记录。
+``QUIET`` 选项禁用信息性消息，包括那些指示包无法找到的消息（如果它不是 ``REQUIRED``）。
+``REQUIRED`` 选项会在找不到包时停止处理并显示错误消息。
+
+可以在 ``COMPONENTS`` 选项（或如果存在则在 ``REQUIRED`` 选项之后）之后列出包特定的必需组件列表。
+其他可选组件可以在 ``OPTIONAL_COMPONENTS`` 之后列出。
+可用组件及其对包是否被认为已找到的影响由目标包定义。
+
+``[version]`` 参数请求找到的包应兼容的版本（格式为 ``major[.minor[.patch[.tweak]]]``）。
+``EXACT`` 选项请求版本完全匹配。如果没有向 find 模块中的递归调用提供 ``[version]`` 和/或组件列表，
+则相应的参数会自动从外部调用转发（包括 ``[version]`` 的 ``EXACT`` 标志）。
+版本支持目前仅在包逐个包的基础上提供（请参见下面的版本选择部分）。
+
+有关 ``NO_POLICY_SCOPE`` 选项的讨论，请参见 ``cmake_policy()`` 命令文档。
+
+该命令有两种模式来搜索包："模块"模式和"配置"模式。
+上面的签名选择模块模式。如果未找到模块，则命令回退到配置模式，如下所述。
+如果给出了 ``MODULE`` 选项，则禁用此回退。
+
+在模块模式中，CMake 搜索名为 ``Find<PackageName>.cmake`` 的文件。
+该文件首先在 ``CMAKE_MODULE_PATH`` 中搜索，
+然后在 CMake 安装提供的：ref:`Find Modules` 中搜索。
+如果找到该文件，则 CMake 读取并处理它。
+它负责查找包、检查版本并生成任何所需的消息。
+某些 find 模块提供有限或不支持版本控制；请检查模块文档。
+
+如果在上面的签名中未指定 ``MODULE`` 选项，
+CMake 首先使用模块模式搜索包。然后，如果未找到包，则使用配置模式再次搜索。
+用户可以将变量 ``CMAKE_FIND_PACKAGE_PREFER_CONFIG`` 设置为 ``TRUE`` 以指示 CMake 首先使用配置模式搜索，然后再回退到模块模式。
+
+完整签名和配置模式
+^^^^^^^^^^^^^^^^^^^^
+
+用户代码通常应使用上面的 `基本签名`_ 查找包。
+此命令文档的其余部分指定完整命令签名和搜索过程的详细信息。
+希望提供供此命令查找的包的包维护者被鼓励继续阅读。
+
+完整的配置模式命令签名为：
+
+ find_package(<PackageName> [version] [EXACT] [QUIET]
+              [REQUIRED] [[COMPONENTS] [components...]]
+              [OPTIONAL_COMPONENTS components...]
+              [CONFIG|NO_MODULE]
+              [NO_POLICY_SCOPE]
+              [NAMES name1 [name2 ...]]
+              [CONFIGS config1 [config2 ...]]
+              [HINTS path1 [path2 ... ]]
+              [PATHS path1 [path2 ... ]]
+              [PATH_SUFFIXES suffix1 [suffix2 ...]]
+              [NO_DEFAULT_PATH]
+              [NO_PACKAGE_ROOT_PATH]
+              [NO_CMAKE_PATH]
+              [NO_CMAKE_ENVIRONMENT_PATH]
+              [NO_SYSTEM_ENVIRONMENT_PATH]
+              [NO_CMAKE_PACKAGE_REGISTRY]
+              [NO_CMAKE_BUILDS_PATH] # 已弃用；不执行任何操作。
+              [NO_CMAKE_SYSTEM_PATH]
+              [NO_CMAKE_SYSTEM_PACKAGE_REGISTRY]
+              [CMAKE_FIND_ROOT_PATH_BOTH |
+               ONLY_CMAKE_FIND_ROOT_PATH |
+               NO_CMAKE_FIND_ROOT_PATH])
+
+``CONFIG`` 选项、同义的 ``NO_MODULE`` 选项，或使用基本签名中未指定的选项都会强制纯配置模式。
+在纯配置模式中，命令跳过模块模式搜索并立即进行配置模式搜索。
+
+配置模式搜索尝试定位要查找的包提供的配置文件。
+将创建一个名为 ``<PackageName>_DIR`` 的缓存条目来保存包含该文件的目录。
+默认情况下，命令搜索名为 ``<PackageName>`` 的包。
+如果给出了 ``NAMES`` 选项，则使用其后面的名称代替 ``<PackageName>``。
+命令为每个指定的名称搜索名为 ``<PackageName>Config.cmake`` 或 ``<lower-case-package-name>-config.cmake`` 的文件。
+可以使用 ``CONFIGS`` 选项给出可能的配置文件名的替换集。
+搜索过程如下所述。
+找到后，配置文件由 CMake 读取和处理。
+由于文件由包提供，它已经知道包内容的位置。
+配置文件的完整路径存储在 cmake 变量 ``<PackageName>_CONFIG`` 中。
+
+CMake 在搜索具有适当版本的包安装时考虑的所有配置文件都存储在 cmake 变量 ``<PackageName>_CONSIDERED_CONFIGS`` 中，
+相关版本存储在 ``<PackageName>_CONSIDERED_VERSIONS`` 中。
+
+如果找不到包配置文件，CMake 将生成描述问题的错误，除非指定了 ``QUIET`` 参数。
+如果指定了 ``REQUIRED`` 且未找到包，则生成致命错误并停止执行配置步骤。
+如果 ``<PackageName>_DIR`` 已设置为不包含配置文件的目录，CMake 将忽略它并从头开始搜索。
+
+提供 CMake 包配置文件的包维护者被鼓励命名和安装它们，
+以便下面概述的搜索过程将找到它们，而无需使用其他选项。
+
+版本选择
+^^^^^^^^^
+
+当给出 ``[version]`` 参数时，配置模式将仅找到声明与请求版本兼容的包版本（格式为 ``major[.minor[.patch[.tweak]]]``）。
+如果给出了 ``EXACT`` 选项，则只能找到声明与请求版本完全匹配的包版本。
+CMake 不建立版本号含义的任何约定。
+包版本号由包本身提供的 "版本" 文件检查。
+对于候选包配置文件 ``<config-file>.cmake``，
+相应的版本文件位于其旁边，名为 ``<config-file>-version.cmake`` 或 ``<config-file>Version.cmake``。
+如果没有这样的版本文件可用，则假定配置文件与任何请求版本都不兼容。
+可以使用 ``CMakePackageConfigHelpers`` 模块创建包含通用版本匹配代码的基本版本文件。
+找到版本文件时，将加载它以检查请求的版本号。
+版本文件在嵌套作用域中加载，其中已定义以下变量：
+
+``PACKAGE_FIND_NAME``
+  包名称 ``<PackageName>``
+``PACKAGE_FIND_VERSION``
+  完整请求版本字符串
+``PACKAGE_FIND_VERSION_MAJOR``
+  如果请求，主版本，否则为 0
+``PACKAGE_FIND_VERSION_MINOR``
+  如果请求，次版本，否则为 0
+``PACKAGE_FIND_VERSION_PATCH``
+  如果请求，补丁版本，否则为 0
+``PACKAGE_FIND_VERSION_TWEAK``
+  如果请求，调整版本，否则为 0
+``PACKAGE_FIND_VERSION_COUNT``
+  版本组件数量，0 到 4
+
+版本文件检查它是否满足请求的版本并设置这些变量：
+
+``PACKAGE_VERSION``
+  完整提供版本字符串
+``PACKAGE_VERSION_EXACT``
+  如果版本完全匹配，则为 true
+``PACKAGE_VERSION_COMPATIBLE``
+  如果版本兼容，则为 true
+``PACKAGE_VERSION_UNSUITABLE``
+  如果不适合作为任何版本，则为 true
+
+这些变量由 ``find_package`` 命令检查，以确定配置文件是否提供可接受的版本。
+它们在 ``find_package`` 调用返回后不可用。
+如果版本可接受，则设置以下变量：
+
+``<PackageName>_VERSION``
+  完整提供版本字符串
+``<PackageName>_VERSION_MAJOR``
+  如果提供，主版本，否则为 0
+``<PackageName>_VERSION_MINOR``
+  如果提供，次版本，否则为 0
+``<PackageName>_VERSION_PATCH``
+  如果提供，补丁版本，否则为 0
+``<PackageName>_VERSION_TWEAK``
+  如果提供，调整版本，否则为 0
+``<PackageName>_VERSION_COUNT``
+  版本组件数量，0 到 4
+
+并加载相应的包配置文件。
+当多个包配置文件可用且其版本文件声明与请求版本兼容时，
+未指定选择哪一个：除非变量 ``CMAKE_FIND_PACKAGE_SORT_ORDER``

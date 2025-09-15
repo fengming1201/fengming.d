@@ -1,0 +1,55 @@
+export
+------
+
+从构建树导出目标以供外部项目使用。
+
+ export(EXPORT <export-name> [NAMESPACE <namespace>] [FILE <filename>])
+
+创建一个文件 ``<filename>``，该文件可被外部项目包含以从当前项目的构建树导入目标。
+这在交叉编译期间很有用，可以在一个项目中构建可以在主机平台上运行的实用程序可执行文件，
+然后将它们导入到另一个针对目标平台编译的项目中。
+如果给出了 ``NAMESPACE`` 选项，则 ``<namespace>`` 字符串将被预先添加到写入文件的所有目标名称。
+
+目标安装使用 ``install(TARGETS)`` 命令的 ``EXPORT`` 选项与导出 ``<export-name>`` 关联。
+
+此命令创建的文件特定于构建树，绝不应安装。
+请参见 ``install(EXPORT)`` 命令以从安装树导出目标。
+
+在生成的 IMPORTED 目标上设置的属性将具有与输入 TARGETS 的最终值相同的值。
+
+ export(TARGETS [target1 [target2 [...]]] [NAMESPACE <namespace>]
+        [APPEND] FILE <filename> [EXPORT_LINK_INTERFACE_LIBRARIES])
+
+此签名类似于 ``EXPORT`` 签名，但目标被显式列出而不是指定为导出名称。
+如果给出了 APPEND 选项，生成的代码将被追加到文件而不是覆盖它。
+如果存在 EXPORT_LINK_INTERFACE_LIBRARIES 关键字，当策略 CMP0022 为 NEW 时，
+会导致导出匹配 ``(IMPORTED_)?LINK_INTERFACE_LIBRARIES(_<CONFIG>)?`` 的属性的内容。
+如果库目标包含在导出中，但链接到的目标未包含，则行为未指定。
+
+.. note::
+
+  在 ``Xcode`` 下的 :ref:`对象库` 如果在 ``CMAKE_OSX_ARCHITECTURES`` 中列出了多个架构，
+  则有特殊处理。在这种情况下，它们将被导出为 :ref:`接口库`，
+  没有对象文件可供客户端使用。这足以满足其他目标在其实现中链接到对象库的传递使用要求。
+
+ export(PACKAGE <PackageName>)
+
+将当前构建目录存储在 CMake 用户包注册表中，用于包 ``<PackageName>``。
+``find_package()`` 命令在搜索包 ``<PackageName>`` 时可能会考虑该目录。
+这有助于依赖项目在没有用户帮助的情况下查找和使用来自当前项目构建树的包。
+请注意，此命令创建的包注册表条目仅与与构建树一起工作的包配置文件（``<PackageName>Config.cmake``）结合使用。
+在某些情况下，例如对于打包和系统范围安装，不希望写入用户包注册表。
+
+默认情况下，``export(PACKAGE)`` 命令不执行任何操作（参见策略 ``CMP0090``），
+因为填充用户包注册表会对源和构建树之外产生影响。
+设置 ``CMAKE_EXPORT_PACKAGE_REGISTRY`` 变量以将构建目录添加到 CMake 用户包注册表。
+
+ export(TARGETS [target1 [target2 [...]]]  [ANDROID_MK <filename>])
+
+此签名通过创建引用预构建目标的 Android.mk 文件，将 cmake 构建的目标导出到 android ndk 构建系统。
+Android NDK 支持使用预构建库，包括静态和共享库。
+这允许 cmake 构建项目的库并使它们可供 ndk 构建系统使用，
+包括使用库所需的传递依赖项、包含标志和定义。
+签名接受目标列表并将它们放在由 ``<filename>`` 指定的 Android.mk 文件中。
+仅当所有给定目标的策略 CMP0022 为 NEW 时，才能使用此签名。
+如果该策略对其中一个目标设置为 OLD，将发出错误。

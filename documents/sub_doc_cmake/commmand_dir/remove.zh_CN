@@ -1,0 +1,9 @@
+remove
+------
+
+::
+
+ remove(VAR VALUE VALUE ...)
+
+从变量 ``VAR`` 中移除 ``VALUE``。这通常用于
+从向量中移除条目（例如分号分隔的列表）。``VALUE`` 会被展开。

@@ -1,0 +1,8 @@
+else
+----
+
+开始 if 块的 else 部分。
+
+ else([<condition>])
+
+参见 ``if()`` 命令。

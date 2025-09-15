@@ -1,0 +1,103 @@
+configure_file
+--------------
+
+将文件复制到另一个位置并修改其内容。
+
+ configure_file(<input> <output>
+                [COPYONLY] [ESCAPE_QUOTES] [@ONLY]
+                [NEWLINE_STYLE [UNIX|DOS|WIN32|LF|CRLF] ])
+
+将 ``<input>`` 文件复制到 ``<output>`` 文件，并替换输入
+文件内容中引用的变量值（形式为 ``@VAR@`` 或 ``${VAR}``）。每个变量引用将被替换为
+变量的当前值，如果变量未定义则替换为空字符串。此外，形式为
+
+ #cmakedefine VAR ...
+
+的输入行将被替换为
+
+ #define VAR ...
+
+或
+
+ /* #undef VAR */
+
+取决于 ``VAR`` 是否在 CMake 中设置为任何不被 ``if()`` 命令视为假常量的值。变量名后的行上的 "..." 内容（如果有）按上述方式处理。
+形式为 ``#cmakedefine01 VAR`` 的输入文件行将被类似地替换为
+``#define VAR 1`` 或 ``#define VAR 0``。
+结果行（``#undef`` 注释除外）可以使用空格和/或制表符在 ``#`` 字符
+和 ``cmakedefine`` 或 ``cmakedefine01`` 词之间缩进。此空白缩进将在输出行中保留：
+
+ #  cmakedefine VAR
+ #  cmakedefine01 VAR
+
+如果定义了 ``VAR``，将被替换为
+
+ #  define VAR
+ #  define VAR 1
+
+如果修改了输入文件，构建系统将重新运行 CMake 以
+重新配置文件并再次生成构建系统。
+仅在内容更改时，生成的文件才会在后续 cmake 运行中被修改，其时间戳才会更新。
+
+参数为：
+
+``<input>``
+  输入文件的路径。相对路径相对于
+  ``CMAKE_CURRENT_SOURCE_DIR`` 的值处理。输入路径
+  必须是文件，不能是目录。
+
+``<output>``
+  输出文件或目录的路径。相对路径相对于
+  ``CMAKE_CURRENT_BINARY_DIR`` 的值处理。
+  如果路径命名现有目录，则输出文件放置在该目录中，文件名与输入文件相同。
+
+``COPYONLY``
+  复制文件而不替换任何变量引用或其他内容。此选项不能与 ``NEWLINE_STYLE`` 一起使用。
+
+``ESCAPE_QUOTES``
+  用反斜杠转义任何替换的引号（C 风格）。
+
+``@ONLY``
+  将变量替换限制为形式为 ``@VAR@`` 的引用。
+  这对于配置使用 ``${VAR}`` 语法的脚本很有用。
+
+``NEWLINE_STYLE <style>``
+  指定输出文件的新行样式。指定
+  ``UNIX`` 或 ``LF`` 表示 ``\n`` 新行，或指定
+  ``DOS``、``WIN32`` 或 ``CRLF`` 表示 ``\r\n`` 新行。
+  此选项不能与 ``COPYONLY`` 一起使用。
+
+示例
+^^^^^
+
+考虑包含 ``foo.h.in`` 文件的源代码树：
+
+ #cmakedefine FOO_ENABLE
+ #cmakedefine FOO_STRING "@FOO_STRING@"
+
+相邻的 ``CMakeLists.txt`` 可以使用 ``configure_file`` 来
+配置头文件：
+
+ option(FOO_ENABLE "Enable Foo" ON)
+ if(FOO_ENABLE)
+   set(FOO_STRING "foo")
+ endif()
+ configure_file(foo.h.in foo.h @ONLY)
+
+这在此源代码目录对应的构建目录中创建 ``foo.h``。如果 ``FOO_ENABLE`` 选项开启，
+配置的文件将包含：
+
+ #define FOO_ENABLE
+ #define FOO_STRING "foo"
+
+否则将包含：
+
+ /* #undef FOO_ENABLE */
+ /* #undef FOO_STRING */
+
+然后可以使用 ``include_directories()`` 命令
+指定输出目录作为包含目录：
+
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+以便源文件可以包含头文件为 ``#include <foo.h>``。

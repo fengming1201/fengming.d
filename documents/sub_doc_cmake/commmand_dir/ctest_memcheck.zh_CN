@@ -1,0 +1,37 @@
+ctest_memcheck
+--------------
+
+执行 :ref:`CTest 内存检查步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_memcheck([BUILD <build-dir>] [APPEND]
+                [START <start-number>]
+                [END <end-number>]
+                [STRIDE <stride-number>]
+                [EXCLUDE <exclude-regex>]
+                [INCLUDE <include-regex>]
+                [EXCLUDE_LABEL <label-exclude-regex>]
+                [INCLUDE_LABEL <label-include-regex>]
+                [EXCLUDE_FIXTURE <regex>]
+                [EXCLUDE_FIXTURE_SETUP <regex>]
+                [EXCLUDE_FIXTURE_CLEANUP <regex>]
+                [PARALLEL_LEVEL <level>]
+                [TEST_LOAD <threshold>]
+                [SCHEDULE_RANDOM <ON|OFF>]
+                [STOP_TIME <time-of-day>]
+                [RETURN_VALUE <result-var>]
+                [DEFECT_COUNT <defect-count-var>]
+                [QUIET]
+                )
+
+使用动态分析工具运行测试并将结果存储在
+``MemCheck.xml`` 中，用于与 ``ctest_submit()``
+命令一起提交。
+
+大多数选项与 ``ctest_test()`` 命令的选项相同。
+
+此命令独有的选项是：
+
+``DEFECT_COUNT <defect-count-var>``
+  在 ``<defect-count-var>`` 中存储发现的缺陷数量。

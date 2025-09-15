@@ -1,0 +1,149 @@
+try_compile
+-----------
+
+尝试构建一些代码。
+
+尝试编译整个项目
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ try_compile(<resultVar> <bindir> <srcdir>
+             <projectName> [<targetName>] [CMAKE_FLAGS <flags>...]
+             [OUTPUT_VARIABLE <var>])
+
+尝试构建一个项目。``try_compile``的成功或失败（分别为``TRUE``或``FALSE``）将返回到``<resultVar>``中。
+
+在这种形式中，``<srcdir>``应包含一个完整的CMake项目，其中包含``CMakeLists.txt``文件和所有源文件。
+``<bindir>``和``<srcdir>``在此命令运行后不会被删除。
+指定``<targetName>``以构建特定目标而不是``all``或``ALL_BUILD``目标。
+其他选项的含义请参见下文。
+
+尝试编译源文件
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ try_compile(<resultVar> <bindir> <srcfile|SOURCES srcfile...>
+             [CMAKE_FLAGS <flags>...]
+             [COMPILE_DEFINITIONS <defs>...]
+             [LINK_OPTIONS <options>...]
+             [LINK_LIBRARIES <libs>...]
+             [OUTPUT_VARIABLE <var>]
+             [COPY_FILE <fileName> [COPY_FILE_ERROR <var>]]
+             [<LANG>_STANDARD <std>]
+             [<LANG>_STANDARD_REQUIRED <bool>]
+             [<LANG>_EXTENSIONS <bool>]
+             )
+
+尝试从一个或多个源文件构建可执行文件或静态库（由``CMAKE_TRY_COMPILE_TARGET_TYPE``变量决定）。
+``try_compile``的成功或失败（分别为``TRUE``或``FALSE``）将返回到``<resultVar>``中。
+
+在这种形式中，必须提供一个或多个源文件。
+如果``CMAKE_TRY_COMPILE_TARGET_TYPE``未设置或设置为``EXECUTABLE``，
+则源文件必须包含``main``的定义，并且CMake将创建一个``CMakeLists.txt``文件以将源文件构建为可执行文件。
+如果``CMAKE_TRY_COMPILE_TARGET_TYPE``设置为``STATIC_LIBRARY``，则将构建一个静态库，且不需要``main``的定义。
+对于可执行文件，生成的``CMakeLists.txt``文件将包含类似以下内容：
+
+ add_definitions(<调用者扩展的COMPILE_DEFINITIONS>)
+ include_directories(${INCLUDE_DIRECTORIES})
+ link_directories(${LINK_DIRECTORIES})
+ add_executable(cmTryCompileExec <srcfile>...)
+ target_link_options(cmTryCompileExec PRIVATE <调用者的LINK_OPTIONS>)
+ target_link_libraries(cmTryCompileExec ${LINK_LIBRARIES})
+
+选项包括：
+
+``CMAKE_FLAGS <flags>...``
+  指定形式为``-DVAR:TYPE=VALUE``的标志，这些标志将传递给用于驱动测试构建的``cmake``命令行。
+  上面的示例显示了如何使用变量``INCLUDE_DIRECTORIES``、``LINK_DIRECTORIES``和``LINK_LIBRARIES``的值。
+
+``COMPILE_DEFINITIONS <defs>...``
+  指定要传递给生成的测试项目中``add_definitions()``的``-Ddefinition``参数。
+
+``COPY_FILE <fileName>``
+  将构建的可执行文件或静态库复制到给定的``<fileName>``。
+
+``COPY_FILE_ERROR <var>``
+  在``COPY_FILE``之后使用，以将尝试复制文件时遇到的任何错误消息捕获到变量``<var>``中。
+
+``LINK_LIBRARIES <libs>...``
+  指定要在生成的项目中链接的库。
+  库列表可以引用系统库和调用项目中的:ref:`导入目标 <Imported Targets>`。
+
+  如果指定了此选项，则给予``CMAKE_FLAGS``选项的任何``-DLINK_LIBRARIES=...``值都将被忽略。
+
+``LINK_OPTIONS <options>...``
+  指定要传递给``target_link_options()``或根据``CMAKE_TRY_COMPILE_TARGET_TYPE``变量设置生成的项目中``STATIC_LIBRARY_OPTIONS``目标属性的链接步骤选项。
+
+``OUTPUT_VARIABLE <var>``
+  将构建过程的输出存储在给定变量中。
+
+``<LANG>_STANDARD <std>``
+  指定生成的项目的``C_STANDARD``、``CXX_STANDARD``、
+  ``OBJC_STANDARD``、``OBJCXX_STANDARD``或``CUDA_STANDARD``目标属性。
+
+``<LANG>_STANDARD_REQUIRED <bool>``
+  指定生成的项目的``C_STANDARD_REQUIRED``、
+  ``CXX_STANDARD_REQUIRED``、``OBJC_STANDARD_REQUIRED``、
+  ``OBJCXX_STANDARD_REQUIRED``或``CUDA_STANDARD_REQUIRED``目标属性。
+
+``<LANG>_EXTENSIONS <bool>``
+  指定生成的项目的``C_EXTENSIONS``、``CXX_EXTENSIONS``、
+  ``OBJC_EXTENSIONS``、``OBJCXX_EXTENSIONS``或``CUDA_EXTENSIONS``目标属性。
+
+在此版本中，``<bindir>/CMakeFiles/CMakeTmp``中的所有文件将自动清理。
+为了调试，可以将``--debug-trycompile``传递给``cmake``以避免此清理。
+但是，多个连续的``try_compile``操作会重用此单个输出目录。
+如果使用``--debug-trycompile``，则一次只能调试一个``try_compile``调用。
+建议的过程是使用``if(NOT DEFINED <resultVar>)``逻辑保护项目中的所有``try_compile``调用，
+一次性完成cmake配置，然后删除与感兴趣的try_compile调用关联的缓存条目，
+然后再次使用``--debug-trycompile``重新运行cmake。
+
+其他行为设置
+^^^^^^^^^^^^^^^^^^^^^^^
+
+如果设置了以下变量，则会将其传递到生成的try_compile CMakeLists.txt中，
+以使用默认值初始化编译目标属性：
+
+* ``CMAKE_CUDA_RUNTIME_LIBRARY``
+* ``CMAKE_ENABLE_EXPORTS``
+* ``CMAKE_LINK_SEARCH_START_STATIC``
+* ``CMAKE_LINK_SEARCH_END_STATIC``
+* ``CMAKE_MSVC_RUNTIME_LIBRARY``
+* ``CMAKE_POSITION_INDEPENDENT_CODE``
+
+如果``CMP0056``设置为``NEW``，则``CMAKE_EXE_LINKER_FLAGS``也会被传递进来。
+
+如果``CMP0083``设置为``NEW``，则为了在链接时获得正确的行为，
+必须在使用``try_compile()``命令之前调用``CheckPIESupported``模块中的``check_pie_supported()``命令。
+
+``CMP0065``和``CMP0083``的当前设置会传播到生成的测试项目中。
+
+设置``CMAKE_TRY_COMPILE_CONFIGURATION``变量以选择构建配置。
+
+设置``CMAKE_TRY_COMPILE_TARGET_TYPE``变量以指定用于源文件签名的目标类型。
+
+设置``CMAKE_TRY_COMPILE_PLATFORM_VARIABLES``变量以指定必须传播到测试项目中的变量。
+此变量仅用于工具链文件，并且仅被源文件形式的``try_compile()``命令所尊重，
+而不是在给出整个项目时。
+
+如果``CMP0067``设置为``NEW``，或者使用了任何``<LANG>_STANDARD``、
+``<LANG>_STANDARD_REQUIRED``或``<LANG>_EXTENSIONS``选项，
+则会尊重语言标准变量：
+
+* ``CMAKE_C_STANDARD``
+* ``CMAKE_C_STANDARD_REQUIRED``
+* ``CMAKE_C_EXTENSIONS``
+* ``CMAKE_CXX_STANDARD``
+* ``CMAKE_CXX_STANDARD_REQUIRED``
+* ``CMAKE_CXX_EXTENSIONS``
+* ``CMAKE_OBJC_STANDARD``
+* ``CMAKE_OBJC_STANDARD_REQUIRED``
+* ``CMAKE_OBJC_EXTENSIONS``
+* ``CMAKE_OBJCXX_STANDARD``
+* ``CMAKE_OBJCXX_STANDARD_REQUIRED``
+* ``CMAKE_OBJCXX_EXTENSIONS``
+* ``CMAKE_CUDA_STANDARD``
+* ``CMAKE_CUDA_STANDARD_REQUIRED``
+* ``CMAKE_CUDA_EXTENSIONS``
+
+它们的值用于设置生成的项目中的相应目标属性（除非被显式选项覆盖）。
+
+对于``Green Hills MULTI``生成器，GHS工具集和目标系统自定义缓存变量也会传播到测试项目中。

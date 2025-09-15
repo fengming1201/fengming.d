@@ -1,0 +1,25 @@
+install_programs
+----------------
+
+此命令已被 ``install()`` 命令取代。它是为了与旧版CMake代码兼容而提供的。
+``FILES`` 形式直接被 ``install()`` 命令的 ``PROGRAMS`` 形式替代。
+正则表达式形式可以使用 ``file()`` 命令的 ``GLOB`` 形式更清晰地表达。
+
+::
+
+ install_programs(<dir> file1 file2 [file3 ...])
+ install_programs(<dir> FILES file1 [file2 ...])
+
+创建规则以将列出的程序安装到给定目录中。
+当只有一个参数时，使用 ``FILES`` 参数来保证将使用文件列表版本的命令。
+
+::
+
+ install_programs(<dir> regexp)
+
+在第二种形式中，当前源目录中与正则表达式匹配的任何程序都将被安装。
+
+此命令旨在安装不由cmake构建的程序，例如shell脚本。
+有关为由cmake构建的目标创建安装规则，请参见 ``install()`` 命令的 ``TARGETS`` 形式。
+
+目录 ``<dir>`` 相对于安装前缀，该前缀存储在变量 ``CMAKE_INSTALL_PREFIX`` 中。

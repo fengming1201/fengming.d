@@ -1,0 +1,99 @@
+ctest_submit
+------------
+
+执行 :ref:`CTest 提交步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_submit([PARTS <part>...] [FILES <file>...]
+              [SUBMIT_URL <url>]
+              [BUILD_ID <result-var>]
+              [HTTPHEADER <header>]
+              [RETRY_COUNT <count>]
+              [RETRY_DELAY <delay>]
+              [RETURN_VALUE <result-var>]
+              [CAPTURE_CMAKE_ERROR <result-var>]
+              [QUIET]
+              )
+
+向仪表板服务器提交结果。
+默认情况下提交所有可用部分。
+
+选项为：
+
+``PARTS <part>...``
+  指定要提交的子部分。有效的部分名称为：
+
+ Start      = 无
+ Update     = ctest_update 结果，在 Update.xml 中
+ Configure  = ctest_configure 结果，在 Configure.xml 中
+ Build      = ctest_build 结果，在 Build.xml 中
+ Test       = ctest_test 结果，在 Test.xml 中
+ Coverage   = ctest_coverage 结果，在 Coverage.xml 中
+ MemCheck   = ctest_memcheck 结果，在 DynamicAnalysis.xml 中
+ Notes      = CTEST_NOTES_FILES 列出的文件，在 Notes.xml 中
+ ExtraFiles = CTEST_EXTRA_SUBMIT_FILES 列出的文件
+ Upload     = 由 ctest_upload() 准备上传的文件，在 Upload.xml 中
+ Submit     = 无
+ Done       = 构建完成，在 Done.xml 中
+
+``FILES <file>...``
+  指定要提交的特定文件的显式列表。
+  每个单独的文件必须在调用时存在。
+
+``SUBMIT_URL <url>``
+  要发送提交到的仪表板服务器的 ``http`` 或 ``https`` URL。
+  如果未给定，使用 ``CTEST_SUBMIT_URL`` 变量。
+
+``BUILD_ID <result-var>``
+  在 ``<result-var>`` 变量中存储 CDash 分配给此构建的 ID。
+
+``HTTPHEADER <HTTP-header>``
+  指定在提交期间向 CDash 发送请求时要包含的 HTTP 标头。
+  例如，CDash 可以配置为仅接受来自经过身份验证的客户端的提交。
+  在这种情况下，您应在标头中提供承载令牌：
+
+  .. code-block:: cmake
+
+    ctest_submit(HTTPHEADER "Authorization: Bearer <auth-token>")
+
+  此子选项可以为多个标头重复多次。
+
+``RETRY_COUNT <count>``
+  指定重试超时提交的次数。
+
+``RETRY_DELAY <delay>``
+  指定在超时提交后等待多少秒（以秒为单位）
+  才尝试重新提交。
+
+``RETURN_VALUE <result-var>``
+  在 ``<result-var>`` 变量中存储成功为 ``0``，
+  失败为非零值。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。
+
+``QUIET``
+  抑制所有否则会打印到控制台的非错误消息。
+
+提交到 CDash 上传 API
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+ ctest_submit(CDASH_UPLOAD <file> [CDASH_UPLOAD_TYPE <type>]
+              [SUBMIT_URL <url>]
+              [HTTPHEADER <header>]
+              [RETRY_COUNT <count>]
+              [RETRY_DELAY <delay>]
+              [RETURN_VALUE <result-var>]
+              [QUIET])
+
+第二个签名用于通过 CDash 文件上传 API 将文件上传到 CDash。
+API 首先向 CDash 发送上传请求以及文件的内容哈希。
+如果 CDash 还没有该文件，则会上传它。
+与文件一起，指定 CDash 类型字符串以告诉 CDash 使用哪个处理程序来处理数据。
+
+此签名接受如上所述的 ``SUBMIT_URL``、``BUILD_ID``、``HTTPHEADER``、
+``RETRY_COUNT``、``RETRY_DELAY``、``RETURN_VALUE`` 和 ``QUIET`` 选项。

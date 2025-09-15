@@ -1,0 +1,35 @@
+ctest_update
+------------
+
+执行 :ref:`CTest 更新步骤` 作为 :ref:`仪表板客户端`。
+
+::
+
+ ctest_update([SOURCE <source-dir>]
+              [RETURN_VALUE <result-var>]
+              [CAPTURE_CMAKE_ERROR <result-var>]
+              [QUIET])
+
+从版本控制更新源代码树并将结果记录在 ``Update.xml`` 中，
+以便与 ``ctest_submit()`` 命令一起提交。
+
+选项为：
+
+``SOURCE <source-dir>``
+  指定源目录。如果未给出，则使用 ``CTEST_SOURCE_DIRECTORY`` 变量。
+
+``RETURN_VALUE <result-var>``
+  在 ``<result-var>`` 变量中存储更新的文件数，
+  或在出错时存储 ``-1``。
+
+``CAPTURE_CMAKE_ERROR <result-var>``
+  如果有任何运行命令的错误，则在 ``<result-var>`` 变量中存储 -1，
+  并防止 ctest 在发生错误时返回非零值。
+
+``QUIET``
+  告诉 CTest 抑制它否则会打印到控制台的大多数非错误消息。
+  CTest 仍将报告存储库的新版本和找到的任何冲突文件。
+
+更新始终遵循源代码目录中当前检出的版本控制分支。
+有关更改 ``ctest_update()`` 行为的变量的信息，
+请参见 :ref:`CTest 更新步骤` 文档。

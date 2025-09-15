@@ -1,0 +1,40 @@
+target_link_directories
+-----------------------
+
+为target添加链接目录。
+
+ target_link_directories(<target> [BEFORE]
+   <INTERFACE|PUBLIC|PRIVATE> [items1...]
+   [<INTERFACE|PUBLIC|PRIVATE> [items2...] ...])
+
+指定链接给定目标时链接器应搜索库的路径。
+每个项目可以是绝对路径或相对路径，后者将被解释为相对于当前源目录。
+这些项目将被添加到链接命令中。
+
+命名的``<target>``必须由诸如``add_executable()``或``add_library()``之类的命令创建，
+且不能是:ref:`ALIAS target <Alias Targets>`。
+
+需要``INTERFACE``、``PUBLIC``和``PRIVATE``关键字来指定后续项目的作用域。
+``PRIVATE``和``PUBLIC``项目将填充``<target>``的``LINK_DIRECTORIES``属性。
+``PUBLIC``和``INTERFACE``项目将填充``<target>``的``INTERFACE_LINK_DIRECTORIES``属性
+（:ref:`IMPORTED targets <Imported Targets>`仅支持``INTERFACE``项目）。
+每个项目指定一个链接目录，如有必要将在添加到相关属性之前转换为绝对路径。
+对同一``<target>``的重复调用将按调用顺序追加项目。
+
+如果指定了``BEFORE``，内容将被前置到相关属性中，而不是追加。
+
+``target_link_directories``的参数可以使用语法为``$<...>``的"生成器表达式"。
+请参见``cmake-generator-expressions(7)``手册以了解可用表达式。
+有关定义构建系统属性的更多信息，请参见``cmake-buildsystem(7)``手册。
+
+.. 注意::
+
+  此命令很少必要，在有其他选择时应避免使用。
+  尽可能优先传递库的完整绝对路径，因为这确保始终链接正确的库。
+  ``find_library()``命令提供完整路径，通常可以直接用于``target_link_libraries()``调用中。
+  可能需要库搜索路径的情况包括：
+
+  - 像Xcode这样的项目生成器，用户可以在构建时切换目标架构，
+    但无法使用库的完整路径，因为它仅提供一种架构（即它不是通用二进制文件）。
+  - 库本身可能具有其他私有库依赖项，这些依赖项期望通过``RPATH``机制找到，
+    但某些链接器无法完全解码这些路径（例如，由于存在诸如``$ORIGIN``之类的东西）。
