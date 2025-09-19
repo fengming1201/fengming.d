@@ -539,6 +539,36 @@
       "language": "",
       "describe": "lwbtn（Lightweight Button Manager）就是个超轻量级的按键管理库，用 C11 写的。它不依赖操作系统，零动态内存，一切都靠你提供个毫秒级的时间源。回调驱动，支持单击、多击、长按，还自带软件防抖——功能虽精简，但绝对够用。",
       "URL": "https://github.com/MaJerle/lwbtn.git"
+    },
+    {
+      "name": "lwesp",
+      "language": "c",
+      "describe": "是一套用 C99 写的超小库，专门帮你把 MCU（比如 ARM Cortex‑M、AVR、PIC）和 ESP8266/ESP32 这种 Wi‑Fi 模块“聊”起来。",
+      "URL": "https://github.com/MaJerle/lwesp.git"
+    },
+    {
+      "name": "lwprintf",
+      "language": "c",
+      "describe": "这是一个专为嵌入式系统量身定制的轻量级printf实现库。让开发者既能享受printf的便利，又无需承受标准库的沉重负担。",
+      "URL": "https://github.com/MaJerle/lwprintf.git"
+    },
+    {
+      "name": "JesFs",
+      "language": "c",
+      "describe": "是给普通串行NOR‑Flash芯片装的文件系统,它专门为 8 KB 代码空间、几百字节 RAM 的超小 MCU 设计，代码只有几百行，运行时只占 200 B RAM，几乎不吃资源。",
+      "URL": "https://github.com/joembedded/JesFs.git"
+    },
+    {
+      "name": "ulog",
+      "language": "c",
+      "describe": "uLog 就是为资源紧张的单片机、裸机系统准备的日志库。它只用两文件（.h + .c），全 C 写的，几乎没有依赖，跟 Log4j、Log4c 那套概念差不多，却轻得像根羽毛。",
+      "URL": "https://github.com/rdpoor/ulog.git"
+    },
+    {
+      "name": "barebox",
+      "language": "",
+      "describe": "barebox 是一个开源的嵌入式 bootloader，结合了 U-Boot 的经验和 Linux 内核的现代设计，目标是让启动、设备管理、脚本与升级流程更规范、更易开发。",
+      "URL": "https://github.com/barebox/barebox.git"
     }
   ]
 }
