@@ -42,7 +42,7 @@ function func_list
 
     return 0
 }
-
+#func_mount  ip
 function func_mount
 {
     local ip=
@@ -157,11 +157,12 @@ function usage
     echo "-d or --debug    # print variable status"
     echo "-t or --test     # test mode, no modifications"
     #echo "--realdo        # real execution"
-    echo "-c or --cmd   {mount | umount}   # 等价于 mount == -M; umount == -U"
-    echo "-l or --list         # 显示挂载信息"
+    echo "-c or --cmd   {mount | umount}   # 等价于 mount ; umount"
+    echo "--ip  ZSpaceIP       # 直接给IP,跳过远程登录查ip"
     echo ""
-    echo "-M or --mount  [ip]  # 挂载zspace,无参数,则从远程登陆获取IP; 给IP参数,则直接挂载"
-    echo "-U or --umount       # 无需参数，自动卸载zspace"
+    echo "list         # 显示挂载信息"
+    echo "mount        # 挂载zspace,无参数,则从远程登陆获取IP; 给IP参数,则直接挂载"
+    echo "umount       # 无需参数，自动卸载zspace"
     echo ""
 }
 
@@ -177,6 +178,7 @@ function func_mount_zspace_samba
     local realdo=false
     local cmd=
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
+    local ip=
     local remaining_args=()
     while [[ $# -gt 0 ]]
     do
@@ -185,9 +187,6 @@ function func_mount_zspace_samba
             -d|--debug) debug=true; shift ;; #不带参数,移动1
             -t|--test) test=true; shift ;;
             --realdo) realdo=true; shift ;;
-            -l|--list) cmd=list; shift ;;
-            -M|--mount) cmd=mount; shift ;;
-            -U|--umount) cmd=umount; shift ;;
             -c|--cmd)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 cmd="$2"; shift 2 ;; #带参数,移动2
@@ -195,6 +194,9 @@ function func_mount_zspace_samba
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 cmd_opt+=("--file $2"); shift 2 ;; #带参数,移动2
             -Q|--qr) cmd_opt+=("--qr=true"); shift ;;
+            --ip) 
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                ip="$2"; shift 2 ;; #带参数,移动2
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
@@ -202,9 +204,6 @@ function func_mount_zspace_samba
                         h) usage; return 0 ;;
                         d) debug=true ;;
                         t) test=true ;;
-                        l) cmd=list ;;
-                        M) cmd=mount ;;
-                        U) cmd=umount ;;
                         c) cmd="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         F) cmd_opt+=("--file $2"); shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         Q) cmd_opt+=("--qr=true") ;;
@@ -215,6 +214,21 @@ function func_mount_zspace_samba
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
+    #补充选项
+    if [ ${debug} = true ];then
+        echo "cmd=${cmd}"
+        echo "${#remaining_args[@]},remaining_args=${remaining_args[@]}"
+    fi
+    if [ "x${cmd}" = "x" ] && [ ${#remaining_args[@]} -lt 1 ];then 
+        echo -e "ERROR: parameter wrong!\n$scriptname -h or --help for help"
+        return 2
+    elif [ "x${cmd}" = "x" ] && [ ${#remaining_args[@]} -eq 1 ] && [ ${remaining_args[0]} = "mount" ];then
+        cmd=mount
+    elif [ "x${cmd}" = "x" ] && [ ${#remaining_args[@]} -eq 1 ] && [ ${remaining_args[0]} = "umount" ];then
+        cmd=umount
+    elif [ "x${cmd}" = "x" ] && [ ${#remaining_args[@]} -eq 1 ] && [ ${remaining_args[0]} = "list" ];then
+        cmd=list
+    fi
     #==================== print debug =============================#
     if [ ${debug} = true ];then
         echo "DEBUG:maybeSUDO=${maybeSUDO}"
@@ -223,6 +237,7 @@ function func_mount_zspace_samba
         #echo "DEBUG:realdo=${realdo}"
         echo "DEBUG:cmd=${cmd}"
         echo "DEBUG:cmd_opt=${cmd_opt[@]} #累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。"
+        echo "DEBUG:ip=${ip}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
@@ -233,7 +248,7 @@ function func_mount_zspace_samba
     if [ "${cmd}" = "list" ];then
         func_list
     elif [ "${cmd}" = "mount" ];then
-        func_mount ${remaining_args[@]}
+        func_mount "${ip}"
     elif [ "${cmd}" = "umount" ];then
         func_umount
     fi

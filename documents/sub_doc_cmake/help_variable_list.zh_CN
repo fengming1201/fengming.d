@@ -39,11 +39,11 @@ MSVC_IDE                           -- 使用Visual Studio IDE时为真
 MSVC_TOOLSET_VERSION               -- MSVC工具集版本号
 MSVC_VERSION                       -- MSVC编译器版本号
 MSYS                               -- 使用MSYS shell时为真
-PROJECT_BINARY_DIR                 -- 当前项目的构建目录
+PROJECT_BINARY_DIR                 -- 当前项目的构建目录，顶层 CMakeLists.txt 的二进制目录。
 PROJECT_DESCRIPTION                -- 当前项目的描述
 PROJECT_HOMEPAGE_URL               -- 当前项目的主页URL
 PROJECT_NAME                       -- 当前项目的名称
-PROJECT_SOURCE_DIR                 -- 当前项目的源代码目录
+PROJECT_SOURCE_DIR                 -- 当前项目的源代码目录，顶层 CMakeLists.txt 所在目录。
 PROJECT_VERSION                    -- 当前项目的完整版本号
 PROJECT_VERSION_MAJOR              -- 当前项目的主版本号
 PROJECT_VERSION_MINOR              -- 当前项目的次版本号
@@ -126,7 +126,7 @@ CMAKE_<CONFIG>_POSTFIX                   -- 配置特定后缀
 CMAKE_BUILD_RPATH                        -- 构建时RPATH
 CMAKE_BUILD_RPATH_USE_ORIGIN             -- 使用源路径作为RPATH
 CMAKE_BUILD_TOOL                         -- 构建工具
-CMAKE_BUILD_TYPE                         -- 构建类型
+CMAKE_BUILD_TYPE                         -- 构建类型，如 Debug、Release 等。
 CMAKE_BUILD_WITH_INSTALL_NAME_DIR        -- 使用安装名称目录
 CMAKE_BUILD_WITH_INSTALL_RPATH           -- 使用安装RPATH
 CMAKE_CFG_INTDIR                         -- 配置中间目录
@@ -159,7 +159,7 @@ CMAKE_CUDA_SEPARABLE_COMPILATION         -- CUDA可分编译
 CMAKE_CUDA_STANDARD                      -- CUDA标准
 CMAKE_CUDA_STANDARD_REQUIRED             -- CUDA标准必需
 CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES   -- CUDA工具包包含目录
-CMAKE_CURRENT_BINARY_DIR                 -- 当前二进制目录
+CMAKE_CURRENT_BINARY_DIR                 -- 当前二进制目录，当前处理的 CMakeLists.txt 的二进制目录。
 CMAKE_CURRENT_FUNCTION                   -- 当前函数名
 CMAKE_CURRENT_FUNCTION_LIST_DIR          -- 当前函数列表目录
 CMAKE_CURRENT_FUNCTION_LIST_FILE         -- 当前函数列表文件
@@ -167,7 +167,7 @@ CMAKE_CURRENT_FUNCTION_LIST_LINE         -- 当前函数列表行号
 CMAKE_CURRENT_LIST_DIR                   -- 当前列表目录
 CMAKE_CURRENT_LIST_FILE                  -- 当前列表文件
 CMAKE_CURRENT_LIST_LINE                  -- 当前列表行号
-CMAKE_CURRENT_SOURCE_DIR                 -- 当前源目录
+CMAKE_CURRENT_SOURCE_DIR                 -- 当前源目录，当前处理的 CMakeLists.txt 所在目录。
 CMAKE_CXX_COMPILE_FEATURES               -- C++编译特性
 CMAKE_CXX_EXTENSIONS                     -- C++扩展
 CMAKE_CXX_STANDARD                       -- C++标准
@@ -275,7 +275,7 @@ CMAKE_INSTALL_DEFAULT_COMPONENT_NAME     -- 默认组件名称
 CMAKE_INSTALL_DEFAULT_DIRECTORY_PERMISSIONS -- 默认目录权限
 CMAKE_INSTALL_MESSAGE                    -- 安装消息
 CMAKE_INSTALL_NAME_DIR                   -- 安装名称目录
-CMAKE_INSTALL_PREFIX                     -- 安装前缀
+CMAKE_INSTALL_PREFIX                     -- 安装前缀，默认的安装路径，通常为 /usr/local。
 CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT -- 安装前缀初始化为默认
 CMAKE_INSTALL_REMOVE_ENVIRONMENT_RPATH   -- 移除环境RPATH
 CMAKE_INSTALL_RPATH                      -- 安装RPATH
@@ -384,7 +384,7 @@ CMAKE_SKIP_INSTALL_ALL_DEPENDENCY        -- 跳过安装所有依赖
 CMAKE_SKIP_INSTALL_RPATH                 -- 跳过安装RPATH
 CMAKE_SKIP_INSTALL_RULES                 -- 跳过安装规则
 CMAKE_SKIP_RPATH                         -- 跳过RPATH
-CMAKE_SOURCE_DIR                         -- 源目录
+CMAKE_SOURCE_DIR                         -- 源目录，项目根目录的完整路径。
 CMAKE_STAGING_PREFIX                     -- 暂存前缀
 CMAKE_STATIC_LIBRARY_PREFIX               -- 静态库前缀
 CMAKE_STATIC_LIBRARY_SUFFIX               -- 静态库后缀
@@ -404,7 +404,7 @@ CMAKE_SYSTEM_FRAMEWORK_PATH              -- 系统框架路径
 CMAKE_SYSTEM_IGNORE_PATH                 -- 系统忽略路径
 CMAKE_SYSTEM_INCLUDE_PATH                -- 系统包含路径
 CMAKE_SYSTEM_LIBRARY_PATH                -- 系统库路径
-CMAKE_SYSTEM_NAME                        -- 系统名称
+CMAKE_SYSTEM_NAME                        -- 系统名称，如 Linux 或 Windows。
 CMAKE_SYSTEM_PREFIX_PATH                 -- 系统前缀路径
 CMAKE_SYSTEM_PROCESSOR                   -- 系统处理器
 CMAKE_SYSTEM_PROGRAM_PATH                -- 系统程序路径
