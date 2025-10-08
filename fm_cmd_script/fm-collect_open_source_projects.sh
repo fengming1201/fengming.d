@@ -136,10 +136,10 @@ function func_list_item
         if [ ${debug} = true ];then
             echo "DEBUG: jq -r '.info[]' ${target_file_name}"
         fi
-        echo "=============================================================="
-        echo "${target_file_name}"
         echo ""
         echo "total item counts: $(jq '.info | length' ${target_file_name})"
+        echo "=============================================================="
+        echo "${target_file_name}"
         echo ""
     fi
 
@@ -150,14 +150,20 @@ function func_list_item_sort
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
     #list all
-    jq -r '.info[].name' ${target_file_name}
+
     if [ ${debug} = true ];then
         echo "EXEC: jq -r '.info[].name' ${target_file_name}"
     fi
-    echo "=============================================================="
-    echo "${target_file_name}"
+	let num=1
+	local sort_list=$(jq -r '.info[].name' ${target_file_name} | sort | tr '\r\n' ' ')
+	for name in ${sort_list};do
+		echo "[${num}]: ${name}"
+		num=$(($num + 1))
+	done
     echo ""
     echo "total item counts: $(jq '.info | length' ${target_file_name})"
+    echo "=============================================================="
+    echo "${target_file_name}"
     echo ""    
     return 0
 }
