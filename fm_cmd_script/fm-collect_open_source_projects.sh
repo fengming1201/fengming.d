@@ -136,10 +136,10 @@ function func_list_item
         if [ ${debug} = true ];then
             echo "DEBUG: jq -r '.info[]' ${target_file_name}"
         fi
-        echo "=============================================================="
-        echo "${target_file_name}"
         echo ""
         echo "total item counts: $(jq '.info | length' ${target_file_name})"
+        echo "=============================================================="
+        echo "${target_file_name}"
         echo ""
     fi
 
@@ -150,14 +150,20 @@ function func_list_item_sort
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
     #list all
-    jq -r '.info[].name' ${target_file_name}
+
     if [ ${debug} = true ];then
         echo "EXEC: jq -r '.info[].name' ${target_file_name}"
     fi
-    echo "=============================================================="
-    echo "${target_file_name}"
+	let num=1
+	local sort_list=$(jq -r '.info[].name' ${target_file_name} | sort | tr '\r\n' ' ')
+	for name in ${sort_list};do
+		echo "[${num}]: ${name}"
+		num=$(($num + 1))
+	done
     echo ""
     echo "total item counts: $(jq '.info | length' ${target_file_name})"
+    echo "=============================================================="
+    echo "${target_file_name}"
     echo ""    
     return 0
 }
@@ -204,44 +210,70 @@ function func_check_item_status
     return 0
 }
 
-##Parameter Counts      : 0
-# Parameter Requirements: none
+##Parameter Counts      : 0 - 2
+# Parameter Requirements: item_name   timeout
 # Example:
+#1, function_name 
+#2, function_name  timeout
+#3, function_name  item_name timeout
 ##
 function func_git_pull_update
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
-    if [ $# -eq 1 ];then
-        timeout_time_s=$1
-    fi
-    #get dir
-    local dir_list=()
-
-    for dir in $(find -maxdepth 1 -type d -printf '%P\n')
+    local item_list=()
+    local timeout=0
+    local remaining_args=()
+    while [[ $# -gt 0 ]]
     do
-        if [ -d ${dir}/.git/ ];then
-            dir_list+=("${dir}")
-        fi
+        case "$1" in
+            -i|--item)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                item_list+=("$2"); shift 2 ;; #带参数,移动2
+            -t|--time)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                timeout="$2"; shift 2 ;; #带参数,移动2
+            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+        esac
     done
-
+    #get real item name list
+    if [ ${#remaining_args[@]} -le 1 ] && [ "x${remaining_args[@]}" = "x" ];then
+        #no special item,means pull all items
+        for dir in $(find -maxdepth 1 -type d -printf '%P\n');do
+            if [ -d ${dir}/.git/ ];then
+                item_list+=("${dir}")
+            fi
+        done
+    else
+        for item in ${remaining_args[@]};do
+            if [ -d ${item}/.git/ ];then
+                item_list+=("${item}")
+            fi
+        done
+    fi
+    #for debug
+    if [ ${debug} = true ];then
+        echo "DEBUG:timeout=${timeout}"
+        echo "DEBUG:remaining_args=${remaining_args[@]}"
+        echo "DEBUG:item_list=${item_list[@]}"
+    fi
+    #handle item one by one
     local remote_name="origin"
     local branch_name="masters"
-
-    for sub_dir in "${dir_list[@]}"
+    for sub_dir in "${item_list[@]}"
     do
-        echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${sub_dir}\") | .describe" ${target_file_name})
+        echo "item_name:"$(jq -r ".info[] | select(.name == \"${sub_dir}\") | .describe" ${target_file_name})
         pushd ${sub_dir}
         remote_name=$(git remote -v | awk '{print $1}' | uniq)
         branch_name=$(git branch | awk '{print $2}' | uniq)
-        if [ "x$timeout_time_s" = "x0" ];then
+        if [ "x${timeout}" = "x0" ];then
             echo -e "\e[31mgit pull ${remote_name} ${branch_name} \e[0m"
-            if [ ${test} = true ];then
+            if [ ${test} = false ];then
                 git pull ${remote_name} ${branch_name}
             fi
         else
-            echo -e "\e[31mtimeout ${timeout_time_s} git pull ${remote_name} ${branch_name} \e[0m"
-            if [ ${test} = true ];then
-                timeout ${timeout_time_s} git pull ${remote_name} ${branch_name}
+            echo -e "\e[31mtimeout ${timeout} git pull ${remote_name} ${branch_name} \e[0m"
+            if [ ${test} = false ];then
+                timeout ${timeout} git pull ${remote_name} ${branch_name}
             fi
         fi
         popd
@@ -249,32 +281,78 @@ function func_git_pull_update
     return 0
 }
 
-##Parameter Counts      : 0
+##Parameter Counts      : 0 - 2
 # Parameter Requirements: none
 # Example:
 ##
 function func_git_clone
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
-
-    local name_list=$(jq -r  '.info[].name' ${target_file_name})
-
-    for item_name in ${name_list}
+    local item_list=()
+    local timeout=0
+    local remaining_args=()
+    while [[ $# -gt 0 ]]
+    do
+        case "$1" in
+            -i|--item)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                item_list+=("$2"); shift 2 ;; #带参数,移动2
+            -t|--time)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                timeout="$2"; shift 2 ;; #带参数,移动2
+            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+        esac
+    done
+    #get real item name list
+    local all_name_list=$(jq -r  '.info[].name' ${target_file_name} | tr "\r\n" " ")
+    echo "count==${#remaining_args[@]}"
+    if [ ${#remaining_args[@]} -le 1 ] && [ "x${remaining_args[@]}" = "x" ];then
+        #no special item,means pull all items
+        item_list=${all_name_list[@]}
+    else
+        #find item from collect file
+        for item in ${remaining_args[@]};do
+            for name in ${all_name_list[@]};do
+                #if [ ${debug} = true ];then echo "$item ?= $name";fi
+                if [ ${item} = ${name} ];then
+                    item_list+=("${name}")
+                    break
+                fi
+            done
+        done
+    fi
+    #for debug
+    if [ ${debug} = true ];then
+        echo "DEBUG:timeout=${timeout}"
+        echo "DEBUG:remaining_args=${remaining_args[@]}"
+        echo "DEBUG:item_list=${item_list[@]}"
+    fi
+    #handle item one by one
+    let num=1
+    for item_name in ${item_list[@]}
     do
         if [ -d ${item_name} ];then
             echo "INFO:item ${item_name} already exist!"
             continue
         fi
-        echo "${item_name}:"$(jq -r ".info[] | select(.name == \"${item_name}\") | .describe" ${target_file_name})
+        echo "[${num}]:item_name:"$(jq -r ".info[] | select(.name == \"${item_name}\") | .describe" ${target_file_name})
         item_url=$(jq -r ".info[] | select(.name == \"${item_name}\") | .URL" ${target_file_name})
-        if [ "x${item_url}" != "x" ];then
-            echo -e "\e[31mgit clone ${item_url} \e[0m"
+        if [ "x${item_url}" = "x" ];then
+            echo "ERROR:${item_name}  URL is empty!"
+            continue
+        fi
+        if [ "x${timeout}" = "x0" ];then
+            echo -e "\e[31m[${num}]:git clone ${item_url} \e[0m"
             if [ ${test} = false ];then
                 git clone ${item_url}
             fi
         else
-            echo "item: ${item_name}  URL is empty!"
+            echo -e "\e[31m[${num}]:timeout ${timeout} git clone ${item_url} \e[0m"
+            if [ ${test} = false ];then
+                timeout ${timeout} git clone ${item_url}
+            fi
         fi
+        num=$(($num + 1))
     done
     return 0
 }
@@ -303,10 +381,10 @@ function usage
     echo "       -D | --describe  \"describe\""
     echo "       -U | --url \"url\""
     echo "  --delete  \"item_name\" | -N  item_name                         #删除收藏项目"
-    echo "  --pull                                [-T|--time  timeout]    #逐个下拉更新已收藏的项目,time 为超时时间秒,缺省60s"
-    echo "  --pull    \"item_name\" | -N item_name  [-T|--time  timeout]    #下拉某个已收藏的项目,time 为超时时间秒,缺省60s"
-    echo "  --clone                               [-T|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省60s"
-    echo "  --clone   \"item_name\" | -N item_name  [-T|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省60s"
+    echo "  --pull                          [-T|--time  timeout]    #逐个下拉更新已收藏的项目,time 为超时时间秒,缺省0s"
+    echo "  --pull    [\"item_name list\"]    [-T|--time  timeout]    #下拉某个已收藏的项目,time 为超时时间秒,缺省0s"
+    echo "  --clone                         [-T|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省0s"
+    echo "  --clone   [\"item_name list\"]    [-T|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省0s"
     echo "--func   func_name  args ...                                     # 单独调用函数"
 }
 
@@ -322,7 +400,7 @@ function func_schedule
     local language=
     local describe=
     local url=
-    local timeoute=60 #60s
+    local timeout=0 #60s
     local debug=false
     local test=false
     local func_test=false
@@ -337,7 +415,7 @@ function func_schedule
             -s|--sort) if [[ -z "$cmd" ]]; then cmd=sort;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -l|--list) if [[ -z "$cmd" ]]; then cmd=list;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -c|--check) if [[ -z "$cmd" ]]; then cmd=check;else echo "ERROR: multiple commands";return 2;fi;shift ;;
-            -t|--time)
+            -T|--time)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 timeout="$2"; shift 2 ;; #带参数,移动2
             -N|--name)
@@ -400,7 +478,7 @@ function func_schedule
         echo "DEBUG:test=${test}"
         echo "DEBUG:sort=${sort}"
         echo "DEBUG:cmd=${cmd}"
-	echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
+	    echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:name=${name}"
         echo "DEBUG:language=${language}"
         echo "DEBUG:describe=${describe}"
@@ -462,16 +540,12 @@ function func_schedule
 
     if [ "${cmd}" = "pull" ];then
         echo -e "\e[31mpull ....\e[0m"
-        if [ "x${name}" != "x" ];then
-            func_git_pull_update "${name}" "${remaining_args[@]:1}"
-        else
-            echo "ERROR: item_name can not empty!!"
-        fi
+        func_git_pull_update "${name}" "${remaining_args[@]}" -t ${timeout}
     fi
 
     if [ "${cmd}" = "clone" ];then
         echo -e "\e[31mclone ....\e[0m"
-        func_git_clone "${url}" "${remaining_args[@]}"
+        func_git_clone "${name}" "${remaining_args[@]:1}" -t ${timeout}
     fi
 
     return 0
