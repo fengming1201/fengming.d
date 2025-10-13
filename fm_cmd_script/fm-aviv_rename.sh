@@ -48,7 +48,7 @@ function func_aviv_rename
 	isdebug=yes
     fi
 
-    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" )
+    local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" "[88k.me]*" )
 
     #debug
     if [ "${isdebug}" = "yes" ]

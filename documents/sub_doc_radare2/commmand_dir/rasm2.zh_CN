@@ -1,0 +1,40 @@
+用法: rasm2 [-ACdDehHLBvw] [-a arch] [-b bits] [-s addr] [-S syntax]
+   [-f file] [-o file] [-F fil:ter] [-i skip] [-l len] 'code'|hex|0101b|-
+ -a [arch]    设置要汇编/反汇编的架构（参见 -L）
+ -A           显示给定十六进制对的分析信息
+ -b [bits]    设置CPU寄存器大小（8、16、32、64）（RASM2_BITS）
+ -B           二进制输入/输出（二进制输入必须使用 -l）
+ -c [cpu]     选择特定CPU（取决于架构）
+ -C           以C格式输出
+ -d, -D       从十六进制对字节进行反汇编（-D显示十六进制对）
+ -e           使用大端序而不是小端序
+ -E           显示ESIL表达式（与 -d 输入相同）
+ -f [file]    从文件读取数据
+ -F [parser]  指定使用哪个解析过滤器（参见 -LL）
+ -h, -hh      显示此帮助信息，-hh 显示详细帮助
+ -H ([var])   显示变量
+ -i [len]     忽略/跳过输入缓冲区的N个字节
+ -j           以JSON格式输出
+ -k [kernel]  选择操作系统（linux、windows、darwin、android、ios、..）
+ -l [len]     输入/输出长度
+ -L ([name])  列出RArch插件：(a=汇编, d=反汇编, e=esil)
+ -LL ([name]) 列出RAsm解析插件
+ -N           与 r2 -N 相同（或 R2_NOPLUGINS）（不加载任何插件）
+ -o [file]    输出文件名（rasm2 -Bf a.asm -o a）
+ -p           对输入运行SPP进行汇编
+ -q           静默模式
+ -r           以radare命令输出
+ -s,-@ [addr] 定义初始开始/搜索地址（默认0）
+ -S [syntax]  选择语法（intel、att）
+ -v           显示版本信息
+ -x           汇编时使用十六进制双字而不是十六进制对
+ -w           这个指令是做什么的？描述操作码
+ 如果'-l'值大于输出长度，输出会用nop填充
+ 如果最后一个参数是'-'，则从标准输入读取
+环境变量：
+R2_NOPLUGINS  不加载共享插件（加快加载速度）
+R2_LOG_LEVEL  更改日志级别
+R2_DEBUG      如果定义，显示错误消息和崩溃信号
+R2_DEBUG_ASSERT  lldb -- r2 获得运行时断言的正确回溯
+RASM2_ARCH    与 rasm2 -a 相同
+RASM2_BITS    与 rasm2 -b 相同

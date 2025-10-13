@@ -1,0 +1,48 @@
+用法: r2 [-ACdfjLMnNqStuvwzX] [-P patch] [-p prj] [-a arch] [-b bits] [-c cmd]
+          [-s addr] [-B baddr] [-m maddr] [-i script] [-e k=v] file|pid|-|--|=
+ --           运行 radare2 但不打开任何文件
+ -            等同于 'r2 malloc://512'
+ =            从标准输入读取文件（使用 -i 和 -c 运行命令）
+ -=           执行 !=! 命令以远程运行所有命令
+ -0           初始化后和每个命令后打印 \x00
+ -1           将标准错误重定向到标准输出
+ -2           关闭标准错误文件描述符（静音警告消息）
+ -a [arch]    设置汇编架构
+ -A           运行 'aaa' 命令分析所有引用的代码
+ -b [bits]    设置汇编位数
+ -B [baddr]   为 PIE 二进制文件设置基地址
+ -c 'cmd..'   执行 radare 命令
+ -C           文件是主机:端口（-c+=http://%s/cmd/ 的别名）
+ -d           调试可执行文件 'file' 或运行中的进程 'pid'
+ -D [backend] 启用调试模式（e cfg.debug=true）
+ -e k=v       评估配置变量
+ -f           块大小 = 文件大小
+ -F [binplug] 强制使用该 rbin 插件
+ -h, -hh      显示帮助信息，-hh 显示详细帮助
+ -H ([var])   显示变量
+ -i [file]    运行 rlang 程序、r2script 文件或加载插件
+ -I [file]    在打开文件之前运行脚本文件
+ -j           对 -v、-L 等使用 json 格式
+ -k [OS/kern] 设置汇编操作系统（linux、macos、w32、netbsd 等）
+ -L, -LL      列出支持的 IO 插件（-LL 列出核心插件）
+ -m [addr]    在给定地址映射文件（加载地址）
+ -M           不解混淆符号名称
+ -n, -nn      不加载 RBin 信息（-nn 仅加载二进制结构）
+ -N           不加载用户设置和脚本
+ -NN          不加载任何脚本或插件
+ -q           安静模式（无提示）并在 -i 后退出
+ -qq          运行完所有 -c 和 -i 后退出
+ -Q           安静模式（无提示）并更快退出（quickLeak=true）
+ -p [prj]     使用项目，无参数则列出，无文件则加载
+ -P [file]    应用 rapatch 文件并退出
+ -r [rarun2]  指定要加载的 rarun2 配置文件（等同于 -e dbg.profile=X）
+ -R [rr2rule] 指定自定义 rarun2 指令（使用 base64 dbg.profile）
+ -s [addr]    初始寻址
+ -S           在沙盒模式下启动 r2
+ -t           在线程中加载 rabin2 信息
+ -u           设置 bin.filter=false 以获取原始符号/段/类名称
+ -v, -V       显示 radare2 版本（-V 显示库版本）
+ -w           以写入模式打开文件
+ -x           不使用执行标志打开（asm.emu 将无法工作），参见 io.exec
+ -X           等同于 -e bin.usextr=false（对 dyldcache 有用）
+ -z, -zz      不加载字符串或即使在原始模式下也加载它们

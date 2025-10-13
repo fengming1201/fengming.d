@@ -1,0 +1,38 @@
+用法: ragg2 [-FOLsrxhvz] [-a arch] [-b bits] [-k os] [-o file] [-I path]
+             [-i sc] [-E enc] [-B hex] [-c k=v] [-C file] [-p pad] [-q off]
+             [-S string] [-f fmt] [-nN dword] [-dDw off:hex] [-e expr] file|f.asm|-
+ -a [arch]       选择架构（x86、mips、arm）
+ -b [bits]       寄存器大小（32、64、..）
+ -B [hexpairs]   追加一些十六进制对字节
+ -c [k=v]        设置配置选项
+ -C [file]       追加文件内容
+ -d [off:dword]  在给定偏移量处修补双字（4字节）
+ -D [off:qword]  在给定偏移量处修补四字（8字节）
+ -e [egg-expr]   从字符串而不是文件中获取egg程序
+ -E [encoder]    使用特定编码器。参见 -L
+ -f [format]     输出格式（raw、c、pe、elf、mach0、python、javascript）
+ -F              输出本机格式（osx=mach0，linux=elf，..）
+ -h              显示此帮助信息
+ -H ([var])      显示变量
+ -i [shellcode]  包含shellcode插件，使用选项。参见 -L
+ -I [path]       添加包含路径
+ -k [os]         操作系统内核（linux、bsd、osx、w32）
+ -L              列出所有插件（shellcode和编码器）
+ -n [dword]      追加32位数字（4字节）
+ -N [dword]      追加64位数字（8字节）
+ -o [file]       输出文件
+ -O              使用默认输出文件（没有扩展名的文件名或a.out）
+ -p [padding]    编译后添加填充（padding=n10s32）
+                 ntas : 开始处使用nop、trap、'a'、序列
+                 NTAS : 与上面相同，但在末尾
+ -P [size]       前缀debruijn模式
+ -q [fragment]   debruijn模式偏移
+ -r              显示原始字节而不是十六进制对
+ -s              显示汇编代码
+ -S [string]     追加一个字符串
+ -v              显示版本
+ -w [off:hex]    在给定偏移量处修补十六进制对
+ -x              执行
+ -X [hexpairs]   执行rop链，使用提供的堆栈
+ -z              以C字符串语法输出
+R2_NOPLUGINS    不加载任何插件

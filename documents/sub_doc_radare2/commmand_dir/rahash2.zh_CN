@@ -1,0 +1,24 @@
+用法: rahash2 [-BehjkLqrvX] [-b S] [-a A] [-c H] [-E A] [-s S] [-f O] [-t O] [file] ...
+ -a algo     逗号分隔的算法列表（默认是'sha256'）
+ -b bsize    指定块的大小（而不是整个文件）
+ -B          显示每个块的哈希值
+ -c hash     与此哈希值比较
+ -e          交换字节序（使用小端序）
+ -E algo     加密。使用 -S 设置密钥，-I 设置 IV
+ -D algo     解密。使用 -S 设置密钥，-I 设置 IV
+ -f from     从给定地址开始哈希
+ -i num      重复哈希 N 次迭代（例如：3DES）
+ -I iv       使用给定的初始化向量（IV）（十六进制或 s:string）
+ -j          以 JSON 格式输出
+ -J          新的简化 JSON 输出（与 -jj 相同）
+ -S seed     使用给定的种子（十六进制或 s:string）使用 ^ 作为前缀（-E 的密钥）
+             (- 会从标准输入读取密钥，@ 前缀指向文件
+ -k          使用 openssh 的 randomkey 算法显示哈希
+ -q          在静默模式下运行（-qq 只显示哈希值）
+ -L          列出 muta 插件（与 -q 结合使用，用于 -a、-E 和 -D）
+ -r          输出 radare 命令
+ -s string   哈希此字符串而不是文件
+ -t to       在给定地址停止哈希
+ -x hexstr   哈希此十六进制对字符串而不是文件
+ -X          以十六进制对输出而不是二进制/纯文本
+ -v          显示版本信息

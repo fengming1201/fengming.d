@@ -1,0 +1,33 @@
+Usage: radiff2 [-options] [-A[A]] [-B #] [-g sym] [-m graph_mode][-t %] [file] [file]
+  -a [arch]  specify architecture plugin to use (x86, arm, ..)
+  -A [-A]    run aaa or aaaa after loading each binary (see -C)
+  -b [bits]  specify register size for arch (16 (thumb), 32, 64, ..)
+  -B [baddr] define the base address to add the offsets when listing
+  -c [cmd]   run given command on every RCore instance
+  -C         graphdiff code (columns: off-A, match-ratio, off-B) (see -A)
+  -d         use delta diffing
+  -D         show disasm instead of hexpairs
+  -e [k=v]   set eval config var value for all RCore instances
+  -f [help]  select output format (see '-f help' for details)
+  -g [arg]   graph diff of [sym] or functions in [off1,off2]
+  -i [help]  compare bin information (symbols, strings, classes, ..)
+  -j         output in json format (see -f json)
+  -l [addr]  specify final offset (length) for diffing, same format as -o
+  -m [mode]  choose the graph output mode (aditsjJ)
+  -n         count of changes
+  -o [addr]  specify initial offset for diffing, can use A:B format
+  -O         code diffing with opcode bytes only
+  -p         use physical addressing (io.va=false) (only for radiff2 -AC)
+  -q         quiet mode (disable colors, reduce output)
+  -r         output in radare commands
+  -s         compute edit distance (no substitution, Eugene W. Myers O(ND) diff algorithm)
+  -ss        compute Levenshtein edit distance (substitution is allowed, O(N^2))
+  -S [name]  sort code diff (name, namelen, addr, size, type, dist) (only for -C or -g)
+  -t [0-100] set threshold for code diff (default is 70%)
+  -T         analyze files in threads (EXPERIMENTAL, 30% faster and crashy)
+  -x         show two column hexdump diffing
+  -X         use xpatch format for the diffing output
+  -u         unified output (---+++)
+  -U         unified output using system 'diff'
+  -v         show version information
+  -V         be verbose (current only for -s)

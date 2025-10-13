@@ -1,0 +1,81 @@
+用法: rabin2 [-AcdeEghHiIjJlLMqrRsSUvVxzZ] [-@ at] [-a arch] [-b bits] [-B addr]
+              [-C F:C:D] [-f str] [-m addr] [-n str] [-N m:M] [-P[-P] pdb]
+              [-o str] [-O help] [-k query] [-D lang mangledsymbol] file
+ -@ [addr]       显示指定地址处的段、符号或导入
+ -A              列出子二进制文件及其架构-位数对
+ -a [arch]       设置架构（x86、arm 等或 <架构>_<位数>）
+ -b [bits]       设置位数（32、64 ...）
+ -B [addr]       覆盖基地址（pie 二进制文件）
+ -c              列出类
+ -cc             以头格式列出类
+ -C [fmt:C:D]    创建 [elf,mach0,pe] 格式，包含代码和数据十六进制对（见 -a）
+ -d              显示调试/dwarf 信息
+ -D lang name    解混淆符号名称（-D all 表示 bin.demangle=true）
+ -e              程序入口点
+ -ee             构造函数/析构函数入口点
+ -E              全局可导出符号
+ -f [str]        选择名为 str 的子二进制
+ -F [binfmt]     强制使用该二进制插件（忽略头部检查）
+ -g              等同于 -SMZIHVResizcld -SS -SSS -ee（显示所有信息）
+ -G [addr]       加载地址 . 地址到头部
+ -h              此帮助信息
+ -H              头部字段
+ -i              导入（从库导入的符号）
+ -I              二进制信息
+ -j              以 JSON 格式输出
+ -J ([var])      显示变量
+ -k [sdb-query]  运行 sdb 查询。例如：'*'
+ -K [algo]       计算校验和（md5、sha1 等）
+ -l              链接的库
+ -L [plugin]     列出支持的二进制插件或插件详情
+ -m [addr]       显示指定地址处的源代码行
+ -M              main（显示 main 符号的地址）
+ -n [str]        显示名为 str 的段、符号或导入
+ -N [min:max]    强制每个字符串的最小:最大字符数（见 -z 和 -zz）
+ -o [str]        写入操作的输出文件/文件夹（默认为 out）
+ -O [str]        写入/提取操作（-O help）
+ -p              始终显示物理地址
+ -P              显示调试/pdb 信息
+ -PP             下载二进制文件的 pdb 文件
+ -q              安静模式，只显示更少的数据
+ -qq             显示更少信息（例如 -z 不显示地址/大小）
+ -Q              显示 dlopen 使用的加载地址（非 aslr 库）
+ -r              radare 输出
+ -R              重定位
+ -s              符号
+ -S              段
+ -SS             段（segments）
+ -SSS            段映射到段（segments）
+ -t              显示文件哈希
+ -T              显示文件签名
+ -u              未过滤（不重命名重复的符号/段）
+ -U              资源（resoUrces）
+ -v              显示版本并退出
+ -V              显示二进制版本信息
+ -w              显示 try/catch 块
+ -x              提取文件中包含的二进制文件
+ -X [fmt] [f] .. 将给定文件和文件中包含的二进制文件打包成 fat 或 zip 格式
+ -z              字符串（来自数据段）
+ -zz             字符串（来自原始二进制 [e bin.str.raw=1]）
+ -zzz            将原始字符串转储到标准输出（用于大文件）
+ -Z              猜测二进制程序的大小
+环境变量：
+R2_NOPLUGINS	                      # 与 r2 -N 相同。不加载共享插件
+RABIN2_ARGS	                      # 忽略命令行并使用这些程序参数
+RABIN2_CHARSET	e cfg.charset         # 为 -z 字符串设置默认字符集
+RABIN2_CODESIGN_VERBOSE	                      # 在解析时显示代码签名详情
+RABIN2_DEBASE64	e bin.str.debase64    # 尝试对所有字符串进行 debase64 处理
+RABIN2_DEMANGLE	e bin.demangle        # 如果值为 0 则不解混淆符号
+RABIN2_DEMANGLE_CMD	e bin.demangle.cmd    # 尝试清除误报
+RABIN2_DEMANGLE_TRYLIB	e bin.demangle.trylib # 加载 Swift 库进行解混淆（默认：false）
+RABIN2_LANG	e bin.lang            # 假设用于解混淆的语言
+RABIN2_MACHO_NOFUNCSTARTS	                      # 如果设置，将忽略 FUNCSTART 信息
+RABIN2_MACHO_NOSWIFT	                      # 避免解析 swift 元数据
+RABIN2_MACHO_SKIPFIXUPS	                      # 不解析 mach-o 链式修复
+RABIN2_MAXSTRBUF	e bin.str.maxbuf      # 指定最大缓冲区大小
+RABIN2_PDBSERVER	e pdb.server          # 使用替代的 PDB 服务器
+RABIN2_PREFIX	e bin.prefix          # 为符号/段/重定位添加特定前缀
+RABIN2_STRFILTER	e bin.str.filter      # r2 -qc 'e bin.str.filter=??' -
+RABIN2_STRPURGE	e bin.str.purge       # 尝试清除误报
+RABIN2_SYMSTORE	e pdb.symstore        # 下游符号存储的路径
+RABIN2_VERBOSE	e bin.verbose         # 显示来自解析器的调试消息
