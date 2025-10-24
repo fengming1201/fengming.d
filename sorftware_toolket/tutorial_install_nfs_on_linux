@@ -1,0 +1,16 @@
+
+
+
+
+
+Q1:
+sudo mount -t nfs -o nolock 192.168.3.15:/home/mining/share nfs_3_15/
+mount: /home/mining/nfs_3_15: bad option; for several filesystems (e.g. nfs, cifs) you might need a /sbin/mount.<type> helper program.
+       dmesg(1) may have more information after failed mount system call.
+
+A1：
+这个错误通常是由于系统缺少必要的挂载工具或配置问题导致的。以下是一些可能的原因及解决方法：
+
+安装 NFS 客户端工具:
+确保已安装 NFS 客户端工具包。可以使用以下命令安装：
+sudo apt-get install nfs-common
