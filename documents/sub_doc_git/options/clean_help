@@ -1,0 +1,16 @@
+usage: git clean [-d] [-f] [-i] [-n] [-q] [-e <pattern>] [-x | -X] [--] <paths>...
+
+    -q, --quiet           不打印已删除文件的名称
+    -n, --dry-run         试运行，不真正执行删除
+    -f, --force           强制
+    -i, --interactive     交互式删除,即删除前 y/n
+    -d                    删除整个目录下
+    -e, --exclude <pattern>  
+                          添加<pattern>以忽略规则
+    -x                    (小x)也删除忽略的文件
+    -X                    (大X)仅删除忽略的文件
+
+########################################################
+例如：将本地还原到本地最新的提交状态，像刚刚clone一样
+git clean -dfx
+
