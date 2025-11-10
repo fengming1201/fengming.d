@@ -199,12 +199,6 @@
       "URL": "https://github.com/fengming1201/GuiLite.git"
     },
     {
-      "name": "EasyLogger",
-      "language": "",
-      "describe": "EasyLogger是github上ArmLink开源的一个轻量级日志库。其功能与大家平时printf把日志数据打印在终端上面是类似的。",
-      "URL": "https://github.com/fengming1201/EasyLogger.git"
-    },
-    {
       "name": "gear-lib",
       "language": "",
       "describe": "Gear-Lib，用于物联网嵌入式多媒体和网络的 C 库",
@@ -569,6 +563,12 @@
       "language": "",
       "describe": "barebox 是一个开源的嵌入式 bootloader，结合了 U-Boot 的经验和 Linux 内核的现代设计，目标是让启动、设备管理、脚本与升级流程更规范、更易开发。",
       "URL": "https://github.com/barebox/barebox.git"
+    },
+    {
+      "name": "EasyLogger",
+      "language": "c",
+      "describe": "EasyLogger是github上ArmLink开源的一个轻量级日志库。其功能与大家平时printf把日志数据打印在终端上面是类似的。",
+      "URL": "https://github.com/armink/EasyLogger"
     }
   ]
 }
