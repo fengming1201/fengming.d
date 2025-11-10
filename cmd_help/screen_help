@@ -1,31 +1,3 @@
-快捷键：
-ctrl + a  ?     : 显示
-
-以下是一些用于管理 Linux Screen 窗口 的最常用命令：
-Ctrl + a  w     : 展示当前会话中的所有窗口
-Ctrl + a  "     : 列出所有窗口
-Ctrl + a  c     : 创建一个新窗口（带shell）
-Ctrl + a  C     : 清理窗口（大写C）
-Ctrl + a  n     : 切换至下一个窗口
-Ctrl + a  p     : 切换至上一个窗口
-Ctrl + a  num   : 切换至编号为num的窗口
-Ctrl + a  k     : 杀死当前窗口
-Ctrl + a  A     : 重命名当前窗口
-
-Ctrl + a  S     :将当前区域水平分割为两个区域
-Ctrl + a  |     :将当前区域垂直分成两个区域
-Ctrl + a tab    :将输入焦点切换到下一个区域
-Ctrl + a Ctrl+a :在当前和之前的区域之间切换
-Ctrl + a  Q     :关闭除当前区域之外其他所有区域
-Ctrl + a  X     :关闭当前区域
-Ctrl + a  \     :终止所有会话并终止 Screen
-
-screen -ls  : 查看当前已有的screen会话.
-
-终止指定的 screen 会话：
-screen -S your_screen_name -X quit  : 删除某个会话.
-
-====================================================
 screen --help
 Use: screen [-opts] [cmd [args]]
 or: screen -r [host.tty]
@@ -68,61 +40,47 @@ Options:
 
 终止指定的 screen 会话：
 screen -S your_screen_name -X quit  : 删除某个会话.
-===================================================================
-Screen key bindings, page 1 of 1.
-Command key:  ^A   Literal ^A:  a
+====================================================
+快捷键：
+ctrl + a  ?     : 显示
 
-break       ^B b
-fit         F
-lastmsg     ^M m
-number      N
-redisplay   ^L l
-suspend     ^Z z
-writebuf    >
-clear       C
-flow        ^F f
-license     ,
-only        Q
-remove      X
-time        ^T t
-xoff        ^S s
-colon       :
-focus       ^I
-lockscreen  ^X x
-other       ^A
-removebuf   =
-title       A
-xon         ^Q q
-copy        ^[ [
-hardcopy    h
-log         H
-pow_break   B
-reset       Z
-vbell       ^G
-detach      ^D d
-help        ?
-login       L
-pow_detach  D
-screen      ^C c
-version     v
-digraph     ^V
-history     { }
-meta        a
-prev        ^H ^P p ^?
-select      '
-width       W
-displays    *
-info        i
-monitor     M
-quit        \
-silence     _
-windows     ^W w
-dumptermcap .
-kill        K k
-next        ^@ ^N sp n
-readbuf     <
-split       S
-wrap        ^R r
+以下是一些用于管理 Linux Screen 窗口 的最常用命令：
+Ctrl + a  w     : 展示当前会话中的所有窗口
+Ctrl + a  "     : 列出所有窗口
+Ctrl + a  c     : 创建一个新窗口（带shell）
+Ctrl + a  C     : 清理窗口（大写C）
+Ctrl + a  n     : 切换至下一个窗口
+Ctrl + a  p     : 切换至上一个窗口
+Ctrl + a  num   : 切换至编号为num的窗口
+Ctrl + a  k     : 杀死当前窗口
+Ctrl + a  A     : 重命名当前窗口
+
+Ctrl + a  S     :将当前区域水平分割为两个区域
+Ctrl + a  |     :将当前区域垂直分成两个区域
+Ctrl + a tab    :将输入焦点切换到下一个区域
+Ctrl + a Ctrl+a :在当前和之前的区域之间切换
+Ctrl + a  Q     :关闭除当前区域之外其他所有区域
+Ctrl + a  X     :关闭当前区域
+Ctrl + a  \     :终止所有会话并终止 Screen
+
+screen -ls  : 查看当前已有的screen会话.
+
+终止指定的 screen 会话：
+screen -S your_screen_name -X quit  : 删除某个会话.
+========================================================================================================================================
+                                                         Screen key bindings, page 1 of 1.
+
+                                                         Command key:  ^A   Literal ^A:  a
+
+ break       ^B b        flow        ^F f        lockscreen  ^X x        pow_break   B           screen      ^C c        width       W         
+ clear       C           focus       ^I          log         H           pow_detach  D           select      '           windows     ^W w      
+ colon       :           hardcopy    h           login       L           prev        ^H ^P p ^?  silence     _           wrap        ^R r      
+ copy        ^[ [        help        ?           meta        a           quit        \           split       S           writebuf    >         
+ detach      ^D d        history     { }         monitor     M           readbuf     <           suspend     ^Z z        xoff        ^S s      
+ digraph     ^V          info        i           next        ^@ ^N sp n  redisplay   ^L l        time        ^T t        xon         ^Q q      
+ displays    *           kill        K k         number      N           remove      X           title       A         
+ dumptermcap .           lastmsg     ^M m        only        Q           removebuf   =           vbell       ^G        
+ fit         F           license     ,           other       ^A          reset       Z           version     v         
 
 ^]   paste .
 "    windowlist -b

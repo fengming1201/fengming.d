@@ -46,10 +46,10 @@ function usage
     echo "opt:"
     echo "-h or --help       # help"
     echo "-d or --debug      # print variable status"
-    echo "-t or --test       # test mode, no modifications"
+    #echo "-t or --test       # test mode, no modifications"
     #echo "--realdo          # real execution"
     #echo "-m or --mode       # you define"
-    echo "--setx or --detail # open set -x mode"
+    #echo "--setx or --detail # open set -x mode"
     echo ""
 }
 

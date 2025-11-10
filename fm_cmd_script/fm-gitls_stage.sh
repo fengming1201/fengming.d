@@ -46,10 +46,10 @@ function usage
     echo "opt:"
     echo "-h or --help       # help"
     echo "-d or --debug      # print variable status"
-    echo "-t or --test       # test mode, no modifications"
+    #echo "-t or --test       # test mode, no modifications"
     #echo "--realdo          # real execution"
-    echo "-m or --mode       # you define"
-    echo "--setx or --detail # open set -x mode"
+    #echo "-m or --mode       # you define"
+    #echo "--setx or --detail # open set -x mode"
     echo ""
 }
 
@@ -123,13 +123,18 @@ function func_git_ls_stage_only
         #linux_cmd  ${cmd_opt[@]} args ....
     #done
     ${maybeSUDO} git rev-parse --is-inside-work-tree &> /dev/null
-	if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
-	local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
+    if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
+    local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
+
+    if [ "${debug}" = true ];then echo "EXEC:git diff --name-only --staged";fi
     echo "{"
     #git diff --name-only --cached
     #或（Git 2.23+）：
-    git diff --name-only --staged
+    ${maybeSUDO} git diff --name-only --staged
     echo "}"
+
+    #echo "git_root_dir:${git_root_dir}"
+    echo ""
     return 0
 }
 #if unnecessary, please do not modify following code

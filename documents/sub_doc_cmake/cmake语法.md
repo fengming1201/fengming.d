@@ -1,3 +1,19 @@
+Scons 和cmake 对比如何？
+SCons, CMake 算是第三代构建工具的两个代表。
+
+第一代 DSL 型构建语言 Makefile，是描述构建的规则和依赖关系的绝对王者。
+
+第二代 autotools(automake) 系列，几乎是是整个 Linux 的构建工具，能完成对环境依赖项的检测。但是不是能够轻松驾驭的。如果用 -j 用得比较多，肯定会遇到：出现链接错误，再次运行就能正确的情形。(gn 有 link pool 的支持优雅解决了这个问题)。
+
+SCons, CMake 算是第三代构建工具的两个代表了。
+链接：https://www.zhihu.com/question/276415476/answer/557715322
+
+
+《构建工具之shell,configure,make,cmake,scons,xmake简析总结》：
+
+https://blog.csdn.net/shixin_0125/article/details/78424747
+
+
 （1）
 
 CMake是一种用于构建和管理跨平台软件项目的工具。它使用一种简洁的脚本语言来描述项目的构建过程和配置选项。下面详细说明CMake的语法元素：

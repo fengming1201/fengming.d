@@ -261,7 +261,8 @@ function func_git_pull_update
     local branch_name="masters"
     for sub_dir in "${item_list[@]}"
     do
-        echo "item_name:"$(jq -r ".info[] | select(.name == \"${sub_dir}\") | .describe" ${target_file_name})
+        echo "name=\e[31m${sub_dir}\e[0m"
+        echo "describe:"$(jq -r ".info[] | select(.name == \"${sub_dir}\") | .describe" ${target_file_name})
         pushd ${sub_dir}
         remote_name=$(git remote -v | awk '{print $1}' | uniq)
         branch_name=$(git branch | awk '{print $2}' | uniq)
