@@ -1,0 +1,35 @@
+用法: mv [选项]... [-T] 源文件 目标文件
+  或: mv [选项]... 源文件... 目录
+  或: mv [选项]... -t 目录 源文件...
+将源文件重命名为目标文件，或将源文件（多个）移动到目录中。
+
+长选项必须使用的参数在使用短选项时也是必须的。
+      --backup[=控制方式]      为每个已存在的目标文件创建备份
+  -b                           类似于 --backup，但不接受参数
+  -f, --force                  覆盖前不提示
+  -g, --progress-bar           添加进度条
+  -i, --interactive            覆盖前提示
+  -n, --no-clobber             不覆盖已存在的文件
+如果同时指定了 -i、-f、-n 中的多个，只有最后一个生效。
+      --strip-trailing-slashes  从每个源文件参数中删除末尾的斜杠
+  -S, --suffix=后缀            覆盖常用的备份后缀
+  -t, --target-directory=目录  将所有源文件参数移动到指定目录
+  -T, --no-target-directory    将目标文件视为普通文件
+  -u, --update                 仅当源文件比目标文件新或者目标文件
+                               不存在时才移动
+  -v, --verbose                解释正在执行的操作
+  -Z, --context                将目标文件的 SELinux 安全上下文设置为默认类型
+      --help     显示此帮助信息并退出
+      --version  显示版本信息并退出
+
+备份后缀默认为 "~"，除非通过 --suffix 或 SIMPLE_BACKUP_SUFFIX 环境变量设置。
+版本控制方式可以通过 --backup 选项或 VERSION_CONTROL 环境变量选择。可用值如下：
+
+  none, off       从不创建备份（即使指定了 --backup）
+  numbered, t     创建编号备份
+  existing, nil   如果存在编号备份则使用编号，否则使用简单备份
+  simple, never   始终创建简单备份
+
+GNU coreutils 在线帮助：<https://www.gnu.org/software/coreutils/>
+完整文档：<https://www.gnu.org/software/coreutils/mv>
+或本地通过以下命令获取：info '(coreutils) mv invocation'

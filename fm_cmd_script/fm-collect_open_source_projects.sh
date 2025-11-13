@@ -35,6 +35,7 @@ fi
 #start here add your code,you need to implement the following function.
 target_file_name=${fengming_dir}/documents/sub_doc_unclassified/collect_open_source_project_info.json
 timeout_time_s=60s
+my_gitlab_url="http://gitlab.fengming.com:8080/github.com"
 
 ## parameter counts: 4
 # parameter request: name language describe url
@@ -44,12 +45,18 @@ function func_add_new_item
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
     if [ $# -ne 4 ];then echo "ERROR:parameter wrong!";return 1;fi
-    tmp_file=$(mktemp)
+    local tmp_file=$(mktemp)
+    local backup=
+    if [ "x$4" != "x" ];then
+        local item_name=$(echo "$4" | xargs basename | tr -d '\r\n')
+        backup="${my_gitlab_url}/${item_name}"
+    fi
     jq --arg name "$1" \
         --arg language "$2" \
         --arg describe "$3" \
         --arg url "$4" \
-        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url}]' \
+        --arg backup "${backup}" \
+        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url, "BACKUP": $backup}]' \
         ${target_file_name} > ${tmp_file}
     echo "New item:${1}"
     #jq -r ".info[] | select(.name == \"${1}\")" ${tmp_file}
@@ -59,7 +66,8 @@ function func_add_new_item
         --arg language "$2" \\
         --arg describe "$3" \\
         --arg url "$4" \\
-        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url}]' \\
+        --arg backup "${backup}" \\
+        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url, "BACKUP": $backup}]' \\
         ${target_file_name} > ${tmp_file}"
     fi
 
@@ -210,6 +218,7 @@ function func_check_item_status
     return 0
 }
 
+
 ##Parameter Counts      : 0 - 2
 # Parameter Requirements: item_name   timeout
 # Example:
@@ -220,6 +229,7 @@ function func_check_item_status
 function func_git_pull_update
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
+    local ret=1
     local item_list=()
     local timeout=0
     local remaining_args=()
@@ -264,17 +274,30 @@ function func_git_pull_update
         echo -e "name=\e[31m${sub_dir}\e[0m"
         echo "describe:"$(jq -r ".info[] | select(.name == \"${sub_dir}\") | .describe" ${target_file_name})
         pushd ${sub_dir}
-        remote_name=$(git remote -v | awk '{print $1}' | uniq)
+        remote_name=$(git remote -v | grep origin | awk '{print $1}' | uniq)
         branch_name=$(git branch | awk '{print $2}' | uniq)
         if [ "x${timeout}" = "x0" ];then
             echo -e "\e[31mgit pull ${remote_name} ${branch_name} \e[0m"
             if [ ${test} = false ];then
                 git pull ${remote_name} ${branch_name}
+                ret=$?
             fi
         else
             echo -e "\e[31mtimeout ${timeout} git pull ${remote_name} ${branch_name} \e[0m"
             if [ ${test} = false ];then
                 timeout ${timeout} git pull ${remote_name} ${branch_name}
+                ret=$?
+            fi
+        fi
+        if [ ${backup} = true ];then
+            git remote -v | grep -w mygitlab > /dev/null
+            if [ $? -ne 0 ];then
+                local backup_url="${my_gitlab_url}/$(git remote -v | grep origin | awk '{print $2}' | uniq | xargs basename | tr -d '\r\n')"
+                git remote add mygitlab "${backup_url}"
+            fi
+            #if pull success,than push
+            if [ $ret -eq 0 ];then
+                git push mygitlab ${branch_name}
             fi
         fi
         popd
@@ -289,6 +312,7 @@ function func_git_pull_update
 function func_git_clone
 {
     if [ ${debug} = true ];then echo "$FUNCNAME():argc=$#,argv[]=$@";fi
+    local ret=1
     local item_list=()
     local timeout=0
     local remaining_args=()
@@ -346,12 +370,21 @@ function func_git_clone
             echo -e "\e[31m[${num}]:git clone ${item_url} \e[0m"
             if [ ${test} = false ];then
                 git clone ${item_url}
+                ret=$?
             fi
         else
             echo -e "\e[31m[${num}]:timeout ${timeout} git clone ${item_url} \e[0m"
             if [ ${test} = false ];then
                 timeout ${timeout} git clone ${item_url}
+                ret=$?
             fi
+        fi
+        if [ ${backup} = true ] && [ $ret -eq 0 ];then
+            pushd ${item_name}
+            local backup_url="${my_gitlab_url}/$(echo ${item_url} | xargs basename | tr -d '\r\n')"
+            git remote add mygitlab "${backup_url}"
+            git push mygitlab ${branch_name}
+            popd
         fi
         num=$(($num + 1))
     done
@@ -382,7 +415,7 @@ function usage
     echo "       -D | --describe  \"describe\""
     echo "       -U | --url \"url\""
     echo "  --delete  \"item_name\" | -N  item_name                         #删除收藏项目"
-    echo "  --pull                          [-T|--time  timeout]    #逐个下拉更新已收藏的项目,time 为超时时间秒,缺省0s"
+    echo "  --pull         [-b | --backup ]         [-T|--time  timeout]    #逐个下拉更新已收藏的项目,-b|--backup更新后推送到备份仓库,time 为超时时间秒,缺省0s"
     echo "  --pull    [\"item_name list\"]    [-T|--time  timeout]    #下拉某个已收藏的项目,time 为超时时间秒,缺省0s"
     echo "  --clone                         [-T|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省0s"
     echo "  --clone   [\"item_name list\"]    [-T|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省0s"
@@ -404,6 +437,7 @@ function func_schedule
     local timeout=0 #60s
     local debug=false
     local test=false
+    local backup=false
     local func_test=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
@@ -413,6 +447,7 @@ function func_schedule
             -h|--help) usage; return 0 ;;
             -d|--debug) debug=true; shift ;; #不带参数,移动1
             -t|--test) test=true; shift ;; #不带参数,移动1
+            -b|--backup) backup=true;shift ;; #不带参数,移动1
             -s|--sort) if [[ -z "$cmd" ]]; then cmd=sort;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -l|--list) if [[ -z "$cmd" ]]; then cmd=list;else echo "ERROR: multiple commands";return 2;fi;shift ;;
             -c|--check) if [[ -z "$cmd" ]]; then cmd=check;else echo "ERROR: multiple commands";return 2;fi;shift ;;
@@ -447,6 +482,7 @@ function func_schedule
                         h) usage; return 0 ;;
                         d) debug=true ;;
                         t) test=true ;;
+                        b) backup=true ;;
                         l) if [[ -z "$cmd" ]]; then cmd=list;else echo "ERROR: multiple commands";return 2;fi ;;
                         s) if [[ -z "$cmd" ]]; then cmd=sort;else echo "ERROR: multiple commands";return 2;fi ;;
                         c) if [[ -z "$cmd" ]]; then cmd=check;else echo "ERROR: multiple commands";return 2;fi ;;
