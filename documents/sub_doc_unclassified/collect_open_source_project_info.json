@@ -196,19 +196,19 @@
       "name": "GuiLite",
       "language": "",
       "describe": "GUILite是一个全平台GUI库。 轻量: 4千行C++代码，0依赖，单一头文件库（GuiLite.h）。 超快: 高效渲染，单片机上也能流畅运行。",
-      "URL": "https://github.com/fengming1201/GuiLite.git"
+      "URL": "https://github.com/idea4good/GuiLite.git"
     },
     {
       "name": "gear-lib",
       "language": "",
       "describe": "Gear-Lib，用于物联网嵌入式多媒体和网络的 C 库",
-      "URL": "https://github.com/fengming1201/gear-lib.git"
+      "URL": "https://github.com/gozfree/gear-lib.git"
     },
     {
       "name": "sqlite",
       "language": "",
       "describe": "",
-      "URL": "https://github.com/fengming1201/sqlite.git"
+      "URL": "https://github.com/sqlite/sqlite.git"
     },
     {
       "name": "FreeRTOS",
@@ -220,7 +220,7 @@
       "name": "MultiTimer",
       "language": "",
       "describe": "MultiTimer 是一个软件定时器扩展模块，可无限扩展你所需的定时器任务，取代传统的标志位判断方式， 更优雅更便捷地管理程序的时间触发时序。",
-      "URL": "https://github.com/fengming1201/MultiTimer.git"
+      "URL": "https://github.com/0x1abin/MultiTimer.git"
     },
     {
       "name": "cJSON",
