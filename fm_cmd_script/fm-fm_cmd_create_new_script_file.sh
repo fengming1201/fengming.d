@@ -50,6 +50,7 @@ function usage
     echo "-p or --path  path            # save to other dir,e.g. -p ."
     echo "--setx or --detail            # open set -x mode"
     echo ""
+    echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
 }
 
 ##Parameter Counts      : 0
@@ -197,6 +198,7 @@ function usage
     echo "-m or --mode       # you define"
     echo "--setx or --detail # open set -x mode"
     echo ""
+    echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
 }
 
 ##Parameter Counts      : 0

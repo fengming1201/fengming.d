@@ -269,6 +269,7 @@ function func_git_pull_update
     #handle item one by one
     local remote_name="origin"
     local branch_name="masters"
+    local pull_fail_list=()
     for sub_dir in "${item_list[@]}"
     do
         echo -e "name=\e[31m${sub_dir}\e[0m"
@@ -289,7 +290,10 @@ function func_git_pull_update
                 ret=$?
             fi
         fi
-        if [ ${backup} = true ];then
+        if [ $ret -ne 0 ];then
+            pull_fail_list+=("${sub_dir}")
+        fi
+        if [ ${backup} = true ] && [ $ret -eq 0 ];then
             git remote -v | grep -w mygitlab > /dev/null
             if [ $? -ne 0 ];then
                 local backup_url="${my_gitlab_url}/$(git remote -v | grep origin | awk '{print $2}' | uniq | xargs basename | tr -d '\r\n')"
@@ -299,15 +303,17 @@ function func_git_pull_update
                 fi
             fi
             #if pull success,than push
-            if [ $ret -eq 0 ];then
-                echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
-                if [ ${test} = false ];then
-                    git push mygitlab ${branch_name}
-                fi
+            echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
+            if [ ${test} = false ];then
+                git push mygitlab ${branch_name}
             fi
         fi
         popd
     done
+    if [ ${#pull_fail_list[@]} -gt 0 ];then
+        echo "================================="
+        echo "pull fail list:${pull_fail_list[@]}"
+    fi
     return 0
 }
 
@@ -359,6 +365,7 @@ function func_git_clone
         echo "DEBUG:item_list=${item_list[@]}"
     fi
     #handle item one by one
+    local clone_fail_list=()
     let num=1
     for item_name in ${item_list[@]}
     do
@@ -385,6 +392,9 @@ function func_git_clone
                 ret=$?
             fi
         fi
+        if [ $ret -ne 0 ];then
+            clone_fail_list+=("${item_name}")
+        fi
         if [ ${backup} = true ] && [ $ret -eq 0 ];then
             pushd ${item_name}
             local backup_url="${my_gitlab_url}/$(echo ${item_url} | xargs basename | tr -d '\r\n')"
@@ -398,6 +408,10 @@ function func_git_clone
         fi
         num=$(($num + 1))
     done
+    if [ ${#clone_fail_list[@]} -gt 0 ];then
+        echo "================================="
+        echo "clone fail list:${clone_fail_list[@]}"
+    fi
     return 0
 }
 
@@ -424,12 +438,12 @@ function usage
     echo "       -L | --language \"language\""
     echo "       -D | --describe  \"describe\""
     echo "       -U | --url \"url\""
-    echo "  --delete  \"item_name\" | -N  item_name                         #删除收藏项目"
-    echo "  --pull         [-b | --backup ]         [-T|--time  timeout]    #逐个下拉更新已收藏的项目,-b|--backup更新后推送到备份仓库,time 为超时时间秒,缺省0s"
+    echo "  --delete  \"item_name\" | -N  item_name                   #删除收藏项目"
+    echo "  --pull    [ -b | --backup ]      [-T|--time  timeout]   #逐个下拉更新已收藏的项目,-b|--backup更新后推送到备份仓库,time 为超时时间秒,缺省0s"
     echo "  --pull    [\"item_name list\"]    [-T|--time  timeout]    #下拉某个已收藏的项目,time 为超时时间秒,缺省0s"
     echo "  --clone                         [-T|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省0s"
     echo "  --clone   [\"item_name list\"]    [-T|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省0s"
-    echo "--func   func_name  args ...                                     # 单独调用函数"
+    echo "  --func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
 }
 
 ##Parameter Counts      : 0
@@ -523,6 +537,7 @@ function func_schedule
         echo "DEBUG:maybeSUDO=${maybeSUDO}"
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:test=${test}"
+        echo "DEBUG:backup=${backup}"
         echo "DEBUG:sort=${sort}"
         echo "DEBUG:cmd=${cmd}"
 	    echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
