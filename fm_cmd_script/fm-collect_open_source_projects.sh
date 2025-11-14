@@ -293,11 +293,17 @@ function func_git_pull_update
             git remote -v | grep -w mygitlab > /dev/null
             if [ $? -ne 0 ];then
                 local backup_url="${my_gitlab_url}/$(git remote -v | grep origin | awk '{print $2}' | uniq | xargs basename | tr -d '\r\n')"
-                git remote add mygitlab "${backup_url}"
+                echo -e "\e[31mgit remote add mygitlab ${backup_url}\e[0m"
+                if [ ${test} = false ];then
+                    git remote add mygitlab "${backup_url}"
+                fi
             fi
             #if pull success,than push
             if [ $ret -eq 0 ];then
-                git push mygitlab ${branch_name}
+                echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
+                if [ ${test} = false ];then
+                    git push mygitlab ${branch_name}
+                fi
             fi
         fi
         popd
@@ -382,8 +388,12 @@ function func_git_clone
         if [ ${backup} = true ] && [ $ret -eq 0 ];then
             pushd ${item_name}
             local backup_url="${my_gitlab_url}/$(echo ${item_url} | xargs basename | tr -d '\r\n')"
-            git remote add mygitlab "${backup_url}"
-            git push mygitlab ${branch_name}
+            echo -e "\e[31mgit remote add mygitlab ${backup_url}\e[0m"
+            echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
+            if [ ${test} = false ];then
+                git remote add mygitlab "${backup_url}"
+                git push mygitlab ${branch_name}
+            fi
             popd
         fi
         num=$(($num + 1))
@@ -577,7 +587,7 @@ function func_schedule
 
     if [ "${cmd}" = "pull" ];then
         echo -e "\e[31mpull ....\e[0m"
-        func_git_pull_update "${name}" "${remaining_args[@]}" -t ${timeout}
+        func_git_pull_update "${name}" "${remaining_args[@]:1}" -t ${timeout}
     fi
 
     if [ "${cmd}" = "clone" ];then
