@@ -305,7 +305,7 @@ function func_git_pull_update
             #if pull success,than push
             echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
             if [ ${test} = false ];then
-                git push mygitlab ${branch_name}
+                timeout 30 git push mygitlab ${branch_name}
             fi
         fi
         popd
@@ -402,7 +402,7 @@ function func_git_clone
             echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
             if [ ${test} = false ];then
                 git remote add mygitlab "${backup_url}"
-                git push mygitlab ${branch_name}
+                timeout 30 git push mygitlab ${branch_name}
             fi
             popd
         fi
