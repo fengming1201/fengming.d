@@ -47,6 +47,7 @@ function usage
     echo "-h or --help       # help"
     echo "-d or --debug      # print variable status"
     #echo "-t or --test       # test mode, no modifications"
+    echo "-i or --ignore     # 也显示被 .gitignore 隐藏的文件"
     #echo "--realdo          # real execution"
     #$echo "-m or --mode       # you define"
     #echo "--setx or --detail # open set -x mode"
@@ -65,6 +66,7 @@ function func_main
     local realdo=false
     local mode=normal
     local setx=false
+    local show_ignore=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
     while [[ $# -gt 0 ]]
@@ -72,8 +74,9 @@ function func_main
         case "$1" in
             -h|--help) usage; return 0 ;;
             -d|--debug) debug=true; shift ;; #不带参数,移动1
-            -t|--test) test=true; shift ;;
-            --realdo) realdo=true; shift ;;
+            -t|--test) test=true; shift ;; #不带参数,移动1
+            -i|--ignore) show_ignore=true; shift ;; #不带参数,移动1
+            --realdo) realdo=true; shift ;; #不带参数,移动1
             --setx) setx=true; shift ;; #不带参数,移动1
             --detail) setx=true; shift ;; #不带参数,移动1
             -m|--mode)
@@ -90,6 +93,7 @@ function func_main
                         h) usage; return 0 ;;
                         d) debug=true ;;
                         t) test=true ;;
+                        i) show_ignore=true ;;
                         m) mode="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         F) cmd_opt+=("--file $2"); shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         Q) cmd_opt+=("--qr=true") ;;
@@ -127,8 +131,13 @@ function func_main
 	local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
 
     if [ "${debug}" = true ];then echo "EXEC:git status --ignored";fi
-	${maybeSUDO} git status --ignored
-    
+    if [ "${test}" = false ];then
+        if [ "${show_ignore}" = true ];then
+	        ${maybeSUDO} git status --ignored
+        else
+            ${maybeSUDO} git status
+        fi
+    fi
     return 0
 }
 #if unnecessary, please do not modify following code

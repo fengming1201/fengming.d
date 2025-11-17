@@ -126,20 +126,23 @@ function func_main
     if [ $? -ne 0 ];then echo "No found git-repository in the current dir!!";return 2;fi
     local git_root_dir=$(${maybeSUDO} git rev-parse --show-toplevel 2>/dev/null)
     if [ "${debug}" = "true" ];then echo "EXEC:git remote -v";fi
-    echo "{"
-    ${maybeSUDO} git remote -v
-    echo "},"
-
+    if [ "${test}" = false ];then
+        echo "{"
+        ${maybeSUDO} git remote -v
+        echo "},"
+    fi
     if [ "${debug}" = true ];then echo "EXEC:git branch -r";fi
-    echo "{"
-    ${maybeSUDO} git branch
-    echo "},"
-
+    if [ "${test}" = false ];then
+        echo "{"
+        ${maybeSUDO} git branch
+        echo "},"
+    fi
     if [ "${debug}" = true ];then echo "EXEC:git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'";fi
-    echo "{"
-    ${maybeSUDO} git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
-    echo "}"
-
+    if [ "${test}" = false ];then
+        echo "{"
+        ${maybeSUDO} git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
+        echo "}"
+    fi
     echo "git_root_dir:${git_root_dir}"
     echo ""
     return 0
