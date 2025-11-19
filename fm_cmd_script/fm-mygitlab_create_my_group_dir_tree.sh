@@ -131,11 +131,15 @@ function func_main
                 MyGitlab/docker_runtime
                 MyGitlab/project
                 MyGitlab/project/sub_project_51mcu
-                MyGitlab/project/sub_project_raspberry_pi
                 MyGitlab/project/sub_project_stm32
-                MyGitlab/project/sub_learn_rust
-                MyGitlab/project/sub_learn_groovy
+                MyGitlab/project/sub_project_easyarm
+                MyGitlab/project/sub_project_qemu
+                MyGitlab/project/sub_project_raspberry_pi
+                MyGitlab/project/sub_project_esp32
+                MyGitlab/project/sub_project_buildroot
                 MyGitlab/project/sub_learn_cmake
+                MyGitlab/project/sub_learn_groovy
+                MyGitlab/project/sub_learn_rust
                 MyGitlab/software_middleware_and_infrastructure
                 MyGitlab/work"
 
