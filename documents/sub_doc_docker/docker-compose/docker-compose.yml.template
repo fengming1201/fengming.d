@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile1
-    command: command1
     container_name: container1
     depends_on:
       - service2
@@ -35,7 +34,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile2
-    command: command2
     container_name: container2
     depends_on:
       - service1
@@ -54,6 +52,9 @@ services:
     ports:
       - "8001:80"
     restart: always
+    command: /bin/bash
+    stdin_open: true
+    tty: true
     volumes:
       - /path/to/volume2:/app/data2
 
