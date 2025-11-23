@@ -137,9 +137,6 @@ function func_main
                 MyGitlab/project/sub_project_raspberry_pi
                 MyGitlab/project/sub_project_esp32
                 MyGitlab/project/sub_project_buildroot
-                MyGitlab/project/sub_learn_cmake
-                MyGitlab/project/sub_learn_groovy
-                MyGitlab/project/sub_learn_rust
                 MyGitlab/software_middleware_and_infrastructure
                 MyGitlab/work"
 
