@@ -57,6 +57,9 @@ alias gitshow='fm-gitshow.sh'
 alias gitlog='fm-gitlog.sh'
 alias gitcat='fm-gitcat_file_by_commit_id.sh'
 alias gitinfo='fm-gitinfo.sh'
+alias gitbranch='git branch'
+alias gitbranch_remote='git branch -r'
+alias gitbranch_all='git branch -a'
 
 #source other files
 #incude first
