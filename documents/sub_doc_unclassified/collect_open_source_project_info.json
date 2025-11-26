@@ -5,665 +5,700 @@
       "language": "C",
       "describe": "是一个c语言编写的，用于c语言程序上下文切换和解耦的工具。",
       "URL": "https://github.com/NevermindZZT/cpost.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/cpost.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/cpost.git"
     },
     {
       "name": "dbugLib-Prj",
       "language": "",
       "describe": "嵌入式开发必备日志库dbuglib",
       "URL": "https://gitee.com/git-lib/dbugLib-Prj",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/dbugLib-Prj"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/dbugLib-Prj"
     },
     {
       "name": "eepromfs",
       "language": "",
       "describe": "基于EEPROM的简易类文件的数据读写库，方便做动态功能增减时参数管理。",
       "URL": "https://gitee.com/wtau_zaozao/eepromfs",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/eepromfs"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/eepromfs"
     },
     {
       "name": "libev",
       "language": "",
       "describe": "libev是一个轻量级的事件循环库，它类似于libevent但更加轻量。libev提供了高性能的事件循环，支持多种类型的事件，包括I/O、定时器、信号处理等。",
       "URL": "https://github.com/enki/libev.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/libev.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/libev.git"
     },
     {
       "name": "libevent",
       "language": "",
       "describe": "它是一个轻量级的事件通知库，支持多种I/O多路复用技术（包括select、poll、epoll、kqueue等），广泛用于开发高性能网络服务器。",
       "URL": "https://github.com/libevent/libevent.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/libevent.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/libevent.git"
     },
     {
       "name": "libevnet",
       "language": "",
       "describe": "异步事件库",
       "URL": "http://25thandClement.com/~william/projects/libevnet.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/libevnet.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/libevnet.git"
     },
     {
       "name": "libhv",
       "language": "C/C++",
       "describe": "libhv是一个比libevent、libev、libuv更易用的跨平台c/c++国产网络库，用来开发TCP/UDP/SSL/HTTP/WebSocket/MQTT客户端/服务端。",
       "URL": "https://github.com/ithewei/libhv.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/libhv.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/libhv.git"
     },
     {
       "name": "libuev",
       "language": "",
       "describe": "libuv是一个跨平台的异步I/O库，它支持异步文件系统操作、TCP、UDP、异步DNS解析、子进程等。(https://libuv.org/)",
       "URL": "https://github.com/libuv/libuv.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/libuv.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/libuv.git"
     },
     {
       "name": "LiteOS",
       "language": "",
       "describe": "LiteOS官方源码",
       "URL": "https://gitee.com/LiteOS/LiteOS.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/LiteOS.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/LiteOS.git"
     },
     {
       "name": "mynewt-core",
       "language": "",
       "describe": "",
       "URL": "https://gitclone.com/github.com/apache/mynewt-core.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mynewt-core.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mynewt-core.git"
     },
     {
       "name": "nuttx",
       "language": "",
       "describe": "是一个具有丰富功能的、能够运行在小型微控制器上的实时操作系统（RTOS）。",
       "URL": "https://gitclone.com/github.com/apache/nuttx.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/nuttx.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/nuttx.git"
     },
     {
       "name": "ringbuff",
       "language": "",
       "describe": "是一款通用FIFO环形缓冲区实现的开源库。",
       "URL": "https://github.com/MaJerle/ringbuff",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/ringbuff"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/ringbuff"
     },
     {
       "name": "RIOT",
       "language": "",
       "describe": "是一款开源的实时操作系统，适用于物联网设备和嵌入式系统等低功耗、资源受限的环境。",
       "URL": "https://gitclone.com/github.com/RIOT-OS/RIOT.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/RIOT.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/RIOT.git"
     },
     {
       "name": "SFUD",
       "language": "",
       "describe": "SFUD 是一款开源的串行 SPI Flash 通用驱动库,为了解决这些 Flash 的差异现状而设计。",
       "URL": "https://github.com/armink/SFUD.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/SFUD.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/SFUD.git"
     },
     {
       "name": "tbox",
       "language": "",
       "describe": "BOX是一个用c语言实现的跨平台开发库。流库、协程库、数据库、xml库、内存库、容器库、算法库、网络库、数学运算库、libc库、libm库、object库。",
       "URL": "https://github.com/tboox/tbox",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/tbox"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/tbox"
     },
     {
       "name": "TencentOS-tiny",
       "language": "",
       "describe": "TencentOS tiny 是腾讯面向物联网领域开发的实时操作系统, 提供精简的 RTOS 内核，内核组件可裁剪可配置，可快速移植到多种主流 MCU (如 STM32 全系列)及模组芯片上。",
       "URL": "https://gitee.com/173049874/TencentOS-tiny.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/TencentOS-tiny.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/TencentOS-tiny.git"
     },
     {
       "name": "toolkit",
       "language": "",
       "describe": "ToolKit 是一套应用于嵌入式系统的通用工具包，可灵活应用到有无RTOS的程序中，采用C语言面向对象的思路实现各个功能，尽可能最大化的复用代码，工具包目前为止包含：循环队列、软件定时器、事件集。",
       "URL": "https://github.com/cproape/toolkit",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/toolkit"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/toolkit"
     },
     {
       "name": "Zorb-Framework",
       "language": "",
       "describe": "是一个基于面向对象的思想来搭建一个轻量级的嵌入式框架。",
       "URL": "https://github.com/54zorb/Zorb-Framework.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/Zorb-Framework.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/Zorb-Framework.git"
     },
     {
       "name": "TaskScheduler",
       "language": "",
       "describe": "TaskScheduler库为开发者提供了一种简单高效的单片机多任务处理解决方案。它使用协作式多任务处理模式，避免了抢占式调度带来的性能损耗和复杂性。TaskScheduler库的代码量小，资源占用少，能够在各种单片机平台上高效运行。",
       "URL": "https://github.com/arkhipenko/TaskScheduler",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/TaskScheduler"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/TaskScheduler"
     },
     {
       "name": "log.c",
       "language": "",
       "describe": "log.c是一个轻量级的日志库。一个用 C99 实现的简单日志库，这意味着它应该可以在任何支持 C99 标准的平台上编译和运行，如我们的嵌入式系统中。",
       "URL": "https://github.com/rxi/log.c.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/log.c.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/log.c.git"
     },
     {
       "name": "varch",
       "language": "",
       "describe": "varch（we-architecture，意为我们的框架库）是嵌入式C语言常用代码模块库，包含了嵌入式中常用的算法库, 数据结构（容器）库, 解析器库, 独立C语言std库, 工具库等等。",
       "URL": "https://gitee.com/Lamdonn/varch",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/varch"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/varch"
     },
     {
       "name": "erpc",
       "language": "",
       "describe": "eRPC（嵌入式RPC）是NXP开源的、用于多芯片嵌入式系统和异构多核SoC的开源远程过程调用（RPC）系统。与其他现代RPC系统（如出色的Apache Thrift）不同，eRPC的与众不同之处在于它是为紧密耦合的系统设计的，使用纯C实现远程功能，并且代码大小较小（<5kB）。它不适用于网络上的高性能分布式系统。",
       "URL": "https://github.com/EmbeddedRPC/erpc",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/erpc"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/erpc"
     },
     {
       "name": "mOTA",
       "language": "",
       "describe": "",
       "URL": "https://gitee.com/DinoHaw/mOTA",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mOTA"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mOTA"
     },
     {
       "name": "c-periphery",
       "language": "",
       "describe": "一个用 C 语言编写的硬件外设访问库。可以用它来读写 Serial、SPI、I2C 等，非常适合在嵌入式产品上使用。",
       "URL": "https://github.com/vsergeev/c-periphery",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/c-periphery"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/c-periphery"
     },
     {
       "name": "jsonrpc-c",
       "language": "",
       "describe": "jsonrpc-c 是一个用 C 语言编写的 JSON-RPC 库，我们可以用它来快速搭建一个基于 TCP socket 的 JSON-RPC server。核心代码就一个 json-rpc.c 文件，共 424 行代码，非常容易集成到我们自己的项目中。",
       "URL": "https://github.com/hmng/jsonrpc-c",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/jsonrpc-c"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/jsonrpc-c"
     },
     {
       "name": "C-Thread-Pool",
       "language": "",
       "describe": "C-Thread-Pool是一个轻量级、易用的线程池实现。特点：1，符合ANSI C 和 POSIX 标准。2，支持暂停/恢复/等待操作。3，简单易懂的 API。4，经过充分测试。C-Thread-Pool库未预编译，我们需要与项目一起编译。在 Linux 上用 gcc 编译时，需要添加标志 -pthread。",
       "URL": "https://github.com/Pithikos/C-Thread-Pool",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/C-Thread-Pool"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/C-Thread-Pool"
     },
     {
       "name": "QuarkTS",
       "language": "",
       "describe": "QuarkTS是一款开源的嵌入式操作系统，旨在为小型嵌入式应用程序提供现代化的开发环境，帮助开发者构建稳定、可预测的事件驱动型多任务软件。其特点包括：1,优先级协作式调度：任务自行管理生命周期，避免了抢占带来的复杂性，减少了重入问题。2,时间控制：提供定时任务和软件定时器，方便实现时间相关的操作。3,任务间通信机制：提供队列、通知、事件标志等机制，实现不同任务之间的有效通信。4,状态机支持：提供分层状态机支持，简化复杂逻辑的实现。5,协程：支持协程，提升代码效率，简化并发编程。5,AT命令行接口：提供简洁的命令行接口，方便调试和交互。6,安全可靠：遵循MISRA C 2012和CERT编码标准，并进行多项静态分析检查，确保代码安全可靠。",
       "URL": "https://github.com/kmilo17pet/QuarkTS",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/QuarkTS"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/QuarkTS"
     },
     {
       "name": "cgic",
       "language": "",
       "describe": "**CGI即通用网关接口（Common Gateway Interface）** ，是一个Web服务器主机提供信息服务的标准接口。通过CGI接口，Web服务器就能够获取客户端提交的信息，转交给服务器端的CGI程序进行处理，最后返回结果给客户端。",
       "URL": "https://github.com/boutell/cgic",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/cgic"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/cgic"
     },
     {
       "name": "cmockery",
       "language": "",
       "describe": "CMockery是google发布的用于C单元测试的一个轻量级的框架。",
       "URL": "https://github.com/google/cmockery.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/cmockery.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/cmockery.git"
     },
     {
       "name": "protobuf",
       "language": "",
       "describe": "Protocol Buffers，是Google公司开发的一种数据格式，类似于XML能够将结构化数据序列化，可用于数据存储、通信协议等方面。它不依赖于语言和平台并且可扩展性极强。",
       "URL": "https://github.com/protocolbuffers/protobuf.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/protobuf.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/protobuf.git"
     },
     {
       "name": "MQTT-C",
       "language": "",
       "describe": "适用于嵌入式系统和 PC 等的便携式 MQTT C 客户端。",
       "URL": "https://github.com/LiamBindle/MQTT-C.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/MQTT-C.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/MQTT-C.git"
     },
     {
       "name": "zephyr",
       "language": "",
       "describe": "Zephyr RTOS是Linux基金会下的一个开源项目,是一款面向物联网的小型、可裁剪的实时操作系统",
       "URL": "https://github.com/zephyrproject-rtos/zephyr.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/zephyr.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/zephyr.git"
     },
     {
       "name": "GuiLite",
       "language": "",
       "describe": "GUILite是一个全平台GUI库。 轻量: 4千行C++代码，0依赖，单一头文件库（GuiLite.h）。 超快: 高效渲染，单片机上也能流畅运行。",
       "URL": "https://github.com/idea4good/GuiLite.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/GuiLite.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/GuiLite.git"
     },
     {
       "name": "gear-lib",
       "language": "",
       "describe": "Gear-Lib，用于物联网嵌入式多媒体和网络的 C 库",
       "URL": "https://github.com/gozfree/gear-lib.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/gear-lib.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/gear-lib.git"
     },
     {
       "name": "sqlite",
       "language": "",
       "describe": "",
       "URL": "https://github.com/sqlite/sqlite.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/sqlite.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/sqlite.git"
     },
     {
       "name": "FreeRTOS",
       "language": "",
       "describe": "",
       "URL": "https://github.com/FreeRTOS/FreeRTOS.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/FreeRTOS.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/FreeRTOS.git"
     },
     {
       "name": "MultiTimer",
       "language": "",
       "describe": "MultiTimer 是一个软件定时器扩展模块，可无限扩展你所需的定时器任务，取代传统的标志位判断方式， 更优雅更便捷地管理程序的时间触发时序。",
       "URL": "https://github.com/0x1abin/MultiTimer.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/MultiTimer.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/MultiTimer.git"
     },
     {
       "name": "cJSON",
       "language": "",
       "describe": "",
       "URL": "https://github.com/DaveGamble/cJSON",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/cJSON"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/cJSON"
     },
     {
       "name": "SKRTOS_sparrow",
       "language": "",
       "describe": "SKRTOS_sparrow 是一款极小型 RTOS，代码仅有 400 行，可以将它看成是一个 mini 版本的 FreeRTOS 内核。作者写了多篇博客讲解它的原理，并指导读者一步步完成一个实时操作系统。",
       "URL": "https://github.com/skaiui2/SKRTOS_sparrow",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/SKRTOS_sparrow"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/SKRTOS_sparrow"
     },
     {
       "name": "mqtt",
       "language": "",
       "describe": "MQTT协议中文版。",
       "URL": "https://github.com/mcxiaoke/mqtt.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mqtt.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mqtt.git"
     },
     {
       "name": "nanohttpd-cn",
       "language": "",
       "describe": "NanoHTTPD 是一个小型、轻量级的开源 HTTP 服务器，它设计用于嵌入其他应用程序。它非常适用于运行在资源受限的环境中，例如在物联网(IoT)设备上。",
       "URL": "http://www.gitpp.com/rz/nanohttpd-cn",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/nanohttpd-cn"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/nanohttpd-cn"
     },
     {
       "name": "usal_mcu",
       "language": "",
       "describe": "《一个基于分层架构实现的MCU通用系统》。在这个项目中，主要实现了一个仿linux分层架构实现的mcu通用系统，该项目的创建方便芯片级切换以及多产品线开发。",
       "URL": "https://github.com/hu198021688500/usal_mcu.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/usal_mcu.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/usal_mcu.git"
     },
     {
       "name": "contiki-ng",
       "language": "",
       "describe": "Contiki-NG是一个为下一代物联网设备设计的开源操作系统，专注于低功耗通信、安全性和可靠性。它支持一系列标准协议，例如IPv6、6LoWPAN、6TiSCH、RPL和CoAP，使得不同设备之间能够高效互联。Contiki-NG是在原有的Contiki OS基础上发展而来的，保留了一些经典特性，并在此基础上进行了增强，以满足现代物联网的需求。",
       "URL": "https://github.com/contiki-ng/contiki-ng.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/contiki-ng.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/contiki-ng.git"
     },
     {
       "name": "mbed-os",
       "language": "",
       "describe": "Mbed OS是Arm公司推出的一个开源嵌入式操作系统，专为物联网设备而设计。它为基于Arm Cortex-M微控制器的连接设备开发提供了全面的功能，包括安全特性、连接性、实时操作系统(RTOS)以及传感器和I/O设备的驱动程序。",
       "URL": "https://github.com/ARMmbed/mbed-os.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mbed-os.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mbed-os.git"
     },
     {
       "name": "HeliOS",
       "language": "",
       "describe": "HeliOS是一个开源的、免费使用的嵌入式多任务内核。它以其精简的体积和强大的API而闻名，为低功耗嵌入式设备提供了灵活的、可高度定制的任务管理、调度、进程间通信以及设备驱动等功能。",
       "URL": "https://github.com/heliosproj/HeliOS.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/HeliOS.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/HeliOS.git"
     },
     {
       "name": "MiROS",
       "language": "",
       "describe": "MiROS是一个为ARM Cortex-M微控制器设计的极简实时操作系统(RTOS)内核。它旨在以简单易懂的方式阐述RTOS的核心概念，而非追求商业应用的健壮性和可移植性。这使其成为学习RTOS的理想工具，尤其适合配合Quantum Leaps提供的在线课程使用。",
       "URL": "https://github.com/QuantumLeaps/MiROS.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/MiROS.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/MiROS.git"
     },
     {
       "name": "rt-thread",
       "language": "C",
       "describe": "",
       "URL": "https://github.com/RT-Thread/rt-thread.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/rt-thread.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/rt-thread.git"
     },
     {
       "name": "FreeRTOS-Kernel-Book",
       "language": "",
       "describe": "",
       "URL": "https://github.com/FreeRTOS/FreeRTOS-Kernel-Book.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/FreeRTOS-Kernel-Book.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/FreeRTOS-Kernel-Book.git"
     },
     {
       "name": "ha_xiaomi_home",
       "language": "",
       "describe": "米家集成是一个由小米官方提供支持的 Home Assistant 的集成组件，它可以让您在 Home Assistant 中使用小米 IoT 智能设备。",
       "URL": "https://github.com/XiaoMi/ha_xiaomi_home.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/ha_xiaomi_home.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/ha_xiaomi_home.git"
     },
     {
       "name": "lvgl",
       "language": "",
       "describe": "LittlevGL是一个免费的开源图形库，提供了创建嵌入式GUI所需的一切，具有易于使用的图形元素、漂亮的视觉效果和低内存占用。",
       "URL": "https://github.com/lvgl/lvgl.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lvgl.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lvgl.git"
     },
     {
       "name": "redis",
       "language": "",
       "describe": "Redis 是基于 C语言编写的开源存储数据库、支持网络、可基于内存、分布式、可选持久性的键值对(Key-Value)存储数据库，并提供多种语言的 API。",
       "URL": "https://github.com/redis/redis.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/redis.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/redis.git"
     },
     {
       "name": "cosyos",
       "language": "",
       "describe": "CosyOS是一款来自中国的开源实时操作系统，从经典的8051内核，到流行的Arm Cortex-M内核，均可实现全局不关总中断、零中断延迟，适用于对系统实时性及中断响应速度有较高要求的场合。",
       "URL": "https://gitee.com/cosyos/cosyos",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/cosyos"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/cosyos"
     },
     {
       "name": "breadboard-os",
       "language": "",
       "describe": "BreadboardOS是一个功能强大且灵活的固件平台，旨在帮助开发者快速构建和测试嵌入式项目。通过使用命令行界面、RTOS任务管理器以及丰富的系统资源信息工具，BreadboardOS大幅提升了开发效率，同时也为未来的项目扩展打下了良好的基础。",
       "URL": "https://github.com/mcknly/breadboard-os",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/breadboard-os"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/breadboard-os"
     },
     {
       "name": "levelx",
       "language": "",
       "describe": "LevelX为嵌入式应用提供了重要的功能。它首先实现了闪存的均匀写入，解决了反复使用同一物理存储区导致的提前磨损问题。此外，LevelX设计了故障恢复机制，使得在每次写入过程中的中断都能自动恢复，确保数据的一致性和完整性。",
       "URL": "https://github.com/eclipse-threadx/levelx",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/levelx"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/levelx"
     },
     {
       "name": "spiffs",
       "language": "",
       "describe": "SPIFFS 是一款为嵌入式系统设计的优秀闪存文件系统，它在资源受限的环境下展现出极高的效率和可靠性。虽然它目前还存在一些局限性，例如不支持目录和可扩展性有限，但其简单易用、低资源消耗以及类似 POSIX 的 API 等优点使其成为许多嵌入式项目的理想选择。",
       "URL": "clone https://github.com/pellepl/spiffs",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/spiffs"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/spiffs"
     },
     {
       "name": "StateOS",
       "language": "",
       "describe": "StateOS 是一款功能强大、轻量高效的实时操作系统，其简洁的设计、丰富的功能以及对标准库的良好支持，使其成为嵌入式开发者的有力工具。",
       "URL": "https://github.com/stateos/StateOS",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/StateOS"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/StateOS"
     },
     {
       "name": "trampoline",
       "language": "",
       "describe": "Trampoline RTOS 以其轻量级、高度可移植性、标准化 API 和丰富的示例代码，为小型嵌入式系统开发提供了一个理想的解决方案。其对各种主流架构和评估板的支持，以及对 OSEK/VDX 和 AUTOSAR 标准的遵循，使其成为一个值得关注和尝试的优秀 RTOS。",
       "URL": "https://github.com/TrampolineRTOS/trampoline.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/trampoline.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/trampoline.git"
     },
     {
       "name": "threadx",
       "language": "",
       "describe": "hreadX是一个先进的实时操作系统（RTOS），专为深度嵌入式应用而设计。它以其高效、可靠和可扩展性而闻名，广泛应用于各种领域，从汽车电子到工业自动化，再到物联网设备。",
       "URL": "https://github.com/eclipse-threadx/threadx.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/threadx.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/threadx.git"
     },
     {
       "name": "modm",
       "language": "",
       "describe": "modm是一个用于构建定制 C++23 嵌入式库的工具箱。它能够生成启动代码、硬件抽象层 (HAL) 及其实现、通信协议、外部设备驱动程序和板级支持包 (BSP)。modm 的模块化和可定制化流程允许你根据自身需求进行微调，极大简化嵌入式开发的复杂性。它并非一个完整的嵌入式操作系统，而是一个库生成器，提供构建嵌入式项目的骨架，并高度关注代码效率和可移植性。",
       "URL": "https://github.com/modm-io/modm.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/modm.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/modm.git"
     },
     {
       "name": "lk",
       "language": "",
       "describe": "Little Kernel (LK) 并非一个简单的内核，而是极具魅力的嵌入式操作系统内核，它以其轻量级、可移植性和模块化设计而闻名。",
       "URL": "https://github.com/littlekernel/lk.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lk.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lk.git"
     },
     {
       "name": "RROS",
       "language": "",
       "describe": "RROS (Rust Real-Time Operating System) 是一款由北京邮电大学研发的新型双内核操作系统，它巧妙地结合了 Rust 编写的实时内核和通用的 Linux 内核，实现了高性能实时处理与强大的 Linux 应用程序兼容性的完美平衡。",
       "URL": "https://github.com/BUPT-OS/RROS.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/RROS.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/RROS.git"
     },
     {
       "name": "StratifyOS",
       "language": "",
       "describe": "StratifyOS并非一个简单的嵌入式操作系统，而是一个为ARM Cortex-M架构微控制器量身打造的、功能完备的实时操作系统（RTOS），它致力于简化开发流程，并充分发挥Cortex-M处理器的强大性能。",
       "URL": "https://github.com/StratifyLabs/StratifyOS.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/StratifyOS.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/StratifyOS.git"
     },
     {
       "name": "pikoRT",
       "language": "",
       "describe": "PikoRT是一个针对ARM Cortex-M系列微处理器优化的微型实时操作系统内核，它拥有Linux-like的架构，但体积精简，性能高效。",
       "URL": "https://github.com/PikoRT/pikoRT",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/pikoRT"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/pikoRT"
     },
     {
       "name": "CodeBrick",
       "language": "",
       "describe": "",
       "URL": "https://gitee.com/moluo-tech/CodeBrick",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/CodeBrick"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/CodeBrick"
     },
     {
       "name": "mcuboot",
       "language": "c",
       "describe": "针对MCU的boot，它是一款适用于 32 位微控制器的安全引导加载程序（软件框架）。而且，这款MCUboot开源、并遵循Apache License 2.0开源协议。",
       "URL": "https://github.com/mcu-tools/mcuboot",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mcuboot"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mcuboot"
     },
     {
       "name": "openblt",
       "language": "C",
       "describe": "OpenBLT 是一款适用于常见 8 位、16 位、32 位等众多单片机的Bootloader。它支持RS232、CAN、USB、TCP/IP、Modbus RTU等单片机常见通信协议。并附带易于使用的 MicroBoot PC 工具，用于启动和监控固件更新。同时，还支持直接从 SD 卡执行固件更新。",
       "URL": "https://github.com/feaser/openblt",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/openblt"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/openblt"
     },
     {
       "name": "tiny_bootloader",
       "language": "C",
       "describe": "Tiny Bootloader顾名思义，它是一款微小（轻量级）的Bootloader，适合于8位（AVR）、32位单片机等资源有限的单片机，只需要2KB ROM即可。",
       "URL": "https://github.com/jaz303/tiny_bootloader",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/tiny_bootloader"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/tiny_bootloader"
     },
     {
       "name": "wolfBoot",
       "language": "",
       "describe": "wolfBoot 是一款开源的、轻量级的安全Bootloader，它是完全独立的应用程序，适用于32位MCU操作系统或裸机项目。",
       "URL": "https://github.com/wolfSSL/wolfBoot",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/wolfBoot"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/wolfBoot"
     },
     {
       "name": "b_flash",
       "language": "c",
       "describe": "一个开源轻量级flash管理器的实现和应用--带磨损均衡和备份,",
       "URL": "https://gitee.com/zhao-zhangbo/b_flash",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/b_flash"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/b_flash"
     },
     {
       "name": "nanogui",
       "language": "c",
       "describe": "NanoGUI是一款超轻量级图形库，支持单色LCD驱动。它代码量仅8KB，适合简单显示设备。",
       "URL": "https://github.com/wjakob/nanogui",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/nanogui"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/nanogui"
     },
     {
       "name": "FlashDB",
       "language": "c",
       "describe": "FlashDB是一款超轻量级的嵌入式数据库，专注于提供嵌入式产品的数据存储方案。",
       "URL": "https://github.com/armink/FlashDB",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/FlashDB"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/FlashDB"
     },
     {
       "name": "zlog",
       "language": "c",
       "describe": "zlog是一个高性能、线程安全、灵活、概念清晰的纯C日志函数库。",
       "URL": "https://github.com/HardySimpson/zlog",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/zlog"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/zlog"
     },
     {
       "name": "mosquitto",
       "language": "c",
       "describe": "mosquitto是一款开源的MQTT消息代理（服务器）软件，提供轻量级的，支持可发布/可订阅的的消息推送模式，使设备对设备之间的短消息通信变得简单。",
       "URL": "https://github.com/eclipse/mosquitto",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mosquitto"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mosquitto"
     },
     {
       "name": "yyjson",
       "language": "C",
       "describe": "yyjson 作为一个高性能、跨平台的 JSON 库，为嵌入式开发提供了强大的支持。它的快速解析能力、灵活扩展性和开发者友好的接口，使其成为嵌入式系统中处理 JSON 数据的理想选择。",
       "URL": "https://github.com/ibireme/yyjson",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/yyjson"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/yyjson"
     },
     {
       "name": "lwrb",
       "language": "C",
       "describe": "lwrb是一个基于标准C11编写的二分缓冲区(Bipartite Buffer)实现，适用于从深度嵌入式系统到高性能计算等各种平台。",
       "URL": "https://github.com/MaJerle/lwrb",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lwrb"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lwrb"
     },
     {
       "name": "embedlog",
       "language": "C",
       "describe": "Embedlog 是一个功能强大、轻量高效的嵌入式日志库，它在保持小巧体积的同时，提供了丰富的功能和灵活的配置选项。其出色的性能和可靠性使其成为嵌入式系统开发的理想选择。",
       "URL": "https://github.com/mlyszczek/embedlog",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/embedlog"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/embedlog"
     },
     {
       "name": "smolrtsp",
       "language": "C",
       "describe": "SmolRTSP是一个轻量级、高效、灵活的RTSP服务器库，它特别适合嵌入式设备的开发。 其简单易用的API、强大的功能以及活跃的社区支持，使其成为嵌入式开发者实现RTSP视频流传输的理想选择",
       "URL": "https://github.com/OpenIPC/smolrtsp",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/smolrtsp"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/smolrtsp"
     },
     {
       "name": "nanoMODBUS",
       "language": "C",
       "describe": "nanoMODBUS 是一款专为嵌入式及微控制器环境量身定制的MODBUS协议库。其小巧紧凑的代码、模块化的设计、丰富的功能支持以及高度的可定制性，都使其成为开发者实现工业通讯的理想选择。",
       "URL": "https://github.com/debevv/nanoMODBUS",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/nanoMODBUS"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/nanoMODBUS"
     },
     {
       "name": "lwow",
       "language": "C",
       "describe": "LwOW (Lightweight OneWire) 是一款专为嵌入式系统设计的轻量级OneWire协议库，它以其卓越的性能和灵活的架构脱颖而出。LwOW 巧妙地利用了MCU 的UART外设或GPIO，实现高效的OneWire 通信，显著降低了资源消耗，并提升了系统效率。",
       "URL": "https://github.com/MaJerle/lwow",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lwow"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lwow"
     },
     {
       "name": "sloop",
       "language": "C",
       "describe": "sloop是一个嵌入式裸机框架，提供一套API，方便管理多种任务，比如超时任务/周期任务/并行任务/互斥任务等。",
       "URL": "https://github.com/sloop-open/sloop",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/sloop"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/sloop"
     },
     {
       "name": "lwmem",
       "language": "C",
       "describe": "LWMEM是一个高效、轻量级、易于集成的动态内存管理器，它为嵌入式系统开发者提供了一种全新的内存管理方案。其高效的算法、灵活的配置、以及对碎片化内存的良好支持。LWMEM能帮助轻松管理内存，提高系统稳定性和性能。",
       "URL": "https://github.com/MaJerle/lwmem",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lwmem"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lwmem"
     },
     {
       "name": "toaruos",
       "language": " ",
       "describe": "ToaruOS是一个为x86-64架构PC设计的完整操作系统，并提供对ARMv8架构的实验性支持。ToaruOS的目标是成为一个教育资源，提供一个代表性微观世界，展现主流桌面操作系统中的功能。它包含内核、引导加载程序、动态共享对象链接器、C标准库、自研的合成窗口系统、动态字节码编译编程语言、高级代码编辑器以及数十个其他实用程序和示例应用程序。所有必要的源代码（主要为C语言）总计约10万行",
       "URL": "https://github.com/klange/toaruos",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/toaruos"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/toaruos"
     },
     {
       "name": "nanoprintf",
       "language": "C",
       "describe": "nanoprintf是一个轻量级、高性能、安全可靠、易于使用的Printf实现，它完美地解决了嵌入式系统中Printf函数体积过大的问题。高度的可配置性、高效的浮点数转换以及多平台支持，让它成为嵌入式开发者的理想选择。",
       "URL": "https://github.com/charlesnicholson/nanoprintf",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/nanoprintf"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/nanoprintf"
     },
     {
       "name": "embox",
       "language": "C",
       "describe": "Embox 是一个为嵌入式系统和受限资源设计的灵活而强大的实时操作系统。凭借其 POSIX 兼容性、对多种编程语言的支持，以及对多种硬件平台的适用性，Embox 使得开发者能够高效地构建和部署嵌入式应用。Embox 是采用一个高效、灵活的解决方案来开发嵌入式系统。",
       "URL": "https://github.com/embox/embox",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/embox"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/embox"
     },
     {
       "name": "mr-library",
       "language": "C",
       "describe": "mr-library 框架支持互斥锁、对象管理等基础内核功能。集成异步事件驱动框架（event）、多时基软件定时器(soft-timer) 等服务。",
       "URL": "https://gitee.com/MacRsh/mr-library",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/mr-library"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mr-library"
     },
     {
       "name": "scmrtos",
       "language": "C",
       "describe": "scmRTOS是一个用C++编写的，适用于MCU的轻量级实时操作系统。最低只需要512字节RAM（内存）、1K的代码量、具有上下文切换极低的延时。",
       "URL": "https://github.com/scmrtos/scmrtos",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/scmrtos"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/scmrtos"
     },
     {
       "name": "phoenix-rtos-kernel",
       "language": "C",
       "describe": "就是一款“凤凰”级别的微内核项目——小巧、灵活，还跨架构。它能跑在你手边那些小到只能点亮LED的Cortex-M芯片上，也能跑在内存几百兆的ARM Cortex-A、x86、RISC-V、LEON3/4 (SPARC)甚至QEMU模拟环境里。底层全BSD协议开源，想捣鼓啥都随你。",
       "URL": "https://github.com/phoenix-rtos/phoenix-rtos-kernel.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/phoenix-rtos-kernel.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/phoenix-rtos-kernel.git"
     },
     {
       "name": "stlink",
       "language": "C",
       "describe": "说起 STM32 开发板，肯定绕不开官方的 ST-LINK 调试器。stlink 就是一个开源版的 STLINK 工具集，用它你能刷固件、调试、查看芯片信息功能跟官方几乎 1:1 对标",
       "URL": "",
-      "BACKUP":""
+      "BACKUP": ""
     },
     {
       "name": "lwbtn",
       "language": "",
       "describe": "lwbtn（Lightweight Button Manager）就是个超轻量级的按键管理库，用 C11 写的。它不依赖操作系统，零动态内存，一切都靠你提供个毫秒级的时间源。回调驱动，支持单击、多击、长按，还自带软件防抖——功能虽精简，但绝对够用。",
       "URL": "https://github.com/MaJerle/lwbtn.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lwbtn.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lwbtn.git"
     },
     {
       "name": "lwesp",
       "language": "c",
       "describe": "是一套用 C99 写的超小库，专门帮你把 MCU（比如 ARM Cortex‑M、AVR、PIC）和 ESP8266/ESP32 这种 Wi‑Fi 模块“聊”起来。",
       "URL": "https://github.com/MaJerle/lwesp.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lwesp.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lwesp.git"
     },
     {
       "name": "lwprintf",
       "language": "c",
       "describe": "这是一个专为嵌入式系统量身定制的轻量级printf实现库。让开发者既能享受printf的便利，又无需承受标准库的沉重负担。",
       "URL": "https://github.com/MaJerle/lwprintf.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/lwprintf.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/lwprintf.git"
     },
     {
       "name": "JesFs",
       "language": "c",
       "describe": "是给普通串行NOR‑Flash芯片装的文件系统,它专门为 8 KB 代码空间、几百字节 RAM 的超小 MCU 设计，代码只有几百行，运行时只占 200 B RAM，几乎不吃资源。",
       "URL": "https://github.com/joembedded/JesFs.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/JesFs.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/JesFs.git"
     },
     {
       "name": "ulog",
       "language": "c",
       "describe": "uLog 就是为资源紧张的单片机、裸机系统准备的日志库。它只用两文件（.h + .c），全 C 写的，几乎没有依赖，跟 Log4j、Log4c 那套概念差不多，却轻得像根羽毛。",
       "URL": "https://github.com/rdpoor/ulog.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/ulog.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/ulog.git"
     },
     {
       "name": "barebox",
       "language": "",
       "describe": "barebox 是一个开源的嵌入式 bootloader，结合了 U-Boot 的经验和 Linux 内核的现代设计，目标是让启动、设备管理、脚本与升级流程更规范、更易开发。",
       "URL": "https://github.com/barebox/barebox.git",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/barebox.git"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/barebox.git"
     },
     {
       "name": "EasyLogger",
       "language": "c",
       "describe": "EasyLogger是github上ArmLink开源的一个轻量级日志库。其功能与大家平时printf把日志数据打印在终端上面是类似的。",
       "URL": "https://github.com/armink/EasyLogger",
-      "BACKUP":"http://gitlab.fengming.com:8080/github.com/EasyLogger"
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/EasyLogger"
+    },
+    {
+      "name": "uC-OS2",
+      "language": "C",
+      "describe": "uCOS-II源码",
+      "URL": "https://github.com/weston-embedded/uC-OS2.git",
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/uC-OS2.git"
+    },
+    {
+      "name": "uC-OS3",
+      "language": "C",
+      "describe": "uCOS-III源码",
+      "URL": "https://github.com/weston-embedded/uC-OS3.git",
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/uC-OS3.git"
+    },
+    {
+      "name": "uC-MQTT",
+      "language": "C",
+      "describe": "基于uCOS的MQTT",
+      "URL": "https://github.com/weston-embedded/uC-MQTT.git",
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/uC-MQTT.git"
+    },
+    {
+      "name": "uC-HTTP",
+      "language": "C",
+      "describe": "基于uCOS的http服务器",
+      "URL": "https://github.com/weston-embedded/uC-HTTP.git",
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/uC-HTTP.git"
+    },
+    {
+      "name": "uC-TCP-IP",
+      "language": "C",
+      "describe": "基于uCOS的TCPIP网络",
+      "URL": "https://github.com/weston-embedded/uC-TCP-IP.git",
+      "BACKUP": "http://gitlab.fengming.com:8080/github.com/uC-TCP-IP.git"
     }
   ]
 }
