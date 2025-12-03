@@ -1,0 +1,13 @@
+{
+	"registry-mirrors": [
+		"https://dockercf.jsdelivr.fyi",
+		"https://docker.1panel.live",
+		"https://docker.sunzishaokao.com",
+		"https://docker-mirror.aigc2d.com",
+		"https://dockerpull.pw",
+		"https://hub.1panel.dev",
+		"https://hub.amingg.com",
+		"https://docker.hlmirror.com"
+	],
+	"insecure-registries":["docker.fengming.com:8090"]
+}
