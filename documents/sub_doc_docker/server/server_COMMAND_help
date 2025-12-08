@@ -15,3 +15,22 @@ Commands:
   update      Update a service
 
 Run 'docker service COMMAND --help' for more information on a command.
+===================================================
+
+使用方法:  docker service 命令
+
+管理Swarm服务
+
+命令:
+  create      创建新服务
+  inspect     显示一个或多个服务的详细信息
+  logs        获取服务或任务的日志
+  ls          列出服务
+  ps          列出一个或多个服务的任务
+  rm          删除一个或多个服务
+  rollback    回滚服务配置的更改
+  scale       扩展一个或多个副本服务
+  update      更新服务
+
+运行 'docker service 命令 --help' 获取有关命令的更多信息。
+===================================================

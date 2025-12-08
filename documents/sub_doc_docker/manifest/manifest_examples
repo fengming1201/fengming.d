@@ -1,0 +1,19 @@
+# Docker Manifest 命令使用示例
+
+## 1. 创建一个多架构镜像的清单列表
+docker manifest create myrepo/myimage:latest myrepo/myimage:amd64 myrepo/myimage:arm64
+
+## 2. 为清单列表添加平台信息注释
+docker manifest annotate --os linux --arch amd64 myrepo/myimage:latest myrepo/myimage:amd64
+
+## 3. 查看清单列表的详细信息
+docker manifest inspect myrepo/myimage:latest
+
+## 4. 推送清单列表到远程仓库
+docker manifest push myrepo/myimage:latest
+
+## 5. 推送后删除本地清单列表
+docker manifest push --purge myrepo/myimage:latest
+
+## 6. 删除本地的清单列表
+docker manifest rm myrepo/myimage:latest

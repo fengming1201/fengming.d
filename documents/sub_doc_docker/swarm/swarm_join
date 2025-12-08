@@ -10,11 +10,64 @@ Options:
       --listen-addr node-addr   Listen address (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
       --token string            Token for entry into the swarm
 ==============================================================
-以节点和/或管理员的身份加入群
+用法:  docker swarm join [选项] 主机:端口
 
-Options:
-      --advertise-addr string   Advertised address (format: "<ip|interface>[:port]")
-      --availability string     节点的可用性 ("active", "pause", "drain") (default "active")
-      --data-path-addr string   用于数据路径流量的地址或接口 (format: "<ip|interface>")
-      --listen-addr node-addr   侦听地址 (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
-      --token string            进入群的令牌
+以节点和/或管理器身份加入集群
+
+选项:
+      --advertise-addr string   广播地址（格式: "<ip|接口>[:端口]"）
+      --availability string     节点可用性（"active", "pause", "drain"）（默认 "active"）
+      --data-path-addr string   用于数据路径流量的地址或接口（格式: "<ip|接口>"）
+      --listen-addr node-addr   监听地址（格式: "<ip|接口>[:端口]"）（默认 0.0.0.0:2377）
+      --token string            加入集群的令牌
+==============================================================
+## 命令作用
+
+docker swarm join命令用于将一个Docker节点加入到现有的Swarm集群中，使其成为集群中的工作节点(worker)或管理节点(manager)。加入集群的节点需要知道集群中至少一个管理节点的地址和端口，以及有效的加入令牌(token)。
+
+## 简单示例
+
+### 示例1: 作为Worker节点加入集群
+
+在想要加入集群的节点上执行以下命令：
+
+```bash
+# 使用获取到的worker token加入集群
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+```
+
+### 示例2: 指定广播地址加入集群
+
+```bash
+# 指定节点的广播地址
+docker swarm join --advertise-addr 192.168.1.15 --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+```
+
+### 示例3: 设置节点可用性
+
+```bash
+# 加入集群但设为暂停状态（不会接收新任务）
+docker swarm join --availability pause --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+```
+
+### 示例4: 作为Manager节点加入集群
+
+```bash
+# 使用manager token加入集群成为管理节点
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789 192.168.1.10:2377
+```
+
+### 获取加入令牌的方法
+
+在集群的管理节点上执行以下命令获取相应的令牌：
+
+```bash
+# 获取worker节点加入令牌
+docker swarm join-token worker
+
+# 获取manager节点加入令牌
+docker swarm join-token manager
+```
+
+执行后，命令输出中会包含完整的docker swarm join命令，您可以直接复制到要加入的节点上执行。
+

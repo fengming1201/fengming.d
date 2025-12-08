@@ -60,7 +60,7 @@ alias gitinfo='fm-gitinfo.sh'
 alias gitbranch='git branch'
 alias gitbranch_remote='git branch -r'
 alias gitbranch_all='git branch -a'
-
+alias wgrep='fm-word_grep.sh'
 #source other files
 #incude first
 source ${FENGMING_DIR}/bash_function_lib/env_variable
@@ -86,6 +86,7 @@ function clrall
 	echo "All bash data has deleted!!"
 	return 0
 }
+
 #no source again when start screen ot tmux!
 #if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ];then
 if [ "x$STY" = "x" ];then

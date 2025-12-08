@@ -1,3 +1,40 @@
+
+#=============================================================================#
+fuser  --help
+用法: fuser [-fIMuvw] [-a|-s] [-4|-6] [-c|-m|-n SPACE]
+             [-k [-i] [-SIGNAL]] NAME...
+       fuser -l
+       fuser -V
+显示哪些进程使用命名文件、套接字或文件系统。
+
+  -a,--all              也显示未使用的文件
+  -i,--interactive      杀人前询问（忽略没有 -k）
+  -I,--inode            始终使用索引节点来比较文件
+  -k,--kill             终止访问命名文件的进程
+  -l,--list-signals     列出可用的信号名称
+  -m,--mount            显示使用命名文件系统或块设备的所有进程
+  -M,--ismountpoint     仅当 NAME 是挂载点时才满足请求
+  -n,--namespace SPACE  在此名称空间中搜索（文件、UDP 或 TCP）
+  -s,--silent           静音操作
+  -SIGNAL               发送此信号而不是 SIGKILL
+  -u,--user             显示用户 ID
+  -v,--verbose          详细输出
+  -w,--writeonly        仅终止具有写入访问权限的进程
+  -V,--version          显示版本信息
+  -4,--ipv4             仅搜索 IPv4 套接字
+  -6,--ipv6             仅搜索 IPv6 套接字
+  -                    重置选项
+  udp/tcp names: [local_port][,[rmt_host][,[rmt_port]]]
+
+
+提示“device is busy”，
+查看正在使用用某个文件或目录的进程ID:
+fuser -m /mnt/data
+
+或者，将会直接kill那个pid
+
+fuser -mk /mnt/data
+=========================================
 fuser
 
 使用文件或文件结构识别进程
@@ -55,40 +92,4 @@ fuser -d /usr文件
 
 /dev/kmem 用于系统映像。
 /dev/mem 也用于系统映像。
-
-#=============================================================================#
-fuser  --help
-用法: fuser [-fIMuvw] [-a|-s] [-4|-6] [-c|-m|-n SPACE]
-             [-k [-i] [-SIGNAL]] NAME...
-       fuser -l
-       fuser -V
-显示哪些进程使用命名文件、套接字或文件系统。
-
-  -a,--all              也显示未使用的文件
-  -i,--interactive      杀人前询问（忽略没有 -k）
-  -I,--inode            始终使用索引节点来比较文件
-  -k,--kill             终止访问命名文件的进程
-  -l,--list-signals     列出可用的信号名称
-  -m,--mount            显示使用命名文件系统或块设备的所有进程
-  -M,--ismountpoint     仅当 NAME 是挂载点时才满足请求
-  -n,--namespace SPACE  在此名称空间中搜索（文件、UDP 或 TCP）
-  -s,--silent           静音操作
-  -SIGNAL               发送此信号而不是 SIGKILL
-  -u,--user             显示用户 ID
-  -v,--verbose          详细输出
-  -w,--writeonly        仅终止具有写入访问权限的进程
-  -V,--version          显示版本信息
-  -4,--ipv4             仅搜索 IPv4 套接字
-  -6,--ipv6             仅搜索 IPv6 套接字
-  -                    重置选项
-  udp/tcp names: [local_port][,[rmt_host][,[rmt_port]]]
-
-
-提示“device is busy”，
-查看正在使用用某个文件或目录的进程ID:
-fuser -m /mnt/data
-
-或者，将会直接kill那个pid
-
-fuser -mk /mnt/data
 

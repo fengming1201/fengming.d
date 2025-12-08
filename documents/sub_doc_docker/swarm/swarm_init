@@ -21,21 +21,25 @@ Options:
       --snapshot-interval uint                 Number of log entries between Raft snapshots (default 10000)
       --task-history-limit int                 Task history retention limit (default 5)
 ============================================================================================
-初始化群
 
-Options:
-      --advertise-addr string                  Advertised address (format: "<ip|interface>[:port]")
-      --autolock                               启用管理器自动锁定 (需要解锁钥匙才能启动已停止的管理器)
-      --availability string                    节点的可用性 ("active", "pause", "drain") (default "active")
-      --cert-expiry duration                   节点证书的有效期 (ns|us|ms|s|m|h) (default 2160h0m0s)
-      --data-path-addr string                  用于数据路径流量的地址或接口 (format: "<ip|interface>")
-      --data-path-port uint32                  用于数据路径流量的端口号（1024-49151）。如果没有设置值或设置为0，使用默认端口（4789）。
-      --default-addr-pool ipNetSlice           CIDR格式的默认地址池 (default [])
-      --default-addr-pool-mask-length uint32   默认地址池子网掩码长度 (default 24)
-      --dispatcher-heartbeat duration          调度员心跳周期 (ns|us|ms|s|m|h) (default 5s)
-      --external-ca external-ca                一个或多个证书签名端点的规范
-      --force-new-cluster                      强制从当前状态创建新群集
-      --listen-addr node-addr                  侦听地址 (format: "<ip|interface>[:port]") (default 0.0.0.0:2377)
-      --max-snapshots uint                     要保留的其他Raft快照的数量
-      --snapshot-interval uint                 Raft快照之间的日志条目数 (default 10000)
-      --task-history-limit int                 任务历史记录保留限制 (default 5)
+用法:  docker swarm init [选项]
+
+初始化一个swarm集群
+
+选项:
+      --advertise-addr string                  通告地址 (格式: "<ip|接口>[:端口]")
+      --autolock                               启用管理器自动锁定 (要求使用解锁密钥启动已停止的管理器)
+      --availability string                    节点可用性 ("active", "pause", "drain") (默认 "active")
+      --cert-expiry duration                   节点证书有效期 (ns|us|ms|s|m|h) (默认 2160h0m0s)
+      --data-path-addr string                  用于数据路径流量的地址或接口 (格式: "<ip|接口>")
+      --data-path-port uint32                  用于数据路径流量的端口号 (1024 - 49151)。如果未设置值或设置为0，
+                                               将使用默认端口 (4789)。
+      --default-addr-pool ipNetSlice           默认地址池，CIDR格式 (默认 [])
+      --default-addr-pool-mask-length uint32   默认地址池子网掩码长度 (默认 24)
+      --dispatcher-heartbeat duration          调度器心跳周期 (ns|us|ms|s|m|h) (默认 5s)
+      --external-ca external-ca                一个或多个证书签名端点的规格
+      --force-new-cluster                      强制从当前状态创建新集群
+      --listen-addr node-addr                  监听地址 (格式: "<ip|接口>[:端口]") (默认 0.0.0.0:2377)
+      --max-snapshots uint                     要保留的额外Raft快照数量
+      --snapshot-interval uint                 Raft快照之间的日志条目数量 (默认 10000)
+      --task-history-limit int                 任务历史保留限制 (默认 5)

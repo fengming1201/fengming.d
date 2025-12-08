@@ -14,8 +14,17 @@ Options:
       --insecure   Allow push to an insecure registry
   -p, --purge      Remove the local manifest list after push
 ===============================================================
-将清单列表推送到存储库
 
-Options:
+使用方法：  docker manifest push [选项] 清单列表
+
+将清单列表推送到仓库
+
+实验性功能：
+  docker manifest push 是一个实验性功能。
+  实验性功能提供对产品功能的早期访问。这些功能可能在版本之间发生变化而不发出警告，或者可能从未来版本中移除。
+  在我们的文档中了解有关实验性功能的更多信息：
+  https://docs.docker.com/go/experimental/
+
+选项：
       --insecure   允许推送到不安全的注册表
   -p, --purge      推送后删除本地清单列表

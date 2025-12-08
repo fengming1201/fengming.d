@@ -1,0 +1,251 @@
+# Docker Swarm 集群示例
+
+本文档提供了一个简单的示例，展示如何将4台主机(A、B、C、D)组成一个Docker Swarm集群。
+
+## 前提条件
+
+在开始之前，请确保：
+
+1. 所有主机上都已安装Docker Engine
+2. 所有主机之间网络连通（建议在同一网段）
+3. 所有主机的防火墙允许以下端口通信：
+   - TCP端口2377（用于集群管理通信）
+   - TCP和UDP端口7946（用于节点间通信）
+   - UDP端口4789（用于overlay网络通信）
+
+## 主机分配
+
+在本示例中，我们将按照以下方式分配主机角色：
+
+- 主机A：Manager节点（主要控制节点）
+- 主机B：Manager节点（备用控制节点）
+- 主机C：Worker节点
+- 主机D：Worker节点
+
+## 初始化集群
+
+### 1. 初始化第一个Manager节点（主机A）
+
+在主机A上，执行以下命令初始化Swarm集群：
+
+```bash
+# 在主机A上执行
+docker swarm init --advertise-addr 主机A的IP地址
+```
+
+将`主机A的IP地址`替换为实际的IP地址，例如：`192.168.1.10`
+
+执行成功后，会看到类似以下输出：
+
+```
+Swarm initialized: current node (abcdef123456) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+```
+
+### 2. 添加第二个Manager节点（主机B）
+
+首先，在主机A上获取添加Manager节点的token：
+
+```bash
+# 在主机A上执行
+docker swarm join-token manager
+```
+
+会看到类似以下输出：
+
+```
+To add a manager to this swarm, run the following command:
+
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789 192.168.1.10:2377
+```
+
+然后，在主机B上执行获取到的命令：
+
+```bash
+# 在主机B上执行
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef-abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789 192.168.1.10:2377
+```
+
+执行成功后，主机B将成为集群中的第二个Manager节点。
+
+### 3. 验证Manager节点状态
+
+在任一Manager节点上执行以下命令检查节点状态：
+
+```bash
+docker node ls
+```
+
+应该会看到类似以下输出：
+
+```
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+a1b2c3d4e5f6 *                主机A              Ready               Active              Leader              20.10.8
+b2c3d4e5f6a1                  主机B              Ready               Active              Reachable           20.10.8
+```
+
+现在，我们已经成功初始化了包含两个Manager节点的Swarm集群。
+
+## 添加Worker节点
+
+### 1. 获取Worker节点加入token
+
+在任一Manager节点上执行以下命令获取Worker节点的加入token：
+
+```bash
+# 在主机A或主机B上执行
+docker swarm join-token worker
+```
+
+会看到类似以下输出：
+
+```
+To add a worker to this swarm, run the following command:
+
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+```
+
+### 2. 添加Worker节点（主机C和主机D）
+
+在主机C和主机D上分别执行获取到的命令：
+
+```bash
+# 在主机C上执行
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+
+# 在主机D上执行
+docker swarm join --token SWMTKN-1-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef 192.168.1.10:2377
+```
+
+执行成功后，主机C和主机D将成为集群中的Worker节点。
+
+### 3. 验证所有节点状态
+
+在任一Manager节点上执行以下命令检查所有节点状态：
+
+```bash
+docker node ls
+```
+
+应该会看到类似以下输出：
+
+```
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+a1b2c3d4e5f6 *                主机A              Ready               Active              Leader              20.10.8
+b2c3d4e5f6a1                  主机B              Ready               Active              Reachable           20.10.8
+c3d4e5f6a1b2                  主机C              Ready               Active                                  20.10.8
+d4e5f6a1b2c3                  主机D              Ready               Active                                  20.10.8
+```
+
+现在，我们已经成功创建了包含2个Manager节点和2个Worker节点的完整Docker Swarm集群。
+
+## 集群管理与应用部署示例
+
+### 1. 部署服务
+
+在Manager节点上执行以下命令部署一个简单的Nginx服务：
+
+```bash
+# 在主机A或主机B上执行
+docker service create --name nginx-service --publish 8080:80 --replicas 2 nginx:latest
+```
+
+这个命令将：
+- 创建名为`nginx-service`的服务
+- 发布端口8080（宿主机）到80（容器）
+- 部署2个副本
+- 使用nginx:latest镜像
+
+### 2. 查看服务状态
+
+```bash
+docker service ls
+docker service ps nginx-service
+```
+
+### 3. 扩缩容服务
+
+将Nginx服务扩展到4个副本（每个节点一个）：
+
+```bash
+docker service scale nginx-service=4
+```
+
+### 4. 更新服务
+
+更新服务使用的镜像或其他配置：
+
+```bash
+# 更新镜像版本
+docker service update --image nginx:1.21 nginx-service
+
+# 更新发布的端口
+docker service update --publish-rm 8080:80 --publish-add 8081:80 nginx-service
+```
+
+### 5. 创建跨节点的网络
+
+创建一个overlay网络，使不同节点上的容器可以相互通信：
+
+```bash
+docker network create -d overlay my-overlay-network
+
+# 在创建服务时使用这个网络
+docker service create --name web-service --network my-overlay-network nginx:latest
+```
+
+### 6. 查看节点资源使用情况
+
+```bash
+docker node ls
+docker node inspect 主机名
+```
+
+### 7. 设置节点可用性
+
+暂时将一个节点设置为不可用（维护模式）：
+
+```bash
+docker node update --availability drain 主机C
+
+# 恢复节点可用性
+docker node update --availability active 主机C
+```
+
+### 8. 删除服务
+
+```bash
+docker service rm nginx-service
+```
+
+### 9. 查看集群事件
+
+```bash
+docker events --filter scope=swarm
+```
+
+## 故障转移示例
+
+由于我们有2个Manager节点，如果Leader节点（主机A）发生故障，Reachable节点（主机B）将自动成为新的Leader，确保集群管理功能不会中断。
+
+### 模拟Leader节点故障
+
+在实际环境中，如果主机A宕机，您可以在主机B上执行以下命令确认新的Leader状态：
+
+```bash
+docker node ls
+```
+
+在输出中，您将看到主机B的MANAGER STATUS变为Leader。
+
+## 安全提示
+
+1. 定期更新Docker Engine版本以获取安全补丁
+2. 考虑启用Swarm的自动锁定功能增强安全性
+3. 为生产环境配置TLS证书
+4. 定期备份Swarm集群状态

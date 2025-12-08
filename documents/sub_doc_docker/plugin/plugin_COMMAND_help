@@ -17,16 +17,43 @@ Commands:
 
 Run 'docker plugin COMMAND --help' for more information on a command.
 =======================================================================
+
+使用方法:  docker plugin 命令
+
 管理插件
 
-Commands:
+命令:
   create      从rootfs和配置创建插件。插件数据目录必须包含config.json和rootfs目录。
   disable     禁用插件
   enable      启用插件
-  inspect     Display detailed information on one or more plugins
-  install     Install a plugin
-  ls          List plugins
-  push        Push a plugin to a registry
-  rm          Remove one or more plugins
-  set         Change settings for a plugin
-  upgrade     Upgrade an existing plugin
+  inspect     显示一个或多个插件的详细信息
+  install     安装插件
+  ls          列出插件
+  push        将插件推送到注册表
+  rm          删除一个或多个插件
+  set         更改插件的设置
+  upgrade     升级现有插件
+
+运行 'docker plugin 命令 --help' 获取有关命令的更多信息。
+
+=======================================================================
+
+简单使用示例:
+
+1. 列出所有已安装的插件:
+   docker plugin ls
+
+2. 安装一个插件:
+   docker plugin install grafana/loki-docker-driver:latest --grant-all-permissions
+
+3. 启用插件:
+   docker plugin enable grafana/loki-docker-driver:latest
+
+4. 查看插件详细信息:
+   docker plugin inspect grafana/loki-docker-driver:latest
+
+5. 禁用并删除插件:
+   docker plugin disable grafana/loki-docker-driver:latest
+   docker plugin rm grafana/loki-docker-driver:latest
+
+=======================================================================

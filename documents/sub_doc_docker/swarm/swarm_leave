@@ -5,3 +5,12 @@ Leave the swarm
 
 Options:
   -f, --force   Force this node to leave the swarm, ignoring warnings
+=========================================================
+
+使用方法:  docker swarm leave [选项]
+
+退出swarm集群
+
+选项:
+  -f, --force   强制此节点离开swarm集群，忽略警告
+=========================================================

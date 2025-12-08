@@ -13,12 +13,37 @@ Commands:
 
 Run 'docker volume COMMAND --help' for more information on a command.
 ========================================================
+
+使用方法: docker volume COMMAND
+
 管理卷
 
-Commands:
+命令:
   create      创建卷
   inspect     显示一个或多个卷的详细信息
   ls          列出卷
   prune       删除未使用的本地卷
   rm          删除一个或多个卷
-  update      更新卷（仅限群集卷）
+  update      更新卷（仅集群卷）
+
+运行 'docker volume COMMAND --help' 获取有关命令的更多信息。
+========================================================
+
+简单使用示例:
+1. 创建一个命名卷：
+   docker volume create my_volume
+
+2. 列出所有卷：
+   docker volume ls
+
+3. 查看卷的详细信息：
+   docker volume inspect my_volume
+
+4. 使用卷运行容器：
+   docker run -d -v my_volume:/app/data nginx
+
+5. 删除未使用的卷：
+   docker volume prune
+
+6. 删除指定卷：
+   docker volume rm my_volume

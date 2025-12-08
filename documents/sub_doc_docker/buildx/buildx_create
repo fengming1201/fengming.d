@@ -1,0 +1,17 @@
+Usage:  docker buildx create [OPTIONS] [CONTEXT|ENDPOINT]
+
+Create a new builder instance
+
+Options:
+      --append                    Append a node to builder instead of changing it
+      --bootstrap                 Boot builder after creation
+      --buildkitd-config string   BuildKit daemon config file
+      --buildkitd-flags string    BuildKit daemon flags
+  -D, --debug                     Enable debug logging
+      --driver string             Driver to use (available: "docker-container", "kubernetes", "remote")
+      --driver-opt stringArray    Options for the driver
+      --leave                     Remove a node from builder instead of changing it
+      --name string               Builder instance name
+      --node string               Create/modify node with given name
+      --platform stringArray      Fixed platforms for current node
+      --use                       Set the current builder instance

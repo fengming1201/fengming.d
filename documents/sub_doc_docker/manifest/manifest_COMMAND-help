@@ -27,26 +27,27 @@ Commands:
 
 Run 'docker manifest COMMAND --help' for more information on a command.
 ===============================================================================
-**docker manifest**命令具有用于管理镜像清单和清单。清单列表允许您使用一个名称来引用同一镜像
-为多种架构而构建。
 
-To see help for a subcommand, use:
+使用方法: docker manifest COMMAND
+
+**docker manifest** 命令具有用于管理镜像清单和清单列表的子命令。清单列表允许您使用一个名称来引用为多种架构构建的相同镜像。
+
+要查看子命令的帮助信息，请使用：
 
     docker manifest CMD --help
 
-有关使用docker清单列表的完整详细信息，请参阅注册表v2规范。
+有关使用 docker 清单列表的完整详细信息，请参阅 registry v2 规范。
 
-实验性：
-  docker清单是一个实验性功能。
-  实验性功能提供了对产品功能的早期访问。这些功能可能会在没有警告的情况下在版本之间发生变化，或者可以从中删除
-  未来的释放。在我们的文档中了解更多关于实验功能的信息：
+实验性功能：
+  docker manifest 是一个实验性功能。
+  实验性功能提供产品功能的早期访问。这些功能可能在版本之间发生变化而不发出警告，或者可能在未来版本中被移除。在我们的文档中了解更多关于实验性功能的信息：
   https://docs.docker.com/go/experimental/
 
-Commands:
-  annotate    向本地映像清单添加其他信息
-  create      创建本地清单列表，用于注释和推送到仓库
-  inspect     显示图像清单或清单列表
-  push        将清单列表推送到存储库
+命令：
+  annotate    向本地镜像清单添加额外信息
+  create      创建本地清单列表，用于注释和推送到注册表
+  inspect     显示镜像清单或清单列表
+  push        将清单列表推送到仓库
   rm          从本地存储中删除一个或多个清单列表
 
-Run 'docker manifest COMMAND --help' for more information on a command.
+运行 'docker manifest COMMAND --help' 获取有关命令的更多信息。

@@ -14,8 +14,16 @@ Options:
   -a, --amend      Amend an existing manifest list
       --insecure   Allow communication with an insecure registry
 ===================================================================
+
+使用方法: docker manifest create MANIFEST_LIST MANIFEST [MANIFEST...]
+
 创建本地清单列表，用于注释和推送到注册表
 
-Options:
-  -a, --amend      修改现有清单
+实验性功能：
+  docker manifest create 是一个实验性功能。
+  实验性功能提供产品功能的早期访问。这些功能可能在版本之间发生变化而不发出警告，或者可能在未来版本中被移除。在我们的文档中了解更多关于实验性功能的信息：
+  https://docs.docker.com/go/experimental/
+
+选项：
+  -a, --amend      修改现有的清单列表
       --insecure   允许与不安全的注册表通信
