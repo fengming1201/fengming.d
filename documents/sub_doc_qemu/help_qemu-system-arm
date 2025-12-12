@@ -1,0 +1,479 @@
+QEMU 模拟器版本 5.2.0 (Debian 1:5.2+dfsg-11+deb11u5)
+版权所有 (c) 2003-2020 Fabrice Bellard 和 QEMU 项目开发者
+用法: qemu-system-arm [选项] [disk_image]
+
+'disk_image' 是 IDE 硬盘 0 的原始硬盘镜像
+
+标准选项:
+-h 或 -help     显示此帮助信息并退出
+-version        显示版本信息并退出
+-machine [type=]name[,prop[=value][,...]]
+                选择要模拟的机器（使用 '-machine help' 获取列表）
+                属性 accel=accel1[:accel2[:...]] 选择加速器
+                支持的加速器有 kvm、xen、hax、hvf、whpx 或 tcg（默认: tcg）
+                vmport=on|off|auto 控制 vmport 模拟（默认: auto）
+                dump-guest-core=on|off 在核心转储中包含客户机内存（默认=on）
+                mem-merge=on|off 控制内存合并支持（默认: on）
+                aes-key-wrap=on|off 控制 AES 密钥包装支持（默认: on）
+                dea-key-wrap=on|off 控制 DEA 密钥包装支持（默认: on）
+                suppress-vmdesc=on|off 禁用自描述迁移（默认: off）
+                nvdimm=on|off 控制 NVDIMM 支持（默认: off）
+                memory-encryption=@var{} 要使用的内存加密对象（默认=none）
+                hmat=on|off 控制 ACPI HMAT 支持（默认: off）
+-cpu cpu        选择 CPU（使用 '-cpu help' 获取列表）
+-accel [accel=]accelerator[,prop[=value][,...]]
+                选择加速器（kvm、xen、hax、hvf、whpx 或 tcg；使用 'help' 获取列表）
+                igd-passthru=on|off（启用 Xen 集成 Intel 图形直通，默认=off）
+                kernel-irqchip=on|off|split 控制加速 irqchip 支持（默认=on）
+                kvm-shadow-mem=KVM 影子 MMU 的大小（字节）
+                tb-size=n（TCG 翻译块缓存大小）
+                thread=single|multi（启用多线程 TCG）
+-smp [cpus=]n[,maxcpus=cpus][,cores=cores][,threads=threads][,dies=dies][,sockets=sockets]
+                设置 CPU 数量为 'n' [默认=1]
+                maxcpus= 总 CPU 的最大数量，包括
+                用于热插拔的离线 CPU 等
+                cores= 一个插槽上的 CPU 核心数量（对于 PC，是在一个芯片上）
+                threads= 一个 CPU 核心上的线程数量
+                dies= 一个插槽上的 CPU 芯片数量（仅适用于 PC）
+                sockets= 系统中离散插槽的数量
+-numa node[,mem=size][,cpus=firstcpu[-lastcpu]][,nodeid=node][,initiator=node]
+-numa node[,memdev=id][,cpus=firstcpu[-lastcpu]][,nodeid=node][,initiator=node]
+-numa dist,src=source,dst=destination,val=distance
+-numa cpu,node-id=node[,socket-id=x][,core-id=y][,thread-id=z]
+-numa hmat-lb,initiator=node,target=node,hierarchy=memory|first-level|second-level|third-level,data-type=access-latency|read-latency|write-latency[,latency=lat][,bandwidth=bw]
+-numa hmat-cache,node-id=node,size=size,level=level[,associativity=none|direct|complex][,policy=none|write-back|write-through][,line=size]
+-add-fd fd=fd,set=set[,opaque=opaque]
+                将 'fd' 添加到 fd 'set'
+-set group.id.arg=value
+                为 <group> 类型的 <id> 项设置 <arg> 参数
+                例如: -set drive.$id.file=/path/to/image
+-global driver.property=value
+-global driver=driver,property=property,value=value
+                为驱动程序属性设置全局默认值
+-boot [order=drives][,once=drives][,menu=on|off]
+      [,splash=sp_name][,splash-time=sp_time][,reboot-timeout=rb_time][,strict=on|off]
+                'drives': 软盘 (a)、硬盘 (c)、CD-ROM (d)、网络 (n)
+                'sp_name': 如果 menu=on，将作为 logo 图片传递给 bios 的文件名
+                'sp_time': 如果 menu=on，splash 图片持续的时间，单位是 ms
+                'rb_timeout': 引导失败时客户机重启前的超时时间，单位是 ms
+-m [size=]megs[,slots=n,maxmem=size]
+                配置客户机 RAM
+                size: 客户机内存的初始数量
+                slots: 热插拔插槽的数量（默认: none）
+                maxmem: 客户机内存的最大数量（默认: none）
+注意: 某些架构可能强制要求特定的粒度
+-mem-path FILE  为客户机 RAM 提供后备存储
+-mem-prealloc   预分配客户机内存（与 -mem-path 一起使用）
+-k language     使用键盘布局（例如 'fr' 表示法语）
+-audio-help     显示当前指定的音频设置的 -audiodev 等效项
+-audiodev [driver=]driver,id=id[,prop[=value][,...]]
+                指定要使用的音频后端
+                id= 后端的标识符
+                timer-period= 计时器周期（微秒）
+                in|out.mixing-engine= 使用混合引擎在 QEMU 内部混合流
+                in|out.fixed-settings= 使用主机音频的固定设置
+                in|out.frequency= 与固定设置一起使用的频率
+                in|out.channels= 与固定设置一起使用的通道数
+                in|out.format= 与固定设置一起使用的采样格式
+                有效值: s8, s16, s32, u8, u16, u32, f32
+                in|out.voices= 要使用的声音数量
+                in|out.buffer-length= 缓冲区长度（微秒）
+-audiodev none,id=id,[,prop[=value][,...]]
+                丢弃所有输出的虚拟驱动程序
+-audiodev alsa,id=id[,prop[=value][,...]]
+                in|out.dev= 要使用的音频设备的名称
+                in|out.period-length= 周期长度（微秒）
+                in|out.try-poll= 尝试使用轮询模式
+                threshold= 播放开始时的阈值（微秒）
+-audiodev oss,id=id[,prop[=value][,...]]
+                in|out.dev= 要使用的音频设备的路径
+                in|out.buffer-count= 缓冲区数量
+                in|out.try-poll= 尝试使用轮询模式
+                try-mmap= 尝试使用内存映射访问
+                exclusive= 以独占模式打开设备
+                dsp-policy= 设置时序策略 (0..10)，-1 表示使用片段模式
+-audiodev pa,id=id[,prop[=value][,...]]
+                server= PulseAudio 服务器地址
+                in|out.name= 源/接收器设备名称
+                in|out.latency= 所需的延迟（微秒）
+-audiodev spice,id=id[,prop[=value][,...]]
+-audiodev wav,id=id[,prop[=value][,...]]
+                path= 要录制的 wav 文件的路径
+-soundhw c1,... 启用音频支持
+                并且仅启用指定的声卡（逗号分隔的列表）
+                使用 '-soundhw help' 获取支持的声卡列表
+                使用 '-soundhw all' 启用所有声卡
+-device driver[,prop[=value][,...]]
+                添加设备（基于驱动程序）
+                prop=value,... 设置驱动程序属性
+                使用 '-device help' 打印所有可能的驱动程序
+                使用 '-device driver,help' 打印所有可能的属性
+-name string1[,process=string2][,debug-threads=on|off]
+                设置客户机的名称
+                string1 设置窗口标题，string2 设置进程名称
+                启用 debug-threads 时，各个线程会有一个单独的名称
+                注意: 线程名称用于调试，不是稳定的 API。
+-uuid %08x-%04x-%04x-%04x-%012x
+                指定机器 UUID
+
+块设备选项:
+-fda/-fdb file  将 'file' 用作软盘 0/1 镜像
+-hda/-hdb file  将 'file' 用作 IDE 硬盘 0/1 镜像
+-hdc/-hdd file  将 'file' 用作 IDE 硬盘 2/3 镜像
+-cdrom file     将 'file' 用作 IDE cdrom 镜像（cdrom 是 ide1 主设备）
+-blockdev [driver=]driver[,node-name=N][,discard=ignore|unmap]
+          [,cache.direct=on|off][,cache.no-flush=on|off]
+          [,read-only=on|off][,auto-read-only=on|off]
+          [,force-share=on|off][,detect-zeroes=on|off|unmap]
+          [,驱动程序特定参数...]
+                配置块后端
+-drive [file=file][,if=type][,bus=n][,unit=m][,media=d][,index=i]
+       [,cache=writethrough|writeback|none|directsync|unsafe][,format=f]
+       [,snapshot=on|off][,rerror=ignore|stop|report]
+       [,werror=ignore|stop|report|enospc][,id=name]
+       [,aio=threads|native|io_uring]
+       [,readonly=on|off][,copy-on-read=on|off]
+       [,discard=ignore|unmap][,detect-zeroes=on|off|unmap]
+       [[,bps=b]|[[,bps_rd=r][,bps_wr=w]]]
+       [[,iops=i]|[[,iops_rd=r][,iops_wr=w]]]
+       [[,bps_max=bm]|[[,bps_rd_max=rm][,bps_wr_max=wm]]]
+       [[,iops_max=im]|[[,iops_rd_max=irm][,iops_wr_max=iwm]]]
+       [[,iops_size=is]]
+       [[,group=g]]
+                将 'file' 用作驱动器镜像
+-mtdblock file  将 'file' 用作板载闪存内存镜像
+-sd file        将 'file' 用作 SecureDigital 卡镜像
+-pflash file    将 'file' 用作并行闪存镜像
+-snapshot       写入临时文件而非磁盘镜像文件
+-fsdev local,id=id,path=path,security_model=mapped-xattr|mapped-file|passthrough|none
+ [,writeout=immediate][,readonly][,fmode=fmode][,dmode=dmode]
+ [[,throttling.bps-total=b]|[[,throttling.bps-read=r][,throttling.bps-write=w]]]
+ [[,throttling.iops-total=i]|[[,throttling.iops-read=r][,throttling.iops-write=w]]]
+ [[,throttling.bps-total-max=bm]|[[,throttling.bps-read-max=rm][,throttling.bps-write-max=wm]]]
+ [[,throttling.iops-total-max=im]|[[,throttling.iops-read-max=irm][,throttling.iops-write-max=iwm]]]
+ [[,throttling.iops-size=is]]
+-fsdev proxy,id=id,socket=socket[,writeout=immediate][,readonly]
+-fsdev proxy,id=id,sock_fd=sock_fd[,writeout=immediate][,readonly]
+-fsdev synth,id=id
+-virtfs local,path=path,mount_tag=tag,security_model=mapped-xattr|mapped-file|passthrough|none
+        [,id=id][,writeout=immediate][,readonly][,fmode=fmode][,dmode=dmode][,multidevs=remap|forbid|warn]
+-virtfs proxy,mount_tag=tag,socket=socket[,id=id][,writeout=immediate][,readonly]
+-virtfs proxy,mount_tag=tag,sock_fd=sock_fd[,id=id][,writeout=immediate][,readonly]
+-virtfs synth,mount_tag=tag[,id=id][,readonly]
+-iscsi [user=user][,password=password]
+       [,header-digest=CRC32C|CR32C-NONE|NONE-CRC32C|NONE
+       [,initiator-name=initiator-iqn][,id=target-iqn]
+       [,timeout=timeout]
+                iSCSI 会话参数
+
+USB选项:
+-usb            启用板载USB主机控制器（如果默认未启用）
+-usbdevice name 添加主机或客户机USB设备 'name'
+
+显示选项:
+-display spice-app[,gl=on|off]
+-display gtk[,grab_on_hover=on|off][,gl=on|off]|
+-display vnc=<display>[,<optargs>]
+-display curses[,charset=<encoding>]
+-display egl-headless[,rendernode=<file>]
+-display none
+                选择显示后端类型
+                默认显示等效于
+                "-display gtk"
+-nographic      禁用图形输出并将串行I/O重定向到控制台
+-curses         -display curses的简写形式
+-alt-grab       使用Ctrl-Alt-Shift抓取鼠标（而不是Ctrl-Alt）
+-ctrl-grab      使用右Ctrl抓取鼠标（而不是Ctrl-Alt）
+-no-quit        禁用SDL窗口关闭功能
+-sdl            -display sdl的简写形式
+-spice [port=port][,tls-port=secured-port][,x509-dir=<dir>]
+       [,x509-key-file=<file>][,x509-key-password=<file>]
+       [,x509-cert-file=<file>][,x509-cacert-file=<file>]
+       [,x509-dh-key-file=<file>][,addr=addr][,ipv4|ipv6|unix]
+       [,tls-ciphers=<list>]
+       [,tls-channel=[main|display|cursor|inputs|record|playback]]
+       [,plaintext-channel=[main|display|cursor|inputs|record|playback]]
+       [,sasl][,password=<secret>][,disable-ticketing]
+       [,image-compression=[auto_glz|auto_lz|quic|glz|lz|off]]
+       [,jpeg-wan-compression=[auto|never|always]]
+       [,zlib-glz-wan-compression=[auto|never|always]]
+       [,streaming-video=[off|all|filter]][,disable-copy-paste]
+       [,disable-agent-file-xfer][,agent-mouse=[on|off]]
+       [,playback-compression=[on|off]][,seamless-migration=[on|off]]
+       [,gl=[on|off]][,rendernode=<file>]
+   启用spice
+   {port, tls-port} 中至少有一个是必需的
+-portrait       将图形输出向左旋转90度（仅适用于PXA LCD）
+-rotate <deg>   将图形输出向左旋转指定角度（仅适用于PXA LCD）
+-vga [std|cirrus|vmware|qxl|xenfb|tcx|cg3|virtio|none]
+                选择视频卡类型
+-full-screen    以全屏模式启动
+-vnc <display>  -display vnc=<display>的简写形式
+-no-acpi        禁用ACPI
+-smbios file=binary
+                从二进制文件加载SMBIOS条目
+-smbios type=0[,vendor=str][,version=str][,date=str][,release=%d.%d]
+              [,uefi=on|off]
+                指定SMBIOS类型0字段
+-smbios type=1[,manufacturer=str][,product=str][,version=str][,serial=str]
+              [,uuid=uuid][,sku=str][,family=str]
+                指定SMBIOS类型1字段
+-smbios type=2[,manufacturer=str][,product=str][,version=str][,serial=str]
+              [,asset=str][,location=str]
+                指定SMBIOS类型2字段
+-smbios type=3[,manufacturer=str][,version=str][,serial=str][,asset=str]
+              [,sku=str]
+                指定SMBIOS类型3字段
+-smbios type=4[,sock_pfx=str][,manufacturer=str][,version=str][,serial=str]
+              [,asset=str][,part=str][,max-speed=%d][,current-speed=%d]
+                指定SMBIOS类型4字段
+-smbios type=11[,value=str][,path=filename]
+                指定SMBIOS类型11字段
+-smbios type=17[,loc_pfx=str][,bank=str][,manufacturer=str][,serial=str]
+               [,asset=str][,part=str][,speed=%d]
+                指定SMBIOS类型17字段
+
+网络选项:
+-netdev user,id=str[,ipv4[=on|off]][,net=addr[/mask]][,host=addr]
+         [,ipv6[=on|off]][,ipv6-net=addr[/int]][,ipv6-host=addr]
+         [,restrict=on|off][,hostname=host][,dhcpstart=addr]
+         [,dns=addr][,ipv6-dns=addr][,dnssearch=domain][,domainname=domain]
+         [,tftp=dir][,tftp-server-name=name][,bootfile=f][,hostfwd=rule][,guestfwd=rule][,smb=dir[,smbserver=addr]]
+                配置ID为'str'的用户模式网络后端，
+                及其DHCP服务器和可选服务
+-netdev tap,id=str[,fd=h][,fds=x:y:...:z][,ifname=name][,script=file][,downscript=dfile]
+         [,br=bridge][,helper=helper][,sndbuf=nbytes][,vnet_hdr=on|off][,vhost=on|off]
+         [,vhostfd=h][,vhostfds=x:y:...:z][,vhostforce=on|off][,queues=n]
+         [,poll-us=n]
+                配置ID为'str'的主机TAP网络后端
+                连接到网桥（默认=br0）
+                使用网络脚本'file'（默认=/etc/qemu-ifup）
+                进行配置，使用'dfile'（默认=/etc/qemu-ifdown）
+                进行取消配置
+                使用'[down]script=no'禁用脚本执行
+                使用网络助手'helper'（默认=/usr/lib/qemu/qemu-bridge-helper）
+                进行配置
+                使用'fd=h'连接到已打开的TAP接口
+                使用'fds=x:y:...:z'连接到已打开的多队列支持的TAP接口
+                使用'sndbuf=nbytes'限制发送缓冲区的大小（
+                默认禁用'sndbuf=0'，要启用流量控制设置'sndbuf=1048576'）
+                使用vnet_hdr=off避免启用IFF_VNET_HDR tap标志
+                使用vnet_hdr=on将缺少IFF_VNET_HDR支持视为错误条件
+                使用vhost=on启用实验性内核内加速器
+                    （仅对使用MSIX的virtio客户机有效）
+                使用vhostforce=on强制为非MSIX virtio客户机启用vhost
+                使用'vhostfd=h'连接到已打开的vhost net设备
+                使用'vhostfds=x:y:...:z'连接到多个已打开的vhost net设备
+                使用'queues=n'指定为多队列TAP创建的队列数
+                使用'poll-us=n'指定可用于vhost net忙轮询的最大微秒数
+-netdev bridge,id=str[,br=bridge][,helper=helper]
+                配置一个ID为 'str' 的主机TAP网络后端，该后端连接到一个网桥（默认=br0）
+                使用程序 'helper'（默认=/usr/lib/qemu/qemu-bridge-helper）
+-netdev l2tpv3,id=str,src=srcaddr,dst=dstaddr[,srcport=srcport][,dstport=dstport]
+         [,rxsession=rxsession],txsession=txsession[,ipv6=on/off][,udp=on/off]
+         [,cookie64=on/off][,counter][,pincounter][,txcookie=txcookie]
+         [,rxcookie=rxcookie][,offset=offset]
+                配置一个ID为 'str' 的网络后端，连接到L2TPv3伪线上的以太网。
+                Linux内核3.3+以及大多数路由器都支持L2TPv3。这种传输方式允许连接VM到VM、
+                VM到路由器，甚至VM到主机。它是一个几乎通用的标准（RFC3931）。
+                注意 - 此实现使用静态预配置隧道（与Linux内核相同）。
+                使用 'src=' 指定源地址
+                使用 'dst=' 指定目标地址
+                使用 'udp=on' 指定UDP封装
+                使用 'srcport=' 指定源UDP端口
+                使用 'dstport=' 指定目标UDP端口
+                使用 'ipv6=on' 强制使用IPv6
+                L2TPv3使用cookie来防止配置错误以及作为一种弱安全措施
+                使用 'rxcookie=0x012345678' 指定接收cookie
+                使用 'txcookie=0x012345678' 指定发送cookie
+                使用 'cookie64=on' 将cookie大小设置为64位，否则为32位
+                使用 'counter=off' 强制使用不带计数器的简化版L2TPv3
+                使用 'pincounter=on' 来解决对等方中计数器处理的问题
+                使用 'offset=X' 在头部和数据之间添加额外的偏移量
+-netdev socket,id=str[,fd=h][,listen=[host]:port][,connect=host:port]
+                配置一个网络后端，使用套接字连接到另一个网络
+-netdev socket,id=str[,fd=h][,mcast=maddr:port[,localaddr=addr]]
+                配置一个网络后端，连接到多播地址maddr和端口
+                使用 'localaddr=addr' 指定发送数据包的主机地址
+-netdev socket,id=str[,fd=h][,udp=host:port][,localaddr=host:port]
+                配置一个网络后端，使用UDP隧道连接到另一个网络
+-netdev vde,id=str[,sock=socketpath][,port=n][,group=groupname][,mode=octalmode]
+                配置一个网络后端，连接到运行在主机上并在'socketpath'上监听传入连接的
+                vde交换机的端口 'n'。使用组 'groupname' 和模式 'octalmode' 更改通信端口的
+                默认所有权和权限。
+-netdev vhost-user,id=str,chardev=dev[,vhostforce=on|off]
+                配置一个vhost-user网络，由字符设备 'dev' 提供支持
+-netdev vhost-vdpa,id=str,vhostdev=/path/to/dev
+                配置一个vhost-vdpa网络，建立一个vhost-vdpa网络设备
+-netdev hubport,id=str,hubid=n[,netdev=nd]
+                在ID为 'n' 的集线器上配置一个集线器端口
+-nic [tap|bridge|user|l2tpv3|vde|vhost-user|socket][,option][,...][mac=macaddr]
+                初始化一个板载/默认主机NIC（使用MAC地址macaddr）并将其连接到给定的主机网络后端
+-nic none       单独使用它来拥有零个网络设备（默认是提供一个 'user' 网络连接）
+-net nic[,macaddr=mac][,model=type][,name=str][,addr=str][,vectors=v]
+                配置或创建一个板载（或机器默认）NIC并将其连接到集线器0（除非需要集线器，否则请使用-nic）
+-net [user|tap|bridge|vde|socket][,option][,option][,...]
+                初始化主机网络接口的旧方法
+                （如果可能，请使用-netdev选项代替）
+
+字符设备选项：
+-chardev help
+-chardev null,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev socket,id=id[,host=host],port=port[,to=to][,ipv4][,ipv6][,nodelay][,reconnect=seconds]
+         [,server][,nowait][,telnet][,websocket][,reconnect=seconds][,mux=on|off]
+         [,logfile=PATH][,logappend=on|off][,tls-creds=ID][,tls-authz=ID] (tcp)
+-chardev socket,id=id,path=path[,server][,nowait][,telnet][,websocket][,reconnect=seconds]
+         [,mux=on|off][,logfile=PATH][,logappend=on|off][,abstract=on|off][,tight=on|off] (unix)
+-chardev udp,id=id[,host=host],port=port[,localaddr=localaddr]
+         [,localport=localport][,ipv4][,ipv6][,mux=on|off]
+         [,logfile=PATH][,logappend=on|off]
+-chardev msmouse,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev vc,id=id[[,width=width][,height=height]][[,cols=cols][,rows=rows]]
+         [,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev ringbuf,id=id[,size=size][,logfile=PATH][,logappend=on|off]
+-chardev file,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev pipe,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev pty,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev stdio,id=id[,mux=on|off][,signal=on|off][,logfile=PATH][,logappend=on|off]
+-chardev braille,id=id[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev serial,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev tty,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev parallel,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev parport,id=id,path=path[,mux=on|off][,logfile=PATH][,logappend=on|off]
+-chardev spicevmc,id=id,name=name[,debug=debug][,logfile=PATH][,logappend=on|off]
+-chardev spiceport,id=id,name=name[,debug=debug][,logfile=PATH][,logappend=on|off]
+
+TPM设备选项：
+-tpmdev passthrough,id=id[,path=path][,cancel-path=path]
+                使用path提供字符设备的路径；默认是/dev/tpm0
+                使用cancel-path提供TPM的取消sysfs条目的路径；如果未提供，
+                将在/sys/class/misc/tpm?/device中搜索
+-tpmdev emulator,id=id,chardev=dev
+                使用字符设备后端配置TPM设备
+
+Linux/Multiboot引导特定选项：
+-kernel bzImage 将 'bzImage' 用作内核镜像
+-append cmdline 将 'cmdline' 用作内核命令行
+-initrd file    将 'file' 用作初始ram磁盘
+-dtb    file    将 'file' 用作设备树镜像
+
+调试/专家选项：
+-fw_cfg [name=]<name>,file=<file>
+                add named fw_cfg entry with contents from file
+-fw_cfg [name=]<name>,string=<str>
+                add named fw_cfg entry with contents from string
+-serial dev     redirect the serial port to char device 'dev'
+-parallel dev   redirect the parallel port to char device 'dev'
+-monitor dev    redirect the monitor to char device 'dev'
+-qmp dev        like -monitor but opens in 'control' mode
+-qmp-pretty dev like -qmp but uses pretty JSON formatting
+-mon [chardev=]name[,mode=readline|control][,pretty[=on|off]]
+-debugcon dev   将调试控制台重定向到字符设备 'dev'
+-pidfile file   将PID写入 'file'
+-singlestep     始终以单步模式运行
+--preconfig     在机器初始化之前暂停QEMU（实验性）
+-S              在启动时冻结CPU（使用 'c' 开始执行）
+-realtime [mlock=on|off]
+                使用实时功能运行qemu
+                mlock=on|off 控制mlock支持（默认：开启）
+-overcommit [mem-lock=on|off][cpu-pm=on|off]
+                使用过度提交提示运行qemu
+                mem-lock=on|off 控制内存锁定支持（默认：关闭）
+                cpu-pm=on|off 控制CPU电源管理（默认：关闭）
+-gdb dev        在 'dev' 上接受gdb连接。（QEMU默认在不等待gdb连接的情况下启动客户机；
+                如果您希望它不开始执行，请同时使用 -S。）
+-s              -gdb tcp::1234 的简写形式
+-d item1,...    启用指定项目的日志记录（使用 '-d help' 获取日志项目列表）
+-D logfile      将日志输出到logfile（默认stderr）
+-dfilter range,..  将调试输出过滤到地址范围（对-d cpu,exec等有用）
+-seed number       为伪随机数生成器设置种子
+-L path         设置BIOS、VGA BIOS和键盘映射的目录
+-bios file      设置BIOS的文件名
+-enable-kvm     启用KVM全虚拟化支持
+-xen-domid id   指定Xen客户机域ID
+-xen-attach     附加到现有的Xen域
+                libxl将在启动QEMU时使用此选项
+-xen-domid-restrict     将可用的Xen操作集限制到指定的域ID。（不影响
+                        xenpv机器类型）
+-no-reboot      退出而不是重启
+-no-shutdown    在关机前停止
+-loadvm [tag|id]
+                立即使用保存的状态启动（在监视器中使用loadvm）
+-daemonize      在初始化后将QEMU守护进程化
+-option-rom rom 将文件rom加载到选项ROM空间
+-rtc [base=utc|localtime|<datetime>][,clock=host|rt|vm][,driftfix=none|slew]
+                设置RTC基准和时钟，启用时钟滴答的漂移修复（仅x86）
+-icount [shift=N|auto][,align=on|off][,sleep=on|off,rr=record|replay,rrfile=<filename>,rrsnapshot=<snapshot>]
+                启用虚拟指令计数器，每个指令有2^N个时钟滴答，启用对齐主机和虚拟时钟
+                或禁用实时CPU睡眠
+-watchdog model
+                启用虚拟硬件看门狗 [默认=无]
+-watchdog-action reset|shutdown|poweroff|inject-nmi|pause|debug|none
+                看门狗触发时的操作 [默认=重置]
+-echr chr       设置终端转义字符，而不是ctrl-a
+-show-cursor    显示光标
+-tb-size n      设置TB大小
+-incoming tcp:[host]:port[,to=maxport][,ipv4][,ipv6]
+-incoming rdma:host:port[,ipv4][,ipv6]
+-incoming unix:socketpath
+                准备传入迁移，在指定的协议和套接字地址上监听
+-incoming fd:fd
+-incoming exec:cmdline
+                在给定的文件描述符上接受传入迁移
+                或从给定的外部命令接受
+-incoming defer
+                等待通过migrate_incoming指定URI
+-only-migratable     只允许可迁移设备
+-nodefaults     不创建默认设备
+-chroot dir     在启动VM之前chroot到dir
+-runas user     在启动VM之前更改为用户ID user
+                user可以是数字uid:gid
+-semihosting    半主机模式
+-semihosting-config [enable=on|off][,target=native|gdb|auto][,chardev=id][,arg=str[,...]]
+                半主机配置
+-old-param      旧参数模式
+-sandbox on[,obsolete=allow|deny][,elevateprivileges=allow|deny|children]
+          [,spawn=allow|deny][,resourcecontrol=allow|deny]
+                启用seccomp模式2系统调用过滤器（默认 'off'）。
+                使用 'obsolete' 允许内核提供的过时系统调用，但通常不再被现代
+                    C库实现使用。
+                使用 'elevateprivileges' 允许或拒绝QEMU进程提升其权限，通过将所有set*uid|gid系统调用列入黑名单。
+                    值 'children' 将拒绝主QEMU进程的set*uid|gid系统调用，但允许fork和execve以非特权方式运行
+                使用 'spawn' 通过将*fork和execve列入黑名单来避免QEMU生成新线程或进程
+                使用 'resourcecontrol' 禁用进程亲和性和调度程序优先级
+-readconfig <file>
+-writeconfig <file>
+                读取/写入配置文件
+-no-user-config
+                在启动时不加载默认的用户提供的配置文件
+-trace [[enable=]<pattern>][,events=<file>][,file=<file>]
+                指定跟踪选项
+-plugin [file=]<file>[,arg=<string>]
+                加载插件
+-enable-fips    启用FIPS 140-2合规性
+-msg [timestamp[=on|off]][,guest-name=[on|off]]
+                控制错误消息格式
+                timestamp=on 启用时间戳（默认：关闭）
+                guest-name=on 启用客户机名称前缀，但仅当
+                              设置了-name guest选项时（默认：关闭）
+-dump-vmstate <file>
+                以JSON格式将vmstate信息输出到文件。
+                使用scripts/vmstate-static-checker.py文件
+                通过比较两个这样的vmstate转储来检查迁移代码中可能的回归。
+-enable-sync-profile
+                启用同步分析
+
+通用对象创建：
+-object TYPENAME[,PROP1=VALUE1,...]
+                创建一个新的TYPENAME类型的对象，按照指定的顺序设置属性。
+                请注意，必须设置 'id' 属性。这些对象被放置在 '/objects' 路径中。
+
+在模拟过程中，以下按键很有用：
+ctrl-alt-f      切换全屏
+ctrl-alt-n      切换到虚拟控制台 'n'
+ctrl-alt        切换鼠标和键盘抓取
+
+使用-nographic时，按 'ctrl-a h' 获得一些帮助。
+
+有关如何报告错误，请参见 <https://qemu.org/contribute/report-a-bug>。
+有关QEMU项目的更多信息，请访问 <https://qemu.org>。

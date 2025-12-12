@@ -7,5 +7,5 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 #curl -fsSL https://get.daocloud.io/docker -o get-docker.sh
 
 
-sudo bash get-docker.sh
+#sudo bash get-docker.sh
 

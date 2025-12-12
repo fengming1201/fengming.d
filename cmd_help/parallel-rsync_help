@@ -1,0 +1,68 @@
+parallel-rsync
+用途: 用于并行同步文件到多个远程主机。
+作用: 使用 rsync 协议并行复制文件或目录到多个目标主机。
+使用场景: 当需要将文件或目录同步到多个服务器时，parallel-rsync 可以加快传输速度。
+
+用法: parallel-rsync [选项] 本地路径 远程路径
+选项:
+  --version             显示程序版本号并退出
+  --help                显示此帮助信息并退出
+  -h HOST_FILE, --hosts=HOST_FILE
+                        主机文件（每行格式 "[用户名@]主机[:端口]")
+  -H HOST_STRING, --host=HOST_STRING
+                        额外的主机条目（格式 "[用户名@]主机[:端口]")
+  -l USER, --user=USER  用户名 (可选)
+  -p PAR, --par=PAR     最大并行线程数 (可选)
+  -o OUTDIR, --outdir=OUTDIR
+                        标准输出文件的输出目录 (可选)
+  -e ERRDIR, --errdir=ERRDIR
+                        标准错误文件的输出目录 (可选)
+  -t TIMEOUT, --timeout=TIMEOUT
+                        每个主机的超时时间（秒）(0 = 无超时) (可选)
+  -O OPTION, --option=OPTION
+                        SSH 选项 (可选)
+  -v, --verbose         开启警告和诊断信息 (可选)
+  -A, --askpass         询问密码 (可选)
+  -x ARGS, --extra-args=ARGS
+                        额外的命令行参数，支持空格、引号和反斜杠处理
+  -X ARG, --extra-arg=ARG
+                        额外的命令行参数
+  -r, --recursive       递归复制目录 (可选)
+  -a, --archive         使用 rsync 的归档模式 (-a) (可选)
+  -z, --compress        使用 rsync 压缩功能 (可选)
+  -S ARGS, --ssh-args=ARGS
+                        SSH 的额外参数
+
+示例: prsync -r -h hosts.txt -l irb2 foo /home/irb2/foo
+==========================================================
+更多使用例子：
+
+1. 批量同步本地目录到多台服务器：
+   prsync -r -h hosts.txt -l root /local/data/ /remote/backup/
+
+2. 使用归档模式批量同步文件：
+   prsync -a -h hosts.txt -l admin project/ /home/admin/
+
+3. 批量同步并使用压缩功能：
+   prsync -az -h hosts.txt -l user docs/ /home/user/documents/
+
+4. 批量同步文件并询问密码：
+   prsync -r -h hosts.txt -l user -A -p 5 data.tar.gz /home/user/
+
+5. 批量同步文件并保存输出日志：
+   prsync -a -h hosts.txt -l root -o /tmp/rsync_out -e /tmp/rsync_err config/ /etc/
+
+6. 使用指定端口和SSH参数批量同步：
+   prsync -r -h hosts.txt -l user -S "-p 2222 -i ~/.ssh/id_rsa" app/ /home/user/
+
+7. 批量同步文件并显示详细信息：
+   prsync -avz -h hosts.txt -l root /var/www/ /srv/www/
+
+8. 批量同步多个本地文件到多台服务器：
+   prsync -h hosts.txt -l user file1.txt file2.txt /home/user/
+
+9. 批量同步并使用rsync额外参数：
+   prsync -r -h hosts.txt -l root -x "--exclude='*.tmp' --delete" /source/ /destination/
+
+10. 批量同步文件到不同用户的主目录：
+    prsync -H "user1@host1,user2@host2" -l root setup.sh ~/setup.sh

@@ -1,0 +1,58 @@
+parallel-scp
+用途: 用于并行复制文件到多个远程主机。
+作用: 使用 scp 并行复制文件到多个目标主机。
+使用场景: 适合快速将文件分发到多台服务器。
+
+用法: parallel-scp [选项] 本地文件/目录 远程路径
+选项:
+  --version             显示程序版本号并退出
+  --help                显示此帮助信息并退出
+  -h HOST_FILE, --hosts=HOST_FILE
+                        主机文件（每行格式 "[用户名@]主机[:端口]")
+  -H HOST_STRING, --host=HOST_STRING
+                        额外的主机条目（格式 "[用户名@]主机[:端口]")
+  -l USER, --user=USER  用户名 (可选)
+  -p PAR, --par=PAR     最大并行线程数 (可选)
+  -o OUTDIR, --outdir=OUTDIR
+                        标准输出文件的输出目录 (可选)
+  -e ERRDIR, --errdir=ERRDIR
+                        标准错误文件的输出目录 (可选)
+  -t TIMEOUT, --timeout=TIMEOUT
+                        每个主机的超时时间（秒）(0 = 无超时) (可选)
+  -O OPTION, --option=OPTION
+                        SSH 选项 (可选)
+  -v, --verbose         开启警告和诊断信息 (可选)
+  -A, --askpass         询问密码 (可选)
+  -x ARGS, --extra-args=ARGS
+                        额外的命令行参数，支持空格、引号和反斜杠处理
+  -X ARG, --extra-arg=ARG
+                        额外的命令行参数
+  -r, --recursive       递归复制目录 (可选)
+
+示例: pscp -h hosts.txt -l irb2 foo.txt /home/irb2/foo.txt
+==========================================================
+更多使用例子：
+
+1. 批量复制本地文件到多台服务器：
+   pscp -h hosts.txt -l root config.txt /etc/config.txt
+
+2. 批量复制本地目录到多台服务器：
+   pscp -h hosts.txt -l admin -r /local/data/ /remote/backup/
+
+3. 使用指定端口和询问密码批量复制：
+   pscp -h hosts.txt -l user -p 5 -A -O "Port=2222" app.tar.gz /home/user/
+
+4. 批量复制文件到不同用户的主目录：
+   pscp -H "user1@host1,user2@host2" -l root setup.sh ~/setup.sh
+
+5. 批量复制文件并保存输出日志：
+   pscp -h hosts.txt -l root -o /tmp/scp_out -e /tmp/scp_err data.txt /var/lib/
+
+6. 批量复制配置文件到多台服务器的不同位置：
+   pscp -h hosts.txt -l admin nginx.conf /etc/nginx/nginx.conf
+
+7. 批量复制脚本文件并设置执行权限：
+   pscp -h hosts.txt -l root script.sh /usr/local/bin/ && pssh -h hosts.txt -l root "chmod +x /usr/local/bin/script.sh"
+
+8. 批量复制多个本地文件到多台服务器：
+   pscp -h hosts.txt -l user file1.txt file2.txt /home/user/docs/

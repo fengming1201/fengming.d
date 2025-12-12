@@ -1,0 +1,67 @@
+parallel-slurp
+用途: 用于并行从多个远程主机下载文件。
+作用: 从多个服务器并行下载文件到本地。
+使用场景: 当需要从多台服务器收集文件时，parallel-slurp 可以提高效率。
+
+用法: parallel-slurp [选项] 远程路径 本地路径
+选项:
+  --version             显示程序版本号并退出
+  --help                显示此帮助信息并退出
+  -h HOST_FILE, --hosts=HOST_FILE
+                        主机文件（每行格式 "[用户名@]主机[:端口]")
+  -H HOST_STRING, --host=HOST_STRING
+                        额外的主机条目（格式 "[用户名@]主机[:端口]")
+  -l USER, --user=USER  用户名 (可选)
+  -p PAR, --par=PAR     最大并行线程数 (可选)
+  -o OUTDIR, --outdir=OUTDIR
+                        标准输出文件的输出目录 (可选)
+  -e ERRDIR, --errdir=ERRDIR
+                        标准错误文件的输出目录 (可选)
+  -t TIMEOUT, --timeout=TIMEOUT
+                        每个主机的超时时间（秒）(0 = 无超时) (可选)
+  -O OPTION, --option=OPTION
+                        SSH 选项 (可选)
+  -v, --verbose         开启警告和诊断信息 (可选)
+  -A, --askpass         询问密码 (可选)
+  -x ARGS, --extra-args=ARGS
+                        额外的命令行参数，支持空格、引号和反斜杠处理
+  -X ARG, --extra-arg=ARG
+                        额外的命令行参数
+  -r, --recursive       递归复制目录 (可选)
+  -L LOCALDIR, --localdir=LOCALDIR
+                        远程文件复制的本地输出目录
+
+示例: pslurp -h hosts.txt -L /tmp/outdir -l irb2
+/home/irb2/foo.txt foo.txt
+=======================================================
+更多使用例子：
+
+1. 从多台服务器批量下载文件：
+   pslurp -h hosts.txt -L /local/backup -l root /etc/passwd passwd.bak
+
+2. 批量下载文件并指定输出目录：
+   pslurp -h hosts.txt -L /tmp/logs -l admin /var/log/syslog syslog
+
+3. 从多台服务器批量下载目录：
+   pslurp -r -h hosts.txt -L /local/data -l user /home/user/docs/ docs/
+
+4. 批量下载文件并询问密码：
+   pslurp -h hosts.txt -L /local/files -l user -A /home/user/config.txt config.txt
+
+5. 批量下载文件并保存输出日志：
+   pslurp -h hosts.txt -L /local/backup -l root -o /tmp/slurp_out -e /tmp/slurp_err /etc/fstab fstab
+
+6. 使用指定端口和SSH参数批量下载：
+   pslurp -h hosts.txt -L /local/data -l user -S "-p 2222 -i ~/.ssh/id_rsa" /home/user/file.txt file.txt
+
+7. 批量下载文件并显示详细信息：
+   pslurp -v -h hosts.txt -L /local/backup -l root /var/spool/cron/crontab crontab
+
+8. 从多台服务器批量下载多个文件：
+   pslurp -h hosts.txt -L /local/config -l admin /etc/nginx/nginx.conf /etc/hosts .
+
+9. 使用主机字符串直接指定多个主机下载文件：
+   pslurp -H "user1@host1,user2@host2" -L /local/backup -l root /etc/os-release os-release
+
+10. 批量下载文件并设置超时时间：
+    pslurp -h hosts.txt -L /local/data -l user -t 30 /home/user/largefile.tar.gz largefile.tar.gz

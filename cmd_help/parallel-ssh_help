@@ -1,0 +1,62 @@
+parallel-ssh
+用途: 用于并行在多个远程主机上执行命令。
+作用: 使用 ssh 并行执行命令。
+使用场景: 适合需要在多台服务器上同时执行命令的情况。
+
+用法: parallel-ssh [选项] 命令 [...]
+选项:
+  --version             显示程序版本号并退出
+  --help                显示此帮助信息并退出
+  -h HOST_FILE, --hosts=HOST_FILE
+                        主机文件（每行格式 "[用户名@]主机[:端口]")
+  -H HOST_STRING, --host=HOST_STRING
+                        额外的主机条目（格式 "[用户名@]主机[:端口]")
+  -l USER, --user=USER  用户名 (可选)
+  -p PAR, --par=PAR     最大并行线程数 (可选)
+  -o OUTDIR, --outdir=OUTDIR
+                        标准输出文件的输出目录 (可选)
+  -e ERRDIR, --errdir=ERRDIR
+                        标准错误文件的输出目录 (可选)
+  -t TIMEOUT, --timeout=TIMEOUT
+                        每个主机的超时时间（秒）(0 = 无超时) (可选)
+  -O OPTION, --option=OPTION
+                        SSH 选项 (可选)
+  -v, --verbose         开启警告和诊断信息 (可选)
+  -A, --askpass         询问密码 (可选)
+  -x ARGS, --extra-args=ARGS
+                        额外的命令行参数，支持空格、引号和反斜杠处理
+  -X ARG, --extra-arg=ARG
+                        额外的命令行参数
+  -i, --inline          内联显示每个服务器的聚合输出和错误
+  --inline-stdout       内联显示每个服务器的标准输出
+  -I, --send-input      从标准输入读取并发送给 ssh 作为输入
+  -P, --print           实时打印我们获得的输出
+
+示例: pssh -h hosts.txt -l irb2 -o /tmp/foo uptime
+===================================================
+使用例子：
+
+1. 批量查看多台服务器的磁盘使用情况：
+   pssh -h hosts.txt -l root -i "df -h"
+
+2. 批量更新Debian/Ubuntu系统包：
+   pssh -h hosts.txt -l root -A -i "apt update && apt upgrade -y"
+
+3. 批量在后台执行长时间运行的命令：
+   pssh -h hosts.txt -l root -o /tmp/output "nohup long-running-command > /dev/null 2>&1 &"
+
+4. 批量检查服务器的负载情况：
+   pssh -h hosts.txt -l admin -p 10 -i "uptime"
+
+5. 批量复制本地文件到多台服务器：
+   （结合pscp工具，是parallel-ssh套件的一部分）
+   pscp -h hosts.txt -l root local_file.txt /remote/path/
+
+6. 批量从标准输入读取命令执行：
+   echo "whoami; hostname" | pssh -h hosts.txt -l user -I
+
+7. 批量检查指定服务的运行状态：
+   pssh -h hosts.txt -l root -i "systemctl status nginx"
+
+8. 批量创建相同的用户账户：
+   pssh -h hosts.txt -l root -A -i "useradd -m -s /bin/bash newuser && passwd newuser"

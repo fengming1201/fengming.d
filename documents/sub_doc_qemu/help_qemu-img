@@ -1,0 +1,83 @@
+qemu-img 版本 5.2.0 (Debian 1:5.2+dfsg-11+deb11u5)
+版权所有 (c) 2003-2020 Fabrice Bellard 和 QEMU 项目开发者
+用法: qemu-img [标准选项] 命令 [命令选项]
+QEMU 磁盘镜像工具
+
+    '-h', '--help'       显示此帮助并退出
+    '-V', '--version'    输出版本信息并退出
+    '-T', '--trace'      [[enable=]<pattern>][,events=<file>][,file=<file>]
+                         指定跟踪选项
+
+命令语法:
+  amend [--object objectdef] [--image-opts] [-p] [-q] [-f fmt] [-t cache] [--force] -o options filename
+  bench [-c count] [-d depth] [-f fmt] [--flush-interval=flush_interval] [-i aio] [-n] [--no-drain] [-o offset] [--pattern=pattern] [-q] [-s buffer_size] [-S step_size] [-t cache] [-w] [-U] filename
+  bitmap (--merge SOURCE | --add | --remove | --clear | --enable | --disable)... [-b source_file [-F source_fmt]] [-g granularity] [--object objectdef] [--image-opts | -f fmt] filename bitmap
+  check [--object objectdef] [--image-opts] [-q] [-f fmt] [--output=ofmt] [-r [leaks | all]] [-T src_cache] [-U] filename
+  commit [--object objectdef] [--image-opts] [-q] [-f fmt] [-t cache] [-b base] [-r rate_limit] [-d] [-p] filename
+  compare [--object objectdef] [--image-opts] [-f fmt] [-F fmt] [-T src_cache] [-p] [-q] [-s] [-U] filename1 filename2
+  convert [--object objectdef] [--image-opts] [--target-image-opts] [--target-is-zero] [--bitmaps] [-U] [-C] [-c] [-p] [-q] [-n] [-f fmt] [-t cache] [-T src_cache] [-O output_fmt] [-B backing_file] [-o options] [-l snapshot_param] [-S sparse_size] [-r rate_limit] [-m num_coroutines] [-W] [--salvage] filename [filename2 [...]] output_filename
+  create [--object objectdef] [-q] [-f fmt] [-b backing_file] [-F backing_fmt] [-u] [-o options] filename [size]
+  dd [--image-opts] [-U] [-f fmt] [-O output_fmt] [bs=block_size] [count=blocks] [skip=blocks] if=input of=output
+  info [--object objectdef] [--image-opts] [-f fmt] [--output=ofmt] [--backing-chain] [-U] filename
+  map [--object objectdef] [--image-opts] [-f fmt] [--start-offset=offset] [--max-length=len] [--output=ofmt] [-U] filename
+  measure [--output=ofmt] [-O output_fmt] [-o options] [--size N | [--object objectdef] [--image-opts] [-f fmt] [-l snapshot_param] filename]
+  snapshot [--object objectdef] [--image-opts] [-U] [-q] [-l | -a snapshot | -c snapshot | -d snapshot] filename
+  rebase [--object objectdef] [--image-opts] [-U] [-q] [-f fmt] [-t cache] [-T src_cache] [-p] [-u] -b backing_file [-F backing_fmt] filename
+  resize [--object objectdef] [--image-opts] [-f fmt] [--preallocation=prealloc] [-q] [--shrink] filename [+ | -]size
+
+命令参数:
+  'filename' 是磁盘镜像文件名
+  'objectdef' 是 QEMU 用户可创建的对象定义。请参阅 qemu(1) 手册页了解对象属性的描述。最常见的对象类型是 'secret'，用于提供密码和/或加密密钥。
+  'fmt' 是磁盘镜像格式。在大多数情况下会自动猜测
+  'cache' 是用于写入输出磁盘镜像的缓存模式，有效选项包括：'none'、'writeback'（默认，除了 convert）、'writethrough'、'directsync' 和 'unsafe'（convert 的默认值）
+  'src_cache' 是用于读取输入磁盘镜像的缓存模式，有效选项与 'cache' 选项相同
+  'size' 是磁盘镜像的大小（以字节为单位）。支持可选后缀 'k' 或 'K'（千字节，1024）、'M'（兆字节，1024k）、'G'（吉字节，1024M）、'T'（太字节，1024G）、'P'（拍字节，1024T）和 'E'（艾字节，1024P）。'b' 被忽略。
+  'output_filename' 是目标磁盘镜像文件名
+  'output_fmt' 是目标格式
+  'options' 是格式特定选项的逗号分隔列表，采用 name=value 格式。使用 -o ? 可以查看所使用格式支持的选项概述
+  'snapshot_param' 是用于内部快照的参数，格式为 'snapshot.id=[ID],snapshot.name=[NAME]' 或 '[ID_OR_NAME]'
+  '-c' 表示目标镜像必须压缩（仅 qcow 格式）
+  '-u' 允许不安全的后端链。对于重新定位，假设旧后端文件和新后端文件完全匹配。在这种情况下，镜像在重新定位之前不需要有效的后端文件（对重命名后端文件很有用）。对于镜像创建，允许在不尝试打开后端文件的情况下创建。
+  '-h' 带或不带命令都显示此帮助并列出支持的格式
+  '-p' 显示命令的进度（仅某些命令）
+  '-q' 使用安静模式 - 不打印任何输出（错误除外）
+  '-S' 表示在转换过程中，必须包含连续的全零字节数（默认为 4k），qemu-img 才会创建稀疏镜像。如果字节数为 0，则不会扫描源文件中的未分配或零扇区，目标镜像将始终完全分配
+  '--output' 指定输出必须采用的格式（human 或 json）
+  '-n' 跳过目标卷创建（如果卷在运行 qemu-img 之前已创建，则很有用）
+
+bitmap 子命令参数:
+  'bitmap' 是要操作的位图的名称，通过 '--add'、'--remove'、'--clear'、'--enable'、'--disable' 或 '--merge source' 等一个或多个操作进行操作
+  '-g granularity' 为 '--add' 操作设置粒度
+  '-b source' 和 '-F src_fmt' 告诉 '--merge' 操作从替代文件中查找源位图
+
+check 子命令参数:
+  '-r' 尝试修复检查过程中发现的任何不一致。'-r leaks' 仅修复集群泄漏，而 '-r all' 修复所有类型的错误，但选择错误修复或隐藏已发生的损坏的风险更高。
+
+convert 子命令参数:
+  '--bitmaps' 将所有顶级持久位图复制到目标
+  '-m' 指定在转换过程中并行工作的协程数量（默认为 8）
+  '-W' 允许无序写入目标而不是顺序写入
+
+snapshot 子命令参数:
+  'snapshot' 是要创建、应用或删除的快照的名称
+  '-a' 应用快照（将磁盘恢复到保存的状态）
+  '-c' 创建快照
+  '-d' 删除快照
+  '-l' 列出给定镜像中的所有快照
+
+compare 子命令参数:
+  '-f' 第一个镜像格式
+  '-F' 第二个镜像格式
+  '-s' 在严格模式下运行 - 镜像大小或扇区分配不同时失败
+
+dd 子命令参数:
+  'bs=BYTES' 每次读写最多 BYTES 字节（默认：512）
+  'count=N' 仅复制 N 个输入块
+  'if=FILE' 从 FILE 读取
+  'of=FILE' 写入 FILE
+  'skip=N' 在输入开始时跳过 N 个 bs 大小的块
+
+支持的格式: blkdebug blklogwrites blkverify bochs cloop compress copy-on-read dmg file ftp ftps gluster host_cdrom host_device http https iscsi iser luks nbd nfs null-aio null-co nvme qcow qcow2 qed quorum raw rbd replication ssh throttle vdi vhdx vmdk vpc vvfat
+
+有关如何报告错误，请参见 <https://qemu.org/contribute/report-a-bug>。
+有关 QEMU 项目的更多信息，请访问 <https://qemu.org>。

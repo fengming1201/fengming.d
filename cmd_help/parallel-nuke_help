@@ -1,0 +1,57 @@
+parallel-nuke
+用途: 用于并行关闭多个远程主机。
+作用: 发送关机命令到多个服务器，可以快速关闭一组服务器。
+使用场景: 当你需要批量关闭多台服务器时，这个工具可以节省时间。
+
+用法: parallel-nuke [选项] 进程模式
+选项:
+  --version             显示程序版本号并退出
+  --help                显示此帮助信息并退出
+  -h HOST_FILE, --hosts=HOST_FILE
+                        主机文件（每行格式 "[用户名@]主机[:端口]")
+  -H HOST_STRING, --host=HOST_STRING
+                        额外的主机条目（格式 "[用户名@]主机[:端口]")
+  -l USER, --user=USER  用户名 (可选)
+  -p PAR, --par=PAR     最大并行线程数 (可选)
+  -o OUTDIR, --outdir=OUTDIR
+                        标准输出文件的输出目录 (可选)
+  -e ERRDIR, --errdir=ERRDIR
+                        标准错误文件的输出目录 (可选)
+  -t TIMEOUT, --timeout=TIMEOUT
+                        每个主机的超时时间（秒）(0 = 无超时) (可选)
+  -O OPTION, --option=OPTION
+                        SSH 选项 (可选)
+  -v, --verbose         开启警告和诊断信息 (可选)
+  -A, --askpass         询问密码 (可选)
+  -x ARGS, --extra-args=ARGS
+                        额外的命令行参数，支持空格、引号和反斜杠处理
+  -X ARG, --extra-arg=ARG
+                        额外的命令行参数
+
+示例: pnuke -h hosts.txt -l irb2 java
+======================================
+更多使用例子：
+
+1. 批量杀死多台服务器上的Java进程：
+   pnuke -h hosts.txt -l root java
+
+2. 批量杀死多台服务器上匹配特定模式的进程：
+   pnuke -h hosts.txt -l admin "python.*script"
+
+3. 批量杀死进程并询问密码：
+   pnuke -h hosts.txt -l user -A -p 10 node
+
+4. 批量杀死特定用户的进程：
+   pnuke -H "host1,host2,host3" -l root "apache2"
+
+5. 批量杀死进程并保存输出日志：
+   pnuke -h hosts.txt -l root -o /tmp/nuke_out -e /tmp/nuke_err mysql
+
+6. 使用指定端口批量杀死进程：
+   pnuke -h hosts.txt -l user -O "Port=2222" nginx
+
+7. 批量杀死多台服务器上的多个进程类型：
+   pnuke -h hosts.txt -l root "(java|python|node)"
+
+8. 批量杀死进程并显示详细信息：
+   pnuke -h hosts.txt -l root -v php-fpm
