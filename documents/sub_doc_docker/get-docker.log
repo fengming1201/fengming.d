@@ -1,0 +1,39 @@
+执行get-docker.sh
+$sudo bash get-docker.sh
+
+================================================================================
+
+To run Docker as a non-privileged user, consider setting up the
+Docker daemon in rootless mode for your user:
+要以非特权用户身份运行Docker，请考虑为您的用户设置无root模式的Docker守护进程：
+
+    dockerd-rootless-setuptool.sh install
+
+Visit https://docs.docker.com/go/rootless/ to learn about rootless mode.
+
+
+To run the Docker daemon as a fully privileged service, but granting non-root
+users access, refer to https://docs.docker.com/go/daemon-access/
+将Docker守护进程作为完全权限的服务运行，但授予非root用户访问权限，参考https://docs.docker.com/go/daemon-access/
+
+WARNING: Access to the remote API on a privileged Docker daemon is equivalent
+         to root access on the host. Refer to the 'Docker daemon attack surface'
+         documentation for details: https://docs.docker.com/go/attack-surface/
+警告：在具有特权的Docker守护进程上访问远程API等同于在主机上获得root权限。有关详细信息，
+请参阅“Docker守护进程攻击面”文档：https://docs.docker.com/go/attack-surface/
+================================================================================
+$dockerd-rootless-setuptool.sh install
+[INFO] Installed docker.service successfully.
+[INFO] To control docker.service, run: `systemctl --user (start|stop|restart) docker.service`
+[INFO] To run docker.service on system startup, run: `sudo loginctl enable-linger dev`
+
+[INFO] Creating CLI context "rootless"
+Successfully created context "rootless"
+[INFO] Using CLI context "rootless"
+Current context is now "rootless"
+
+[INFO] Make sure the following environment variable(s) are set (or add them to ~/.bashrc):
+export PATH=/usr/bin:$PATH
+
+[INFO] Some applications may require the following environment variable too:
+export DOCKER_HOST=unix:///run/user/1000/docker.sock
