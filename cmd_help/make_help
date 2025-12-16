@@ -1,0 +1,47 @@
+用法: make [选项] [目标] ...
+选项:
+  -b, -m                      为了兼容性而被忽略。
+  -B, --always-make           无条件地生成所有目标。
+  -C DIRECTORY, --directory=DIRECTORY
+                              在执行任何操作之前切换到DIRECTORY目录。
+  -d                          打印大量调试信息。
+  --debug[=FLAGS]             打印各种类型的调试信息。
+  -e, --environment-overrides
+                              环境变量覆盖Makefile中的变量。
+  -E STRING, --eval=STRING    将STRING作为Makefile语句进行评估。
+  -f FILE, --file=FILE, --makefile=FILE
+                              读取FILE作为Makefile。
+  -h, --help                  打印此消息并退出。
+  -i, --ignore-errors         忽略命令执行错误。
+  -I DIRECTORY, --include-dir=DIRECTORY
+                              在DIRECTORY中搜索包含的Makefile。
+  -j [N], --jobs[=N]          允许同时执行N个任务；不带参数则无限任务。
+  -k, --keep-going            即使某些目标无法生成也继续执行。
+  -l [N], --load-average[=N], --max-load[=N]
+                              只有当系统负载低于N时才启动多个任务。
+  -L, --check-symlink-times   使用符号链接和目标之间的最新修改时间。
+  -n, --just-print, --dry-run, --recon
+                              不实际执行任何命令，仅打印它们。
+  -o FILE, --old-file=FILE, --assume-old=FILE
+                              假设FILE非常旧，不重新生成它。
+  -O[TYPE], --output-sync[=TYPE]
+                              按TYPE同步并行任务的输出。
+  -p, --print-data-base       打印make的内部数据库。
+  -q, --question              不执行任何命令；退出状态表示是否是最新的。
+  -r, --no-builtin-rules      禁用内置的隐式规则。
+  -R, --no-builtin-variables  禁用内置变量设置。
+  -s, --silent, --quiet       不回显执行的命令。
+  --no-silent                 回显执行的命令（禁用--silent模式）。
+  -S, --no-keep-going, --stop
+                              关闭-k选项。
+  -t, --touch                 更新目标的修改时间而不重新生成它们。
+  --trace                     打印跟踪信息。
+  -v, --version               打印make的版本号并退出。
+  -w, --print-directory       打印当前目录。
+  --no-print-directory        关闭-w选项，即使它是隐式开启的。
+  -W FILE, --what-if=FILE, --new-file=FILE, --assume-new=FILE
+                              假设FILE是最新的。
+  --warn-undefined-variables  当引用未定义变量时发出警告。
+
+此程序为x86_64-pc-linux-gnu构建
+报告错误至 <bug-make@gnu.org>
