@@ -1,13 +1,13 @@
 {
 	"registry-mirrors": [
-		"https://dockercf.jsdelivr.fyi",
 		"https://docker.1panel.live",
-		"https://docker.sunzishaokao.com",
-		"https://docker-mirror.aigc2d.com",
-		"https://dockerpull.pw",
 		"https://hub.1panel.dev",
-		"https://hub.amingg.com",
-		"https://docker.hlmirror.com"
+		"https://docker.kejilion.pro",
+		"https://docker.xuanyuan.me",
+		"https://hubp.me",
+		"https://dockerproxy.net",
+		"https://hub2.nat.tf",
+		"https://doublezonline.cloud"
 	],
-	"insecure-registries":["docker.fengming.com:8090","docker.fengming.tmp:8090"]
+	"insecure-registries":["docker.fengming.com:8091","docker.fengming.tmp:8091"]
 }
