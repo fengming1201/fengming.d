@@ -144,14 +144,9 @@ extract_key_value_pairs() {
     
     # Split by spaces and process each token
     for token in $cmdline_without_mtd; do
-        # Check if token contains '=' or ':' and is not empty
+        # Check if token contains '=' and is not empty
         if [[ "$token" == *"="* ]] && [ -n "$token" ]; then
             echo "$token"
-        elif [[ "$token" == *":"* ]] && [ -n "$token" ]; then
-            # Convert colon format to equals format for consistency
-            local key=$(echo "$token" | cut -d':' -f1)
-            local value=$(echo "$token" | cut -d':' -f2-)
-            echo "${key}=${value}"
         fi
     done
 }
@@ -208,7 +203,7 @@ function usage
     #echo "--setx or --detail # open set -x mode"
     echo "-f or --file       # 从文件中读取命令行字符串"
     echo "--extract-only     # 仅提取MTD分区表，不进行解析"
-    echo "--show-kv          # 显示命令行中的键值对（排除mtdparts），支持=和:两种格式"
+    echo "--show-kv          # 显示命令行中的键值对（排除mtdparts）"
     echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
     echo ""
     echo "example:"
