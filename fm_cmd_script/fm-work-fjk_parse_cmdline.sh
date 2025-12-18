@@ -66,7 +66,7 @@ parse_mtd_partitions() {
     local device="${partitions_part%%:*}"
     local partitions_str="${partitions_part#*:}"
     
-    echo "Device: $device"
+    echo "Device: $device ,MTD partition table:"
     echo "=========================================="
     
     # Split partitions by comma and parse each
@@ -135,6 +135,27 @@ convert_hex_to_size()
     return 0
 }
 
+# Function to extract key-value pairs from command line string (excluding mtdparts)
+extract_key_value_pairs() {
+    local cmdline="$1"
+    
+    # Remove mtdparts from the string to avoid parsing it
+    local cmdline_without_mtd=$(echo "$cmdline" | sed 's/mtdparts=[^[:space:]]*//g')
+    
+    # Split by spaces and process each token
+    for token in $cmdline_without_mtd; do
+        # Check if token contains '=' or ':' and is not empty
+        if [[ "$token" == *"="* ]] && [ -n "$token" ]; then
+            echo "$token"
+        elif [[ "$token" == *":"* ]] && [ -n "$token" ]; then
+            # Convert colon format to equals format for consistency
+            local key=$(echo "$token" | cut -d':' -f1)
+            local value=$(echo "$token" | cut -d':' -f2-)
+            echo "${key}=${value}"
+        fi
+    done
+}
+
 # Function to display summary information
 display_summary() {
     local mtd_string="$1"
@@ -186,18 +207,16 @@ function usage
     #echo "-m or --mode       # you define"
     #echo "--setx or --detail # open set -x mode"
     echo "-f or --file       # 从文件中读取命令行字符串"
-    echo "--stdin            # 从标准输入读取命令行字符串（支持heredoc和管道）"
     echo "--extract-only     # 仅提取MTD分区表，不进行解析"
+    echo "--show-kv          # 显示命令行中的键值对（排除mtdparts），支持=和:两种格式"
+    echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
     echo ""
     echo "example:"
-    echo "$scriptname \"ipc_cpu_type=fh8852v201 mtdparts=spi0.0:0x20000@0(bootstrap),0x50000@0x20000(uboot)\""
-    echo "$scriptname -f input_file.txt"
-    echo "$scriptname --file input_file.txt --extract-only"
     echo "$scriptname --stdin << EOF"
-    echo "  > U-Boot> printenv"
-    echo "  > bootargs=mem=0x2700000 mtdparts=spi0.0:0x20000@0(bootstrap)..."
-    echo "  > EOF"
-    echo "cat input_file.txt | $scriptname --stdin"
+    echo ">data line 1"
+    echo ">data line 2"
+    echo ">EOF"
+    echo "cat data.txt | $scriptname --stdin"
     echo ""
 }
 
@@ -214,6 +233,7 @@ function func_main
     local mode=normal
     local setx=false
     local extract_only=false
+    local show_kv=true
     local input_file=""
     local use_stdin=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
@@ -228,6 +248,7 @@ function func_main
             --setx) setx=true; shift ;; #不带参数,移动1
             --detail) setx=true; shift ;; #不带参数,移动1
             --extract-only) extract_only=true; shift ;;
+            --show-kv) show_kv=true; shift ;;
             --stdin) use_stdin=true; shift ;;
             -f|--file)
                 if [[ -z "$2" ]]; then echo "ERROR: this option requires one parameter" >&2; return 1; fi
@@ -261,6 +282,7 @@ function func_main
         echo "DEBUG:mode=${mode}"
         echo "DEBUG:setx=${setx}"
         echo "DEBUG:extract_only=${extract_only}"
+        echo "DEBUG:show_kv=${show_kv}"
         echo "DEBUG:input_file=${input_file}"
         echo "DEBUG:use_stdin=${use_stdin}"
         echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
@@ -324,6 +346,19 @@ function func_main
     echo "Extracted MTD partition table:"
     echo "$mtd_result"
     echo ""
+    
+    # Display key-value pairs if requested
+    if [ "$show_kv" = true ]; then
+        echo "Key-Value Pairs:"
+        echo "================"
+        local kv_pairs=$(extract_key_value_pairs "$cmdline_string")
+        if [ -n "$kv_pairs" ]; then
+            echo "$kv_pairs"
+        else
+            echo "No key-value pairs found."
+        fi
+        echo ""
+    fi
     
     # If extract-only mode, just return the extracted string
     if [ "$extract_only" = true ]; then
