@@ -1,10 +1,9 @@
+用法:  docker compose push [选项] [服务...]
 
-Usage:  docker compose push [OPTIONS] [SERVICE...]
+推送服务镜像
 
-Push service images
-
-Options:
-      --dry-run                Execute command in dry run mode
-      --ignore-push-failures   Push what it can and ignores images with push failures
-      --include-deps           Also push images of services declared as dependencies
-  -q, --quiet                  Push without printing progress information
+选项:
+      --dry-run                在试运行模式下执行命令
+      --ignore-push-failures   推送可以推送的镜像，忽略推送失败的镜像
+      --include-deps           同时推送声明为依赖项的服务镜像
+  -q, --quiet                  推送时不打印进度信息

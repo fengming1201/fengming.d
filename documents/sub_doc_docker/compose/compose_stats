@@ -1,30 +1,15 @@
+用法:  docker compose stats [选项] [服务]
 
-Usage:  docker compose stats [OPTIONS] [SERVICE]
-
-Display a live stream of container(s) resource usage statistics
-
-Options:
-  -a, --all             Show all containers (default shows just running)
-      --dry-run         Execute command in dry run mode
-      --format string   Format output using a custom template:
-                        'table':            Print output in table format with column headers (default)
-                        'table TEMPLATE':   Print output in table format using the given Go template
-                        'json':             Print in JSON format
-                        'TEMPLATE':         Print output using the given Go template.
-                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
-      --no-stream       Disable streaming stats and only pull the first result
-      --no-trunc        Do not truncate output
-=======================================================
 显示容器资源使用统计信息的实时流
 
-Options:
-  -a, --all             显示所有容器（默认显示仅运行）
-      --dry-run         Execute command in dry run mode
-      --format string   使用自定义模板设置输出格式：
-                        'table':            Print output in table format with column headers (default)
-                        'table TEMPLATE':   Print output in table format using the given Go template
-                        'json':             Print in JSON format
-                        'TEMPLATE':         Print output using the given Go template.
-                        Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
-      --no-stream       禁用流媒体统计数据，只拉取第一个结果
+选项:
+  -a, --all             显示所有容器 (默认仅显示运行中的)
+      --dry-run         在试运行模式下执行命令
+      --format string   使用自定义模板格式化输出：
+                        'table':            以表格格式打印输出，包含列标题 (默认)
+                        'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                        'json':             以 JSON 格式打印
+                        'TEMPLATE':         使用给定的 Go 模板打印输出。
+                        参考https://docs.docker.com/go/formatting/ 了解有关使用模板格式化输出的更多信息
+      --no-stream       禁用流式统计并仅拉取第一个结果
       --no-trunc        不截断输出

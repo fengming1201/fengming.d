@@ -1,68 +1,33 @@
+用法:  docker compose up [选项] [服务...]
 
-Usage:  docker compose up [OPTIONS] [SERVICE...]
-
-Create and start containers
-
-Options:
-      --abort-on-container-exit      Stops all containers if any container was stopped. Incompatible with -d
-      --abort-on-container-failure   Stops all containers if any container exited with failure. Incompatible with -d
-      --always-recreate-deps         Recreate dependent containers. Incompatible with --no-recreate.
-      --attach stringArray           Restrict attaching to the specified services. Incompatible with --attach-dependencies.
-      --attach-dependencies          Automatically attach to log output of dependent services
-      --build                        Build images before starting containers
-  -d, --detach                       Detached mode: Run containers in the background
-      --dry-run                      Execute command in dry run mode
-      --exit-code-from string        Return the exit code of the selected service container. Implies --abort-on-container-exit
-      --force-recreate               Recreate containers even if their configuration and image haven't changed
-      --menu                         Enable interactive shortcuts when running attached. Incompatible with --detach. Can also be
-                                     enable/disable by setting COMPOSE_MENU environment var.
-      --no-attach stringArray        Do not attach (stream logs) to the specified services
-      --no-build                     Don't build an image, even if it's policy
-      --no-color                     Produce monochrome output
-      --no-deps                      Don't start linked services
-      --no-log-prefix                Don't print prefix in logs
-      --no-recreate                  If containers already exist, don't recreate them. Incompatible with --force-recreate.
-      --no-start                     Don't start the services after creating them
-      --pull string                  Pull image before running ("always"|"missing"|"never") (default "policy")
-      --quiet-pull                   Pull without printing progress information
-      --remove-orphans               Remove containers for services not defined in the Compose file
-  -V, --renew-anon-volumes           Recreate anonymous volumes instead of retrieving data from the previous containers
-      --scale scale                  Scale SERVICE to NUM instances. Overrides the scale setting in the Compose file if present.
-  -t, --timeout int                  Use this timeout in seconds for container shutdown when attached or when containers are already running
-      --timestamps                   Show timestamps
-      --wait                         Wait for services to be running|healthy. Implies detached mode.
-      --wait-timeout int             Maximum duration to wait for the project to be running|healthy
-  -w, --watch                        Watch source code and rebuild/refresh containers when files are updated.
-============================================================
 创建并启动容器
 
-Options:
-      --abort-on-container-exit      如果任何容器被停止，则停止所有容器。与 -d 不兼容
-      --abort-on-container-failure   如果任何容器退出失败，则停止所有容器。与 -d 不兼容
-      --always-recreate-deps         重新创建依赖容器。与 --no-recreate 不兼容
-      --attach stringArray           限制连接到指定的服务。与 --attach-dependencies 不兼容
+选项:
+      --abort-on-container-exit      如果任何容器停止则停止所有容器。与 -d 不兼容
+      --abort-on-container-failure   如果任何容器因故障退出则停止所有容器。与 -d 不兼容
+      --always-recreate-deps         重新创建依赖容器。与 --no-recreate 不兼容。
+      --attach stringArray           限制附加到指定的服务。与 --attach-dependencies 不兼容。
       --attach-dependencies          自动附加到依赖服务的日志输出
       --build                        在启动容器之前构建镜像
   -d, --detach                       分离模式：在后台运行容器
-      --dry-run                      Execute command in dry run mode
-      --exit-code-from string        返回所选服务容器的退出代码。含义 --abort-on-container-exit
-      --force-recreate               即使容器的配置和镜像没有更改，也要重新创建容器
-      --menu                         Enable interactive shortcuts when running attached. Incompatible with --detach. Can also be
-                                     enable/disable by setting COMPOSE_MENU environment var.
-      --no-attach stringArray        Do not attach (stream logs) to the specified services
-      --no-build                     Don't build an image, even if it's policy
-      --no-color                     Produce monochrome output
-      --no-deps                      Don't start linked services
-      --no-log-prefix                Don't print prefix in logs
-      --no-recreate                  If containers already exist, don't recreate them. Incompatible with --force-recreate.
-      --no-start                     Don't start the services after creating them
-      --pull string                  Pull image before running ("always"|"missing"|"never") (default "policy")
-      --quiet-pull                   Pull without printing progress information
-      --remove-orphans               删除Compose文件中未定义的服务的容器
-  -V, --renew-anon-volumes           Recreate anonymous volumes instead of retrieving data from the previous containers
-      --scale scale                  Scale SERVICE to NUM instances. Overrides the scale setting in the Compose file if present.
-  -t, --timeout int                  Use this timeout in seconds for container shutdown when attached or when containers are already running
-      --timestamps                   Show timestamps
-      --wait                         Wait for services to be running|healthy. Implies detached mode.
-      --wait-timeout int             Maximum duration to wait for the project to be running|healthy
-  -w, --watch                        查看源代码，并在文件更新时重建/刷新容器。
+      --dry-run                      在试运行模式下执行命令
+      --exit-code-from string        返回所选服务容器的退出代码。意味着 --abort-on-container-exit
+      --force-recreate               即使容器的配置和镜像没有更改也重新创建容器
+      --menu                         在附加运行时启用交互式快捷键。与 --detach 不兼容。也可以通过设置 COMPOSE_MENU 环境变量启用/禁用。
+      --no-attach stringArray        不附加（流式日志）到指定的服务
+      --no-build                     不构建镜像，即使策略要求
+      --no-color                     产生单色输出
+      --no-deps                      不启动链接的服务
+      --no-log-prefix                不在日志中打印前缀
+      --no-recreate                  如果容器已存在，不要重新创建它们。与 --force-recreate 不兼容。
+      --no-start                     创建服务后不启动它们
+      --pull string                  在运行前拉取镜像 ("always"|"missing"|"never") (默认 "policy")
+      --quiet-pull                   拉取时不打印进度信息
+      --remove-orphans               删除未在 Compose 文件中定义的服务容器
+  -V, --renew-anon-volumes           重新创建匿名卷而不是从之前的容器检索数据
+      --scale scale                  将服务扩展到指定数量的实例。覆盖 Compose 文件中的扩展设置（如果存在）。
+  -t, --timeout int                  在附加或容器已在运行时，使用此超时时间（秒）进行容器关闭
+      --timestamps                   显示时间戳
+      --wait                         等待服务运行|健康。意味着分离模式。
+      --wait-timeout int             等待项目运行|健康的最大持续时间
+  -w, --watch                        监视源代码并在文件更新时重建/刷新容器。

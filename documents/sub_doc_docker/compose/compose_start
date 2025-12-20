@@ -1,7 +1,6 @@
+用法:  docker compose start [服务...]
 
-Usage:  docker compose start [SERVICE...]
+启动服务
 
-Start services
-
-Options:
-      --dry-run   Execute command in dry run mode
+选项:
+      --dry-run   在试运行模式下执行命令

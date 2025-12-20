@@ -1,9 +1,8 @@
+用法:  docker compose restart [选项] [服务...]
 
-Usage:  docker compose restart [OPTIONS] [SERVICE...]
+重启服务容器
 
-Restart service containers
-
-Options:
-      --dry-run       Execute command in dry run mode
-      --no-deps       Don't restart dependent services
-  -t, --timeout int   Specify a shutdown timeout in seconds
+选项:
+      --dry-run       在试运行模式下执行命令
+      --no-deps       不重启依赖服务
+  -t, --timeout int   指定关闭超时时间（秒）

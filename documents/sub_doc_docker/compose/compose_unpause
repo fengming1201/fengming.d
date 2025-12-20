@@ -1,7 +1,6 @@
+用法:  docker compose unpause [服务...]
 
-Usage:  docker compose unpause [SERVICE...]
+取消暂停服务
 
-Unpause services
-
-Options:
-      --dry-run   Execute command in dry run mode
+选项:
+      --dry-run   在试运行模式下执行命令

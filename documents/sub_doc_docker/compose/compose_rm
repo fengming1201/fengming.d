@@ -1,28 +1,14 @@
+用法:  docker compose rm [选项] [服务...]
 
-Usage:  docker compose rm [OPTIONS] [SERVICE...]
-
-Removes stopped service containers
-
-By default, anonymous volumes attached to containers will not be removed. You
-can override this with -v. To list all volumes, use "docker volume ls".
-
-Any data which is not in a volume will be lost.
-
-Options:
-      --dry-run   Execute command in dry run mode
-  -f, --force     Don't ask to confirm removal
-  -s, --stop      Stop the containers, if required, before removing
-  -v, --volumes   Remove any anonymous volumes attached to containers
-=======================================================================
 删除已停止的服务容器
 
-默认情况下，附加到容器的匿名卷不会被删除。你可以用-v覆盖它。
-要列出所有卷，请使用“docker volume ls”。
+默认情况下，附加到容器的匿名卷不会被删除。您
+可以使用 -v 覆盖此设置。要列出所有卷，请使用 "docker volume ls"。
 
-任何不在卷中的数据都将丢失。
+不在卷中的任何数据都将丢失。
 
-Options:
-      --dry-run   Execute command in dry run mode
-  -f, --force     不要要求确认删除
-  -s, --stop      如果需要，在移除之前停止容器
+选项:
+      --dry-run   在试运行模式下执行命令
+  -f, --force     不要求确认删除
+  -s, --stop      如果需要，在删除前停止容器
   -v, --volumes   删除附加到容器的任何匿名卷

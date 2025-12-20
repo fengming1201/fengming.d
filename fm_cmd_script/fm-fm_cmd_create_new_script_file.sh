@@ -215,7 +215,7 @@ fi
 function usage
 {
     echo ""
-    echo "$scriptname  [opt]  files"
+    echo "\$scriptname  [opt]  files"
     echo "opt:"
     echo "-h or --help       # help"
     echo "-d or --debug      # print variable status"
@@ -226,11 +226,11 @@ function usage
     echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
     echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
     echo "example:"
-    echo "$scriptname --stdin << EOF"
+    echo "\$scriptname --stdin << EOF"
     echo ">data line 1"
     echo ">data line 2"
     echo ">EOF"
-    echo "cat data.txt | $scriptname --stdin"
+    echo "cat data.txt | \$scriptname --stdin"
     echo ""
 }
 
@@ -301,7 +301,7 @@ function func_main
         fi
         input_string=\$(cat)
         # Remove newlines and extra whitespace
-        input_string=\$(echo "\${input_string}" | tr '\n' ' ' | tr -s ' ')
+        #input_string=\$(echo "\${input_string}" | tr '\n' ' ' | tr -s ' ')
         echo "DEBUG:input_string=\${input_string}"
     else
         local remaining_argc=\${#remaining_args[@]}

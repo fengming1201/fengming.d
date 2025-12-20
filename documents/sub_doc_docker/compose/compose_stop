@@ -1,8 +1,7 @@
+用法:  docker compose stop [选项] [服务...]
 
-Usage:  docker compose stop [OPTIONS] [SERVICE...]
+停止服务
 
-Stop services
-
-Options:
-      --dry-run       Execute command in dry run mode
-  -t, --timeout int   Specify a shutdown timeout in seconds
+选项:
+      --dry-run       在试运行模式下执行命令
+  -t, --timeout int   指定关闭超时时间（秒）

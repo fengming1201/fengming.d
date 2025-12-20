@@ -1,11 +1,10 @@
+用法:  docker compose ls [选项]
 
-Usage:  docker compose ls [OPTIONS]
+列出运行中的 compose 项目
 
-List running compose projects
-
-Options:
-  -a, --all             Show all stopped Compose projects
-      --dry-run         Execute command in dry run mode
-      --filter filter   Filter output based on conditions provided
-      --format string   Format the output. Values: [table | json] (default "table")
-  -q, --quiet           Only display IDs
+选项:
+  -a, --all             显示所有已停止的 Compose 项目
+      --dry-run         在试运行模式下执行命令
+      --filter filter   根据提供的条件过滤输出
+      --format string   格式化输出。值: [table | json] (默认 "table")
+  -q, --quiet           仅显示 ID

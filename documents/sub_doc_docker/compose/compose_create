@@ -1,28 +1,14 @@
+用法:  docker compose create [选项] [服务...]
 
-Usage:  docker compose create [OPTIONS] [SERVICE...]
-
-Creates containers for a service
-
-Options:
-      --build            Build images before starting containers
-      --dry-run          Execute command in dry run mode
-      --force-recreate   Recreate containers even if their configuration and image haven't changed
-      --no-build         Don't build an image, even if it's policy
-      --no-recreate      If containers already exist, don't recreate them. Incompatible with --force-recreate.
-      --pull string      Pull image before running ("always"|"missing"|"never"|"build") (default "policy")
-      --quiet-pull       Pull without printing progress information
-      --remove-orphans   Remove containers for services not defined in the Compose file
-      --scale scale      Scale SERVICE to NUM instances. Overrides the scale setting in the Compose file if present.
-================================================================================================
 为服务创建容器
 
-Options:
-      --build            在启动容器之前构建映像
-      --dry-run          Execute command in dry run mode
-      --force-recreate   即使容器的配置和映像没有更改，也要重新创建容器
-      --no-build         不要树立形象，即使这是政策
-      --no-recreate      如果容器已经存在，不要重新创建它们。与 --force-recreate 不兼容
-      --pull string      运行前拉取图像 ("always"|"missing"|"never"|"build") (default "policy")
-      --quiet-pull       拉取不打印进度信息
-      --remove-orphans   删除Compose文件中未定义的服务的容器
-      --scale scale      将服务扩展到NUM个实例。覆盖“编写”文件中的比例设置（如果存在）。
+选项:
+      --build            在启动容器之前构建镜像
+      --dry-run          在试运行模式下执行命令
+      --force-recreate   即使容器的配置和镜像没有更改也重新创建容器
+      --no-build         不构建镜像，即使策略要求
+      --no-recreate      如果容器已存在，不要重新创建它们。与 --force-recreate 不兼容。
+      --pull string      在运行前拉取镜像 ("always"|"missing"|"never"|"build") (默认 "policy")
+      --quiet-pull       拉取时不打印进度信息
+      --remove-orphans   删除未在 Compose 文件中定义的服务容器
+      --scale scale      将服务扩展到指定数量的实例。覆盖 Compose 文件中的扩展设置（如果存在）。

@@ -1,22 +1,11 @@
+用法:  docker compose pull [选项] [服务...]
 
-Usage:  docker compose pull [OPTIONS] [SERVICE...]
+拉取服务镜像
 
-Pull service images
-
-Options:
-      --dry-run                Execute command in dry run mode
-      --ignore-buildable       Ignore images that can be built
-      --ignore-pull-failures   Pull what it can and ignores images with pull failures
-      --include-deps           Also pull services declared as dependencies
-      --policy string          Apply pull policy ("missing"|"always")
-  -q, --quiet                  Pull without printing progress information
-========================================================================
-Pull service images
-
-Options:
-      --dry-run                Execute command in dry run mode
-      --ignore-buildable       Ignore images that can be built
-      --ignore-pull-failures   Pull what it can and ignores images with pull failures
-      --include-deps           Also pull services declared as dependencies
-      --policy string          Apply pull policy ("missing"|"always")
-  -q, --quiet                  Pull without printing progress information
+选项:
+      --dry-run                在试运行模式下执行命令
+      --ignore-buildable       忽略可以构建的镜像
+      --ignore-pull-failures   拉取可以拉取的镜像，忽略拉取失败的镜像
+      --include-deps           同时拉取声明为依赖项的服务
+      --policy string          应用拉取策略 ("missing"|"always")
+  -q, --quiet                  拉取时不打印进度信息

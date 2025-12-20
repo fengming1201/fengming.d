@@ -1,101 +1,51 @@
+用法:  docker compose [选项] 命令
 
-Usage:  docker compose [OPTIONS] COMMAND
+使用 Docker 定义和运行多容器应用程序
 
-Define and run multi-container applications with Docker
-
-Options:
-      --all-resources              Include all resources, even those not used by services
-      --ansi string                Control when to print ANSI control characters ("never"|"always"|"auto") (default "auto")
-      --compatibility              Run compose in backward compatibility mode
-      --dry-run                    Execute command in dry run mode
-      --env-file stringArray       Specify an alternate environment file
-  -f, --file stringArray           Compose configuration files
-      --parallel int               Control max parallelism, -1 for unlimited (default -1)
-      --profile stringArray        Specify a profile to enable
-      --progress string            Set type of progress output (auto, tty, plain, json, quiet) (default "auto")
-      --project-directory string   Specify an alternate working directory
-                                   (default: the path of the, first specified, Compose file)
-  -p, --project-name string        Project name
-
-Commands:
-  attach      Attach local standard input, output, and error streams to a service's running container
-  build       Build or rebuild services
-  config      Parse, resolve and render compose file in canonical format
-  cp          Copy files/folders between a service container and the local filesystem
-  create      Creates containers for a service
-  down        Stop and remove containers, networks
-  events      Receive real time events from containers
-  exec        Execute a command in a running container
-  images      List images used by the created containers
-  kill        Force stop service containers
-  logs        View output from containers
-  ls          List running compose projects
-  pause       Pause services
-  port        Print the public port for a port binding
-  ps          List containers
-  pull        Pull service images
-  push        Push service images
-  restart     Restart service containers
-  rm          Removes stopped service containers
-  run         Run a one-off command on a service
-  scale       Scale services 
-  start       Start services
-  stats       Display a live stream of container(s) resource usage statistics
-  stop        Stop services
-  top         Display the running processes
-  unpause     Unpause services
-  up          Create and start containers
-  version     Show the Docker Compose version information
-  wait        Block until containers of all (or specified) services stop.
-  watch       Watch build context for service and rebuild/refresh containers when files are updated
-
-Run 'docker compose COMMAND --help' for more information on a command.
-===============================================================================
-使用Docker定义和运行多容器应用程序
-
-选项：
-      --all-resources              包括所有资源，即使是服务未使用的资源
-      --ansi string                控制何时打印ANSI控制字符 ("never"|"always"|"auto") (default "auto")
-      --compatibility              在向后兼容模式下运行compose
-      --dry-run                    在干运行模式下执行命令
+选项:
+      --all-resources              包含所有资源，即使服务未使用的资源
+      --ansi string                控制何时打印 ANSI 控制字符 ("never"|"always"|"auto") (默认 "auto")
+      --compatibility              以向后兼容模式运行 compose
+      --dry-run                    在试运行模式下执行命令
       --env-file stringArray       指定备用环境文件
-  -f, --file stringArray           编写配置文件
-      --parallel int               控制最大并行度，-1表示无限制（默认值-1）
+  -f, --file stringArray           Compose 配置文件
+      --parallel int               控制最大并行度，-1 表示无限制 (默认 -1)
       --profile stringArray        指定要启用的配置文件
-      --progress string            设置进度输出类型 (auto, tty, plain, json, quiet) (default "auto")
-      --project-directory string   指定备用工作目录（默认值：首先指定的Compose文件的路径）
+      --progress string            设置进度输出类型 (auto, tty, plain, json, quiet) (默认 "auto")
+      --project-directory string   指定备用工作目录
+                                   (默认: 第一个指定的 Compose 文件路径)
   -p, --project-name string        项目名称
 
-命令：
-  attach      将本地标准输入、输出和错误流附加到服务的运行容器中
+命令:
+  attach      将本地标准输入、输出和错误流附加到服务的运行容器
   build       构建或重建服务
-  config      以规范格式解析、解析和呈现组合文件
+  config      以规范格式解析、解析和渲染 compose 文件
   cp          在服务容器和本地文件系统之间复制文件/文件夹
   create      为服务创建容器
-  down        停止并删除容器、网络
+  down        停止并移除容器、网络
   events      从容器接收实时事件
-  exec        在正在运行的容器中执行命令
-  images      列出创建的容器使用的图像
+  exec        在运行容器中执行命令
+  images      列出创建的容器所使用的镜像
   kill        强制停止服务容器
-  logs        查看容器的输出
-  ls          列出正在运行的组合项目
+  logs        查看容器输出
+  ls          列出运行的 compose 项目
   pause       暂停服务
   port        打印端口绑定的公共端口
   ps          列出容器
-  pull        Pull service images
-  push        Push service images
-  restart     重新启动服务容器
-  rm          删除已停止的服务容器
+  pull        拉取服务镜像
+  push        推送服务镜像
+  restart     重启服务容器
+  rm          移除已停止的服务容器
   run         在服务上运行一次性命令
-  scale       规模服务
+  scale       扩展服务
   start       启动服务
-  stats       显示容器资源使用统计信息的实时流
+  stats       显示容器资源使用统计的实时流
   stop        停止服务
-  top         显示正在运行的进程
-  unpause     未暂停服务
+  top         显示运行进程
+  unpause     恢复服务
   up          创建并启动容器
-  version     Show the Docker Compose version information
-  wait        阻塞，直到所有（或指定）服务的容器停止。
-  watch       监视服务的构建上下文，并在文件更新时重建/刷新容器
+  version     显示 Docker Compose 版本信息
+  wait        阻塞直到所有（或指定）服务的容器停止
+  watch       监视服务的构建上下文，当文件更新时重建/刷新容器
 
-Run 'docker compose COMMAND --help' for more information on a command.
+运行 'docker compose 命令 --help' 获取命令的更多信息。

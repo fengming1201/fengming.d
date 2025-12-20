@@ -1,14 +1,13 @@
+用法:  docker compose exec [选项] 服务 命令 [参数...]
 
-Usage:  docker compose exec [OPTIONS] SERVICE COMMAND [ARGS...]
+在运行中的容器中执行命令
 
-Execute a command in a running container
-
-Options:
-  -d, --detach                       Detached mode: Run command in the background
-      --dry-run                      Execute command in dry run mode
-  -e, --env stringArray              Set environment variables
-      --index int                    Index of the container if service has multiple replicas
-  -T, --no-TTY docker compose exec   Disable pseudo-TTY allocation. By default docker compose exec allocates a TTY. (default true)
-      --privileged                   Give extended privileges to the process
-  -u, --user string                  Run the command as this user
-  -w, --workdir string               Path to workdir directory for this command
+选项:
+  -d, --detach                       分离模式：在后台运行命令
+      --dry-run                      在试运行模式下执行命令
+  -e, --env stringArray              设置环境变量
+      --index int                    如果服务有多个副本，则为容器的索引
+  -T, --no-TTY docker compose exec   禁用伪 TTY 分配。默认情况下 docker compose exec 分配一个 TTY。(默认 true)
+      --privileged                   为进程提供扩展权限
+  -u, --user string                  以此用户身份运行命令
+  -w, --workdir string               此命令的工作目录路径

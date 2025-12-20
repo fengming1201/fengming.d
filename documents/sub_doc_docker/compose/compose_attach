@@ -1,11 +1,10 @@
+用法:  docker compose attach [选项] 服务
 
-Usage:  docker compose attach [OPTIONS] SERVICE
+将本地标准输入、输出和错误流附加到服务的运行容器
 
-Attach local standard input, output, and error streams to a service's running container
-
-Options:
-      --detach-keys string   Override the key sequence for detaching from a container.
-      --dry-run              Execute command in dry run mode
-      --index int            index of the container if service has multiple replicas.
-      --no-stdin             Do not attach STDIN
-      --sig-proxy            Proxy all received signals to the process (default true)
+选项:
+      --detach-keys string   覆盖从容器分离的键序列。
+      --dry-run              在试运行模式下执行命令
+      --index int            如果服务有多个副本，则为容器的索引。
+      --no-stdin             不附加 STDIN
+      --sig-proxy            将所有接收到的信号代理到进程 (默认 true)

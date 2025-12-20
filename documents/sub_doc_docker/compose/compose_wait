@@ -1,14 +1,7 @@
+用法:  docker compose wait 服务 [服务...] [选项]
 
-Usage:  docker compose wait SERVICE [SERVICE...] [OPTIONS]
+阻塞直到所有（或指定的）服务容器停止。
 
-Block until containers of all (or specified) services stop.
-
-Options:
-      --down-project   Drops project when the first container stops
-      --dry-run        Execute command in dry run mode
-========================================================
-阻塞，直到所有（或指定）服务的容器停止。
-
-Options:
+选项:
       --down-project   当第一个容器停止时删除项目
-      --dry-run        Execute command in dry run mode
+      --dry-run        在试运行模式下执行命令

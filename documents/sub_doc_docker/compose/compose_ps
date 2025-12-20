@@ -1,21 +1,20 @@
+用法:  docker compose ps [选项] [服务...]
 
-Usage:  docker compose ps [OPTIONS] [SERVICE...]
+列出容器
 
-List containers
-
-Options:
-  -a, --all                  Show all stopped containers (including those created by the run command)
-      --dry-run              Execute command in dry run mode
-      --filter string        Filter services by a property (supported filters: status)
-      --format string        Format output using a custom template:
-                             'table':            Print output in table format with column headers (default)
-                             'table TEMPLATE':   Print output in table format using the given Go template
-                             'json':             Print in JSON format
-                             'TEMPLATE':         Print output using the given Go template.
-                             Refer to https://docs.docker.com/go/formatting/ for more information about formatting output with templates
-                             (default "table")
-      --no-trunc             Don't truncate output
-      --orphans              Include orphaned services (not declared by project) (default true)
-  -q, --quiet                Only display IDs
-      --services             Display services
-      --status stringArray   Filter services by status. Values: [paused | restarting | removing | running | dead | created | exited]
+选项:
+  -a, --all                  显示所有已停止的容器 (包括由 run 命令创建的容器)
+      --dry-run              在试运行模式下执行命令
+      --filter string        按属性过滤服务 (支持的过滤器: status)
+      --format string        使用自定义模板格式化输出：
+                             'table':            以表格格式打印输出，包含列标题 (默认)
+                             'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
+                             'json':             以 JSON 格式打印
+                             'TEMPLATE':         使用给定的 Go 模板打印输出。
+                             参考https://docs.docker.com/go/formatting/ 了解有关使用模板格式化输出的更多信息
+                             (默认 "table")
+      --no-trunc             不截断输出
+      --orphans              包含孤立服务 (未由项目声明) (默认 true)
+  -q, --quiet                仅显示 ID
+      --services             显示服务
+      --status stringArray   按状态过滤服务。值: [paused | restarting | removing | running | dead | created | exited]

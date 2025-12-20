@@ -1,7 +1,6 @@
+用法:  docker compose top [服务...]
 
-Usage:  docker compose top [SERVICES...]
+显示运行中的进程
 
-Display the running processes
-
-Options:
-      --dry-run   Execute command in dry run mode
+选项:
+      --dry-run   在试运行模式下执行命令

@@ -1,61 +1,24 @@
+用法:  docker compose config [选项] [服务...]
 
-Usage:  docker compose config [OPTIONS] [SERVICE...]
+解析、解析并以规范格式渲染 compose 文件
 
-Parse, resolve and render compose file in canonical format
-
-Aliases:
+别名:
   docker compose config, docker compose convert
 
-Options:
-      --dry-run                 Execute command in dry run mode
-      --environment             Print environment used for interpolation.
-      --format string           Format the output. Values: [yaml | json] (default "yaml")
-      --hash string             Print the service config hash, one per line.
-      --images                  Print the image names, one per line.
-      --no-consistency          Don't check model consistency - warning: may produce invalid Compose output
-      --no-interpolate          Don't interpolate environment variables
-      --no-normalize            Don't normalize compose model
-      --no-path-resolution      Don't resolve file paths
-  -o, --output string           Save to file (default to stdout)
-      --profiles                Print the profile names, one per line.
-  -q, --quiet                   Only validate the configuration, don't print anything
-      --resolve-image-digests   Pin image tags to digests
-      --services                Print the service names, one per line.
-      --variables               Print model variables and default values.
-      --volumes                 Print the volume names, one per line.
-============================================================================
-以规范格式解析、解析和呈现组合文件
-
-Aliases:
-  docker compose config, docker compose convert
-
-Options:
-      --dry-run                 在干运行模式下执行命令
-      --environment             用于插值的打印环境。
-      --format string           Format the output. Values: [yaml | json] (default "yaml")
+选项:
+      --dry-run                 在试运行模式下执行命令
+      --environment             打印用于插值的环境。
+      --format string           格式化输出。值: [yaml | json] (默认 "yaml")
       --hash string             打印服务配置哈希，每行一个。
       --images                  打印镜像名称，每行一个。
-      --no-consistency          不检查模型一致性-警告：可能产生无效的Compose输出
-      --no-interpolate          不要插入环境变量
-      --no-normalize            不规范组合模型
+      --no-consistency          不检查模型一致性 - 警告：可能产生无效的 Compose 输出
+      --no-interpolate          不插值环境变量
+      --no-normalize            不规范化 compose 模型
       --no-path-resolution      不解析文件路径
-  -o, --output string           Save to file (default to stdout)
+  -o, --output string           保存到文件 (默认到 stdout)
       --profiles                打印配置文件名称，每行一个。
-  -q, --quiet                   Only validate the configuration, don't print anything
-      --resolve-image-digests   Pin image tags to digests
+  -q, --quiet                   仅验证配置，不打印任何内容
+      --resolve-image-digests   将镜像标签固定为摘要
       --services                打印服务名称，每行一个。
       --variables               打印模型变量和默认值。
-      --volumes                 打印卷名，每行一个。
-
-例子：
-1，检查docker-compose.yml 语法是否正确
-docker compose config
-
-2,列出docker-compose.yml 中的服务
-docker compose config --services
-
-3，列出docker-compose.yml 中所用的镜像
-docker compose config --images
-
-4，列出docker-compose.yml 中的卷
-docker compose config --volumes
+      --volumes                 打印卷名称，每行一个。

@@ -1,9 +1,8 @@
+用法:  docker compose images [选项] [服务...]
 
-Usage:  docker compose images [OPTIONS] [SERVICE...]
+列出已创建容器使用的镜像
 
-List images used by the created containers
-
-Options:
-      --dry-run         Execute command in dry run mode
-      --format string   Format the output. Values: [table | json] (default "table")
-  -q, --quiet           Only display IDs
+选项:
+      --dry-run         在试运行模式下执行命令
+      --format string   格式化输出。值: [table | json] (默认 "table")
+  -q, --quiet           仅显示 ID
