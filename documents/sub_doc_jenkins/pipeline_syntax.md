@@ -1,5 +1,57 @@
 # Jenkins Pipeline 语法参考
 
+## 目录
+
+- [基本概念](#基本概念)
+- [基本语法](#基本语法)
+- [基本结构](#基本结构)
+- [常用步骤说明](#常用步骤说明)
+  - [基础步骤](#基础步骤)
+  - [文件操作](#文件操作)
+  - [源码管理](#源码管理)
+  - [构建工具](#构建工具)
+  - [环境管理](#环境管理)
+  - [构建产物](#构建产物)
+  - [流程控制](#流程控制)
+- [条件判断（When）](#条件判断when)
+  - [基本条件](#基本条件)
+  - [复合条件](#复合条件)
+- [并行执行](#并行执行)
+  - [基本并行](#基本并行)
+  - [动态并行](#动态并行)
+- [Agent 配置](#agent-配置)
+  - [基本Agent](#基本agent)
+  - [指定工作目录](#指定工作目录)
+- [凭证管理](#凭证管理)
+  - [使用凭证](#使用凭证)
+- [错误处理](#错误处理)
+  - [捕获错误](#捕获错误)
+  - [超时处理](#超时处理)
+- [高级特性](#高级特性)
+  - [使用共享库](#使用共享库)
+  - [HTTP请求](#http请求)
+  - [邮件通知](#邮件通知)
+- [最佳实践](#最佳实践)
+
+## 基本语法
+
+```groovy
+pipeline{
+    // 必需关键字
+    agent any
+    
+    // 可选关键字
+    environment // 全局环境变量
+    tools // 工具配置 
+    options // Pipeline 选项
+    parameters // 参数定义
+    triggers // 构建触发器
+    library // 加载共享库
+    stages // 构建阶段
+    post // 构建后操作
+}
+```
+
 ## 基本结构
 
 ```groovy
@@ -24,21 +76,21 @@ pipeline {
     
     // Pipeline选项配置
     options {
-        // 保存最近5次构建记录
+        //1.保存最近5次构建记录
         buildDiscarder(logRotator(numToKeepStr: '5'))
-        // 检出代码到子目录
+        //2.检出代码到子目录
         checkoutToSubdirectory('src')
-        // 禁止并行构建
+        //3.禁止并行构建
         disableConcurrentBuilds()
-        // 每个stage使用新容器（仅在Docker agent中生效）
+        //4.每个stage使用新容器（仅在Docker agent中生效）
         newContainerPerStage()
-        // 失败时重试3次
+        //5.失败时重试3次
         retry(3)
-        // 设置1小时超时
+        //6.设置1小时超时
         timeout(time: 1, unit: 'HOURS')
-        // 跳过默认的SCM检出
+        //7.跳过默认的SCM检出
         skipDefaultCheckout()
-        // 启用构建超时提醒
+        //8.启用构建超时提醒（30分钟）
         timeout(time: 30, unit: 'MINUTES')
     }
     
@@ -58,15 +110,15 @@ pipeline {
         text(name: 'DEPLOY_SCRIPT', defaultValue: '#!/bin/bash\necho "Deploying..."', description: '部署脚本')
     }
     
-    // 构建触发器
+    // 构建触发器(时间触发、事件触发)
     triggers {
-        // 定时构建（每周一到周五上午9点）
+        //[时间触发]-定时构建（每周一到周五上午9点）
         cron('0 9 * * 1-5')
-        // SCM变更触发器（每分钟检查一次）
+        //[时间触发]-SCM变更触发器（每分钟检查一次）
         pollSCM('* * * * *')
-        // 上游构建完成后触发
+        //[事件触发]-上游构建完成后触发
         upstream(upstreamProjects: 'other-job', threshold: hudson.model.Result.SUCCESS)
-        // GitHub webhook触发器
+        //[事件触发]-GitHub webhook触发器
         githubPush()
     }
     

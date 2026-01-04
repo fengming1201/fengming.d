@@ -1,10 +1,49 @@
 # Jenkins Pipeline Stage 语法参考
 
+## 目录
+
+- [基本概念](#基本概念)
+- [基本语法](#基本语法)
+- [完整示例](#完整示例)
+- [核心配置详解](#核心配置详解)
+  - [1. Stage 名称](#1-stage-名称)
+  - [2. Agent 配置](#2-agent-配置)
+  - [3. 环境变量](#3-环境变量)
+  - [4. 工具配置](#4-工具配置)
+  - [5. 选项配置](#5-选项配置)
+  - [6. 执行条件 (When)](#6-执行条件-when)
+  - [7. 用户输入 (Input)](#7-用户输入-input)
+- [高级用法](#高级用法)
+  - [1. 并行 Stage](#1-并行-stage)
+  - [2. 动态并行 Stage](#2-动态并行-stage)
+  - [3. 嵌套 Stage](#3-嵌套-stage)
+- [最佳实践](#最佳实践)
+- [常见问题](#常见问题)
+  - [1. Stage 未执行](#1-stage-未执行)
+  - [2. Stage 执行超时](#2-stage-执行超时)
+  - [3. 并行 Stage 中的一个失败](#3-并行-stage-中的一个失败)
+- [总结](#总结)
+
 ## 基本概念
 
 Stage 是 Jenkins Pipeline 中用于组织构建过程的基本单元，代表构建流程中的一个独立阶段。每个 stage 包含一组相关的步骤（steps），用于完成特定的构建任务。
 
 ## 基本语法
+
+### Stage 关键字
+
+**必需关键字：**
+- `steps` - 定义此 stage 执行的步骤
+
+**可选关键字：**
+- `agent` - 覆盖全局 agent 配置
+- `environment` - 定义此 stage 的环境变量
+- `tools` - 定义此 stage 的工具配置
+- `options` - 定义此 stage 的选项
+- `input` - 暂停等待用户输入
+- `when` - 定义此 stage 的执行条件
+
+### 基本结构
 
 ```groovy
 stage('Stage Name') {
@@ -25,7 +64,7 @@ stage('Stage Name') {
 
 ## 完整示例
 
-```groovy
+```
 pipeline {
     agent any
     
