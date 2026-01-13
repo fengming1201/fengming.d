@@ -22,7 +22,8 @@ function func_gitdiff_work-repository
 
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo " "
+		echo " 工作区 vs 最新提交"
+		echo ""
 		echo "$FUNCNAME  file or file list"
 		return 1
 	fi
@@ -50,11 +51,11 @@ function func_gitdiff_work-repository
 	
 	if [ $ret -ne 0 ]
 	then
-		echo "git diff --cached ${file_list[*]}"
-		sudo git diff --cached ${file_list[*]}
+		echo "git diff HEAD ${file_list[*]}"
+		sudo git diff HEAD ${file_list[*]}
 	else
-		echo "git diff --cached ${file_list[*]}"
-		git diff --cached ${file_list[*]}
+		echo "git diff HEAD ${file_list[*]}"
+		git diff HEAD ${file_list[*]}
 	fi
 	return 0
 }

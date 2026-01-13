@@ -21,7 +21,8 @@ function func_gitdiff_work-cache
 	local ret=128
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
-		echo " "
+		echo " 工作区 vs 暂存区"
+		echo ""
 		echo "$FUNCNAME  file or file list"
 		return 1
 	fi
