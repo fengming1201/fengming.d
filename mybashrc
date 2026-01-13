@@ -62,6 +62,8 @@ alias gitbranch='git branch'
 alias gitbranch_remote='git branch -r'
 alias gitbranch_all='git branch -a'
 alias wgrep='fm-word_grep.sh'
+alias hex_map_layout='fm-work_hex_map_layout.sh'
+alias hex_calculator='fm-work_hex_calculator.sh'
 #source other files
 #incude first
 source ${FENGMING_DIR}/bash_function_lib/env_variable

@@ -116,7 +116,7 @@ function usage
     echo "-o or --output     # 输出进制选择: 2(二进制), 8(八进制), 10(十进制), 16(十六进制,默认)或hex/dec"
     #echo "--setx or --detail # open set -x mode"
     echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
-    echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
+
     echo "example:"
     echo "$scriptname 10+0xA"              # 十进制10加十六进制10，默认十六进制输出
     echo "$scriptname 0xFF-255"            # 十六进制255减十进制255
@@ -124,10 +124,11 @@ function usage
     echo "$scriptname 256/0x10 -o 10" # 十进制256除以十六进制16，十进制输出
     echo "$scriptname 10+5 -o 2"     # 10+5，二进制输出
     echo "$scriptname 255 -o 8"       # 255，八进制输出
-    echo "$scriptname --stdin << EOF"
-    echo ">0xA+10 -o 10"        # 支持管道输入
-    echo ">EOF"
-    echo "cat expr.txt | $scriptname"   # 从文件读取表达式
+    echo "echo '0xA+10 -o 10' | $scriptname"   # 从管道读取表达式
+    echo "cat expr.txt | $scriptname"           # 从文件读取表达式
+    echo "$scriptname  << EOF"   #多个表达式
+    echo "0xA+10 -o 10"
+    echo "EOF"
     echo "例子："
     echo "$scriptname \"0xA0800000-0x80000\"/0x1000"
     echo "$scriptname \"((0xA+10)*2-(0x5/0x1))+0x10\""
@@ -144,7 +145,6 @@ function usage
 ##
 function func_main
 {
-    if [ $# -lt 1 ];then usage; return 1; fi
     local debug=false
     local test=false
     local setx=false
@@ -152,6 +152,17 @@ function func_main
     local output="hex"  # 默认输出十六进制
     local expression=""
     local remaining_args=()
+    
+    # 自动检测管道输入
+    if [ ! -t 0 ]; then
+        use_stdin=true
+    fi
+    
+    # 如果没有参数且没有管道输入，显示帮助
+    if [ $# -eq 0 ] && [ "$use_stdin" = false ]; then
+        usage
+        return 1
+    fi
     while [[ $# -gt 0 ]]
     do
         case "$1" in
@@ -163,7 +174,7 @@ function func_main
                 output="$2"; shift 2 ;; #带参数,移动2
             --setx) setx=true; shift ;; #不带参数,移动1
             --detail) setx=true; shift ;; #不带参数,移动1
-            --stdin) use_stdin=true; shift ;;  
+
             -*)
                 # 处理合并的选项
                 for (( i=1; i<${#1}; i++ )); do
@@ -190,19 +201,24 @@ then
         echo "DEBUG:remaining_args=${remaining_args[@]}"
     fi
     #=================== start your code ==============================#
-    # check if input is from stdin
-    if [ ${use_stdin} = true ];
-then
-        # Read from stdin
-        if [ -t 0 ]; then
-            echo "ERROR: --stdin option requires input from pipe or heredoc!" >&2
-            return 2
-        fi
+    # 处理输入
+    if [ "$use_stdin" = true ]; then
+        # 从标准输入读取表达式
+
         expression=$(cat | tr '\n' ' ' | tr -s ' ')
+        # 解析表达式中的选项
+        if [[ "$expression" =~ (-o|--output)[[:space:]]+([0-9]+|hex|dec) ]]; then
+            output="${BASH_REMATCH[2]}"
+            # 完整的选项字符串
+            opt_str="${BASH_REMATCH[0]}"
+            # 从表达式中移除选项
+            expression="${expression/$opt_str/}"
+            # 移除多余空格
+            expression=$(echo "$expression" | tr -s ' ')
+        fi
     else
         # 从剩余参数构建表达式
-        if [ ${#remaining_args[@]} -eq 0 ];
-then
+        if [ ${#remaining_args[@]} -eq 0 ]; then
             echo "ERROR: expression is empty!!";usage;return 2
         fi
         expression=$(IFS=" "; echo "${remaining_args[*]}")
@@ -210,6 +226,7 @@ then
     
     if [ ${debug} = true ]; then
         echo "DEBUG:expression=${expression}"
+        echo "DEBUG:output=${output}"
     fi
     
     # 调用十六进制计算器函数

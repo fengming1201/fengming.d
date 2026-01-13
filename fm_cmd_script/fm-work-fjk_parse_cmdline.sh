@@ -204,14 +204,12 @@ function usage
     echo "-f or --file       # 从文件中读取命令行字符串"
     echo "--extract-only     # 仅提取MTD分区表，不进行解析"
     echo "--show-kv          # 显示命令行中的键值对（排除mtdparts）"
-    echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
     echo ""
     echo "example:"
-    echo "$scriptname --stdin << EOF"
-    echo ">data line 1"
-    echo ">data line 2"
+    echo "cat data.txt | $scriptname"
+    echo "$scriptname << EOF"
+    echo ">mtdparts=spi0.0:0x20000@0(bootstrap),0x50000@0x20000(uboot)"
     echo ">EOF"
-    echo "cat data.txt | $scriptname --stdin"
     echo ""
 }
 
@@ -221,7 +219,6 @@ function usage
 ##
 function func_main
 {
-    if [ $# -lt 1 ];then usage; return 1; fi
     local debug=false
     local test=false
     local realdo=false
@@ -233,6 +230,17 @@ function func_main
     local use_stdin=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
+    
+    # 自动检测管道输入
+    if [ ! -t 0 ]; then
+        use_stdin=true
+    fi
+    
+    # 如果没有参数且没有管道输入，显示帮助
+    if [ $# -eq 0 ] && [ "$use_stdin" = false ]; then
+        usage
+        return 1
+    fi
     while [[ $# -gt 0 ]]
     do
         case "$1" in
@@ -242,9 +250,8 @@ function func_main
             --realdo) realdo=true; shift ;;
             --setx) setx=true; shift ;; #不带参数,移动1
             --detail) setx=true; shift ;; #不带参数,移动1
-            --extract-only) extract_only=true; shift ;;
-            --show-kv) show_kv=true; shift ;;
-            --stdin) use_stdin=true; shift ;;
+            --extract-only) extract_only=true; shift ;;  
+            --show-kv) show_kv=true; shift ;;  
             -f|--file)
                 if [[ -z "$2" ]]; then echo "ERROR: this option requires one parameter" >&2; return 1; fi
                 input_file="$2"; shift 2 ;; #带参数,移动2
@@ -289,10 +296,6 @@ function func_main
     # Check if input is from stdin, file, or command line arguments
     if [ "$use_stdin" = true ]; then
         # Read from stdin
-        if [ -t 0 ]; then
-            echo "ERROR: --stdin option requires input from pipe or heredoc!" >&2
-            return 2
-        fi
         cmdline_string=$(cat)
         # Remove newlines and extra whitespace
         cmdline_string=$(echo "$cmdline_string" | tr '\n' ' ' | tr -s ' ')
