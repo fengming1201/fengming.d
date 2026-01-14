@@ -34,6 +34,34 @@ if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
+function  funxc_convert_hex_to_size() 
+{
+    local hex_value=$1
+    local decimal_value=$((hex_value))
+
+    local megabytes=$((decimal_value / (1024 * 1024)))
+    local remaining=$((decimal_value % (1024 * 1024)))
+    local kilobytes=$((remaining / 1024))
+    local bytes=$((remaining % 1024))
+
+    local result=""
+    if (( megabytes > 0 )); then
+        result="${megabytes}M"
+    fi
+    if (( kilobytes > 0 )); then
+        result="${result}${kilobytes}K"
+    fi
+    if (( bytes > 0 )); then
+        result="${result}${bytes}B"
+    fi
+    # 处理0值的特殊情况
+    if [ -z "$result" ]; then
+        result="0B"
+    fi
+
+    echo "==$result"
+    return 0
+}
 function func_hex_calculator
 {
     local expression="$1"
@@ -98,6 +126,11 @@ function func_hex_calculator
             ;;
     esac
     
+    # 检查是否需要转换为大小单位
+    if [ "$readable" = "true" ]; then
+        funxc_convert_hex_to_size "$result"
+    fi
+    
     return 0
 }
 ##Parameter Counts      : 0
@@ -113,7 +146,8 @@ function usage
     echo "-d or --debug      # print variable status"
     #echo "-t or --test       # test mode, no modifications"
     #echo "--realdo          # real execution"
-    echo "-o or --output     # 输出进制选择: 2(二进制), 8(八进制), 10(十进制), 16(十六进制,默认)或hex/dec"
+    echo "-o or --output  [2|8|10|16|hex|dec]    # 输出进制选择: 2(二进制), 8(八进制), 10(十进制), 16(十六进制,默认)或hex/dec"
+    echo "-s or --size                           # 输出转为可阅读的大小单位，G、M、K、B"
     #echo "--setx or --detail # open set -x mode"
     echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
 
@@ -150,6 +184,7 @@ function func_main
     local setx=false
     local use_stdin=false
     local output="hex"  # 默认输出十六进制
+    local readable=false # 默认不转换为大小单位
     local expression=""
     local remaining_args=()
     
@@ -172,6 +207,7 @@ function func_main
             -o|--output)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 output="$2"; shift 2 ;; #带参数,移动2
+            -s|--size) readable=true; shift ;; #不带参数,移动1
             --setx) setx=true; shift ;; #不带参数,移动1
             --detail) setx=true; shift ;; #不带参数,移动1
 
@@ -182,6 +218,8 @@ function func_main
                         h) usage; return 0 ;;
                         d) debug=true ;;
                         t) test=true ;;
+                        s) readable=true ;; #不带参数,移动1
+                        o) output="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -196,6 +234,7 @@ then
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:test=${test}"
         echo "DEBUG:output=${output}"
+        echo "DEBUG:readable=${readable}"
         echo "DEBUG:setx=${setx}"
         echo "DEBUG:use_stdin=${use_stdin}"
         echo "DEBUG:remaining_args=${remaining_args[@]}"
