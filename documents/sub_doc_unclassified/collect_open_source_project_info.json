@@ -64,32 +64,11 @@
       "BACKUP": "http://gitlab.fengming.com:8080/github.com/LiteOS.git"
     },
     {
-      "name": "mynewt-core",
-      "language": "",
-      "describe": "",
-      "URL": "https://gitclone.com/github.com/apache/mynewt-core.git",
-      "BACKUP": "http://gitlab.fengming.com:8080/github.com/mynewt-core.git"
-    },
-    {
-      "name": "nuttx",
-      "language": "",
-      "describe": "是一个具有丰富功能的、能够运行在小型微控制器上的实时操作系统（RTOS）。",
-      "URL": "https://gitclone.com/github.com/apache/nuttx.git",
-      "BACKUP": "http://gitlab.fengming.com:8080/github.com/nuttx.git"
-    },
-    {
       "name": "ringbuff",
       "language": "",
       "describe": "是一款通用FIFO环形缓冲区实现的开源库。",
       "URL": "https://github.com/MaJerle/ringbuff",
       "BACKUP": "http://gitlab.fengming.com:8080/github.com/ringbuff"
-    },
-    {
-      "name": "RIOT",
-      "language": "",
-      "describe": "是一款开源的实时操作系统，适用于物联网设备和嵌入式系统等低功耗、资源受限的环境。",
-      "URL": "https://gitclone.com/github.com/RIOT-OS/RIOT.git",
-      "BACKUP": "http://gitlab.fengming.com:8080/github.com/RIOT.git"
     },
     {
       "name": "SFUD",
@@ -699,6 +678,34 @@
       "describe": "基于uCOS的TCPIP网络",
       "URL": "https://github.com/weston-embedded/uC-TCP-IP.git",
       "BACKUP": "http://gitlab.fengming.com:8080/github.com/uC-TCP-IP.git"
+    },
+    {
+      "name": "nuttx",
+      "language": "",
+      "describe": "是一个具有丰富功能的、能够运行在小型微控制器上的实时操作系统（RTOS）。",
+      "URL": "https://github.com/apache/nuttx.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/nuttx.git"
+    },
+    {
+      "name": "valkey",
+      "language": "",
+      "describe": "Redis的平替",
+      "URL": "https://github.com/valkey-io/valkey.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/valkey.git"
+    },
+    {
+      "name": "mynewt-core",
+      "language": "",
+      "describe": "",
+      "URL": "https://github.com/apache/mynewt-core.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/mynewt-core.git"
+    },
+    {
+      "name": "RIOT",
+      "language": "",
+      "describe": "是一款开源的实时操作系统，适用于物联网设备和嵌入式系统等低功耗、资源受限的环境。",
+      "URL": "https://github.com/RIOT-OS/RIOT.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/RIOT.git"
     }
   ]
 }
