@@ -1,0 +1,86 @@
+Flatpak 是一种用于在 Linux 上构建、分发和运行桌面应用程序的框架或工具 。
+你可以把它理解为一个通用的应用"商店"和运行环境，
+旨在解决传统 Linux 软件包管理面临的一些碎片化问题。
+
+它的核心特点和优势主要有以下几点：
+。跨发行版通用：Flatpak 应用程序可以安装在几乎所有 Linux 发行版上，无论你是用 Ubuntu、Fedora、Debian 还是其他发行版，开发者只需打包一次，用户就能在各种系统上运行。
+。这解决了传统上每个发行版都需要单独打包的问题
+。应用沙盒隔离：每个 Flatpak 应用都在一个被称为"沙盒"的隔离环境中运
+。默认情况下，应用无法访问你的用户文件、网络、系统设备等宿主机资源，除非你明确授予权限 。这样做可以显著提升系统的安全性，即使某个应用出现问题，也不会影响到整个操作系统
+。使用运行时作为基础：Flatpak 应用不直接依赖宿主系统的库文件，而是依赖特定的"运行时"（Runtime）
+。运行时是一个包含应用所需基本依赖的集合（例如特定的图形界面库）。多个应用可以共享同一个运行时，这既节省了磁盘空间，也保证了应用运行环境的稳定性和一致性
+。集中的软件源 Flathub：Flathub 是 Flatpak 应用最大的集中仓库和分发服务
+。你可以把它想象成 Linux 领域的"应用商店"，里面有成百上千个可以直接安装的应用，如 Blender、Spotify、Slack 等 。当然，Flatpak 本身也支持添加其他软件源，是去中心化的
+。便捷的权限管理：你可以通过命令行或图形界面（如 GNOME Software 或 KDE Discover）查看和修改已安装 Flatpak 应用的权限
+。例如，你可以决定是否允许一个应用访问你的网络或家目录中的特定文件夹。
+
+总的来说，Flatpak 为 Linux 桌面应用提供了一种更现代、更安全、更统一的交付和运行方式。它让开发者能更轻松地覆盖所有 Linux 用户，也让用户能更方便地获取和运行应用，同时保证了系统的安全和稳定。
+
+用法：
+Flatpak 是一个用于在 Linux 上分发和管理应用程序的工具。以下是一些常用的 Flatpak 命令和用法：
+
+### 安装 Flatpak 应用
+
+```bash
+flatpak install <remote> <application>
+```
+- 例如，从 Flathub 安装 VLC：
+  ```bash
+  flatpak install flathub org.videolan.VLC
+  ```
+
+### 运行 Flatpak 应用
+
+```bash
+flatpak run <application>
+```
+- 例如，运行 VLC：
+  ```bash
+  flatpak run org.videolan.VLC
+  ```
+
+### 列出已安装的应用
+
+```bash
+flatpak list
+```
+
+### 更新已安装的应用
+
+```bash
+flatpak update
+```
+
+### 卸载应用
+
+```bash
+flatpak uninstall <application>
+```
+- 例如，卸载 VLC：
+  ```bash
+  flatpak uninstall org.videolan.VLC
+  ```
+
+### 添加远程仓库
+
+```bash
+flatpak remote-add --if-not-exists <name> <url>
+```
+- 例如，添加 Flathub 仓库：
+  ```bash
+  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  ```
+
+### 列出远程仓库
+
+```bash
+flatpak remotes
+```
+
+### 查看应用信息
+
+```bash
+flatpak info <application>
+```
+
+这些命令可以帮助你管理和使用 Flatpak 应用。如果你有其他问题或需要进一步的帮助，请告诉我！
