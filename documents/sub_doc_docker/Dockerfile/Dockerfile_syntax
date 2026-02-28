@@ -27,12 +27,6 @@ RUN 开头的指令会在创建中运行，比如安装一个软件包，在这�
 FROM ubuntu:20.04  # 使用Ubuntu 20.04作为基础镜像
 FROM alpine:latest  # 使用最新的Alpine镜像作为基础镜像
 
-### MAINTAINER
-**语法**：MAINTAINER <作者名> [<邮箱>]
-**说明**：设置镜像的作者信息。已弃用，推荐使用LABEL指令。
-**示例**：
-MAINTAINER John Doe <john@example.com>
-
 ### LABEL
 **语法**：LABEL <key>=<value> [<key>=<value>...]
 **说明**：为镜像添加元数据信息，以键值对形式存储。可添加多个LABEL，便于组织和检索镜像。
@@ -58,7 +52,7 @@ RUN ["mkdir", "-p", "/app/data"]
 - CMD <command> （shell格式）
 - CMD ["executable", "param1", "param2"] （exec格式）
 - CMD ["param1", "param2"] （为ENTRYPOINT提供默认参数）
-**说明**：指定容器启动时默认执行的命令。可以被docker run命令行参数覆盖。
+**说明**：指定容器"启动时"默认执行的命令。可以被docker run命令行参数覆盖。
 **注意**：Dockerfile中如果有多个CMD指令，只有最后一个生效。
 **示例**：
 # shell格式启动nginx
@@ -71,7 +65,7 @@ CMD ["node", "app.js"]
 **语法**：
 - ENTRYPOINT <command> （shell格式）
 - ENTRYPOINT ["executable", "param1", "param2"] （exec格式）
-**说明**：设置容器启动时的主要命令。与CMD不同，不会被命令行参数覆盖，而是作为固定的入口点。
+**说明**：设置容器""启动时的主要命令。与CMD不同，不会被命令行参数覆盖，而是作为"固定"的入口点。
 **注意**：Dockerfile中如果有多个ENTRYPOINT指令，只有最后一个生效。
 **示例**：
 # exec格式（推荐）
@@ -145,7 +139,7 @@ USER appuser
 
 ### ARG
 **语法**：ARG <参数名>[=<默认值>]
-**说明**：定义构建参数，可通过docker build --build-arg <参数名>=<值>覆盖。构建完成后这些变量不会保存在镜像中。
+**说明**：定义""构建"参数，可通过docker build --build-arg <参数名>=<值>覆盖。构建完成后这些变量不会保存在镜像中。
 **示例**：
 ARG NODE_VERSION=16
 FROM node:${NODE_VERSION}
