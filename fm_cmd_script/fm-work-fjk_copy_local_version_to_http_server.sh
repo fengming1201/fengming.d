@@ -64,7 +64,7 @@ function func_upgrade_step_help
         echo "step 3:(trigger upgrade)"
         echo "      ipcctl_cmd_upgrade_ver http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/${version}/upgrade-init.pkg"
         echo ""
-    elif [ x"$platform" = "xfh1x" ];then
+    elif [ x"$platform" = "xfh1x" ] || [ x"$platform" = "xfh8626v3x" ];then
         echo "step 1:(redirect server)"
         echo "      create file:/mnt/mtd/system_data/flag_debug_dcm_server"
         echo "      {"
@@ -143,10 +143,10 @@ function func_copy_local_version_to_http_server
             fi
             if [ -d ${target_dir}/${version} ];then 
                 echo "${maybeSUDO} rm -r ${target_dir}/${version}/*"
-                #${maybeSUDO} rm -r ${target_dir}/${version}/*
+                ${maybeSUDO} rm -r ${target_dir}/${version}/*
             else
                 echo "${maybeSUDO} mkdir -p ${target_dir}/${version}"
-                #${maybeSUDO} mkdir -p ${target_dir}/${version}
+                ${maybeSUDO} mkdir -p ${target_dir}/${version}
             fi
             echo "===================================================="
             if [ x"$platform" = "xbipc_fh8852v201_aiw4211" ] || [ x"$platform" = "xbipc_fh862x_hi3861" ];then
@@ -156,7 +156,7 @@ function func_copy_local_version_to_http_server
                 echo ">>>${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/"
                 ${maybeSUDO} cp -r ${sub_dir}/${version}/*  ${target_dir}/${version}/
                 ret=$?
-            elif [ x"$platform" = "xfh1x" ];then
+            elif [ x"$platform" = "xfh1x" ] || [ x"$platform" = "xfh8626v3x" ];then
                 echo "src_dir:${sub_dir}/"
                 echo "des_dir:${target_dir}/${version}"
                 if [ -d ${target_dir}/${version} ];then rm -r ${target_dir}/${version};fi
