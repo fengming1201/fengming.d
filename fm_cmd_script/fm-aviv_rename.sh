@@ -38,13 +38,13 @@ fi
 function extract_video_file_and_delete_useless_files
 {
     echo "starting extract ..."
-    if [ ${test} = true ];then
-        find -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
-        find -type f -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" -exec echo 'TEST: mv -vi {} .' \;
+    if [ ${realdo} = false ];then
+        find -mindepth 2 -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
+        find -mindepth 2 -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;
         find -type d -exec echo 'TEST: rmdir -v {}' \;
     else
-        find -type f -name "*.torrent" -exec rm -v {} \;
-        find -type f -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" -exec mv -vi {} . \;
+        find -mindepth 2 -type f -name "*.torrent" -exec rm -v {} \;
+        find -mindepth 2 -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec mv -vi {} . \;
         find -type d -exec rmdir -v {} \;
     fi
     echo "extract done!"
@@ -71,7 +71,7 @@ function delete_invalid_prefixes_and_suffixes
                 maybeSUDO=sudo
             fi
             if [ -f "${file}" ];then
-                if [ ${test} = true ];then
+                if [ ${realdo} = false ];then
                     echo "TEST: ${maybeSUDO} mv -vi ${file}  ${new}"
                 else
                     ${maybeSUDO} mv -vi "${file}"  "${new}"
@@ -95,8 +95,8 @@ function usage
     echo "opt:"
     echo "-h or --help       # help"
     echo "-d or --debug      # print variable status"
-    echo "-t or --test       # test mode, no modifications"
-    #echo "--realdo          # real execution"
+    #echo "-t or --test       # test mode, no modifications"
+    echo "--realdo          # real execution"
     echo "-m or --mode   [ extract | rename | all ]    # 执行模式"
     #echo "--setx or --detail # open set -x mode"
     #echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
@@ -193,13 +193,16 @@ function func_main
     #done
     if [ ${mode} = "extract" ] || [ ${mode} = "all" ];then
         extract_video_file_and_delete_useless_files
-    elif [ ${mode} = "rename"] || [ ${mode} = "all" ];then
-        delete_invalid_prefixes_and_suffixes
-    else
-        echo "ERROR: unknow mode"
-        return 1
     fi
-    
+    if [ ${mode} = "rename" ] || [ ${mode} = "all" ];then
+        delete_invalid_prefixes_and_suffixes
+    fi
+    if [ ${realdo} = false ];then
+        echo "------------------------------------------------------------"
+        echo "above result is just a simulated execution,"
+        echo "if you want to actually execute it, add the option --realdo "
+        echo ""
+    fi
     return 0
 }
 #if unnecessary, please do not modify following code
