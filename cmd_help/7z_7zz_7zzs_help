@@ -11,3 +11,25 @@
 
 7za (p7zip) - 7-Zip的独立版本，支持一些主要格式： 
                 7z, xz, lzma, zip, bzip2, gzip, tar, cab, ppmd and split.
+==================================
+常见用法：
+# 解压文件到当前目录
+7z x archive.7z
+7z e archive.7z  # 不保留目录结构
+
+# 解压到指定目录
+7z x archive.7z -o./target_directory
+7z e archive.7z -o./target_directory  # 不保留目录结构
+
+# 解压到同名目录
+7z x archive.7z -oarchive  # 创建与归档同名的目录并解压到其中
+
+# 批量解压当前目录下的所有7z文件
+for file in *.7z; do 7z x "$file" -o"${file%.7z}"; done
+
+# 批量解压当前目录下的所有压缩文件（支持多种格式）
+for file in *.{7z,zip,rar,tar.gz,tgz}; do 
+    if [ -f "$file" ]; then 
+        mkdir -p "${file%.*}" && 7z x "$file" -o"${file%.*}"; 
+    fi 
+done
