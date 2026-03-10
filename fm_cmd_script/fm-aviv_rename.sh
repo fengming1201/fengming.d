@@ -34,6 +34,7 @@ if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
     maybeSUDO=sudo
 fi
 #start here add your code,you need to implement the following function.
+log_file=.log
 #提取视频文件，删除无用文件
 function extract_video_file_and_delete_useless_files
 {
@@ -59,8 +60,11 @@ function delete_invalid_prefixes_and_suffixes
                             "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" \
                             "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" \
                             "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" \
-                            "[88k.me]*" )
-
+                            "[88k.me]*" "4k2.me@*" )
+    if [ ${realdo} = true ];then
+        rm ${log_file}
+    fi
+    eval "${open_setx_mode}"
     for pattern in "${delete_str_list[@]}"
     do
         new_pat=$(echo "${pattern}" | tr -d '*')
@@ -74,12 +78,13 @@ function delete_invalid_prefixes_and_suffixes
                 if [ ${realdo} = false ];then
                     echo "TEST: ${maybeSUDO} mv -vi ${file}  ${new}"
                 else
+                    echo "${file}  -> ${new}" >> ${log_file}
                     ${maybeSUDO} mv -vi "${file}"  "${new}"
                 fi
             fi
         done
     done
-
+    eval "${close_setx_mode}"
     echo "rename done!"
     return 0
 }
