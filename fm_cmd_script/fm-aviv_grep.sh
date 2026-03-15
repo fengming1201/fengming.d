@@ -177,8 +177,8 @@ function func_main
     for file in "${remaining_args[@]}"
     do
         #here we process each parameter
-        echo "reseult:$file"
-        #func_aviv_grep "$file"
+        func_aviv_grep "$file"
+        echo -----------------------------------------
     done
     
     return 0
