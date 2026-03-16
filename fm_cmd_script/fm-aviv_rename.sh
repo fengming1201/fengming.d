@@ -103,7 +103,7 @@ function usage
     #echo "-t or --test       # test mode, no modifications"
     echo "--realdo          # real execution"
     echo "-m or --mode   [ extract | rename | all ]    # 执行模式"
-    #echo "--setx or --detail # open set -x mode"
+    echo "--setx or --detail # open set -x mode"
     #echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
     #echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
     #echo "example:"
