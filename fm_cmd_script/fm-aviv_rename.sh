@@ -40,11 +40,11 @@ function extract_video_file_and_delete_useless_files
 {
     echo "starting extract ..."
     if [ ${realdo} = false ];then
-        find -mindepth 2 -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
+        find -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
         find -mindepth 2 -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;
         find -type d -exec echo 'TEST: rmdir -v {}' \;
     else
-        find -mindepth 2 -type f -name "*.torrent" -exec rm -v {} \;
+        find -type f -name "*.torrent" -exec rm -v {} \;
         find -mindepth 2 -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec mv -vi {} . \;
         find -type d -exec rmdir -v {} \;
     fi
