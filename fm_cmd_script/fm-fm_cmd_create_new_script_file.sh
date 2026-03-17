@@ -217,20 +217,23 @@ function usage
     echo ""
     echo "\$scriptname  [opt]  files"
     echo "opt:"
-    echo "-h or --help       # help"
-    echo "-d or --debug      # print variable status"
-    echo "-t or --test       # test mode, no modifications"
-    #echo "--realdo          # real execution"
-    echo "-m or --mode       # you define"
-    echo "--setx or --detail # open set -x mode"
-    echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
-    echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
-    echo "example:"
-    echo "\$scriptname --stdin << EOF"
-    echo ">data line 1"
-    echo ">data line 2"
+    echo "-h or --help                  # help"
+    echo "-d or --debug                 # 开启调试，打印变量等"
+    echo "-t or --test                  # 测试模式，不真正执行"
+    #echo "--realdo                     # 缺省不执行"
+    echo "--setx                        # 开启set -x 详细模式"
+    echo "--func   func_name  args ...  # 调试某个函数,无参数--func,显示函数列表"
+    echo ""
+    echo "-m or --mode                  # 待你定义"
+    echo "-f or --file                  # 从指定文件读取"
+    echo "-e or --exclude  list         # 排除清单，允许多个-e"
+    echo "-o or --opt  sub_option       # 给命令自自身添加子选项,允许多个-o,如：-o '-p' -o '-f file'"
+    echo ""
+    echo "example:                      # 从管道或标准输入"
+    echo "(1), cat data.txt | \$scriptname"
+    echo "(2), \$scriptname << EOF"
+    echo "your content"
     echo ">EOF"
-    echo "cat data.txt | \$scriptname --stdin"
     echo ""
 }
 
@@ -245,10 +248,21 @@ function func_main
     local test=false
     local realdo=false
     local mode=normal
-    local setx=false
+    local setx=false #用法: eval \"\${open_setx_mode}\" or eval \"\${close_setx_mode}\""
+    local input_file=""  #从指定文件读取
     local use_stdin=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
-    local remaining_args=()
+    local remaining_args=() #无选项参数
+    local exclude_dir=()    #排除参数
+    # 自动检测管道输入
+    if [ ! -t 0 ]; then
+        use_stdin=true
+    fi
+    # 如果没有参数且没有管道输入，显示帮助
+    if [ \$# -eq 0 ] && [ "\${use_stdin}" = false ]; then
+        usage
+        return 1
+    fi    
     while [[ \$# -gt 0 ]]
     do
         case "\$1" in
@@ -261,8 +275,15 @@ function func_main
             -m|--mode)
                 if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="\$2"; shift 2 ;; #带参数,移动2
-            --stdin) use_stdin=true; shift ;;
-            -Q|--qr) cmd_opt+=("--qr=true"); shift ;;
+            -e|--exclude)
+                if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                exclude_dir+=("\$2"); shift 2 ;; #带参数,移动2
+            -f|--file)
+                if [[ -z "\$2" ]]; then echo "ERROR: this option requires one parameter" >&2; return 1; fi
+                input_file="\$2"; shift 2 ;; #带参数,移动2
+            -o|--opt)
+                if [[ -z "\$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                cmd_opt+=("\$2"); shift 2 ;; #带参数,移动2
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<\${#1}; i++ )); do
@@ -271,7 +292,9 @@ function func_main
                         d) debug=true ;;
                         t) test=true ;;
                         m) mode="\$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
-                        Q) cmd_opt+=("--qr=true") ;;
+                        e) exclude_dir+=("\$2"); shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        f) input_file="\$2"; shift;break ;; # 当 f 是合并选项的一部分时，它应该停止解析剩余的字符
+                        o) cmd_opt="\$2"; shift;break ;; # 当 f 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -\${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -279,6 +302,32 @@ function func_main
             *) remaining_args+=("\$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
+    
+    local stdin_string=""
+    # Check if input is from stdin, file, or command line arguments
+    if [ "\${use_stdin}" = true ]; then
+        # Read from stdin
+        stdin_string=\$(cat)
+        # Remove newlines and extra whitespace
+        #stdin_string=\$(echo "\$stdin_string" | tr '\n' ' ' | tr -s ' ')
+    elif [ -n "\${input_file}" ]; then
+        # Read from file
+        if [ ! -f "\${input_file}" ] || [ ! -r "\${input_file}" ]; then
+            echo "ERROR: Input file '\${input_file}' does not exist!" >&2
+            return 2
+        fi
+        stdin_string=\$(cat "\$stdin_string")
+        # Remove newlines and extra whitespace
+        #stdin_string=\$(echo "\$stdin_string" | tr '\n' ' ' | tr -s ' ')
+    else
+        # Read from command line arguments
+        local remaining_argc=\${#remaining_args[@]}
+        if [ \${remaining_argc} -lt 1 ];then
+            echo "ERROR: command line string is required!!";usage;return 2
+        fi
+        # Combine all remaining arguments into one command line string
+        #stdin_string="\${remaining_args[*]}"
+    fi
     #==================== print debug =============================#
     if [ \${debug} = true ];then
         echo "DEBUG:maybeSUDO=\${maybeSUDO}"
@@ -290,26 +339,10 @@ function func_main
         echo "DEBUG:use_stdin=\${use_stdin}"
         echo "DEBUG:cmd_opt=\${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:remaining_args=\${remaining_args[@]}"
+        echo "DEBUG:exclude_dir=\${exclude_dir[@]}"
+        echo "DEBUG:stdin_string=\${stdin_string}"
     fi
     #=================== start your code ==============================#
-    # check if input is from stdin
-    if [ \${use_stdin} = true ];then
-        # Read from stdin
-        if [ -t 0 ]; then
-            echo "ERROR: --stdin option requires input from pipe or heredoc!" >&2
-            return 2
-        fi
-        input_string=\$(cat)
-        # Remove newlines and extra whitespace
-        #input_string=\$(echo "\${input_string}" | tr '\n' ' ' | tr -s ' ')
-        echo "DEBUG:input_string=\${input_string}"
-    else
-        local remaining_argc=\${#remaining_args[@]}
-        if [ \${remaining_argc} -lt 1 ];then
-            echo "ERROR: platform list is empty!!";usage;return 2
-        fi
-    fi
-    
     #for file in "\${remaining_args[@]}"
     #do
         #here we process each parameter

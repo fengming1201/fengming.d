@@ -35,18 +35,25 @@ if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
 fi
 #start here add your code,you need to implement the following function.
 log_file=.log
+find_exlude_dir=()
 #提取视频文件，删除无用文件
 function extract_video_file_and_delete_useless_files
 {
     echo "starting extract ..."
     if [ ${realdo} = false ];then
-        find -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
-        find -mindepth 2 -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;
-        find -type d -exec echo 'TEST: rmdir -v {}' \;
+        echo "EXEC:find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;"
+        find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
+        echo "EXEC:find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;"
+        find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;
+        echo "EXEC:find -mindepth 1 -type d -exec echo 'TEST: rmdir -v {}' \;"
+        find -mindepth 1 -type d -exec echo 'TEST: rmdir -v {}' \;
     else
-        find -type f -name "*.torrent" -exec rm -v {} \;
-        find -mindepth 2 -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec mv -vi {} . \;
-        find -type d -exec rmdir -v {} \;
+        echo "EXEC:find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec rm -v {} \;"
+        find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec rm -v {} \;
+        echo "EXEC:find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec mv -vi {} . \;"
+        find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec mv -vi {} . \;
+        echo "EXEC:find -mindepth 1 -type d -exec rmdir -v {} \;"
+        find -mindepth 1 -type d -exec rmdir -v {} \;
     fi
     echo "extract done!"
     return 0
@@ -103,6 +110,7 @@ function usage
     #echo "-t or --test       # test mode, no modifications"
     echo "--realdo          # real execution"
     echo "-m or --mode   [ extract | rename | all ]    # 执行模式"
+    echo "-e or --exclude  list         # 排除清单，允许多个-e"
     echo "--setx or --detail # open set -x mode"
     #echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
     #echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
@@ -125,11 +133,12 @@ function func_main
     local debug=false
     local test=false
     local realdo=false
-    local mode=all
+    local mode=none
     local setx=false
     local use_stdin=false
     local cmd_opt=() #命令自身累加选项，,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
     local remaining_args=()
+    local exclude_dir=()    #排除参数
     while [[ $# -gt 0 ]]
     do
         case "$1" in
@@ -142,6 +151,9 @@ function func_main
             -m|--mode)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="$2"; shift 2 ;; #带参数,移动2
+            -e|--exclude)
+                if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
+                exclude_dir+=("$2"); shift 2 ;; #带参数,移动2
             --stdin) use_stdin=true; shift ;;
             -Q|--qr) cmd_opt+=("--qr=true"); shift ;;
             -*)
@@ -152,6 +164,7 @@ function func_main
                         d) debug=true ;;
                         t) test=true ;;
                         m) mode="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
+                        e) exclude_dir+=("$2"); shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         Q) cmd_opt+=("--qr=true") ;;
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
@@ -160,6 +173,15 @@ function func_main
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
+    # 处理
+    if [ ${#exclude_dir[@]} -gt 0 ];then
+        find_exlude_dir=("(" -path "*/${exclude_dir[0]}*")
+        for path in "${exclude_dir[@]:1}"
+        do
+            find_exlude_dir+=(-o -path "*/${path}*")
+        done
+        find_exlude_dir+=(")" -prune -o)
+    fi
     #==================== print debug =============================#
     if [ ${debug} = true ];then
         echo "DEBUG:maybeSUDO=${maybeSUDO}"
@@ -171,6 +193,8 @@ function func_main
         echo "DEBUG:use_stdin=${use_stdin}"
         echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
         echo "DEBUG:remaining_args=${remaining_args[@]}"
+        echo "DEBUG:exclude_dir=${exclude_dir[@]}"
+        echo "DEBUG:find_exlude_dir=${find_exlude_dir}"
     fi
     #=================== start your code ==============================#
     # check if input is from stdin
@@ -196,10 +220,10 @@ function func_main
         #here we process each parameter
         #linux_cmd  ${cmd_opt[@]} args ....
     #done
-    if [ ${mode} = "extract" ] || [ ${mode} = "all" ];then
+    if [ ${mode} = "extract" ] || [ ${mode} = "1" ] || [ ${mode} = "all" ];then
         extract_video_file_and_delete_useless_files
     fi
-    if [ ${mode} = "rename" ] || [ ${mode} = "all" ];then
+    if [ ${mode} = "rename" ] || [ ${mode} = "2" ] || [ ${mode} = "all" ];then
         delete_invalid_prefixes_and_suffixes
     fi
     if [ ${realdo} = false ];then
