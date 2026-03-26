@@ -67,7 +67,7 @@ function delete_invalid_prefixes_and_suffixes
                             "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" \
                             "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" \
                             "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" \
-                            "[88k.me]*" "4k2.me@*" )
+                            "\[88k.me\]*" "4k2.me@*" "\[Thz.la\]*" "489155.com@*" )
     if [ ${realdo} = true ];then
         rm ${log_file}
     fi
@@ -210,9 +210,9 @@ function func_main
         echo "DEBUG:input_string=${input_string}"
     else
         local remaining_argc=${#remaining_args[@]}
-        if [ ${remaining_argc} -lt 1 ];then
-            echo "ERROR: platform list is empty!!";usage;return 2
-        fi
+        #if [ ${remaining_argc} -lt 1 ];then
+        #    echo "ERROR: platform list is empty!!";usage;return 2
+        #fi
     fi
     
     #for file in "${remaining_args[@]}"
@@ -220,6 +220,7 @@ function func_main
         #here we process each parameter
         #linux_cmd  ${cmd_opt[@]} args ....
     #done
+
     if [ ${mode} = "extract" ] || [ ${mode} = "1" ] || [ ${mode} = "all" ];then
         extract_video_file_and_delete_useless_files
     fi
