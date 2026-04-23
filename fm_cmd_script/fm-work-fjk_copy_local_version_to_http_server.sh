@@ -71,6 +71,10 @@ function func_upgrade_step_help
         echo "         dcm_server:"${http_server_ip}:${http_server_port}","
         echo "         dcm_path:"dcm/ipc/$platform""
         echo "      }"
+        if [ -f ${http_server_root_dir}/dcm/ipc/${platform}/flag_debug_dcm_server ];then
+            echo "      download: "
+            echo "               wget http://${http_server_ip}:${http_server_port}/dcm/ipc/${platform}/flag_debug_dcm_server -P /mnt/mtd/system_data/"
+        fi
         echo ""
         echo "step 2:(not certified)"
         echo "      touch  /mnt/mtd/flag_debug_pkg_no_sign_verify"
@@ -97,11 +101,41 @@ function func_copy_local_version_to_http_server
 {
     local ret=0
 
-    if [ $# -ne 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+    if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ] || [ "$1" = "help" ]
     then
         echo "$scriptname  version"
         echo "$scriptname  v1.5.3.240419103253"
+        echo ""
+        echo "$scriptname  list [version]"
         return 1
+    fi
+    # list
+    if [ "$1" = "-l" ] || [ "$1" = "--list" ] || [ "$1" = "list" ]
+    then
+        local target_dir=${http_server_root_dir}/dcm/ipc
+        if [ ! -d "${target_dir}" ];then
+            echo "ERROR:dir ${target_dir} not exist"
+            return 1
+        fi
+        if [ $# -eq 2 ];then
+            #get path
+            local target_version=$2
+            local target_dpath=""
+            target_dpath=$(find "${target_dir}" -maxdepth 2 -type d -name ${target_version}  2> /dev/null)
+            if [ -z $target_dpath ];then
+                echo "ERROR:not found version $target_version"
+                return 1
+            fi
+            #echo "target_dpath=$target_dpath"
+            target_platform=$(dirname "$target_dpath" | xargs basename)
+            echo ""
+            echo "===================================================="
+            func_upgrade_step_help  ${target_platform} ${target_version}
+        else
+            #list all version
+            tree -d -L 2 ${target_dir}
+        fi
+        return 0
     fi
     #parameter check
     local version=$1
