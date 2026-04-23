@@ -39,13 +39,14 @@ find_exlude_dir=()
 #提取视频文件，删除无用文件
 function extract_video_file_and_delete_useless_files
 {
+    if [ "${test}" = true ];then  echo "TEST: $FUNCNAME( $@ ) called!";return 0;fi
     echo "starting extract ..."
     if [ ${realdo} = false ];then
-        echo "EXEC:find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;"
+        echo "TEST:find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;"
         find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec echo 'TEST: rm -v {}' \;
-        echo "EXEC:find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;"
+        echo "TEST:find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;"
         find -mindepth 2 ${find_exlude_dir[@]} -type f \( -name "*.mp4" -o -name "*.mkv" -o -name "*.avi" \) -exec echo 'TEST: mv -vi {} .' \;
-        echo "EXEC:find -mindepth 1 -type d -exec echo 'TEST: rmdir -v {}' \;"
+        echo "TEST:find -mindepth 1 -type d -exec echo 'TEST: rmdir -v {}' \;"
         find -mindepth 1 -type d -exec echo 'TEST: rmdir -v {}' \;
     else
         echo "EXEC:find ${find_exlude_dir[@]} -type f -name "*.torrent" -exec rm -v {} \;"
@@ -62,6 +63,7 @@ function extract_video_file_and_delete_useless_files
 #删除无效的前缀或后缀
 function delete_invalid_prefixes_and_suffixes
 {
+    if [ "${test}" = true ];then  echo "TEST: $FUNCNAME( $@ ) called!";return 0;fi
     echo "starting rename ..."
     local delete_str_list=( "hhd800.com@*" "*-nyap2p.com*" "*~nyap2p.com*" \
                             "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" \
@@ -107,11 +109,15 @@ function usage
     echo "opt:"
     echo "-h or --help       # help"
     echo "-d or --debug      # print variable status"
-    #echo "-t or --test       # test mode, no modifications"
-    echo "--realdo          # real execution"
-    echo "-m or --mode   [ extract | rename | all ]    # 执行模式"
-    echo "-e or --exclude  list         # 排除清单，允许多个-e"
+    echo "-t or --test       # test mode, no modifications"
+    echo "--realdo           # real execution"
+    #echo "-m or --mode   [ extract | rename | all ]    # 执行模式"
     echo "--setx or --detail # open set -x mode"
+    echo "example:"
+    echo "$scriptname  1     # extract"
+    echo "$scriptname  2     # rename"
+    echo "$scriptname  all   # extract + rename"
+    echo "-e or --exclude  list         # 排除清单，允许多个-e"
     #echo "--func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
     #echo "--stdin            # 从标准输入读取输入（支持heredoc和管道）"
     #echo "example:"
@@ -148,7 +154,7 @@ function func_main
             --realdo) realdo=true; shift ;;
             --setx) setx=true; shift ;; #不带参数,移动1
             --detail) setx=true; shift ;; #不带参数,移动1
-            -m|--mode)
+            -m|-mode)
                 if [[ -z "$2" ]]; then echo "ERROR: this opt requires one parameter" >&2; return 1; fi
                 mode="$2"; shift 2 ;; #带参数,移动2
             -e|--exclude)
@@ -187,8 +193,8 @@ function func_main
         echo "DEBUG:maybeSUDO=${maybeSUDO}"
         echo "DEBUG:debug=${debug}"
         echo "DEBUG:test=${test}"
-        #echo "DEBUG:realdo=${realdo}"
-        echo "DEBUG:mode=${mode}"
+        echo "DEBUG:realdo=${realdo}"
+        echo "DEBUG:cmd=${cmd}"
         echo "DEBUG:setx=${setx}"
         echo "DEBUG:use_stdin=${use_stdin}"
         echo "DEBUG:cmd_opt=${cmd_opt[@]} "#累加选项,如-F test.txt 加--file test.txt,-Q 加 --qr=true。
@@ -215,18 +221,19 @@ function func_main
         fi
     fi
     
-    #for file in "${remaining_args[@]}"
-    #do
+    for cmd in "${remaining_args[@]}"
+    do
         #here we process each parameter
-        #linux_cmd  ${cmd_opt[@]} args ....
-    #done
-    if [ ${mode} = "extract" ] || [ ${mode} = "1" ] || [ ${mode} = "all" ];then
-        extract_video_file_and_delete_useless_files
-    fi
-    if [ ${mode} = "rename" ] || [ ${mode} = "2" ] || [ ${mode} = "all" ];then
-        delete_invalid_prefixes_and_suffixes
-    fi
-    if [ ${realdo} = false ];then
+        if [ ${cmd} = "1" ] || [ ${cmd} = "all" ];then
+            if [ "${debug}" = true ];then echo "EXEC: sub_cmd: extract";fi
+            extract_video_file_and_delete_useless_files
+        fi
+        if [ ${cmd} = "2" ] || [ ${cmd} = "all" ];then
+            if [ "${debug}" = true ];then echo "EXEC: sub_cmd: rename";fi
+            delete_invalid_prefixes_and_suffixes
+        fi
+    done
+    if [ ${realdo} = false ] && [ ${#remaining_args[@]} -ge 1 ];then
         echo "------------------------------------------------------------"
         echo "above result is just a simulated execution,"
         echo "if you want to actually execute it, add the option --realdo "
