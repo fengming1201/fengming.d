@@ -178,7 +178,7 @@ function func_main
         #here we process each parameter
         #linux_cmd  ${cmd_opt[@]} args ....
     #done
-    CMDLINE_INPUT="${stdin_string}" python3 - <<'END'
+    MTDPARTS_INPUT="${stdin_string}" python3 - <<'END'
 import re
 import os
 
@@ -198,26 +198,15 @@ def format_size(size):
     else:
         return f"{size}B"
 
-def parse_cmdline(cmdline_str):
-    """解析 cmdline 字符串，返回键值对字典"""
-    cmdline = {}
-    
-    # 分割 cmdline 中的各个参数
-    args = cmdline_str.split()
-    for arg in args:
-        if '=' in arg:
-            key, value = arg.split('=', 1)
-            cmdline[key] = value
-        else:
-            cmdline[arg] = ""
-    
-    return cmdline
-
-def parse_partition_string(partition_str):
+def parse_partition_string(partition_str, source_name):
     """解析分区字符串并返回设备和分区列表"""
+    # 去掉可能的前缀 "mtdparts="
+    if partition_str.startswith('mtdparts='):
+        partition_str = partition_str[len('mtdparts='):]
+    
     # 分割设备和分区
     if ':' not in partition_str:
-        print("错误: 分区格式不正确")
+        print(f"{source_name} 错误: 分区格式不正确")
         return None, []
     
     device_part, partitions_part = partition_str.split(':', 1)
@@ -264,90 +253,87 @@ def parse_partition_string(partition_str):
                 continue
     
     if not partitions:
-        print("错误: 未找到有效的分区")
+        print(f"{source_name} 错误: 未找到有效的分区")
         return device_part, []
     
     return device_part, partitions
 
-def print_table(headers, rows):
-    """打印表格"""
-    if not rows:
+def print_partition_table(device_part, partitions, table_title):
+    """打印分区表"""
+    print(f"\n=== {table_title} ===")
+    if not partitions:
         return
     
-    # 计算列宽
-    col_widths = []
-    for i in range(len(headers)):
-        max_width = len(headers[i])
-        for row in rows:
-            if i < len(row):
-                max_width = max(max_width, len(str(row[i])))
-        col_widths.append(max_width)
+    # 计算最大宽度用于对齐
+    max_start_len = max(len(f"0x{p['offset']:x}") for p in partitions)
+    max_end_len = max(len(f"0x{p['end']:x}") for p in partitions)
     
-    # 打印标题
-    header_line = "|".join(f" {header:<{col_width}}".rstrip() for header, col_width in zip(headers, col_widths))
-    print(f"+{'+'.join('-' * (w + 2) for w in col_widths)}+")
-    print(f"|{header_line}|")
-    print(f"+{'+'.join('=' * (w + 2) for w in col_widths)}+")
+    # 打印分区表
+    print(f"设备: {device_part}")
+    print("-" * 80)
     
-    # 打印行
-    for row in rows:
-        row_line = "|".join(f" {str(item):<{col_width}}".rstrip() for item, col_width in zip(row, col_widths))
-        print(f"|{row_line}|")
+    for p in partitions:
+        start_hex = f"0x{p['offset']:x}"
+        end_hex = f"0x{p['end']:x}"
+        size_hex = f"0x{p['size']:x}"
+        size_human = format_size(p['size'])
+        
+        # 手动构建对齐字符串
+        start_padded = start_hex + ' ' * (max_start_len - len(start_hex))
+        end_padded = end_hex + ' ' * (max_end_len - len(end_hex))
+        size_hex_padded = size_hex + ' ' * (10 - len(size_hex))
+        size_human_padded = size_human + ' ' * (12 - len(size_human))
+        
+        line = '分区: [' + start_padded + ' - ' + end_padded + '], 大小: ' + size_hex_padded + ' --> ' + size_human_padded + ' : "' + p['name'] + '"'
+        print(line)
+
+def parse_mtdpart_from_bootargs(bootargs_str):
+    """从 bootargs 中解析 mtdparts 参数"""
+    if not bootargs_str:
+        return None, []
     
-    # 打印底部边框
-    print(f"+{'+'.join('-' * (w + 2) for w in col_widths)}+")
+    # 查找 mtdparts 参数
+    mtdparts_match = re.search(r'mtdparts=([^\s]+)', bootargs_str)
+    if not mtdparts_match:
+        return None, []
+    
+    return parse_partition_string(mtdparts_match.group(1), "Bootargs 中的 mtdparts")
+
+def parse_mtdparts(input_str):
+    """解析独立的 mtdparts 环境变量"""
+    # 匹配完整的 mtdparts= 环境变量行
+    mtdparts_match = re.search(r'^mtdparts=([^\n]+)', input_str, re.MULTILINE)
+    
+    if not mtdparts_match:
+        return None, []
+    
+    return parse_partition_string(mtdparts_match.group(1), "独立的 mtdparts")
 
 # 获取输入
-input_str = os.environ.get('CMDLINE_INPUT', '')
+input_str = os.environ.get('MTDPARTS_INPUT', '')
 
-# 清理输入，去掉可能的 "cat /proc/cmdline" 行
-if 'cat /proc/cmdline' in input_str:
-    cmdline_str = input_str.split('cat /proc/cmdline', 1)[1].strip()
-else:
-    cmdline_str = input_str.strip()
+found_any_partition = False
 
-# 解析 cmdline
-cmdline = parse_cmdline(cmdline_str)
-
-# 打印所有键值对
-print("\nKey-Value Pairs:")
-print("================")
-if cmdline:
-    for key, value in cmdline.items():
-        if key != 'mtdparts':  # 跳过mtdparts，因为它会在后面单独解析
-            print(f"{key}={value}")
-else:
-    print("未找到有效的键值对")
-
-# 解析并打印 mtdparts
-print("\n=== MTD 分区表 ===")
-if 'mtdparts' in cmdline:
-    device_part, partitions = parse_partition_string(cmdline['mtdparts'])
+# 从 bootargs 中解析 mtdparts
+bootargs_match = re.search(r'bootargs=([^\n]+)', input_str)
+if bootargs_match:
+    device_part, partitions = parse_mtdpart_from_bootargs(bootargs_match.group(1))
     if device_part and partitions:
-        print(f"设备: {device_part}")
-        print("-" * 80)
-        
-        # 计算最大宽度用于对齐
-        max_start_len = max(len(f"0x{p['offset']:x}") for p in partitions)
-        max_end_len = max(len(f"0x{p['end']:x}") for p in partitions)
-        
-        for p in partitions:
-            start_hex = f"0x{p['offset']:x}"
-            end_hex = f"0x{p['end']:x}"
-            size_hex = f"0x{p['size']:x}"
-            size_human = format_size(p['size'])
-            
-            # 手动构建对齐字符串
-            start_padded = start_hex + ' ' * (max_start_len - len(start_hex))
-            end_padded = end_hex + ' ' * (max_end_len - len(end_hex))
-            size_hex_padded = size_hex + ' ' * (10 - len(size_hex))
-            size_human_padded = size_human + ' ' * (12 - len(size_human))
-            
-            print(f'区间: [{start_padded} - {end_padded}], 大小: {size_hex_padded} --> {size_human_padded} : "{p["name"]}"')
-    else:
-        print("未找到有效的 MTD 分区")
-else:
-    print("未找到 mtdparts 参数")
+        print_partition_table(device_part, partitions, "Bootargs 中的 MTD 分区表")
+        found_any_partition = True
+
+# 解析独立的 mtdparts
+device_part, partitions = parse_mtdparts(input_str)
+if device_part and partitions:
+    print_partition_table(device_part, partitions, "独立 mtdparts 分区表")
+    found_any_partition = True
+
+# 如果没有找到任何分区表，显示提示
+if not found_any_partition:
+    print("\n未找到任何有效的 MTD 分区表信息")
+    print("请确保输入数据中包含以下任意一种格式的分区表：")
+    print("1. bootargs 中的 mtdparts 参数")
+    print("2. 独立的 mtdparts 环境变量")
 
 print()
 END

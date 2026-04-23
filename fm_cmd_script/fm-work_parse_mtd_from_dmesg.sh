@@ -133,8 +133,6 @@ function func_main
     if [ "${use_stdin}" = true ]; then
         # Read from stdin
         stdin_string=$(cat)
-        # Remove newlines and extra whitespace
-        #stdin_string=$(echo "$stdin_string" | tr '\n' ' ' | tr -s ' ')
     elif [ -n "${input_file}" ]; then
         # Read from file
         if [ ! -f "${input_file}" ] || [ ! -r "${input_file}" ]; then
@@ -142,8 +140,6 @@ function func_main
             return 2
         fi
         stdin_string=$(cat "${input_file}")
-        # Remove newlines and extra whitespace
-        #stdin_string=$(echo "$stdin_string" | tr '\n' ' ' | tr -s ' ')
     else
         # Read from command line arguments as file names
         local remaining_argc=${#remaining_args[@]}
@@ -203,40 +199,68 @@ def format_size(size):
 
 content = os.environ.get('MTD_CONTENT', '')
 
+# 只处理在"Creating MTD partitions"之后的内容，提高准确性
+creating_mtd_marker = 'Creating MTD partitions'
+if creating_mtd_marker in content:
+    content = content.split(creating_mtd_marker, 1)[1]
+
 # 更精确的正则表达式，只匹配真正的MTD分区格式
 # 格式通常是：0x...-0x... : "partition_name"
+# 同时匹配行首可能的时间戳等内容
 pattern = r'0x([0-9a-fA-F]+)-0x([0-9a-fA-F]+)\s*:\s*"([^"]+)"'
 matches = re.findall(pattern, content)
 
-# 另外，过滤掉明显过大的地址范围（通常MTD分区地址不会太大）
-# 或者只处理在"Creating MTD partitions"之后的内容
-filtered_matches = []
+# 先处理所有匹配，计算最大地址长度
+partitions = []
+max_start_len = 0
+max_end_len = 0
+max_size_hex_len = 0
+
 for match in matches:
     start_part, end_part, name = match
-    start_hex = f"0x{start_part}"
-    end_hex = f"0x{end_part}"
     
-    start = int(start_hex, 16)
-    end = int(end_hex, 16)
-    
-    # 排除像0xa0000000这样的大地址（通常是内存地址，不是MTD分区）
-    if start >= 0x10000000:
+    try:
+        start = int(f"0x{start_part}", 16)
+        end = int(f"0x{end_part}", 16)
+        
+        # 排除像0xa0000000这样的大地址（通常是内存地址，不是MTD分区）
+        # MTD闪存地址通常比较小，这里设为0x10000000作为阈值
+        if start >= 0x10000000:
+            continue
+        
+        # 确保结束地址大于开始地址
+        if end <= start:
+            continue
+        
+        # 格式化地址，去掉前面多余的0
+        start_hex = f"0x{start:x}"
+        end_hex = f"0x{end:x}"
+        size = end - start
+        size_hex = f"0x{size:x}"
+        
+        partitions.append((start_hex, end_hex, name, start, end, size, size_hex))
+        
+        # 更新最大地址长度
+        max_start_len = max(max_start_len, len(start_hex))
+        max_end_len = max(max_end_len, len(end_hex))
+        max_size_hex_len = max(max_size_hex_len, len(size_hex))
+        
+    except ValueError:
+        # 跳过无法正确转换为整数的匹配
         continue
-    
-    filtered_matches.append(match)
 
-for match in filtered_matches:
-    start_part, end_part, name = match
-    start_hex = f"0x{start_part}"
-    end_hex = f"0x{end_part}"
-    
-    start = int(start_hex, 16)
-    end = int(end_hex, 16)
-    size = end - start
-    size_hex = f"0x{size:x}"
+# 打印所有分区
+for start_hex, end_hex, name, start, end, size, size_hex in partitions:
     size_human = format_size(size)
     
-    print(f'区间: [{start_hex} - {end_hex}], 大小: {size_hex:<10} --> {size_human:<12} : "{name}"')
+    # 手动构建对齐字符串，确保使用标准空格
+    start_padded = start_hex + ' ' * (max_start_len - len(start_hex))
+    end_padded = end_hex + ' ' * (max_end_len - len(end_hex))
+    size_hex_padded = size_hex + ' ' * (10 - len(size_hex))
+    size_human_padded = size_human + ' ' * (12 - len(size_human))
+    
+    line = '分区: [' + start_padded + ' - ' + end_padded + '], 大小: ' + size_hex_padded + ' --> ' + size_human_padded + ' : "' + name + '"'
+    print(line)
 END
     
     return 0
