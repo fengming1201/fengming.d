@@ -1,0 +1,77 @@
+这是 GNU 调试器。用法：
+
+    gdb [选项] [可执行文件 [核心转储文件或进程 ID]]
+    gdb [选项] --args 可执行文件 [被调试程序参数 ...]
+
+选择被调试程序及其文件：
+
+  --args             可执行文件之后的参数会传给被调试程序。
+  --core=COREFILE    分析核心转储文件 COREFILE。
+  --exec=EXECFILE    将 EXECFILE 用作可执行文件。
+  --pid=PID          附加到正在运行的进程 PID。
+  --directory=DIR    在 DIR 中搜索源文件。
+  --se=FILE          将 FILE 同时用作符号文件和可执行文件。
+  --symbols=SYMFILE  从 SYMFILE 读取符号。
+  --readnow          在首次访问时完整读入符号文件。
+  --readnever        不读取符号文件。
+  --write            允许写入可执行文件和核心转储文件。
+
+初始命令与命令文件：
+
+  --command=FILE, -x  从 FILE 执行 GDB 命令。
+  --init-command=FILE, -ix
+                      类似 -x，但在加载被调试程序之前执行命令。
+  --eval-command=COMMAND, -ex
+                      执行一条 GDB 命令。
+                      可多次使用，也可与 --command 组合使用。
+  --init-eval-command=COMMAND, -iex
+                      类似 -ex，但在加载被调试程序之前执行。
+  --nh                不读取 ~/.gdbinit。
+  --nx                不读取任何目录下的 .gdbinit 文件。
+
+输出与用户界面控制：
+
+  --fullname          输出供 emacs-GDB 接口使用的信息。
+  --interpreter=INTERP
+                      选择特定的解释器 / 用户界面。
+  --tty=TTY           被调试程序使用 TTY 进行输入/输出。
+  -w                  使用图形界面。
+  --nw                不使用图形界面。
+  --tui               使用终端用户界面。
+  -q, --quiet, --silent
+                      启动时不打印版本号。
+
+运行模式：
+
+  --batch             处理完选项后退出。
+  --batch-silent      类似 --batch，但抑制所有 gdb 标准输出。
+  --return-child-result
+                      GDB 的退出码与被调试子进程的退出码相同。
+  --configuration     打印 GDB 配置详情后退出。
+  --help              打印本说明后退出。
+  --version           打印版本信息后退出。
+
+远程调试选项：
+
+  -b BAUDRATE         设置远程调试使用的串口波特率。
+  -l TIMEOUT          设置远程调试的超时时间（秒）。
+
+其他选项：
+
+  --cd=DIR            将当前目录切换到 DIR。
+  --data-directory=DIR, -D
+                      将 GDB 的数据目录设置为 DIR。
+
+启动时，GDB 会读取以下早期初始化文件并执行其中的命令：
+   未找到。
+
+启动时，GDB 会读取以下初始化文件并执行其中的命令：
+   * 系统级初始化文件：/etc/gdb/gdbinit
+
+更多信息，可在 GDB 内输入 "stream"，或查阅
+GDB 手册（在线 info 或纸质手册均可）。
+
+向 <https://www.gnu.org/software/gdb/bugs/> 报告缺陷。
+
+有关 GDB 的问题可发送到 GDB 用户邮件列表
+(gdb@sourceware.org)，或在 GDB 的 IRC 频道（Libera.Chat 上的 #gdb）提问。

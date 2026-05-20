@@ -1,0 +1,128 @@
+# GDB 常用用法速查（配合本目录 buggy_lab 练习）
+
+## 启动与退出
+
+    gdb -q ./buggy_lab              # -q 启动时不打印版本
+    gdb -q --args ./buggy_lab race  # 把 race 传给被调试程序
+    gdb -q -p <PID>                 # 附加到已运行进程（如 deadlock 挂起时）
+    gdb -q ./buggy_lab core.12345   # 分析 core 文件
+
+    (gdb) run                       # 启动（或 restart）
+    (gdb) run race                  # 带参数运行
+    (gdb) quit                      # 退出
+
+## 断点
+
+    (gdb) break main
+    (gdb) break buggy_lab.c:45      # 按文件:行号
+    (gdb) break race_worker         # 按函数名
+    (gdb) break race_worker if id == 2
+
+    (gdb) info breakpoints          # 列出断点
+    (gdb) disable 2                 # 禁用编号 2 的断点
+    (gdb) enable 2
+    (gdb) delete 2                  # 删除
+    (gdb) clear race_worker         # 清除该函数上所有断点
+
+    (gdb) watch shared_counter      # 变量被写时停下
+    (gdb) rwatch shared_counter     # 被读时停下
+    (gdb) awatch shared_counter     # 读或写都停下
+
+## 执行控制
+
+    (gdb) continue      # c   继续运行
+    (gdb) next          # n   单步，跨过函数
+    (gdb) step          # s   单步，进入函数
+    (gdb) finish                # 跑到当前函数返回
+    (gdb) until 120             # 跑到指定行
+    (gdb) return                # 强制从当前函数返回
+
+    (gdb) Ctrl+C                # 中断运行（deadlock 挂起时常用）
+
+## 查看代码与变量
+
+    (gdb) list                  # 显示源码
+    (gdb) list race_worker
+    (gdb) print shared_counter  # p
+    (gdb) print/x shared_counter
+    (gdb) display shared_counter    # 每次停下自动打印
+    (gdb) undisplay
+
+    (gdb) info locals           # 当前栈帧局部变量
+    (gdb) info args             # 当前函数参数
+    (gdb) set var shared_counter = 0
+
+## 调用栈
+
+    (gdb) backtrace             # bt  完整栈
+    (gdb) bt 5                  # 只显示 5 层
+    (gdb) frame 2               # 切换到第 2 帧
+    (gdb) up / down             # 在栈帧间移动
+    (gdb) info frame
+
+## 多线程（本练习重点）
+
+    (gdb) info threads                  # 列出所有线程
+    (gdb) thread 3                      # 切换到线程 3
+    (gdb) thread apply all bt           # 所有线程各打一份栈
+    (gdb) thread apply all bt 5
+    (gdb) thread apply 2-4 print $thread
+
+    (gdb) set scheduler-locking on      # 单步时只跑当前线程（便于观察）
+    (gdb) set scheduler-locking off     # 恢复，别忘记关
+    (gdb) set scheduler-locking step    # 单步时锁定，continue 时放开
+
+    (gdb) break pthread_mutex_lock      # 在加锁处停下（查死锁）
+    (gdb) break uaf_producer
+    (gdb) break uaf_consumer
+
+## 配合 buggy_lab 场景
+
+    # race — 观察计数丢失
+    (gdb) break race_worker
+    (gdb) run race
+    (gdb) watch shared_counter
+
+    # deadlock — 进程挂起后另开终端 gdb -p <pid>，或先 run 再 Ctrl+C
+    (gdb) run deadlock
+    # Ctrl+C
+    (gdb) info threads
+    (gdb) thread apply all bt
+
+    # uaf — 对比 free 与读指针的时序
+    (gdb) break uaf_producer
+    (gdb) break uaf_consumer
+    (gdb) run uaf
+
+    # overflow — 崩溃后看栈
+    (gdb) run overflow
+    (gdb) bt
+
+## 命令脚本与批处理
+
+    gdb -q -x debug.gdb ./buggy_lab     # 启动时执行脚本
+
+    # debug.gdb 示例：
+    # set pagination off
+    # break main
+    # run race
+    # info threads
+    # bt
+
+    gdb -batch -ex "run race" -ex "bt" --args ./buggy_lab   # 无交互批处理
+
+## 其他实用设置
+
+    (gdb) set pagination off        # 长输出不分页
+    (gdb) set print pretty on       # 结构体美化打印
+    (gdb) directory /path/to/src    # 补充源码搜索路径
+    (gdb) info sources              # 已知源文件列表
+    (gdb) disassemble race_worker   # 反汇编
+
+## 帮助
+
+    (gdb) help
+    (gdb) help break
+    (gdb) apropos thread            # 搜索与 thread 相关的命令
+
+更多信息：GDB 手册 (info gdb)，或本目录 README.md、SOLUTIONS.md。
