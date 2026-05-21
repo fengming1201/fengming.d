@@ -70,7 +70,7 @@ function delete_invalid_prefixes_and_suffixes
                             "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" \
                             "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" \
                             "[88k.me]*" "4k2.me@*" )
-    if [ ${realdo} = true ];then
+    if [ ${realdo} = true1 ];then
         rm ${log_file}
     fi
     eval "${open_setx_mode}"

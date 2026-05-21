@@ -1,276 +1,50 @@
-# gdbserver 与 GDB 远程联调（嵌入式向）
-
-## 1. 角色分工
-
-    ┌─────────────────┐         网络/串口          ┌─────────────────┐
-    │  开发主机 (Host) │  ◄──────────────────────►  │  目标板 (Target) │
-    │  交叉 GDB        │      RSP 远程协议          │  gdbserver       │
-    │  带符号的 ELF    │                            │  被调试程序      │
-    └─────────────────┘                            └─────────────────┘
-
-- **目标板**：运行 `gdbserver`（或 `gdbserver-multi`），真正执行/控制 inferior。
-- **主机**：运行与目标 **同架构** 的交叉 `gdb`（如 `arm-linux-gnueabihf-gdb`），加载 **带调试符号** 的 ELF，通过 `target remote` 连接。
-
-符号解析、源码浏览、断点设置在主机完成；单步、读写内存、寄存器由 gdbserver 在目标上执行。
-
----
-
-## 2. 准备（嵌入式常见）
-
-### 2.1 交叉编译时保留调试信息
-
-    # 在 Makefile / CMake 中
-    CFLAGS += -g -O0          # 发布固件可用 -g1 或单独保留 unstripped 副本
-    # 不要将 debug 与 release 混用同一输出名，避免搞错
-
-建议保留两份：
-
-- `app`（strip 后烧录到板子，体积小）
-- `app.debug`（仅留在主机，给 GDB 用）
-
-    arm-linux-gnueabihf-strip -o app app.debug   # 可选
-
-### 2.2 将 gdbserver 放到目标板
-
-从交叉工具链或 Buildroot/Yocto 产物中拷贝与目标 libc 匹配的 `gdbserver`：
-
-    # 例：通过 adb / scp / nfs 放到板子
-    scp gdbserver root@192.168.1.10:/usr/bin/
-    chmod +x /usr/bin/gdbserver
-
-静态链接的 gdbserver 适合 libc 不一致或极精简 rootfs。
-
-### 2.3 主机安装交叉 GDB
-
-    sudo apt install gdb-multiarch
-    # 或工具链自带：
-    arm-linux-gnueabihf-gdb
-
-`file app.debug` 应与目标架构一致（如 ARM aarch32/aarch64、MIPS、RISC-V）。
-
----
-
-## 3. 目标板：启动 gdbserver
-
-### 3.1 启动新程序（最常用）
-
-    # 监听 TCP 2345，运行 /usr/bin/myapp
-    gdbserver :2345 /usr/bin/myapp [参数...]
-
-    # 指定绑定地址（多网卡时）
-    gdbserver 192.168.1.10:2345 /usr/bin/myapp
-
-    # 串口（波特率需与主机 minicom/串口工具一致）
-    gdbserver /dev/ttyS0 /usr/bin/myapp
-
-### 3.2 附加到已在运行的进程
-
-    gdbserver --attach :2345 <PID>
-
-适合服务已启动、或不能由 gdbserver 重新 exec 的场景。
-
-### 3.3 常用选项
-
-    gdbserver --multi :2345          # 先监听，等 GDB 发 run（见 4.3）
-    gdbserver --once :2345 prog      # 断开后 gdbserver 退出
-    gdbserver --debug                # gdbserver 自身打日志，排查连接问题
-
----
-
-## 4. 主机：GDB 连接与调试
-
-### 4.1 基本会话（TCP）
-
-**终端 1（目标板）：**
-
-    gdbserver :2345 /usr/bin/myapp
-
-**终端 2（主机）：**
-
-    arm-linux-gnueabihf-gdb ./app.debug
-    (gdb) set sysroot /path/to/target/rootfs    # 见 5.2
-    (gdb) target remote 192.168.1.10:2345
-    (gdb) break main
-    (gdb) continue
-
-首次连接后程序通常已在入口处暂停（取决于 gdbserver 版本与是否 `--multi`）。
-
-### 4.2 一行启动（脚本友好）
-
-    arm-linux-gnueabihf-gdb -q ./app.debug \
-      -ex "set sysroot /opt/target-rootfs" \
-      -ex "target remote 192.168.1.10:2345" \
-      -ex "break main" \
-      -ex "continue"
-
-### 4.3 --multi：先起 server，再由 GDB 决定运行谁
-
-**目标板：**
-
-    gdbserver --multi :2345
-
-**主机：**
-
-    (gdb) target extended-remote 192.168.1.10:2345
-    (gdb) file /usr/bin/myapp          # 逻辑路径，可与 set remote exec-file 配合
-    (gdb) set remote exec-file /usr/bin/myapp
-    (gdb) run arg1 arg2
-
-`extended-remote` 支持多次 `run`、断开后重连，更适合反复调试。
-
-### 4.4 串口连接
-
-    (gdb) set remotebaud 115200
-    (gdb) target remote /dev/ttyUSB0
-
-确保串口未被其他程序占用；USB 转串口在主机为 `/dev/ttyUSB0`，目标侧 gdbserver 用 `/dev/ttyS0`。
-
----
-
-## 5. 嵌入式必配项
-
-### 5.1 符号在主机、程序在目标
-
-主机 GDB 必须加载 **与目标逻辑一致** 的 ELF（含 `.debug` 或独立 debug 文件）：
-
-    (gdb) file ./app.debug
-    (gdb) target remote 192.168.1.10:2345
-
-若烧录的是 strip 版，**不要**用 strip 版做 `file`，否则无行号、断点错位。
-
-使用 `.gnu_debuglink` 时，GDB 会自动找同目录下的 debug 文件。
-
-### 5.2 sysroot（动态库 / 源码路径）
-
-目标 rootfs 解压到主机，例如 `/opt/arm-rootfs`：
-
-    (gdb) set sysroot /opt/arm-rootfs
-    (gdb) set solib-search-path /opt/arm-rootfs/lib:/opt/arm-rootfs/usr/lib
-
-用于解析 `libc.so`、`libpthread.so` 等，否则 `bt` 里全是 `??`。
-
-### 5.3 仅目标存在的共享库
-
-    (gdb) set solib-search-path /opt/arm-rootfs/lib
-    (gdb) sharedlibrary                  # 让 GDB 尝试加载已映射的 so 符号
-
-### 5.4 源码路径映射（编译机 vs 实际目录）
-
-编译时绝对路径与主机源码树不一致时：
-
-    (gdb) set substitute-path /old/build/path /home/user/project
-
----
-
-## 6. 典型嵌入式工作流
-
-### 6.1 本机先验证，再上板（推荐）
-
-    # 主机本地（与 buggy_lab 类似，先熟悉 GDB 命令）
-    gdb -q ./app.debug
-
-    # 确认无误后，同一二进制拷到板子，gdbserver 远程调
-    scp app root@board:/usr/bin/
-    scp app.debug user@host:~/   # debug 只留主机
-
-### 6.2 NFS rootfs：目标直接跑 NFS 上的二进制
-
-    # 目标
-    gdbserver :2345 /nfs/app
-
-    # 主机 file 指向 NFS 同源构建产物，避免版本不一致
-
-### 6.3 配合 OpenOCD / JTAG（CPU 刚复位、无 Linux 时）
-
-裸机或 RTOS 常用 OpenOCD 暴露 GDB 端口，而不是 gdbserver：
-
-    (gdb) target remote localhost:3333
-
-有 Linux 后，用户态程序仍用 **gdbserver**；内核/驱动调试可能用 **kgdb** 或 JTAG 另一套，勿混用端口。
-
-### 6.4 多线程（与本目录 buggy_lab 同类）
-
-远程连接后命令与本地相同：
-
-    (gdb) info threads
-    (gdb) thread apply all bt
-    (gdb) set scheduler-locking on
-
-确保目标 **libpthread** 与 sysroot 一致，否则线程名可能显示为 LWP 数字。
-
----
-
-## 7. 命令对照速查
-
-| 场景           | 目标板 (gdbserver)              | 主机 (GDB)                          |
-|----------------|---------------------------------|-------------------------------------|
-| 起新程序       | `gdbserver :2345 /path/app`     | `target remote ip:2345`             |
-| 多次 run       | `gdbserver --multi :2345`       | `target extended-remote ip:2345`  |
-| 附加进程       | `gdbserver --attach :2345 PID`  | `target remote ...` 后 `continue`   |
-| 上传并运行     | 先 scp 二进制                   | `set remote exec-file` + `run`      |
-
-常用 GDB 远程命令：
-
-    (gdb) monitor help              # 发给 gdbserver 的扩展命令（视版本而定）
-    (gdb) detach                    # 断开但目标继续跑
-    (gdb) kill                      # 结束 inferior
-    (gdb) interrupt                 # 向目标发中断（Ctrl+C 同类）
-
----
-
-## 8. 防火墙与端口转发
-
-    # 目标临时开端口（若用 iptables）
-    # 或 SSH 隧道（目标在内网、仅 SSH 可达时）
-    ssh -L 2345:127.0.0.1:2345 root@192.168.1.10
-    # 主机 GDB 连
-    (gdb) target remote 127.0.0.1:2345
-
-Docker/QEMU 仿真嵌入式时，常映射 `-p 2345:2345`。
-
----
-
-## 9. 常见问题
-
-| 现象 | 可能原因 | 处理 |
-|------|----------|------|
-| 断点不停 / 错位 | 主机 `file` 与目标二进制不一致 | 同步构建产物，用带 `-g` 的 ELF |
-| `??` 无符号栈 | 未设 sysroot / solib | `set sysroot`、`sharedlibrary` |
-| 连不上 | 防火墙、IP、gdbserver 未起 | `ping`、`nc -zv ip 2345` |
-| Remote 'g' packet reply is empty | 目标程序已退出 | 重新 `gdbserver` 或 `run` |
-| 架构不匹配 | 用了 x86 的 gdb 连 ARM | 换交叉 gdb |
-| 串口乱码 | 波特率不一致 | `set remotebaud` 与目标一致 |
-
-启用 gdbserver 调试日志：
-
-    gdbserver --debug :2345 /usr/bin/myapp
-
-主机侧：
-
-    (gdb) set debug remote 1
-
----
-
-## 10. 最小完整示例（ARM Linux 板）
-
-**目标（192.168.1.10）：**
-
-    gdbserver :2345 /home/root/buggy_lab race
-
-**主机：**
-
-    arm-linux-gnueabihf-gdb ./buggy_lab
-    (gdb) set sysroot ~/arm-sysroot
-    (gdb) target remote 192.168.1.10:2345
-    (gdb) break race_worker
-    (gdb) continue
-    (gdb) info threads
-    (gdb) thread apply all bt
-
----
-
-## 11. 相关文件
-
-- 本地 GDB 命令：`gdb_help2`
-- 多线程练习程序：`buggy_lab`、`README.md`
-- 官方文档：GDB 手册 “Debugging Remote Programs” / `info gdbserver`
+用法：	gdbserver [选项] COMM PROG [参数 ...]
+	gdbserver [选项] --attach COMM PID
+	gdbserver [选项] --multi COMM
+
+COMM 可以是 tty 设备（用于串口调试）、
+用于监听 TCP 连接的 HOST:PORT，或 '-' / 'stdio' 表示使用 gdbserver 的 stdin/stdout。
+PROG 为要调试的可执行程序。ARGS 为传给被调试进程的参数。
+使用 --attach 时，PID 为要附加的进程 ID。
+
+运行模式：
+
+  --attach              附加到正在运行的进程 PID。
+  --multi               启动服务器时不指定具体程序，
+                        仅在收到显式退出命令时才退出。
+  --once                在第一次连接关闭后退出。
+  --help                打印本说明并退出。
+  --version             显示版本信息后退出。
+
+其他选项：
+
+  --wrapper WRAPPER --  通过 WRAPPER 启动新程序。
+  --disable-randomization
+                        在禁用地址空间随机化的情况下运行 PROG。
+  --no-disable-randomization
+                        启动 PROG 时不禁用地址空间随机化。
+  --startup-with-shell
+                        通过 shell 启动 PROG，即先 exec shell，
+                        再由 shell exec PROG。（默认）
+  --no-startup-with-shell
+                        直接 exec PROG，不经过 shell。
+                        在类 UNIX 系统上会禁用参数通配符与变量替换。
+
+调试选项：
+
+  --debug               启用一般调试输出。
+  --debug-format=OPT1[,OPT2,...]
+                        指定调试输出中的额外内容。
+                          选项：
+                            all
+                            none
+                            timestamp
+  --remote-debug        启用远程协议调试输出。
+  --disable-packet=OPT1[,OPT2,...]
+                        禁用对 RSP 数据包或特性的支持。
+                          选项：
+                            vCont、Tthread、qC、qfThreadInfo 以及
+                            threads（禁用所有线程相关数据包）。
+
+更多信息请参阅 GDB 手册（在线 info 或纸质版）。
+请将问题反馈至 "<http://www.fullhan.com>"。
