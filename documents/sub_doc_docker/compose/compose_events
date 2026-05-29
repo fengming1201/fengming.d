@@ -1,7 +1,9 @@
-用法:  docker compose events [选项] [服务...]
+用法：  docker compose events [选项] [SERVICE...]
 
-从容器接收实时事件
+接收来自容器的实时事件
 
-选项:
-      --dry-run   在试运行模式下执行命令
-      --json      将事件作为 json 对象流输出
+选项：
+      --dry-run        以试运行模式执行命令
+      --json           以 JSON 对象流输出事件
+      --since string   显示自该时间戳以来的所有事件
+      --until string   流式输出事件直到该时间戳

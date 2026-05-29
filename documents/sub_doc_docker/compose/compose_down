@@ -1,10 +1,10 @@
-用法:  docker compose down [选项] [服务]
+用法：  docker compose down [选项] [SERVICES]
 
-停止并删除容器、网络
+停止并移除容器、网络
 
-选项:
-      --dry-run          在试运行模式下执行命令
-      --remove-orphans   删除未在 Compose 文件中定义的服务容器
-      --rmi string       删除服务使用的镜像。"local" 仅删除没有自定义标签的镜像 ("local"|"all")
+选项：
+      --dry-run          以试运行模式执行命令
+      --remove-orphans   移除 Compose 文件中未定义的服务容器
+      --rmi string       移除服务使用的镜像。"local" 仅移除无自定义标签的镜像（"local"|"all"）
   -t, --timeout int      指定关闭超时时间（秒）
-  -v, --volumes          删除在 Compose 文件的 "volumes" 部分声明的命名卷和附加到容器的匿名卷
+  -v, --volumes          移除 Compose 文件 "volumes" 段中声明的命名卷，以及附加到容器的匿名卷

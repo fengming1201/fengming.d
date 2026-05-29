@@ -1,8 +1,8 @@
-用法:  docker compose port [选项] 服务 私有端口
+用法：  docker compose port [选项] SERVICE PRIVATE_PORT
 
-打印端口绑定的公共端口
+打印端口绑定对应的公开端口
 
-选项:
-      --dry-run           在试运行模式下执行命令
-      --index int         如果服务有多个副本，则为容器的索引
-      --protocol string   tcp 或 udp (默认 "tcp")
+选项：
+      --dry-run           以试运行模式执行命令
+      --index int         若服务有多个副本，指定容器索引
+      --protocol string   tcp 或 udp（默认 "tcp"）

@@ -1,26 +1,30 @@
-用法:  docker compose run [选项] 服务 [命令] [参数...]
+用法：  docker compose run [选项] SERVICE [COMMAND] [ARGS...]
 
 在服务上运行一次性命令
 
-选项:
-      --build                 在启动容器前构建镜像
-      --cap-add list          添加 Linux 能力
-      --cap-drop list         删除 Linux 能力
-  -d, --detach                在后台运行容器并打印容器 ID
-      --dry-run               在试运行模式下执行命令
-      --entrypoint string     覆盖镜像的入口点
-  -e, --env stringArray       设置环境变量
-  -i, --interactive           即使未附加也保持 STDIN 打开 (默认 true)
-  -l, --label stringArray     添加或覆盖标签
-      --name string           为容器分配名称
-  -T, --no-TTY                禁用伪 TTY 分配 (默认: 自动检测) (默认 true)
-      --no-deps               不启动链接的服务
-  -p, --publish stringArray   将容器的端口发布到主机
-      --quiet-pull            拉取时不打印进度信息
-      --remove-orphans        删除未在 Compose 文件中定义的服务容器
-      --rm                    容器退出时自动删除容器
-  -P, --service-ports         运行命令时启用所有服务的端口并映射到主机
-      --use-aliases           在容器连接的网络中使用服务的网络 useAliases
-  -u, --user string           以指定的用户名或 uid 运行
-  -v, --volume stringArray    绑定挂载卷
-  -w, --workdir string        容器内的工作目录
+选项：
+      --build                       启动容器前先构建镜像
+      --cap-add list                添加 Linux 能力
+      --cap-drop list               移除 Linux 能力
+  -d, --detach                      在后台运行容器并打印容器 ID
+      --dry-run                     以试运行模式执行命令
+      --entrypoint string           覆盖镜像的 entrypoint
+  -e, --env stringArray             设置环境变量
+      --env-from-file stringArray   从文件设置环境变量
+  -i, --interactive                 即使未附加也保持 STDIN 打开（默认 true）
+  -l, --label stringArray           添加或覆盖标签
+      --name string                 为容器指定名称
+  -T, --no-TTY                      禁用伪 TTY 分配（默认：自动检测）（默认 true）
+      --no-deps                     不启动关联服务
+  -p, --publish stringArray         将容器端口发布到主机
+      --pull string                 运行前拉取镜像（"always"|"missing"|"never"）（默认 "policy"）
+  -q, --quiet                       不向 STDOUT 打印任何内容
+      --quiet-build                 抑制构建过程的进度输出
+      --quiet-pull                  拉取时不打印进度信息
+      --remove-orphans              移除 Compose 文件中未定义的服务容器
+      --rm                          容器退出时自动移除
+  -P, --service-ports               启用服务的所有端口并映射到主机后运行命令
+      --use-aliases                 在容器连接的网络中使用服务的 network useAliases
+  -u, --user string                 以指定用户名或 uid 运行
+  -v, --volume stringArray          绑定挂载卷
+  -w, --workdir string              容器内的工作目录

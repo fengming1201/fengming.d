@@ -1,14 +1,15 @@
-用法:  docker compose create [选项] [服务...]
+用法：  docker compose create [选项] [SERVICE...]
 
 为服务创建容器
 
-选项:
-      --build            在启动容器之前构建镜像
-      --dry-run          在试运行模式下执行命令
-      --force-recreate   即使容器的配置和镜像没有更改也重新创建容器
-      --no-build         不构建镜像，即使策略要求
-      --no-recreate      如果容器已存在，不要重新创建它们。与 --force-recreate 不兼容。
-      --pull string      在运行前拉取镜像 ("always"|"missing"|"never"|"build") (默认 "policy")
+选项：
+      --build            启动容器前先构建镜像
+      --dry-run          以试运行模式执行命令
+      --force-recreate   即使配置和镜像未变更也重新创建容器
+      --no-build         即使策略要求也不构建镜像
+      --no-recreate      若容器已存在则不重新创建。与 --force-recreate 不兼容
+      --pull string      运行前拉取镜像（"always"|"missing"|"never"|"build"）（默认 "policy"）
       --quiet-pull       拉取时不打印进度信息
-      --remove-orphans   删除未在 Compose 文件中定义的服务容器
-      --scale scale      将服务扩展到指定数量的实例。覆盖 Compose 文件中的扩展设置（如果存在）。
+      --remove-orphans   移除 Compose 文件中未定义的服务容器
+      --scale scale      将 SERVICE 扩展为 NUM 个实例。若 Compose 文件中有 scale 设置则覆盖之
+  -y, --yes              对所有提示假定回答「是」，以非交互方式运行

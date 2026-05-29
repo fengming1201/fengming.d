@@ -1,0 +1,8 @@
+用法：  docker compose version [选项]
+
+显示 Docker Compose 版本信息
+
+选项：
+      --dry-run         以试运行模式执行命令
+  -f, --format string   设置输出格式。可选值：[pretty | json]（默认：pretty）
+      --short           仅显示 Compose 版本号

@@ -1,7 +1,7 @@
-用法:  docker compose scale [服务=副本数...]
+用法：  docker compose scale [SERVICE=REPLICAS...]
 
-扩展服务
+扩展服务规模
 
-选项:
-      --dry-run   在试运行模式下执行命令
-      --no-deps   不启动链接的服务
+选项：
+      --dry-run   以试运行模式执行命令
+      --no-deps   不启动关联服务

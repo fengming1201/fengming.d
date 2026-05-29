@@ -1,24 +1,25 @@
-用法:  docker compose config [选项] [服务...]
+用法：  docker compose config [选项] [SERVICE...]
 
-解析、解析并以规范格式渲染 compose 文件
+解析、消解依赖并以规范格式渲染 compose 文件
 
-别名:
-  docker compose config, docker compose convert
-
-选项:
-      --dry-run                 在试运行模式下执行命令
-      --environment             打印用于插值的环境。
-      --format string           格式化输出。值: [yaml | json] (默认 "yaml")
-      --hash string             打印服务配置哈希，每行一个。
-      --images                  打印镜像名称，每行一个。
-      --no-consistency          不检查模型一致性 - 警告：可能产生无效的 Compose 输出
+选项：
+      --dry-run                 以试运行模式执行命令
+      --environment             打印用于插值的环境变量
+      --format string           设置输出格式。可选值：[yaml | json]
+      --hash string             打印服务配置哈希，每行一个
+      --images                  打印镜像名称，每行一个
+      --lock-image-digests      生成包含镜像摘要的覆盖文件
+      --models                  打印模型名称，每行一个
+      --networks                打印网络名称，每行一个
+      --no-consistency          不检查模型一致性——警告：可能产生无效的 Compose 输出
+      --no-env-resolution       不解析服务环境变量文件
       --no-interpolate          不插值环境变量
       --no-normalize            不规范化 compose 模型
       --no-path-resolution      不解析文件路径
-  -o, --output string           保存到文件 (默认到 stdout)
-      --profiles                打印配置文件名称，每行一个。
+  -o, --output string           保存到文件（默认输出到 stdout）
+      --profiles                打印 profile 名称，每行一个
   -q, --quiet                   仅验证配置，不打印任何内容
       --resolve-image-digests   将镜像标签固定为摘要
-      --services                打印服务名称，每行一个。
-      --variables               打印模型变量和默认值。
-      --volumes                 打印卷名称，每行一个。
+      --services                打印服务名称，每行一个
+      --variables               打印模型变量及默认值
+      --volumes                 打印卷名称，每行一个

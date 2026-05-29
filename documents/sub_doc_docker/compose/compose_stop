@@ -1,7 +1,7 @@
-用法:  docker compose stop [选项] [服务...]
+用法：  docker compose stop [选项] [SERVICE...]
 
 停止服务
 
-选项:
-      --dry-run       在试运行模式下执行命令
+选项：
+      --dry-run       以试运行模式执行命令
   -t, --timeout int   指定关闭超时时间（秒）

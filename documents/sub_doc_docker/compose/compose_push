@@ -1,9 +1,9 @@
-用法:  docker compose push [选项] [服务...]
+用法：  docker compose push [选项] [SERVICE...]
 
 推送服务镜像
 
-选项:
-      --dry-run                在试运行模式下执行命令
-      --ignore-push-failures   推送可以推送的镜像，忽略推送失败的镜像
-      --include-deps           同时推送声明为依赖项的服务镜像
+选项：
+      --dry-run                以试运行模式执行命令
+      --ignore-push-failures   尽可能推送，忽略推送失败的镜像
+      --include-deps           同时推送声明为依赖的服务镜像
   -q, --quiet                  推送时不打印进度信息

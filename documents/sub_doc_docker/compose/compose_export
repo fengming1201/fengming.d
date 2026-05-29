@@ -1,0 +1,8 @@
+用法：  docker compose export [选项] SERVICE
+
+将服务容器的文件系统导出为 tar 归档
+
+选项：
+      --dry-run         以试运行模式执行命令
+      --index int       若服务有多个副本，指定容器索引
+  -o, --output string   写入文件，而非 STDOUT

@@ -1,0 +1,11 @@
+用法：  docker compose commit [选项] SERVICE [REPOSITORY[:TAG]]
+
+根据服务容器的变更创建新镜像
+
+选项：
+  -a, --author string    作者（例如："John Hannibal Smith <hannibal@a-team.com>"）
+  -c, --change list      对创建的镜像应用 Dockerfile 指令
+      --dry-run          以试运行模式执行命令
+      --index int        若服务有多个副本，指定容器索引
+  -m, --message string   提交说明
+  -p, --pause            提交期间暂停容器（默认 true）

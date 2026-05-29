@@ -1,33 +1,35 @@
-用法:  docker compose up [选项] [服务...]
+用法：  docker compose up [选项] [SERVICE...]
 
 创建并启动容器
 
-选项:
-      --abort-on-container-exit      如果任何容器停止则停止所有容器。与 -d 不兼容
-      --abort-on-container-failure   如果任何容器因故障退出则停止所有容器。与 -d 不兼容
-      --always-recreate-deps         重新创建依赖容器。与 --no-recreate 不兼容。
-      --attach stringArray           限制附加到指定的服务。与 --attach-dependencies 不兼容。
+选项：
+      --abort-on-container-exit      若有任何容器停止，则停止所有容器。与 -d 不兼容
+      --abort-on-container-failure   若有任何容器以失败状态退出，则停止所有容器。与 -d 不兼容
+      --always-recreate-deps         重新创建依赖容器。与 --no-recreate 不兼容
+      --attach stringArray           仅附加到指定服务的输出。与 --attach-dependencies 不兼容
       --attach-dependencies          自动附加到依赖服务的日志输出
-      --build                        在启动容器之前构建镜像
+      --build                        启动容器前先构建镜像
   -d, --detach                       分离模式：在后台运行容器
-      --dry-run                      在试运行模式下执行命令
-      --exit-code-from string        返回所选服务容器的退出代码。意味着 --abort-on-container-exit
-      --force-recreate               即使容器的配置和镜像没有更改也重新创建容器
-      --menu                         在附加运行时启用交互式快捷键。与 --detach 不兼容。也可以通过设置 COMPOSE_MENU 环境变量启用/禁用。
-      --no-attach stringArray        不附加（流式日志）到指定的服务
-      --no-build                     不构建镜像，即使策略要求
-      --no-color                     产生单色输出
-      --no-deps                      不启动链接的服务
+      --dry-run                      以试运行模式执行命令
+      --exit-code-from string        返回所选服务容器的退出码。隐含 --abort-on-container-exit
+      --force-recreate               即使配置和镜像未变更也重新创建容器
+      --menu                         附加运行时启用交互式快捷键。与 --detach 不兼容。也可通过 COMPOSE_MENU 环境变量启用/禁用
+      --no-attach stringArray        不附加（流式输出日志）到指定服务
+      --no-build                     即使策略要求也不构建镜像
+      --no-color                     输出单色内容
+      --no-deps                      不启动关联服务
       --no-log-prefix                不在日志中打印前缀
-      --no-recreate                  如果容器已存在，不要重新创建它们。与 --force-recreate 不兼容。
-      --no-start                     创建服务后不启动它们
-      --pull string                  在运行前拉取镜像 ("always"|"missing"|"never") (默认 "policy")
+      --no-recreate                  若容器已存在则不重新创建。与 --force-recreate 不兼容
+      --no-start                     创建服务后不启动
+      --pull string                  运行前拉取镜像（"always"|"missing"|"never"）（默认 "policy"）
+      --quiet-build                  抑制构建输出
       --quiet-pull                   拉取时不打印进度信息
-      --remove-orphans               删除未在 Compose 文件中定义的服务容器
-  -V, --renew-anon-volumes           重新创建匿名卷而不是从之前的容器检索数据
-      --scale scale                  将服务扩展到指定数量的实例。覆盖 Compose 文件中的扩展设置（如果存在）。
-  -t, --timeout int                  在附加或容器已在运行时，使用此超时时间（秒）进行容器关闭
+      --remove-orphans               移除 Compose 文件中未定义的服务容器
+  -V, --renew-anon-volumes           重新创建匿名卷，而非从先前容器恢复数据
+      --scale scale                  将 SERVICE 扩展为 NUM 个实例。若 Compose 文件中有 scale 设置则覆盖之
+  -t, --timeout int                  附加模式或容器已在运行时的容器关闭超时时间（秒）
       --timestamps                   显示时间戳
-      --wait                         等待服务运行|健康。意味着分离模式。
-      --wait-timeout int             等待项目运行|健康的最大持续时间
-  -w, --watch                        监视源代码并在文件更新时重建/刷新容器。
+      --wait                         等待服务进入 running|healthy 状态。隐含分离模式
+      --wait-timeout int             等待项目进入 running|healthy 状态的最长时间（秒）
+  -w, --watch                        监视源代码，文件更新时重新构建/刷新容器
+  -y, --yes                          对所有提示假定回答「是」，以非交互方式运行

@@ -1,9 +1,9 @@
-用法:  docker compose watch [服务...]
+用法：  docker compose watch [SERVICE...]
 
-监视服务的构建上下文并在文件更新时重建/刷新容器
+监视服务的构建上下文，文件更新时重新构建/刷新容器
 
-选项:
-      --dry-run   在试运行模式下执行命令
-      --no-up     在监视之前不构建和启动服务
-      --prune     重建时删除悬空镜像
+选项：
+      --dry-run   以试运行模式执行命令
+      --no-up     监视前不构建和启动服务
+      --prune     重新构建时清理悬空镜像（默认 true）
       --quiet     隐藏构建输出

@@ -1,8 +1,8 @@
-用法:  docker compose kill [选项] [服务...]
+用法：  docker compose kill [选项] [SERVICE...]
 
 强制停止服务容器
 
-选项:
-      --dry-run          在试运行模式下执行命令
-      --remove-orphans   删除未在 Compose 文件中定义的服务容器
-  -s, --signal string    发送到容器的信号 (默认 "SIGKILL")
+选项：
+      --dry-run          以试运行模式执行命令
+      --remove-orphans   移除 Compose 文件中未定义的服务容器
+  -s, --signal string    发送给容器的信号（默认 "SIGKILL"）

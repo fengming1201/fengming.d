@@ -1,11 +1,11 @@
-用法:  docker compose pull [选项] [服务...]
+用法：  docker compose pull [选项] [SERVICE...]
 
 拉取服务镜像
 
-选项:
-      --dry-run                在试运行模式下执行命令
-      --ignore-buildable       忽略可以构建的镜像
-      --ignore-pull-failures   拉取可以拉取的镜像，忽略拉取失败的镜像
-      --include-deps           同时拉取声明为依赖项的服务
-      --policy string          应用拉取策略 ("missing"|"always")
+选项：
+      --dry-run                以试运行模式执行命令
+      --ignore-buildable       忽略可构建的镜像
+      --ignore-pull-failures   尽可能拉取，忽略拉取失败的镜像
+      --include-deps           同时拉取声明为依赖的服务
+      --policy string          应用拉取策略（"missing"|"always"）
   -q, --quiet                  拉取时不打印进度信息

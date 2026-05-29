@@ -1,10 +1,11 @@
-用法:  docker compose cp [选项] 服务:SRC_PATH DEST_PATH|-
-	docker compose cp [选项] SRC_PATH|- 服务:DEST_PATH
+用法：  docker compose cp [选项] SERVICE:SRC_PATH DEST_PATH|-
+	docker compose cp [选项] SRC_PATH|- SERVICE:DEST_PATH
 
-在服务容器和本地文件系统之间复制文件/文件夹
+在服务容器与本地文件系统之间复制文件/文件夹
 
-选项:
-  -a, --archive       归档模式 (复制所有 uid/gid 信息)
-      --dry-run       在试运行模式下执行命令
-  -L, --follow-link   在 SRC_PATH 中始终跟随符号链接
-      --index int     如果服务有多个副本，则为容器的索引
+选项：
+      --all           包含由 run 命令创建的容器
+  -a, --archive       归档模式（复制所有 uid/gid 信息）
+      --dry-run       以试运行模式执行命令
+  -L, --follow-link   始终跟随 SRC_PATH 中的符号链接
+      --index int     若服务有多个副本，指定容器索引

@@ -1,8 +1,8 @@
-用法:  docker compose images [选项] [服务...]
+用法：  docker compose images [选项] [SERVICE...]
 
 列出已创建容器使用的镜像
 
-选项:
-      --dry-run         在试运行模式下执行命令
-      --format string   格式化输出。值: [table | json] (默认 "table")
+选项：
+      --dry-run         以试运行模式执行命令
+      --format string   设置输出格式。可选值：[table | json]（默认 "table"）
   -q, --quiet           仅显示 ID

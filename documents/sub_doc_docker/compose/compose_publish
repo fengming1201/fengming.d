@@ -1,0 +1,11 @@
+用法：  docker compose publish [选项] REPOSITORY[:TAG]
+
+发布 compose 应用
+
+选项：
+      --app                     发布 compose 应用（包含引用的镜像）
+      --dry-run                 以试运行模式执行命令
+      --oci-version string      OCI 镜像/制品规范版本（默认自动确定）
+      --resolve-image-digests   将镜像标签固定为摘要
+      --with-env                在发布的 OCI 制品中包含环境变量
+  -y, --yes                     对所有提示假定回答「是」

@@ -1,15 +1,19 @@
-用法:  docker compose build [选项] [服务...]
+用法：  docker compose build [选项] [SERVICE...]
 
-构建或重建服务
+构建或重新构建服务
 
-选项:
+选项：
       --build-arg stringArray   为服务设置构建时变量
-      --builder string          设置要使用的构建器
-      --dry-run                 在试运行模式下执行命令
-  -m, --memory bytes            为构建容器设置内存限制。BuildKit 不支持。
+      --builder string          指定要使用的构建器
+      --check                   检查构建配置
+      --dry-run                 以试运行模式执行命令
+  -m, --memory bytes            设置构建容器的内存限制。BuildKit 不支持此选项
       --no-cache                构建镜像时不使用缓存
-      --pull                    始终尝试拉取镜像的更新版本
+      --print                   打印等效的 bake 文件
+      --provenance string       添加 provenance 证明
+      --pull                    始终尝试拉取镜像的较新版本
       --push                    推送服务镜像
-  -q, --quiet                   不向 STDOUT 打印任何内容
-      --ssh string              设置构建服务镜像时使用的 SSH 认证。(使用 'default' 使用您的默认 SSH Agent)
-      --with-dependencies       同时构建依赖项（传递性地）
+  -q, --quiet                   抑制构建输出
+      --sbom string             添加 SBOM 证明
+      --ssh string              设置构建服务镜像时使用的 SSH 认证（使用 'default' 表示使用默认 SSH Agent）
+      --with-dependencies       同时构建依赖项（传递性）

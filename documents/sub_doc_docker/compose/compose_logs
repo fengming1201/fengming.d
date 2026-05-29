@@ -1,14 +1,14 @@
-用法:  docker compose logs [选项] [服务...]
+用法：  docker compose logs [选项] [SERVICE...]
 
 查看容器输出
 
-选项:
-      --dry-run         在试运行模式下执行命令
-  -f, --follow          跟随日志输出
-      --index int       如果服务有多个副本，则为容器的索引
-      --no-color        产生单色输出
+选项：
+      --dry-run         以试运行模式执行命令
+  -f, --follow          持续跟踪日志输出
+      --index int       若服务有多个副本，指定容器索引
+      --no-color        输出单色内容
       --no-log-prefix   不在日志中打印前缀
-      --since string    显示从时间戳 (例如 2013-01-02T13:23:37Z) 或相对时间 (例如 42m 表示 42 分钟) 开始的日志
-  -n, --tail string     从每个容器的日志末尾显示的行数 (默认 "all")
+      --since string    显示自该时间戳以来的日志（例如 2013-01-02T13:23:37Z）或相对时间（例如 42m 表示 42 分钟）
+  -n, --tail string     每个容器从日志末尾显示的行数（默认 "all"）
   -t, --timestamps      显示时间戳
-      --until string    显示时间戳 (例如 2013-01-02T13:23:37Z) 或相对时间 (例如 42m 表示 42 分钟) 之前的日志
+      --until string    显示该时间戳之前的日志（例如 2013-01-02T13:23:37Z）或相对时间（例如 42m 表示 42 分钟）

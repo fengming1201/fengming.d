@@ -1,20 +1,21 @@
-用法:  docker compose ps [选项] [服务...]
+用法：  docker compose ps [选项] [SERVICE...]
 
 列出容器
 
-选项:
-  -a, --all                  显示所有已停止的容器 (包括由 run 命令创建的容器)
-      --dry-run              在试运行模式下执行命令
-      --filter string        按属性过滤服务 (支持的过滤器: status)
+选项：
+  -a, --all                  显示所有已停止的容器（包括由 run 命令创建的）
+      --dry-run              以试运行模式执行命令
+      --filter string        按属性过滤服务（支持的过滤器：status）
       --format string        使用自定义模板格式化输出：
-                             'table':            以表格格式打印输出，包含列标题 (默认)
-                             'table TEMPLATE':   使用给定的 Go 模板以表格格式打印输出
-                             'json':             以 JSON 格式打印
-                             'TEMPLATE':         使用给定的 Go 模板打印输出。
-                             参考https://docs.docker.com/go/formatting/ 了解有关使用模板格式化输出的更多信息
-                             (默认 "table")
+                             'table'：            以带列标题的表格格式打印输出（默认）
+                             'table TEMPLATE'：   使用给定 Go 模板以表格格式打印输出
+                             'json'：             以 JSON 格式打印
+                             'TEMPLATE'：         使用给定 Go 模板打印输出
+                             有关使用模板格式化输出的更多信息，请参阅 https://docs.docker.com/go/formatting/
+                             （默认 "table"）
       --no-trunc             不截断输出
-      --orphans              包含孤立服务 (未由项目声明) (默认 true)
+      --orphans              包含孤立服务（项目中未声明的）（默认 true）
   -q, --quiet                仅显示 ID
       --services             显示服务
-      --status stringArray   按状态过滤服务。值: [paused | restarting | removing | running | dead | created | exited]
+      --status stringArray   按状态过滤服务。可选值：[paused | restarting | removing | running | dead | created |
+                             exited]
