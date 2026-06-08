@@ -706,6 +706,20 @@
       "describe": "是一款开源的实时操作系统，适用于物联网设备和嵌入式系统等低功耗、资源受限的环境。",
       "URL": "https://github.com/RIOT-OS/RIOT.git",
       "BACKUP": "http://gitlab.fengming.com:8090/github.com/RIOT.git"
+    },
+    {
+      "name": "dufs",
+      "language": "C",
+      "describe": "Dufs是一款功能强大的实用文件服务器，支持静态文件服务、文件上传、搜索、访问控制、WebDAV等多种功能。",
+      "URL": "https://github.com/sigoden/dufs.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/dufs.git"
+    },
+    {
+      "name": "z",
+      "language": "shell",
+      "describe": "快速跳转目录工具",
+      "URL": "https://github.com/rupa/z.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/z.git"
     }
   ]
 }
