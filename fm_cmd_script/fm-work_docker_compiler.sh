@@ -45,18 +45,21 @@ function docker-compiler
     if { [ -z "${g_platform}" ] && [ $# -lt 2 ]; } || { [ -n "${g_platform}" ] && [ $# -lt 1 ]; }; then
         echo "Usage: "
         echo "         $FUNCNAME [options] platform command args ..."
-        echo "platform: bipc_fh8626 bipc_fh8852 fh1x fh8626v3x mc632x new_mc632x"
         echo ""
-        echo "Example: $FUNCNAME fh8626v3x ./AllInOne4_fh8626v3x_build.sh all"
-        echo "Example: $FUNCNAME mc632x    ./AllInOne4_mc632x_build.sh    all"
-        echo "Example: $FUNCNAME mc632x make all"
-        echo "Example: $FUNCNAME mc632x make clean && make all"
+        echo "platform:"
+        echo "old ->: bipc_fh8626 bipc_fh8852 fh1x jzt40 fh8626v3x mc632x"
+        echo "new ->: new_fh8852v201 new_fh8626v300 new_jzt23 new_jzt33 new_mc632x"
         echo ""
         echo "options:"
         echo "        -d|--debug: enable debug mode"
         echo "        -m|--map   map_path         #modify default workdir volume mapping path.default: /home/lshm"
         echo "        -n|--name  container_name   #overwrite container name.e.g. container4_fastboot_mc632x_compiler"
         echo "        -p|--plat  platform         #overwrite platform.e.g. mc632x"
+        echo ""
+        echo "Example: $FUNCNAME fh8626v3x ./AllInOne4_fh8626v3x_build.sh all"
+        echo "Example: $FUNCNAME mc632x    ./AllInOne4_mc632x_build.sh    all"
+        echo "Example: $FUNCNAME mc632x make all"
+        echo "Example: $FUNCNAME mc632x make clean && make all"
         echo ""
         echo "Example: $FUNCNAME -m /home/mining/uboot -n mytest -p jzt33 make all"
         echo ""
@@ -117,18 +120,30 @@ function docker-compiler
     fi
     #select docker container name by platform
     if [ "x${docker_container_name}" = "x" ];then
+        #======================== old framework ========================
         if [ "bipc_fh8626" = "$platform" ];then
             docker_container_name="container4_bipc_fh8626_compiler"
         elif [ "bipc_fh8852" = "$platform" ];then
             docker_container_name="container4_bipc_fh8852_compiler"
         elif [ "fh1x" = "$platform" ];then
             docker_container_name="container4_fastboot_fh885x_compiler"
+        elif [ "jzt40" = "$platform" ];then
+            docker_container_name="container4_fastboot_jztxx_compiler"
         elif [ "fh8626v3x" = "$platform" ];then
             docker_container_name="container4_fastboot_fh8626_compiler"
         elif [ "mc632x" = "$platform" ];then
             docker_container_name="container4_fastboot_mc632x_compiler"
+        #======================== new framework ========================
+        elif [ "new_fh8852v201" = "$platform" ];then
+            docker_container_name="container4_newfw_fh885x_compiler"
+        elif [ "new_fh8626v300" = "$platform" ];then
+            docker_container_name="container4_newfw_fh8626v3x_compiler"
+        elif [ "new_jzt23" = "$platform" ];then
+            docker_container_name="container4_newfw_jzt23_compiler"
+        elif [ "new_jzt33" = "$platform" ];then
+            docker_container_name="container4_newfw_jzt33_compiler"
         elif [ "new_mc632x" = "$platform" ];then
-            docker_container_name="container4_newfw_mc6321_compiler"
+            docker_container_name="container4_newfw_mc632x_compiler"
         fi
     fi
     if [ -z ${docker_container_name} ];then
