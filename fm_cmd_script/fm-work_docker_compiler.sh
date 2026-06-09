@@ -35,39 +35,40 @@ if [ $(ls -ld . | awk '{print$3}') != $(whoami) ];then
 fi
 #start here add your code,you need to implement the following function.
 
-##Parameter Counts      : 0
-# Parameter Requirements: none
-# Example:
-##
-function usage
-{
-    echo "Usage: "
-    echo "         $FUNCNAME [options] platform command args ..."
-    echo "platform: bipc_fh8626 bipc_fh8852 fh1x fh8626v3x mc632x new_mc632x"
-    echo ""
-    echo "Example: $FUNCNAME fh8626v3x ./AllInOne4_fh8626v3x_build.sh all"
-    echo "Example: $FUNCNAME mc632x    ./AllInOne4_mc632x_build.sh    all"
-    echo "Example: $FUNCNAME mc632x make all"
-    echo "Example: $FUNCNAME mc632x make clean && make all"
-    echo ""
-    echo "options:"
-    echo "        -d|--debug: enable debug mode"
-    echo "        -m|--map   map_path         #modify default workdir volume mapping path.default: /home/lshm"
-    echo "        -n|--name  container_name   #overwrite container name.e.g. container4_fastboot_mc632x_compiler"
-    echo "        -p|--plat  platform         #overwrite platform.e.g. mc632x"
-    echo "The default value can also be changed through environment variables"
-    echo "Example: export g_container_name=XXX"
-    echo "Example: export g_platform=XXX"
-    return 1
-}
 
 ##Parameter Counts      : 0
 # Parameter Requirements: none
 # Example:
 ##
-function func_main
+function docker-compiler
 {
-    if [ $# -lt 2 ];then usage; return 1; fi
+    if { [ -z "${g_platform}" ] && [ $# -lt 2 ]; } || { [ -n "${g_platform}" ] && [ $# -lt 1 ]; }; then
+        echo "Usage: "
+        echo "         $FUNCNAME [options] platform command args ..."
+        echo "platform: bipc_fh8626 bipc_fh8852 fh1x fh8626v3x mc632x new_mc632x"
+        echo ""
+        echo "Example: $FUNCNAME fh8626v3x ./AllInOne4_fh8626v3x_build.sh all"
+        echo "Example: $FUNCNAME mc632x    ./AllInOne4_mc632x_build.sh    all"
+        echo "Example: $FUNCNAME mc632x make all"
+        echo "Example: $FUNCNAME mc632x make clean && make all"
+        echo ""
+        echo "options:"
+        echo "        -d|--debug: enable debug mode"
+        echo "        -m|--map   map_path         #modify default workdir volume mapping path.default: /home/lshm"
+        echo "        -n|--name  container_name   #overwrite container name.e.g. container4_fastboot_mc632x_compiler"
+        echo "        -p|--plat  platform         #overwrite platform.e.g. mc632x"
+        echo ""
+        echo "Example: $FUNCNAME -m /home/mining/uboot -n mytest -p jzt33 make all"
+        echo ""
+        echo "The default value can also be changed through environment variables"
+        echo "Example: export g_workdir_map_path=XXX"
+        echo "Example: export g_container_name=XXX"
+        echo "Example: export g_platform=XXX"
+        return 1
+    fi
+
+    #default values
+    #/home_duser=/workdir mapping path
     local workdir_volume_map_path=/home/lshm
     local docker_container_name=${g_container_name:-}
     local platform=${g_platform:-}
@@ -101,16 +102,17 @@ function func_main
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    if [ ${#remaining_args[@]} -lt 2 ];then
+    if { [ -z $g_platform ] && [ ${#remaining_args[@]} -lt 2 ]; } || { [ -n $g_platform ] && [ ${#remaining_args[@]} -lt 1 ]; };then
         echo "Error: no command provided"
-        usage
+        echo "         $FUNCNAME [options] platform command args ..."
+        echo "Example: $FUNCNAME mc632x make all"
         return 2
     fi
 
-    if [ "x${platform}" = "x" ] && [ ${#remaining_args[@]} -gt 0 ];then
+    if [ "x${platform}" = "x" ] && [ ${#remaining_args[@]} -ge 2 ];then
         platform="${remaining_args[0]}"
         cmd="${remaining_args[@]:1}"
-    elif [ "x${platform}" != "x" ] && [ ${#remaining_args[@]} -eq 1 ];then
+    elif [ "x${platform}" != "x" ] && [ ${#remaining_args[@]} -ge 1 ];then
         cmd="${remaining_args[*]}"
     fi
     #select docker container name by platform
@@ -157,6 +159,6 @@ function func_main
 func_debug_function "$@"
 if [ $? -ne 0 ];then exit 0;fi
 
-func_main "$@"
+docker-compiler "$@"
 if [ $? -ne 0 ];then exit 1;fi
 exit 0
