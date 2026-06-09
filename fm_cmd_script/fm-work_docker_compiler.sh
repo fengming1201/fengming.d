@@ -55,17 +55,19 @@ function docker-compiler
         echo "        -m|--map   map_path         #modify default workdir volume mapping path.default: /home/lshm"
         echo "        -n|--name  container_name   #overwrite container name.e.g. container4_fastboot_mc632x_compiler"
         echo ""
-        echo "Example: $FUNCNAME fh8626v3x  ./AllInOne4_fh8626v3x_build.sh all"
-        echo "Example: $FUNCNAME mc632x    \"./AllInOne4_mc632x_build.sh    all --no-pack\""
-        echo "Example: $FUNCNAME mc632x  make all"
-        echo "Example: $FUNCNAME mc632x \"make clean && make all\""
+        echo "Example1: $FUNCNAME fh8626v3x  ./AllInOne4_fh8626v3x_build.sh all"
+        echo "Example2: $FUNCNAME mc632x    \"./AllInOne4_mc632x_build.sh    all --no-pack\""
+        echo "Example3: $FUNCNAME mc632x  make all"
+        echo "Example4: $FUNCNAME mc632x \"make clean && make all\""
+        echo "Example5: $FUNCNAME \"make clean && make all\" -n container4_fastboot_mc632x_compiler"
+        echo "Example6: export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
         echo ""
-        echo "Example: $FUNCNAME -m /home/mining/uboot -n mytest -p jzt33 make all"
+        echo "Example7: $FUNCNAME -m /home/mining/uboot -n mytest  make all"
         echo ""
         echo "The default value can also be changed through environment variables"
-        echo "Example: export g_workdir_map_path="
-        echo "Example: export g_container_name="
-        echo "Example: export g_platform="
+        echo "export g_workdir_map_path="
+        echo "export g_container_name="
+        echo "export g_platform="
         return 1
     fi
 
@@ -101,10 +103,10 @@ function docker-compiler
         esac
     done
 
-    if [ "x${platform}" = "x" ] && [ ${#remaining_args[@]} -ge 2 ];then
+    if [[ -z "${platform}" ]] && [[ -z "${docker_container_name}" ]] && [[ ${#remaining_args[@]} -ge 2 ]]; then
         platform="${remaining_args[0]}"
         cmd="${remaining_args[@]:1}"
-    elif [ "x${platform}" != "x" ] && [ ${#remaining_args[@]} -ge 1 ];then
+    elif [[ -n "${platform}" || -n "${docker_container_name}" ]] && [[ ${#remaining_args[@]} -ge 1 ]]; then
         cmd="${remaining_args[*]}"
     else
         echo "Error: no command provided"
@@ -113,7 +115,7 @@ function docker-compiler
         return 2
     fi
     #select docker container name by platform
-    if [ "x${docker_container_name}" = "x" ];then
+    if [[ -z "${docker_container_name}" &&  -n "${platform}" ]];then
         #======================== old framework ========================
         if [ "bipc_fh8626" = "$platform" ];then
             docker_container_name="container4_bipc_fh8626_compiler"
