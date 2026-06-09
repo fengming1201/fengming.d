@@ -42,36 +42,35 @@ fi
 ##
 function docker-compiler
 {
-    if { [ -z "${g_platform}" ] && [ $# -lt 2 ]; } || { [ -n "${g_platform}" ] && [ $# -lt 1 ]; }; then
+    if [ $# -lt 1 ]; then
         echo "Usage: "
-        echo "         $FUNCNAME [options] platform command args ..."
+        echo "         $FUNCNAME [options] platform \"command args ...\""
         echo ""
         echo "platform:"
         echo "old ->: bipc_fh8626 bipc_fh8852 fh1x jzt40 fh8626v3x mc632x"
         echo "new ->: new_fh8852v201 new_fh8626v300 new_jzt23 new_jzt33 new_mc632x"
         echo ""
         echo "options:"
-        echo "        -d|--debug: enable debug mode"
+        echo "        -d|--debug                  #debug mode:not truly executing your command."
         echo "        -m|--map   map_path         #modify default workdir volume mapping path.default: /home/lshm"
         echo "        -n|--name  container_name   #overwrite container name.e.g. container4_fastboot_mc632x_compiler"
-        echo "        -p|--plat  platform         #overwrite platform.e.g. mc632x"
         echo ""
-        echo "Example: $FUNCNAME fh8626v3x ./AllInOne4_fh8626v3x_build.sh all"
-        echo "Example: $FUNCNAME mc632x    ./AllInOne4_mc632x_build.sh    all"
-        echo "Example: $FUNCNAME mc632x make all"
-        echo "Example: $FUNCNAME mc632x make clean && make all"
+        echo "Example: $FUNCNAME fh8626v3x  ./AllInOne4_fh8626v3x_build.sh all"
+        echo "Example: $FUNCNAME mc632x    \"./AllInOne4_mc632x_build.sh    all --no-pack\""
+        echo "Example: $FUNCNAME mc632x  make all"
+        echo "Example: $FUNCNAME mc632x \"make clean && make all\""
         echo ""
         echo "Example: $FUNCNAME -m /home/mining/uboot -n mytest -p jzt33 make all"
         echo ""
         echo "The default value can also be changed through environment variables"
-        echo "Example: export g_workdir_map_path=XXX"
-        echo "Example: export g_container_name=XXX"
-        echo "Example: export g_platform=XXX"
+        echo "Example: export g_workdir_map_path="
+        echo "Example: export g_container_name="
+        echo "Example: export g_platform="
         return 1
     fi
 
     #default values
-    #/home_duser=/workdir mapping path
+    local ret=0
     local workdir_volume_map_path=/home/lshm
     local docker_container_name=${g_container_name:-}
     local platform=${g_platform:-}
@@ -87,9 +86,6 @@ function docker-compiler
             -n|--name)
                 if [[ -z "$2" ]]; then echo "ERROR: -n|--name requires one parameter" >&2; return 1; fi
                 docker_container_name="$2"; shift 2 ;; #带参数，移动2
-            -p|--plat)
-                if [[ -z "$2" ]]; then echo "ERROR: -p|--plat requires one parameter" >&2; return 1; fi
-                platform="$2"; shift 2 ;; #带参数，移动2
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
@@ -97,7 +93,6 @@ function docker-compiler
                         d) debug=true ;;
                         m) workdir_volume_map_path="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         n) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
-                        p) platform="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -105,18 +100,17 @@ function docker-compiler
             *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
         esac
     done
-    if { [ -z $g_platform ] && [ ${#remaining_args[@]} -lt 2 ]; } || { [ -n $g_platform ] && [ ${#remaining_args[@]} -lt 1 ]; };then
-        echo "Error: no command provided"
-        echo "         $FUNCNAME [options] platform command args ..."
-        echo "Example: $FUNCNAME mc632x make all"
-        return 2
-    fi
 
     if [ "x${platform}" = "x" ] && [ ${#remaining_args[@]} -ge 2 ];then
         platform="${remaining_args[0]}"
         cmd="${remaining_args[@]:1}"
     elif [ "x${platform}" != "x" ] && [ ${#remaining_args[@]} -ge 1 ];then
         cmd="${remaining_args[*]}"
+    else
+        echo "Error: no command provided"
+        echo "         $FUNCNAME [options] platform \"command args ...\""
+        echo "Example: $FUNCNAME mc632x make all"
+        return 2
     fi
     #select docker container name by platform
     if [ "x${docker_container_name}" = "x" ];then
@@ -148,16 +142,20 @@ function docker-compiler
     fi
     if [ -z ${docker_container_name} ];then
         echo "Error: not found docker container name for this platform: $platform"
+        echo "         $FUNCNAME [options] platform \"command args ...\""
+        echo "Example: $FUNCNAME mc632x make all"
         return 3
     fi
     #convert current_dir to docker_inner_path;e.g. /home/lshm/workdir/mc632x_test/build.sh to /home/duser/workdir/mc632x_test/build.sh
     local docker_inner_path=$(echo $(pwd) | sed "s|${workdir_volume_map_path}|/home/duser/workdir|")
-    echo "INFO:workdir_volume_map_path=${workdir_volume_map_path}"
-    echo "INFO:docker_container_name=${docker_container_name}"
-    echo "INFO:docker_inner_path=${docker_inner_path}"
-    echo "INFO:platform=${platform}"
-    echo "INFO:cmd=${cmd}"
-    echo "INFO:remaining_args=${remaining_args[@]}"
+    if [ ${debug} = true ];then
+        echo "INFO:workdir_volume_map_path=${workdir_volume_map_path}"
+        echo "INFO:docker_container_name=${docker_container_name}"
+        echo "INFO:docker_inner_path=${docker_inner_path}"
+        echo "INFO:platform=${platform}"
+        echo "INFO:cmd=${cmd}"
+        echo "INFO:remaining_args=${remaining_args[@]}"
+    fi
     #check if the docker container is running
     docker ps -a | grep -w -q $docker_container_name
     if [ $? -ne 0 ];then
@@ -167,8 +165,10 @@ function docker-compiler
     echo "EXEC:docker exec ${docker_container_name} bash -c \"cd $docker_inner_path && $cmd\""
     if [ ${debug} = false ];then
         docker exec ${docker_container_name} bash -c "cd $docker_inner_path && $cmd"
+        ret=$?
+        if [ $ret -ne 0 ];then echo "Error: docker exec exit code:$ret";fi
     fi
-    return 0
+    return $ret
 }
 #if unnecessary, please do not modify following code
 func_debug_function "$@"
