@@ -1,0 +1,1640 @@
+
+命令类别列表：
+
+aliases -- 其他命令的别名。
+breakpoints -- 使程序在特定位置停止。
+data -- 检查数据。
+files -- 指定并检查文件。
+internals -- 维护命令。
+obscure -- 晦涩功能。
+running -- 运行程序。
+stack -- 检查栈。
+status -- 状态查询。
+support -- 支持设施。
+tracepoints -- 在不停止程序的情况下跟踪程序执行。
+user-defined -- 用户自定义命令。
+
+输入 "help" 加类别名可查看该类中的命令列表。
+输入 "help all" 可查看所有命令列表。
+输入 "help" 加命令名可查看完整文档。
+输入 "apropos word" 可搜索与 "word" 相关的命令。
+输入 "apropos -v word" 可查看与 "word" 相关命令的完整文档。
+若缩写无歧义，则允许使用命令名缩写。
+
+(gdb) help all
+==============================================================================================================
+命令类别：aliases（别名）
+
+ni -- 单步执行一条指令，但会穿过子程序调用。
+rc -- 继续运行被调试程序，但以反向方式执行。
+rni -- 向后单步一条指令，但会穿过被调用的子程序。
+rsi -- 精确向后单步一条指令。
+si -- 精确单步执行一条指令。
+stepping -- 指定跟踪点处的单步行为。
+tp -- 在指定位置设置跟踪点。
+tty -- 为被调试程序今后的运行设置终端。
+where -- 打印所有栈帧的回溯，或最内层 COUNT 个栈帧。
+ws -- 指定跟踪点处的单步行为。
+==============================================================================================================
+命令类别：breakpoints（断点）
+
+awatch -- 为表达式设置监视点（访问时触发）。
+break -- 在指定位置设置断点。
+break-range -- 为地址范围设置断点。
+catch -- 设置捕获点以捕获事件。
+catch assert -- 在 Ada 断言失败被抛出时捕获。
+catch catch -- 在异常被捕获时捕获。
+catch exception -- 在 Ada 异常被抛出时捕获。
+catch exec -- 捕获对 exec 的调用。
+catch fork -- 捕获对 fork 的调用。
+catch handlers -- 在 Ada 异常被处理时捕获。
+catch load -- 捕获共享库的加载。
+catch rethrow -- 在异常被重新抛出时捕获。
+catch signal -- 按名称和/或编号捕获信号。
+catch syscall -- 按名称、分组和/或编号捕获系统调用。
+catch throw -- 在异常被抛出时捕获。
+catch unload -- 捕获共享库的卸载。
+catch vfork -- 捕获对 vfork 的调用。
+clear -- 清除指定位置的断点。
+commands -- 设置在给定断点命中时要执行的命令。
+condition -- 指定断点编号 N 仅在 COND 为真时中断。
+delete -- 删除全部或部分断点。
+delete bookmark -- 从书签列表中删除书签。
+delete breakpoints -- 删除全部或部分断点或自动显示表达式。
+delete display -- 取消程序停止时要显示的部分表达式。
+delete mem -- 删除内存区域。
+delete tracepoints -- 删除指定的跟踪点。
+delete tvariable -- 删除一个或多个跟踪状态变量。
+disable -- 禁用全部或部分断点。
+disable breakpoints -- 禁用全部或部分断点。
+--Type <RET> for more, q to quit, c to continue without paging-- 
+disable display -- 禁用程序停止时要显示的部分表达式。
+disable mem -- 禁用内存区域。
+disable probes -- 禁用探针。
+dprintf -- 在指定位置设置动态 printf。
+enable -- 启用全部或部分断点。
+enable breakpoints -- 启用全部或部分断点。
+enable breakpoints count -- 启用部分断点，命中 COUNT 次后失效。
+enable breakpoints delete -- 启用部分断点，命中后删除。
+enable breakpoints once -- 启用部分断点，仅命中一次。
+enable count -- 启用部分断点，命中 COUNT 次后失效。
+enable delete -- 启用部分断点，命中后删除。
+enable display -- 启用程序停止时要显示的部分表达式。
+enable mem -- 启用内存区域。
+enable once -- 启用部分断点，仅命中一次。
+enable probes -- 启用探针。
+ftrace -- 在指定位置设置快速跟踪点。
+hbreak -- 设置硬件辅助断点。
+ignore -- 将断点编号 N 的忽略计数设为 COUNT。
+rbreak -- 为所有匹配 REGEXP 的函数设置断点。
+rwatch -- 为表达式设置读监视点。
+save -- 将断点定义保存为脚本。
+save breakpoints -- 将当前断点定义保存为脚本。
+save gdb-index -- 保存 gdb-index 文件。
+save tracepoints -- 将当前跟踪点定义保存为脚本。
+skip -- 单步时忽略某个函数。
+skip delete -- 删除 skip 条目。
+skip disable -- 禁用 skip 条目。
+skip enable -- 启用 skip 条目。
+skip file -- 单步时忽略某个文件。
+skip function -- 单步时忽略某个函数。
+strace -- 在位置或标记处设置静态跟踪点。
+tbreak -- 设置临时断点。
+tcatch -- 设置临时捕获点以捕获事件。
+tcatch assert -- 在 Ada 断言失败被抛出时捕获。
+tcatch catch -- 在异常被捕获时捕获。
+tcatch exception -- 在 Ada 异常被抛出时捕获。
+tcatch exec -- 捕获对 exec 的调用。
+tcatch fork -- 捕获对 fork 的调用。
+tcatch handlers -- 在 Ada 异常被处理时捕获。
+tcatch load -- 捕获共享库的加载。
+tcatch rethrow -- 在异常被重新抛出时捕获。
+tcatch signal -- 按名称和/或编号捕获信号。
+tcatch syscall -- 按名称、分组和/或编号捕获系统调用。
+tcatch throw -- 在异常被抛出时捕获。
+tcatch unload -- 捕获共享库的卸载。
+--Type <RET> for more, q to quit, c to continue without paging--
+tcatch vfork -- 捕获对 vfork 的调用。
+thbreak -- 设置临时硬件辅助断点。
+trace -- 在指定位置设置跟踪点。
+watch -- 为表达式设置监视点。
+==============================================================================================================
+命令类别：data（数据）
+
+agent-printf -- 仅由目标 agent 执行的格式化打印，类似 C 的 "printf" 函数。
+append -- 将目标代码/数据追加到本地文件。
+append binary -- 将目标代码/数据追加到原始二进制文件。
+append binary memory -- 将内存内容追加到原始二进制文件。
+append binary value -- 将表达式的值追加到原始二进制文件。
+append memory -- 将内存内容追加到原始二进制文件。
+append value -- 将表达式的值追加到原始二进制文件。
+call -- 调用程序中的函数。
+disassemble -- 反汇编指定的内存段。
+display -- 每次程序停止时打印表达式 EXP 的值。
+dump -- 将目标代码/数据转储到本地文件。
+dump binary -- 将目标代码/数据写入原始二进制文件。
+dump binary memory -- 将内存内容写入原始二进制文件。
+dump binary value -- 将表达式的值写入原始二进制文件。
+dump ihex -- 将目标代码/数据写入 Intel hex 文件。
+dump ihex memory -- 将内存内容写入 ihex 文件。
+dump ihex value -- 将表达式的值写入 ihex 文件。
+dump memory -- 将内存内容写入原始二进制文件。
+dump srec -- 将目标代码/数据写入 srec 文件。
+dump srec memory -- 将内存内容写入 srec 文件。
+dump srec value -- 将表达式的值写入 srec 文件。
+dump tekhex -- 将目标代码/数据写入 tekhex 文件。
+dump tekhex memory -- 将内存内容写入 tekhex 文件。
+dump tekhex value -- 将表达式的值写入 tekhex 文件。
+dump value -- 将表达式的值写入原始二进制文件。
+dump verilog -- 将目标代码/数据写入 Verilog hex 文件。
+dump verilog memory -- 将内存内容写入 Verilog hex 文件。
+dump verilog value -- 将表达式的值写入 Verilog hex 文件。
+find -- 在内存中搜索字节序列。
+init-if-undefined -- 如有必要则初始化便利变量。
+mem -- 定义内存区域属性，或将内存区域处理重置为基于目标的方式。
+output -- 类似 "print"，但不记入值历史且不换行。
+print -- 打印表达式 EXP 的值。
+print-object -- 让 Objective-C 对象自行打印。
+printf -- 格式化打印，类似 C 的 "printf" 函数。
+ptype -- 打印类型 TYPE 的定义。
+restore -- 将 FILE 的内容恢复到目标内存。
+set -- 求值表达式 EXP 并将结果赋给变量 VAR。
+--Type <RET> for more, q to quit, c to continue without paging--
+set ada -- 用于修改 Ada 相关设置的前缀命令。
+set ada print-signatures -- 启用或禁用在重载选择菜单中输出函数的形式参数和返回类型。
+set ada trust-PAD-over-XVS -- 启用或禁用信任 PAD 类型优于 XVS 类型的优化。
+set agent -- 设置调试器是否愿意使用 agent 作为辅助。
+set annotate -- 设置 annotation_level。
+set architecture -- 设置目标架构。
+set args -- 设置被调试程序启动时传入的参数列表。
+set arm -- 各种 ARM 相关命令。
+set arm abi -- 设置 ABI。
+set arm apcs32 -- 设置 ARM 32 位模式的使用。
+set arm disassembler -- 设置反汇编风格。
+set arm fallback-mode -- 设置符号不可用时的假定模式。
+set arm force-mode -- 设置即使符号可用时也假定的模式。
+set arm fpu -- 设置浮点类型。
+set auto-connect-native-target -- 设置 GDB 是否可自动连接到本机目标。
+set auto-load -- 自动加载相关设置。
+set auto-load gdb-scripts -- 启用或禁用自动加载预制命令序列脚本。
+set auto-load local-gdbinit -- 启用或禁用自动加载当前目录中的 .gdbinit 脚本。
+set auto-load safe-path -- 设置可安全自动加载的文件和目录列表。
+set auto-load scripts-directory -- 设置从中加载自动脚本的目录列表。
+set auto-solib-add -- 设置共享库符号的自动加载。
+set backtrace -- 设置回溯相关变量。
+set backtrace limit -- 设置回溯层数的上限。
+set backtrace past-entry -- 设置回溯是否应越过程序入口点继续。
+set backtrace past-main -- 设置回溯是否应越过 "main" 继续。
+set basenames-may-differ -- 设置源文件是否可有多个基本名。
+set breakpoint -- 断点相关设置。
+set breakpoint always-inserted -- 设置插入断点的模式。
+set breakpoint auto-hw -- 设置是否自动使用硬件断点。
+set breakpoint condition-evaluation -- 设置断点条件求值模式。
+set breakpoint pending -- 设置调试器对待决断点的行为。
+set can-use-hw-watchpoints -- 设置调试器是否愿意使用监视点硬件。
+set case-sensitive -- 设置名称搜索的大小写敏感性（on/off/auto）。
+set charset -- 设置主机和目标字符集。
+set check -- 设置类型/范围检查器的状态。
+set check range -- 设置范围检查（on/warn/off/auto）。
+set check type -- 设置严格类型检查。
+set circular-trace-buffer -- 设置目标是否使用环形跟踪缓冲区。
+set code-cache -- 设置代码段访问的缓存使用。
+set coerce-float-to-double -- 设置调用函数时是否将 float 强制转换为 double。
+set compile-args -- 设置编译命令的 GCC 命令行参数。
+set compile-gcc -- 设置编译命令的 GCC 驱动程序文件名。
+set complaints -- 设置关于错误符号的最大抱怨次数。
+set confirm -- 设置是否确认潜在危险操作。
+set cp-abi -- 设置用于检查 C++ 对象的 ABI。
+--Type <RET> for more, q to quit, c to continue without paging--
+set cwd -- 设置 inferior 启动时使用的当前工作目录。
+set data-directory -- 设置 GDB 的数据目录。
+set dcache -- 使用此命令设置 dcache 的行数和行大小。
+set dcache line-size -- 设置 dcache 行大小（字节，必须为 2 的幂）。
+set dcache size -- 设置 dcache 行数。
+set debug -- 用于设置 gdb 调试标志的通用命令。
+set debug arch -- 设置架构调试。
+set debug arm -- 设置 ARM 调试。
+set debug auto-load -- 设置自动加载验证调试。
+set debug bfd-cache -- 设置 bfd 缓存调试。
+set debug check-physname -- 设置 "physname" 代码与 demangler 的交叉检查。
+set debug coff-pe-read -- 设置 coff PE 读取调试。
+set debug compile -- 设置编译命令调试。
+set debug compile-cplus-scopes -- 设置 C++ 编译作用域调试。
+set debug compile-cplus-types -- 设置 C++ 编译类型转换调试。
+set debug displaced -- 设置 displaced stepping 调试。
+set debug dwarf-die -- 设置 DWARF DIE 读取器调试。
+set debug dwarf-line -- 设置 dwarf 行读取器调试。
+set debug dwarf-read -- 设置 DWARF 读取器调试。
+set debug entry-values -- 设置入口值和尾调用帧调试。
+set debug expression -- 设置表达式调试。
+set debug frame -- 设置帧调试。
+set debug index-cache -- 设置是否显示 index-cache 调试消息。
+set debug infrun -- 设置 inferior 调试。
+set debug jit -- 设置 JIT 调试。
+set debug notification -- 设置异步远程通知调试。
+set debug observer -- 设置 observer 调试。
+set debug overload -- 设置 C++ 重载调试。
+set debug parser -- 设置解析器调试。
+set debug record -- 设置 record/replay 功能调试。
+set debug remote -- 设置远程协议调试。
+set debug remote-packet-max-chars -- 设置每个远程包显示的最大字符数。
+set debug separate-debug-file -- 设置是否打印独立调试信息文件搜索的调试输出。
+set debug serial -- 设置串口调试。
+set debug skip -- 设置是否打印关于跳过文件和函数的调试输出。
+set debug stap-expression -- 设置 SystemTap 表达式调试。
+set debug symbol-lookup -- 设置符号查找调试。
+set debug symfile -- 设置 symfile 函数调试。
+set debug symtab-create -- 设置符号表创建调试。
+set debug target -- 设置目标调试。
+set debug timestamp -- 设置是否为调试消息添加时间戳。
+set debug varobj -- 设置 varobj 调试。
+set debug xml -- 设置 XML 解析器调试。
+set debug-file-directory -- 设置搜索独立调试符号的目录。
+set default-collect -- 设置默认要收集的表达式列表。
+--Type <RET> for more, q to quit, c to continue without paging--
+set demangle-style -- 设置当前 C++ 还原符号风格。
+set detach-on-fork -- 设置 gdb 是否在 fork 后分离子进程。
+set directories -- 设置查找源文件的搜索路径。
+set disable-randomization -- 设置是否禁用被调试进程的虚拟地址空间随机化。
+set disassemble-next-line -- 设置执行停止时是否反汇编下一条源行或指令。
+set disassembler-options -- 设置反汇编器选项。
+set disconnected-dprintf -- 设置 GDB 断开后 dprintf 是否继续。
+set disconnected-tracing -- 设置 GDB 断开后跟踪是否继续。
+set displaced-stepping -- 设置调试器是否愿意使用 displaced stepping。
+set dprintf-channel -- 设置动态 printf 使用的通道。
+set dprintf-function -- 设置动态 printf 使用的函数。
+set dprintf-style -- 设置动态 printf 的使用风格。
+set dump-excluded-mappings -- 设置 gcore 是否转储带 VM_DONTDUMP 标志的映射。
+set editing -- 设置是否在输入时编辑命令行。
+set endian -- 设置目标字节序。
+set environment -- 设置传给程序的环境变量值。
+set exec-direction -- 设置执行方向。
+set exec-done-display -- 设置异步执行命令完成时的通知。
+set extension-language -- 设置文件名扩展名与源语言的映射。
+set filename-display -- 设置如何显示文件名。
+set follow-exec-mode -- 设置调试器对程序调用 exec 的响应。
+set follow-fork-mode -- 设置调试器对程序调用 fork 或 vfork 的响应。
+set gnutarget -- 设置当前 BFD 目标。
+set guile -- Guile 偏好设置的前缀命令。
+set guile print-stack -- 设置出错时 Guile 异常打印模式。
+set height -- 设置 GDB 输出分页时每页行数。
+set history -- 用于设置命令历史参数的通用命令。
+set history expansion -- 设置命令输入的历史展开。
+set history filename -- 设置记录命令历史的文件名。
+set history remove-duplicates -- 设置在历史中向后查找并删除重复条目的范围。
+set history save -- 设置退出时是否保存历史记录。
+set history size -- 设置命令历史大小。
+set host-charset -- 设置主机字符集。
+set index-cache -- 设置 index-cache 选项。
+set index-cache directory -- 设置 index cache 的目录。
+set index-cache off -- 禁用 index cache。
+set index-cache on -- 启用 index cache。
+set inferior-tty -- 为被调试程序今后的运行设置终端。
+set input-radix -- 设置输入数字的默认进制。
+set interactive-mode -- 设置 GDB 标准输入是否为终端。
+set language -- 设置当前源语言。
+set listsize -- 设置 gdb 默认列出的源行数。
+set logging -- 设置日志选项。
+set logging debugredirect -- 设置日志调试输出模式。
+set logging file -- 设置当前日志文件。
+--Type <RET> for more, q to quit, c to continue without paging--
+set logging off -- 禁用日志。
+set logging on -- 启用日志。
+set logging overwrite -- 设置日志是覆盖还是追加到日志文件。
+set logging redirect -- 设置日志输出模式。
+set max-completions -- 设置补全候选的最大数量。
+set max-user-call-depth -- 设置非 python/scheme 用户自定义命令的最大调用深度。
+set max-value-size -- 设置 gdb 从 inferior 加载的值的最大尺寸。
+set may-call-functions -- 设置是否允许调用程序中的函数。
+set may-insert-breakpoints -- 设置是否允许在目标中插入断点。
+set may-insert-fast-tracepoints -- 设置是否允许在目标中插入快速跟踪点。
+set may-insert-tracepoints -- 设置是否允许在目标中插入跟踪点。
+set may-interrupt -- 设置是否允许中断或向目标发信号。
+set may-write-memory -- 设置是否允许写入目标内存。
+set may-write-registers -- 设置是否允许写入寄存器。
+set mem -- 内存区域设置。
+set mem inaccessible-by-default -- 设置未知内存区域的处理方式。
+set mi-async -- 设置是否启用 MI 异步模式。
+set multiple-symbols -- 设置调试器如何处理表达式中的歧义。
+set non-stop -- 设置 gdb 是否以 non-stop 模式控制 inferior。
+set observer -- 设置 gdb 是否以 observer 模式控制 inferior。
+set opaque-type-resolution -- 设置不透明 struct/class/union 类型的解析（须在加载符号前设置）。
+set osabi -- 设置目标的 OS ABI。
+set output-radix -- 设置打印值的默认输出进制。
+set overload-resolution -- 设置求值 C++ 函数时的重载解析。
+set pagination -- 设置 GDB 输出分页状态。
+set print -- 用于设置打印方式的通用命令。
+set print address -- 设置是否打印地址。
+set print array -- 设置数组的美化格式。
+set print array-indexes -- 设置是否打印数组下标。
+set print asm-demangle -- 设置反汇编列表中 C++/ObjC 名称的还原。
+set print demangle -- 设置显示符号时是否还原编码的 C++/ObjC 名称。
+set print elements -- 设置字符串字符或数组元素打印的上限。
+set print entry-values -- 设置是否在函数入口打印函数参数。
+set print finish -- 设置 `finish' 是否打印返回值。
+set print frame-arguments -- 设置是否打印非标量帧参数。
+set print frame-info -- 设置是否打印帧信息。
+set print inferior-events -- 设置是否打印 inferior 事件（如启动和退出）。
+set print max-depth -- 设置嵌套结构体、联合体和数组的最大打印深度。
+set print max-symbolic-offset -- 设置以 <SYMBOL+1234> 形式打印的最大偏移。
+set print null-stop -- 设置字符数组是否在首个空字符处停止打印。
+set print object -- 设置是否打印 C++ 虚函数表。
+set print pascal_static-members -- 设置是否打印 Pascal 静态成员。
+set print pretty -- 设置结构体的美化格式。
+set print raw-frame-arguments -- 设置是否以原始形式打印帧参数。
+set print raw-values -- 设置是否以原始形式打印值。
+--Type <RET> for more, q to quit, c to continue without paging--
+set print repeats -- 设置重复打印元素的阈值。
+set print sevenbit-strings -- 设置字符串中 8 位字符是否以 \nnn 形式打印。
+set print static-members -- 设置是否打印 C++ 静态成员。
+set print symbol -- 设置打印指针时是否打印符号名。
+set print symbol-filename -- 设置是否在 <SYMBOL> 旁打印源文件名和行号。
+set print symbol-loading -- 设置是否打印符号加载消息。
+set print thread-events -- 设置是否打印线程事件（如线程启动和退出）。
+set print type -- 用于设置类型打印方式的通用命令。
+set print type methods -- 设置是否打印类中定义的方法。
+set print type nested-type-limit -- 设置要打印的递归嵌套类型定义数量（"unlimited" 或 -1 表示全部）。
+set print type typedefs -- 设置是否打印类中定义的 typedef。
+set print union -- 设置是否打印结构体内部的联合体。
+set print vtbl -- 设置是否打印 C++ 虚函数表。
+set prompt -- 设置 gdb 提示符。
+set python -- Python 偏好设置的前缀命令。
+set python print-stack -- 设置出错时 Python 栈转储模式。
+set radix -- 设置默认输入和输出数字进制。
+set range-stepping -- 启用或禁用范围单步。
+set record -- 设置 record 选项。
+set record btrace -- 设置 record 选项。
+set record btrace bts -- 设置 record btrace bts 选项。
+set record btrace bts buffer-size -- 设置 record/replay bts 缓冲区大小。
+set record btrace cpu -- 设置用于跟踪解码的 CPU。
+set record btrace cpu auto -- 自动确定用于跟踪解码的 CPU。
+set record btrace cpu none -- 不为跟踪解码启用勘误表变通。
+set record btrace pt -- 设置 record btrace pt 选项。
+set record btrace pt buffer-size -- 设置 record/replay pt 缓冲区大小。
+set record btrace replay-memory-access -- 设置回放期间允许的内存访问。
+set record full -- 设置 record 选项。
+set record full insn-number-max -- 设置 record/replay 缓冲区上限。
+set record full memory-query -- 设置若 PREC 无法记录下一条指令的内存变化时是否查询。
+set record full stop-at-limit -- 设置 record/replay 缓冲区满时是否停止。
+set record function-call-history-size -- 设置 "record function-call-history" 中打印的函数数量。
+set record instruction-history-size -- 设置 "record instruction-history" 中打印的指令数量。
+set remote -- 远程协议相关变量。
+set remote P-packet -- 设置是否使用远程协议 `P' (set-register) 包。
+set remote TracepointSource-packet -- 设置是否使用远程协议 `TracepointSource' (TracepointSource) 包。
+set remote X-packet -- 设置是否使用远程协议 `X' (binary-download) 包。
+set remote Z-packet -- 设置是否使用远程协议 `Z' packets.
+set remote access-watchpoint-packet -- 设置是否使用远程协议 `Z4' (access-watchpoint) 包。
+set remote agent-packet -- 设置是否使用远程协议 `QAgent' (agent) 包。
+set remote allow-packet -- 设置是否使用远程协议 `QAllow' (allow) 包。
+set remote attach-packet -- 设置是否使用远程协议 `vAttach' (attach) 包。
+set remote binary-download-packet -- 设置是否使用远程协议 `X' (binary-download) 包。
+set remote breakpoint-commands-packet -- 设置是否使用远程协议 `BreakpointCommands' (breakpoint-commands) 包。
+--Type <RET> for more, q to quit, c to continue without paging--
+set remote btrace-conf-bts-size-packet -- 设置是否使用远程协议 `Qbtrace-conf:bts:size' (btrace-conf-bts-size) 包。
+set remote btrace-conf-pt-size-packet -- 设置是否使用远程协议 `Qbtrace-conf:pt:size' (btrace-conf-pt-size) 包。
+set remote catch-syscalls-packet -- 设置是否使用远程协议 `QCatchSyscalls' (catch-syscalls) 包。
+set remote conditional-breakpoints-packet -- 设置是否使用远程协议 `ConditionalBreakpoints' (conditional-breakpoints) 包。
+set remote conditional-tracepoints-packet -- 设置是否使用远程协议 `ConditionalTracepoints' (conditional-tracepoints) 包。
+set remote ctrl-c-packet -- 设置是否使用远程协议 `vCtrlC' (ctrl-c) 包。
+set remote disable-btrace-packet -- 设置是否使用远程协议 `Qbtrace:off' (disable-btrace) 包。
+set remote disable-randomization-packet -- 设置是否使用远程协议 `QDisableRandomization' (disable-randomization) 包。
+set remote enable-btrace-bts-packet -- 设置是否使用远程协议 `Qbtrace:bts' (enable-btrace-bts) 包。
+set remote enable-btrace-pt-packet -- 设置是否使用远程协议 `Qbtrace:pt' (enable-btrace-pt) 包。
+set remote environment-hex-encoded-packet -- 设置是否使用远程协议 `QEnvironmentHexEncoded' (environment-hex-encoded) 包。
+set remote environment-reset-packet -- 设置是否使用远程协议 `QEnvironmentReset' (environment-reset) 包。
+set remote environment-unset-packet -- 设置是否使用远程协议 `QEnvironmentUnset' (environment-unset) 包。
+set remote exec-event-feature-packet -- 设置是否使用远程协议 `exec-event-feature' (exec-event-feature) 包。
+set remote exec-file -- 设置 "run" 的远程路径名。
+set remote fast-tracepoints-packet -- 设置是否使用远程协议 `FastTracepoints' (fast-tracepoints) 包。
+set remote fetch-register-packet -- 设置是否使用远程协议 `p' (fetch-register) 包。
+set remote fork-event-feature-packet -- 设置是否使用远程协议 `fork-event-feature' (fork-event-feature) 包。
+set remote get-thread-information-block-address-packet -- 设置是否使用远程协议 `qGetTIBAddr' (get-thread-information-block-address) 包。
+set remote get-thread-local-storage-address-packet -- 设置是否使用远程协议 `qGetTLSAddr' (get-thread-local-storage-address) 包。
+set remote hardware-breakpoint-limit -- 设置目标硬件断点的最大数量。
+set remote hardware-breakpoint-packet -- 设置是否使用远程协议 `Z1' (hardware-breakpoint) 包。
+set remote hardware-watchpoint-length-limit -- 设置目标硬件监视点的最大长度（字节）。
+set remote hardware-watchpoint-limit -- 设置目标硬件监视点的最大数量。
+set remote hostio-close-packet -- 设置是否使用远程协议 `vFile:close' (hostio-close) 包。
+set remote hostio-fstat-packet -- 设置是否使用远程协议 `vFile:fstat' (hostio-fstat) 包。
+set remote hostio-open-packet -- 设置是否使用远程协议 `vFile:open' (hostio-open) 包。
+set remote hostio-pread-packet -- 设置是否使用远程协议 `vFile:pread' (hostio-pread) 包。
+set remote hostio-pwrite-packet -- 设置是否使用远程协议 `vFile:pwrite' (hostio-pwrite) 包。
+set remote hostio-readlink-packet -- 设置是否使用远程协议 `vFile:readlink' (hostio-readlink) 包。
+set remote hostio-setfs-packet -- 设置是否使用远程协议 `vFile:setfs' (hostio-setfs) 包。
+set remote hostio-unlink-packet -- 设置是否使用远程协议 `vFile:unlink' (hostio-unlink) 包。
+set remote hwbreak-feature-packet -- 设置是否使用远程协议 `hwbreak-feature' (hwbreak-feature) 包。
+set remote install-in-trace-packet -- 设置是否使用远程协议 `InstallInTrace' (install-in-trace) 包。
+set remote interrupt-on-connect -- 设置 gdb 连接时是否向远程目标发送中断序列。
+set remote interrupt-sequence -- 设置发往远程目标的中断序列。
+set remote kill-packet -- 设置是否使用远程协议 `vKill' (kill) 包。
+set remote library-info-packet -- 设置是否使用远程协议 `qXfer:libraries:read' (library-info) 包。
+set remote library-info-svr4-packet -- 设置是否使用远程协议 `qXfer:libraries-svr4:read' (library-info-svr4) 包。
+set remote memory-map-packet -- 设置是否使用远程协议 `qXfer:memory-map:read' (memory-map) 包。
+set remote memory-read-packet-size -- 设置每个内存读包的最大字节数。
+set remote memory-write-packet-size -- 设置每个内存写包的最大字节数。
+set remote multiprocess-feature-packet -- 设置是否使用远程协议 `multiprocess-feature' (multiprocess-feature) 包。
+set remote no-resumed-stop-reply-packet -- 设置是否使用远程协议 `N stop reply' (no-resumed-stop-reply) 包。
+set remote noack-packet -- 设置是否使用远程协议 `QStartNoAckMode' (noack) 包。
+--Type <RET> for more, q to quit, c to continue without paging--
+set remote osdata-packet -- 设置是否使用远程协议 `qXfer:osdata:read' (osdata) 包。
+set remote p-packet -- 设置是否使用远程协议 `p' (fetch-register) 包。
+set remote pass-signals-packet -- 设置是否使用远程协议 `QPassSignals' (pass-signals) 包。
+set remote pid-to-exec-file-packet -- 设置是否使用远程协议 `qXfer:exec-file:read' (pid-to-exec-file) 包。
+set remote program-signals-packet -- 设置是否使用远程协议 `QProgramSignals' (program-signals) 包。
+set remote query-attached-packet -- 设置是否使用远程协议 `qAttached' (query-attached) 包。
+set remote read-aux-vector-packet -- 设置是否使用远程协议 `qXfer:auxv:read' (read-aux-vector) 包。
+set remote read-btrace-conf-packet -- 设置是否使用远程协议 `qXfer:btrace-conf' (read-btrace-conf) 包。
+set remote read-btrace-packet -- 设置是否使用远程协议 `qXfer:btrace' (read-btrace) 包。
+set remote read-fdpic-loadmap-packet -- 设置是否使用远程协议 `qXfer:fdpic:read' (read-fdpic-loadmap) 包。
+set remote read-sdata-object-packet -- 设置是否使用远程协议 `qXfer:statictrace:read' (read-sdata-object) 包。
+set remote read-siginfo-object-packet -- 设置是否使用远程协议 `qXfer:siginfo:read' (read-siginfo-object) 包。
+set remote read-watchpoint-packet -- 设置是否使用远程协议 `Z3' (read-watchpoint) 包。
+set remote reverse-continue-packet -- 设置是否使用远程协议 `bc' (reverse-continue) 包。
+set remote reverse-step-packet -- 设置是否使用远程协议 `bs' (reverse-step) 包。
+set remote run-packet -- 设置是否使用远程协议 `vRun' (run) 包。
+set remote search-memory-packet -- 设置是否使用远程协议 `qSearch:memory' (search-memory) 包。
+set remote set-register-packet -- 设置是否使用远程协议 `P' (set-register) 包。
+set remote set-working-dir-packet -- 设置是否使用远程协议 `QSetWorkingDir' (set-working-dir) 包。
+set remote software-breakpoint-packet -- 设置是否使用远程协议 `Z0' (software-breakpoint) 包。
+set remote startup-with-shell-packet -- 设置是否使用远程协议 `QStartupWithShell' (startup-with-shell) 包。
+set remote static-tracepoints-packet -- 设置是否使用远程协议 `StaticTracepoints' (static-tracepoints) 包。
+set remote supported-packets-packet -- 设置是否使用远程协议 `qSupported' (supported-packets) 包。
+set remote swbreak-feature-packet -- 设置是否使用远程协议 `swbreak-feature' (swbreak-feature) 包。
+set remote symbol-lookup-packet -- 设置是否使用远程协议 `qSymbol' (symbol-lookup) 包。
+set remote system-call-allowed -- 设置是否允许目标使用主机的 system(3) 调用。
+set remote target-features-packet -- 设置是否使用远程协议 `qXfer:features:read' (target-features) 包。
+set remote thread-events-packet -- 设置是否使用远程协议 `QThreadEvents' (thread-events) 包。
+set remote threads-packet -- 设置是否使用远程协议 `qXfer:threads:read' (threads) 包。
+set remote trace-buffer-size-packet -- 设置是否使用远程协议 `QTBuffer:size' (trace-buffer-size) 包。
+set remote trace-status-packet -- 设置是否使用远程协议 `qTStatus' (trace-status) 包。
+set remote traceframe-info-packet -- 设置是否使用远程协议 `qXfer:traceframe-info:read' (traceframe-info) 包。
+set remote unwind-info-block-packet -- 设置是否使用远程协议 `qXfer:uib:read' (unwind-info-block) 包。
+set remote verbose-resume-packet -- 设置是否使用远程协议 `vCont' (verbose-resume) 包。
+set remote verbose-resume-supported-packet -- 设置是否使用远程协议 `vContSupported' (verbose-resume-supported) 包。
+set remote vfork-event-feature-packet -- 设置是否使用远程协议 `vfork-event-feature' (vfork-event-feature) 包。
+set remote write-siginfo-object-packet -- 设置是否使用远程协议 `qXfer:siginfo:write' (write-siginfo-object) 包。
+set remote write-watchpoint-packet -- 设置是否使用远程协议 `Z2' (write-watchpoint) 包。
+set remoteaddresssize -- 设置内存包中地址的最大位数。
+set remotecache -- 设置远程目标的缓存使用。
+set remoteflow -- 设置远程串口 I/O 是否使用硬件流控。
+set remotelogbase -- 设置远程会话日志的数字进制。
+set remotelogfile -- 设置远程会话记录的文件名。
+set remotetimeout -- 设置等待目标响应的超时限制。
+set remotewritesize -- 设置每个内存写包的最大字节数（已弃用）。
+--Type <RET> for more, q to quit, c to continue without paging--
+set schedule-multiple -- 设置恢复所有进程线程的模式。
+set scheduler-locking -- 设置执行期间锁定调度器的模式。
+set script-extension -- 设置脚本文件名扩展名识别模式。
+set serial -- 设置默认串口/并口配置。
+set serial baud -- 设置远程串口 I/O 的波特率。
+set serial parity -- 设置远程串口 I/O 的奇偶校验。
+set solib-absolute-prefix -- 设置备用系统根目录。
+set solib-search-path -- 设置加载非绝对路径共享库符号文件的搜索路径。
+set stack-cache -- 设置栈访问的缓存使用。
+set step-mode -- 设置 step 操作的模式。
+set stop-on-solib-events -- 设置是否在共享库事件处停止。
+set style -- 样式相关设置。
+set style address -- 地址显示样式。
+set style address background -- 设置此属性的背景色。
+set style address foreground -- 设置此属性的前景色。
+set style address intensity -- 设置此属性的显示强度。
+set style enabled -- 设置是否启用 CLI 样式。
+set style filename -- 文件名显示样式。
+set style filename background -- 设置此属性的背景色。
+set style filename foreground -- 设置此属性的前景色。
+set style filename intensity -- 设置此属性的显示强度。
+set style function -- 函数名显示样式。
+set style function background -- 设置此属性的背景色。
+set style function foreground -- 设置此属性的前景色。
+set style function intensity -- 设置此属性的显示强度。
+set style highlight -- 高亮显示样式。
+set style highlight background -- 设置此属性的背景色。
+set style highlight foreground -- 设置此属性的前景色。
+set style highlight intensity -- 设置此属性的显示强度。
+set style metadata -- 元数据显示样式。
+set style metadata background -- 设置此属性的背景色。
+set style metadata foreground -- 设置此属性的前景色。
+set style metadata intensity -- 设置此属性的显示强度。
+set style sources -- 设置是否启用源代码样式。
+set style title -- 标题显示样式。
+set style title background -- 设置此属性的背景色。
+set style title foreground -- 设置此属性的前景色。
+set style title intensity -- 设置此属性的显示强度。
+set style tui-active-border -- TUI 活动边框显示样式。
+set style tui-active-border background -- 设置此属性的背景色。
+set style tui-active-border foreground -- 设置此属性的前景色。
+set style tui-border -- TUI 边框显示样式。
+set style tui-border background -- 设置此属性的背景色。
+set style tui-border foreground -- 设置此属性的前景色。
+set style variable -- 变量名显示样式。
+--Type <RET> for more, q to quit, c to continue without paging--
+set style variable background -- 设置此属性的背景色。
+set style variable foreground -- 设置此属性的前景色。
+set style variable intensity -- 设置此属性的显示强度。
+set substitute-path -- 添加用于重写源目录的替换规则。
+set sysroot -- 设置备用系统根目录。
+set target-charset -- 设置目标字符集。
+set target-file-system-kind -- 设置目标报告文件名所假定的文件系统类型。
+set target-wide-charset -- 设置目标宽字符集。
+set tcp -- TCP 协议相关变量。
+set tcp auto-retry -- 设置套接字连接是否自动重试。
+set tcp connect-timeout -- 设置套接字连接的超时限制（秒）。
+set tdesc -- 目标描述相关变量。
+set tdesc filename -- 设置用于读取 XML 目标描述的文件。
+set trace-buffer-size -- 设置请求的跟踪缓冲区大小。
+set trace-commands -- 设置是否跟踪 GDB CLI 命令。
+set trace-notes -- 设置当前及今后跟踪运行使用的备注字符串。
+set trace-stop-notes -- 设置今后 tstop 命令使用的备注字符串。
+set trace-user -- 设置当前及今后跟踪运行使用的用户名。
+set trust-readonly-sections -- 设置从只读段读取的模式。
+set tui -- TUI 配置变量。
+set tui active-border-mode -- 设置活动 TUI 窗口边框使用的属性模式。
+set tui border-kind -- 设置 TUI 窗口边框类型。
+set tui border-mode -- 设置 TUI 窗口边框使用的属性模式。
+set tui compact-source -- 设置 TUI 源窗口是否紧凑。
+set tui tab-width -- 设置 TUI 的制表符宽度（字符数）。
+set unwind-on-terminating-exception -- 设置在 call dummy 中调用 std::terminate 时是否展开栈。
+set unwindonsignal -- 设置在 call dummy 中收到信号时是否展开栈。
+set use-coredump-filter -- 设置 gcore 是否考虑 /proc/PID/coredump_filter。
+set use-deprecated-index-sections -- 设置是否使用已弃用的 gdb_index 段。
+set var -- 求值表达式 EXP 并将结果赋给变量 VAR。
+set variable -- 求值表达式 EXP 并将结果赋给变量 VAR。
+set varsize-limit -- 设置可变大小对象允许的最大字节数。
+set verbose -- 设置详细程度。
+set watchdog -- 设置看门狗定时器。
+set width -- 设置 GDB 输出换行的字符数。
+set write -- 设置是否写入可执行文件和 core 文件。
+undisplay -- 取消程序停止时要显示的部分表达式。
+whatis -- 打印表达式 EXP 的数据类型。
+with -- 临时将 SETTING 设为 VALUE，运行 COMMAND，然后恢复 SETTING。
+x -- 检查内存：x/FMT ADDRESS。
+==============================================================================================================
+命令类别：files（文件）
+
+add-symbol-file -- 从 FILE 加载符号，假定 FILE 已被动态加载。
+add-symbol-file-from-memory -- 从动态加载的目标文件的内存中加载符号。
+--Type <RET> for more, q to quit, c to continue without paging--
+cd -- 为调试器将工作目录设为 DIR。
+core-file -- 使用 FILE 作为 core 转储以检查内存和寄存器。
+directory -- 将目录 DIR 添加到源文件搜索路径开头。
+edit -- 编辑指定文件或函数。
+exec-file -- 使用 FILE 作为获取纯内存内容的程序。
+file -- 使用 FILE 作为要调试的程序。
+forward-search -- 从上次列出的行起向前搜索正则表达式（见 regex(3)）。
+generate-core-file -- 保存包含被调试进程当前状态的 core 文件。
+list -- 列出指定函数或行。
+load -- 将 FILE 动态加载到运行中的程序。
+nosharedlibrary -- 卸载所有共享对象库符号。
+path -- 将目录 DIR(s) 添加到目标文件搜索路径开头。
+pwd -- 打印工作目录。
+remote -- 操作远程系统上的文件。
+remote delete -- 删除远程文件。
+remote get -- 将远程文件复制到本地系统。
+remote put -- 将本地文件复制到远程系统。
+remove-symbol-file -- 移除通过 add-symbol-file 命令添加的符号文件。
+reverse-search -- 从上次列出的行起向后搜索正则表达式（见 regex(3)）。
+search -- 从上次列出的行起搜索正则表达式（见 regex(3)）。
+section -- 将可执行文件段 SECTION 的基址改为 ADDR。
+sharedlibrary -- 为匹配 REGEXP 的文件加载共享对象库符号。
+symbol-file -- 从可执行文件 FILE 加载符号表。
+==============================================================================================================
+命令类别：internals（内部）
+
+flushregs -- 强制 gdb 刷新其寄存器缓存（维护者命令）。
+maintenance -- 供 GDB 维护者使用的命令。
+maintenance agent -- 将表达式转换为用于跟踪的远程 agent 字节码。
+maintenance agent-eval -- 将表达式转换为用于求值的远程 agent 字节码。
+maintenance agent-printf -- 将表达式转换为用于求值的远程 agent 字节码并显示字节码。
+maintenance btrace -- 分支跟踪维护命令。
+maintenance btrace clear -- 清除分支跟踪数据。
+maintenance btrace clear-packet-history -- 清除分支跟踪包历史。
+maintenance btrace packet-history -- 打印原始分支跟踪数据。
+maintenance check -- 用于检查 gdb 内部状态的命令。
+maintenance check xml-descriptions -- 检查 GDB 目标描述与 XML 创建描述是否一致。
+maintenance check-psymtabs -- 检查当前已展开 psymtab 与 symtab 的一致性。
+maintenance check-symtabs -- 检查当前已展开 symtab 的一致性。
+maintenance cplus -- C++ 维护命令。
+maintenance cplus first_component -- 打印 NAME 的第一个类/命名空间组件。
+maintenance demangler-warning -- 向 GDB 发出 demangler 警告。
+maintenance deprecate -- 弃用命令（用于测试）。
+maintenance dump-me -- 触发致命错误；使调试器转储其 core。
+maintenance expand-symtabs -- 展开符号表。
+--Type <RET> for more, q to quit, c to continue without paging--
+maintenance flush-symbol-cache -- 刷新每个程序空间的符号缓存。
+maintenance info -- 用于显示被调试程序内部信息的命令。
+maintenance info bfds -- 列出当前打开的 BFD。
+maintenance info breakpoints -- 所有断点的状态，或断点编号 NUMBER。
+maintenance info btrace -- 关于分支跟踪数据的信息。
+maintenance info line-table -- 列出所有符号表中行表的内容。
+maintenance info program-spaces -- 关于当前已知程序空间的信息。
+maintenance info psymtabs -- 列出所有目标文件的部分符号表。
+maintenance info sections -- 列出可执行文件和 core 文件的 BFD 段。
+maintenance info selftests -- 列出已注册的自测项。
+maintenance info symtabs -- 列出所有目标文件的完整符号表。
+maintenance internal-error -- 向 GDB 发出内部错误。
+maintenance internal-warning -- 向 GDB 发出内部警告。
+maintenance packet -- 向远程目标发送任意包。
+maintenance print -- 用于打印 GDB 内部状态的维护命令。
+maintenance print architecture -- 打印内部架构配置。
+maintenance print c-tdesc -- 将当前目标描述打印为 C 源文件。
+maintenance print cooked-registers -- 打印内部寄存器配置（含 cooked 值）。
+maintenance print dummy-frames -- 打印内部 dummy 帧栈内容。
+maintenance print msymbols -- 打印当前最小符号定义的转储。
+maintenance print objfiles -- 打印当前目标文件定义的转储。
+maintenance print psymbols -- 打印当前部分符号定义的转储。
+maintenance print raw-registers -- 打印内部寄存器配置（含 raw 值）。
+maintenance print reggroups -- 打印内部寄存器组名。
+maintenance print register-groups -- 打印内部寄存器配置（含各寄存器所属组）。
+maintenance print registers -- 打印内部寄存器配置。
+maintenance print remote-registers -- 打印内部寄存器配置（含远程寄存器编号及 g/G 包偏移）。
+maintenance print statistics -- 打印关于 gdb 内部状态的统计信息。
+maintenance print symbol-cache -- 转储每个程序空间的符号缓存。
+maintenance print symbol-cache-statistics -- 打印每个程序空间的符号缓存统计。
+maintenance print symbols -- 打印当前符号定义的转储。
+maintenance print target-stack -- 打印内部目标栈各层名称。
+maintenance print type -- 打印给定符号的类型链。
+maintenance print user-registers -- 列出当前用户寄存器名称。
+maintenance selftest -- 运行 gdb 单元测试。
+maintenance set -- 设置 GDB 维护者使用的内部变量。
+maintenance set ada -- 设置 Ada 维护相关变量。
+maintenance set ada ignore-descriptive-types -- 设置是否忽略 GNAT 生成的描述性类型。
+maintenance set bfd-sharing -- 设置 gdb 是否共享看似相同的 bfd 文件。
+maintenance set btrace -- 设置分支跟踪相关变量。
+maintenance set btrace pt -- 设置 Intel Processor Trace 相关变量。
+maintenance set btrace pt skip-pad -- 设置是否在 btrace 包历史中跳过 PAD 包。
+maintenance set catch-demangler-crashes -- 设置是否尝试捕获 demangler 崩溃。
+maintenance set demangler-warning -- 配置检测到 demangler-warning 时 GDB 的行为。
+maintenance set demangler-warning quit -- 设置检测到 demangler-warning 时 GDB 是否退出。
+--Type <RET> for more, q to quit, c to continue without paging--
+maintenance set dwarf -- 设置 DWARF 相关变量。
+maintenance set dwarf always-disassemble -- 设置 `info address' 是否总是反汇编 DWARF 表达式。
+maintenance set dwarf max-cache-age -- 设置缓存的 DWARF 编译单元年龄上限。
+maintenance set dwarf unwinders -- 设置是否使用 DWARF 栈帧展开器。
+maintenance set internal-error -- 配置检测到 internal-error 时 GDB 的行为。
+maintenance set internal-error corefile -- 设置检测到 internal-error 时 GDB 是否生成自身的 core 文件。
+maintenance set internal-error quit -- 设置检测到 internal-error 时 GDB 是否退出。
+maintenance set internal-warning -- 配置检测到 internal-warning 时 GDB 的行为。
+maintenance set internal-warning corefile -- 设置检测到 internal-warning 时 GDB 是否生成自身的 core 文件。
+maintenance set internal-warning quit -- 设置检测到 internal-warning 时 GDB 是否退出。
+maintenance set per-command -- 每条命令的统计设置。
+maintenance set per-command space -- 设置是否显示每条命令的空间占用。
+maintenance set per-command symtab -- 设置是否显示每条命令的 symtab 统计。
+maintenance set per-command time -- 设置是否显示每条命令的执行时间。
+maintenance set profile -- 设置内部性能分析。
+maintenance set symbol-cache-size -- 设置符号缓存大小。
+maintenance set target-async -- 设置 gdb 是否以异步模式控制 inferior。
+maintenance set target-non-stop -- 设置 gdb 是否始终以 non-stop 模式控制 inferior。
+maintenance set test-settings -- 设置用于 set/show 命令基础设施测试的 GDB 内部变量。
+maintenance set test-settings auto-boolean -- 用于内部测试的命令。
+maintenance set test-settings boolean -- 用于内部测试的命令。
+maintenance set test-settings enum -- 用于内部测试的命令。
+maintenance set test-settings filename -- 用于内部测试的命令。
+maintenance set test-settings integer -- 用于内部测试的命令。
+maintenance set test-settings optional-filename -- 用于内部测试的命令。
+maintenance set test-settings string -- 用于内部测试的命令。
+maintenance set test-settings string-noescape -- 用于内部测试的命令。
+maintenance set test-settings uinteger -- 用于内部测试的命令。
+maintenance set test-settings zinteger -- 用于内部测试的命令。
+maintenance set test-settings zuinteger -- 用于内部测试的命令。
+maintenance set test-settings zuinteger-unlimited -- 用于内部测试的命令。
+maintenance set tui-resize-message -- 设置 TUI 调整大小消息。
+maintenance set worker-threads -- 设置 GDB 可使用的工作线程数。
+maintenance show -- 显示 GDB 维护者使用的内部变量。
+maintenance show ada -- 显示 Ada 维护相关变量。
+maintenance show ada ignore-descriptive-types -- 显示是否忽略 GNAT 生成的描述性类型。
+maintenance show bfd-sharing -- 显示 gdb 是否共享看似相同的 bfd 文件。
+maintenance show btrace -- 显示分支跟踪相关变量。
+maintenance show btrace pt -- 显示 Intel Processor Trace 相关变量。
+maintenance show btrace pt skip-pad -- 显示是否在 btrace 包历史中跳过 PAD 包。
+maintenance show catch-demangler-crashes -- 显示是否尝试捕获 demangler 崩溃。
+maintenance show demangler-warning -- 显示检测到 demangler-warning 时 GDB 的行为。
+maintenance show demangler-warning quit -- 显示检测到 demangler-warning 时 GDB 是否会退出。
+maintenance show dwarf -- 显示 DWARF 相关变量。
+maintenance show dwarf always-disassemble -- 显示 `info address' 是否总是反汇编 DWARF 表达式。
+--Type <RET> for more, q to quit, c to continue without paging--
+maintenance show dwarf max-cache-age -- 显示缓存的 DWARF 编译单元年龄上限。
+maintenance show dwarf unwinders -- 显示是否使用 DWARF 栈帧展开器。
+maintenance show internal-error -- 显示检测到 internal-error 时 GDB 的行为。
+maintenance show internal-error corefile -- 显示检测到 internal-error 时 GDB 是否会生成自身的 core 文件。
+maintenance show internal-error quit -- 显示检测到 internal-error 时 GDB 是否会退出。
+maintenance show internal-warning -- 显示检测到 internal-warning 时 GDB 的行为。
+maintenance show internal-warning corefile -- 显示检测到 internal-warning 时 GDB 是否会生成自身的 core 文件。
+maintenance show internal-warning quit -- 显示检测到 internal-warning 时 GDB 是否会退出。
+maintenance show per-command -- 显示每条命令的统计设置。
+maintenance show per-command space -- 显示是否显示每条命令的空间占用。
+maintenance show per-command symtab -- 显示是否显示每条命令的 symtab 统计。
+maintenance show per-command time -- 显示是否显示每条命令的执行时间。
+maintenance show profile -- 显示内部性能分析。
+maintenance show symbol-cache-size -- 显示符号缓存大小。
+maintenance show target-async -- 显示 gdb 是否以异步模式控制 inferior。
+maintenance show target-non-stop -- 显示 gdb 是否始终以 non-stop 模式控制 inferior。
+maintenance show test-options-completion-result -- 显示 maintenance test-options 补全结果。
+maintenance show test-settings -- 显示用于 set/show 命令基础设施测试的 GDB 内部变量。
+maintenance show test-settings auto-boolean -- 用于内部测试的命令。
+maintenance show test-settings boolean -- 用于内部测试的命令。
+maintenance show test-settings enum -- 用于内部测试的命令。
+maintenance show test-settings filename -- 用于内部测试的命令。
+maintenance show test-settings integer -- 用于内部测试的命令。
+maintenance show test-settings optional-filename -- 用于内部测试的命令。
+maintenance show test-settings string -- 用于内部测试的命令。
+maintenance show test-settings string-noescape -- 用于内部测试的命令。
+maintenance show test-settings uinteger -- 用于内部测试的命令。
+maintenance show test-settings zinteger -- 用于内部测试的命令。
+maintenance show test-settings zuinteger -- 用于内部测试的命令。
+maintenance show test-settings zuinteger-unlimited -- 用于内部测试的命令。
+maintenance show tui-resize-message -- 显示 TUI 调整大小消息。
+maintenance show worker-threads -- 显示 GDB 可使用的工作线程数。
+maintenance space -- 设置空间占用的显示。
+maintenance test-options -- 用于测试选项基础设施的通用命令。
+maintenance test-options require-delimiter -- 用于测试选项处理的命令。
+maintenance test-options unknown-is-error -- 用于测试选项处理的命令。
+maintenance test-options unknown-is-operand -- 用于测试选项处理的命令。
+maintenance time -- 设置时间占用的显示。
+maintenance translate-address -- 将段名和地址转换为符号。
+maintenance undeprecate -- 取消弃用命令（用于测试）。
+maintenance with -- 类似 "with"，但适用于 "maintenance set" 变量。
+==============================================================================================================
+命令类别：obscure（晦涩）
+
+compare-sections -- 将目标上的段数据与可执行文件比较。
+--Type <RET> for more, q to quit, c to continue without paging--
+compile -- 编译源代码并注入 inferior 的命令。
+compile code -- 编译、注入并执行代码。
+compile file -- 求值包含源代码的文件。
+compile print -- 使用编译器求值 EXPR 并打印结果。
+complete -- 列出该行剩余部分作为命令的补全项。
+expression -- 编译源代码并注入 inferior 的命令。
+compile code -- 编译、注入并执行代码。
+compile file -- 求值包含源代码的文件。
+compile print -- 使用编译器求值 EXPR 并打印结果。
+guile -- 求值 Guile 表达式。
+guile-repl -- 启动 Guile 交互提示符。
+monitor -- 向远程监视器发送命令（仅远程目标）。
+python -- 求值 Python 命令。
+python-interactive -- 启动 Python 交互提示符。
+record -- 开始记录。
+record btrace -- 开始分支跟踪记录。
+record btrace bts -- 以 Branch Trace Store (BTS) 格式开始分支跟踪记录。
+record btrace pt -- 以 Intel Processor Trace 格式开始分支跟踪记录。
+record delete -- 删除执行日志的剩余部分并重新开始记录。
+record full -- 开始完整执行记录。
+record full restore -- 从文件恢复执行日志。
+record function-call-history -- 以函数粒度打印执行历史。
+record goto -- 将程序恢复到指令编号 N 处的状态。
+record goto begin -- 转到执行日志开头。
+record goto end -- 转到执行日志末尾。
+record instruction-history -- 打印执行日志中存储的反汇编指令。
+record save -- 将执行日志保存到文件。
+record stop -- 停止 record/replay 目标。
+stop -- 没有 `stop' 命令，但可在 `stop' 上设置 hook。
+==============================================================================================================
+命令类别：running（运行）
+
+advance -- 继续运行程序直至给定位置（参数形式与 break 命令相同）。
+attach -- 附加到 GDB 外的进程或文件。
+continue -- 在信号或断点后继续运行被调试程序。
+detach -- 分离先前附加的进程或文件。
+detach inferiors -- 从 inferior ID（或 ID 列表）分离。
+disconnect -- 断开与目标的连接。
+finish -- 执行直至所选栈帧返回。
+handle -- 指定如何处理信号。
+inferior -- 使用此命令在多个 inferior 之间切换。
+interrupt -- 中断被调试程序的执行。
+jump -- 在被调试程序的指定行或地址处继续执行。
+kill -- 终止被调试程序的执行。
+kill inferiors -- 终止 inferior ID（或 ID 列表）。
+--Type <RET> for more, q to quit, c to continue without paging--
+next -- 单步执行程序，穿过子程序调用。
+nexti -- 单步一条指令，但穿过子程序调用。
+queue-signal -- 将信号加入队列，在线程恢复时传递给当前线程。
+reverse-continue -- 继续运行被调试程序，但以反向方式执行。
+reverse-finish -- 向后执行直至所选栈帧即将被调用之前。
+reverse-next -- 向后单步执行程序，穿过子程序调用。
+reverse-nexti -- 向后单步一条指令，但穿过被调用的子程序。
+reverse-step -- 向后单步执行程序直至到达另一条源行开头。
+reverse-stepi -- 精确向后单步一条指令。
+run -- 启动被调试程序。
+signal -- 以指定信号继续运行程序。
+start -- 启动被调试程序并在 main 过程开头停止。
+starti -- 启动被调试程序并在第一条指令处停止。
+step -- 单步执行程序直至到达不同的源行。
+stepi -- 精确单步执行一条指令。
+taas -- 对所有线程应用命令（忽略错误和空输出）。
+target -- 连接到目标机或进程。
+target core -- 使用 core 文件作为目标。
+target exec -- 使用可执行文件作为目标。
+target extended-remote -- 通过串口使用 gdb 专用协议连接远程计算机。
+target record-btrace -- 收集控制流跟踪并提供执行历史。
+target record-core -- 在执行时记录程序并从日志回放执行。
+target record-full -- 在执行时记录程序并从日志回放执行。
+target remote -- 通过串口使用 gdb 专用协议连接远程计算机。
+target tfile -- 使用跟踪文件作为目标。
+task -- 使用此命令在 Ada 任务之间切换。
+tfaas -- 对所有线程的所有帧应用命令（忽略错误和空输出）。
+thread -- 使用此命令在线程之间切换。
+thread apply -- 对线程列表应用命令。
+thread apply all -- 对所有线程应用命令。
+thread find -- 查找匹配正则表达式的线程。
+thread name -- 设置当前线程的名称。
+until -- 执行直至越过当前行或越过 LOCATION。
+==============================================================================================================
+命令类别：stack（栈）
+
+backtrace -- 打印所有栈帧的回溯，或最内层 COUNT 个栈帧。
+bt -- 打印所有栈帧的回溯，或最内层 COUNT 个栈帧。
+down -- 选择并打印调用当前帧的栈帧。
+faas -- 对所有帧应用命令（忽略错误和空输出）。
+frame -- 选择并打印栈帧。
+frame address -- 按栈地址选择并打印栈帧。
+frame apply -- 对若干帧应用命令。
+frame apply all -- 对所有帧应用命令。
+frame apply level -- 对帧列表应用命令。
+--Type <RET> for more, q to quit, c to continue without paging--
+frame function -- 按函数名选择并打印栈帧。
+frame level -- 按层级选择并打印栈帧。
+frame view -- 查看可能位于当前回溯之外的栈帧。
+return -- 使所选栈帧返回到其调用者。
+select-frame -- 选择栈帧但不打印任何内容。
+select-frame address -- 按栈地址选择栈帧。
+select-frame function -- 按函数名选择栈帧。
+select-frame level -- 按层级选择栈帧。
+select-frame view -- 选择可能位于当前回溯之外的栈帧。
+up -- 选择并打印调用当前帧的栈帧。
+==============================================================================================================
+命令类别：status（状态）
+
+info -- 用于显示被调试程序相关信息的通用命令。
+info address -- 描述符号 SYM 的存储位置。
+info all-registers -- 列出所选栈帧的所有寄存器及其内容。
+info args -- 当前栈帧的所有参数变量，或匹配 REGEXP 的变量。
+info auto-load -- 打印自动加载文件的当前状态。
+info auto-load gdb-scripts -- 打印自动加载的命令序列列表。
+info auto-load local-gdbinit -- 打印是否已加载当前目录的 .gdbinit 文件。
+info auxv -- 显示 inferior 的辅助向量。
+info bookmarks -- 用户可设书签的状态。
+info breakpoints -- 指定断点的状态（无参数时为所有用户可设断点）。
+info classes -- 所有 Objective-C 类，或匹配 REGEXP 的类。
+info common -- 打印 Fortran COMMON 块中的值。
+info copying -- 再分发 GDB 副本的条件。
+info dcache -- 打印 dcache 性能信息。
+info display -- 程序停止时要显示的表达式及编号。
+info exceptions -- 列出所有 Ada 异常名。
+info extensions -- 与源语言关联的所有文件名扩展名。
+info files -- 目标和被调试文件的名称。
+info float -- 打印浮点单元状态。
+info frame -- 关于所选栈帧的全部信息。
+info frame address -- 打印按栈地址所选栈帧的信息。
+info frame function -- 打印按函数名所选栈帧的信息。
+info frame level -- 打印按层级所选栈帧的信息。
+info frame view -- 打印当前回溯之外栈帧的信息。
+info functions -- 所有函数名，或匹配 REGEXP 的函数名。
+info guile -- Guile 信息显示的前缀命令。
+info handle -- 程序收到各种信号时调试器的行为。
+info inferiors -- 打印正在管理的 inferior 列表。
+info line -- 源行代码的核心地址。
+info locals -- 当前栈帧的所有局部变量，或匹配 REGEXP 的变量。
+info macro -- 显示宏 MACRO 的定义及其源位置。
+info macros -- 显示 LINESPEC 处或当前源位置的所有宏定义。
+--Type <RET> for more, q to quit, c to continue without paging--
+info mem -- 内存区域属性。
+info module -- 打印模块信息。
+info module functions -- 按模块显示函数。
+info module variables -- 按模块显示变量。
+info modules -- 所有模块名，或匹配 REGEXP 的模块名。
+info os -- 显示 OS 数据 ARG。
+info probes -- 显示可用的静态探针。
+info probes all -- 显示所有类型探针的信息。
+info probes dtrace -- 显示 DTrace 静态探针的信息。
+info probes stap -- 显示 SystemTap 静态探针的信息。
+info proc -- 显示进程的附加信息。
+info proc all -- 列出指定进程的所有可用信息。
+info proc cmdline -- 列出指定进程的命令行参数。
+info proc cwd -- 列出指定进程的当前工作目录。
+info proc exe -- 列出指定进程可执行文件的绝对路径。
+info proc files -- 列出指定进程打开的文件。
+info proc mappings -- 列出指定进程映射的内存区域。
+info proc stat -- 列出来自 /proc/PID/stat 的进程信息。
+info proc status -- 列出来自 /proc/PID/status 的进程信息。
+info program -- 程序的执行状态。
+info record -- record 选项信息。
+info registers -- 列出所选栈帧的整数寄存器及其内容。
+info scope -- 列出作用域内的局部变量。
+info selectors -- 所有 Objective-C 选择器，或匹配 REGEXP 的选择器。
+info set -- 显示所有 GDB 设置。
+info sharedlibrary -- 已加载共享对象库的状态。
+info signals -- 程序收到各种信号时调试器的行为。
+info skip -- 显示 skip 的状态。
+info source -- 关于当前源文件的信息。
+info sources -- 程序中所有源文件，或匹配 REGEXP 的源文件。
+info stack -- 栈的回溯，或最内层 COUNT 个帧。
+info static-tracepoint-markers -- 列出目标静态跟踪点标记。
+info symbol -- 描述地址 ADDR 处的符号。
+info target -- 目标和被调试文件的名称。
+info tasks -- 提供所有已知 Ada 任务的信息。
+info terminal -- 打印 inferior 保存的终端状态。
+info threads -- 显示当前已知线程。
+info tracepoints -- 指定跟踪点的状态（无参数时为所有跟踪点）。
+info tvariables -- 跟踪状态变量及其值的状态。
+info types -- 所有类型名，或匹配 REGEXP 的类型名。
+info variables -- 所有全局和静态变量名，或匹配 REGEXP 的变量名。
+info vector -- 打印向量单元状态。
+info vtbl -- 显示 C++ 对象的虚函数表。
+info warranty -- 您并不拥有的各种保修条款。
+info watchpoints -- 指定监视点的状态（无参数时为所有监视点）。
+--Type <RET> for more, q to quit, c to continue without paging--
+info win -- 列出所有已显示窗口。
+macro -- 处理 C 预处理器宏的命令前缀。
+macro define -- 定义新的 C/C++ 预处理器宏。
+macro expand -- 完全展开 EXPRESSION 中的 C/C++ 预处理器宏调用。
+macro expand-once -- 展开 EXPRESSION 中直接出现的 C/C++ 预处理器宏调用。
+macro list -- 列出使用 `macro define' 命令定义的所有宏。
+macro undef -- 移除给定名称的 C/C++ 预处理器宏定义。
+show -- 用于显示调试器相关信息的通用命令。
+show ada -- 用于显示 Ada 相关设置的通用命令。
+show ada print-signatures -- 启用或禁用在重载选择菜单中输出函数的形式参数和返回类型。
+show ada trust-PAD-over-XVS -- 启用或禁用信任 PAD 类型优于 XVS 类型的优化。
+show agent -- 显示调试器是否愿意使用 agent 作为辅助。
+show annotate -- 显示 annotation_level。
+show architecture -- 显示目标架构。
+show args -- 显示被调试程序启动时传入的参数列表。
+show arm -- 各种 ARM 相关命令。
+show arm abi -- 显示 ABI.
+show arm apcs32 -- 显示 ARM 32 位模式的使用。
+show arm disassembler -- 显示反汇编风格。
+show arm fallback-mode -- 显示符号不可用时的假定模式。
+show arm force-mode -- 显示即使符号可用时也假定的模式。
+show arm fpu -- 显示浮点类型。
+show auto-connect-native-target -- 显示 GDB 是否可自动连接到本机目标。
+show auto-load -- 自动加载相关设置。
+show auto-load gdb-scripts -- 启用或禁用自动加载预制命令序列脚本。
+show auto-load local-gdbinit -- 启用或禁用自动加载当前目录中的 .gdbinit 脚本。
+show auto-load safe-path -- 显示可安全自动加载的文件和目录列表。
+show auto-load scripts-directory -- 显示从中加载自动脚本的目录列表。
+show auto-solib-add -- 显示共享库符号的自动加载。
+show backtrace -- 显示回溯相关变量。
+show backtrace limit -- 显示回溯层数的上限。
+show backtrace past-entry -- 显示回溯是否应越过程序入口点继续。
+show backtrace past-main -- 显示回溯是否应越过 "main" 继续。
+show basenames-may-differ -- 显示源文件是否可有多个基本名。
+show breakpoint -- 断点相关设置。
+show breakpoint always-inserted -- 显示插入断点的模式。
+show breakpoint auto-hw -- 显示是否自动使用硬件断点。
+show breakpoint condition-evaluation -- 显示断点条件求值模式。
+show breakpoint pending -- 显示调试器对待决断点的行为。
+show can-use-hw-watchpoints -- 显示调试器是否愿意使用监视点硬件。
+show case-sensitive -- 显示名称搜索的大小写敏感性（on/off/auto）。
+show charset -- 显示主机和目标字符集。
+show check -- 显示类型/范围检查器的状态。
+show check range -- 显示范围检查（on/warn/off/auto）。
+show check type -- 显示严格类型检查。
+--Type <RET> for more, q to quit, c to continue without paging--
+show circular-trace-buffer -- 显示目标是否使用环形跟踪缓冲区。
+show code-cache -- 显示代码段访问的缓存使用。
+show coerce-float-to-double -- 显示调用函数时是否将 float 强制转换为 double。
+show commands -- 显示 history of commands you typed.
+show compile-args -- 显示编译命令的 GCC 命令行参数。
+show compile-gcc -- 显示编译命令的 GCC 驱动程序文件名。
+show complaints -- 显示关于错误符号的最大抱怨次数。
+show configuration -- 显示 how GDB was configured at build time.
+show confirm -- 显示是否确认潜在危险操作。
+show convenience -- 调试器便利（"$foo"）变量和函数。
+show copying -- 再分发 GDB 副本的条件。
+show cp-abi -- 显示用于检查 C++ 对象的 ABI。
+show cwd -- 显示 inferior 启动时使用的当前工作目录。
+show data-directory -- 显示 GDB 的数据目录。
+show dcache -- 使用此命令设置 dcache 的行数和行大小。
+show dcache line-size -- 显示 dcache 行大小（字节，必须为 2 的幂）。
+show dcache size -- 显示 dcache 行数。
+show debug -- 用于设置 gdb 调试标志的通用命令。
+show debug arch -- 显示架构调试。
+show debug arm -- 显示 ARM 调试。
+show debug auto-load -- 显示自动加载验证调试。
+show debug bfd-cache -- 显示 bfd 缓存调试。
+show debug check-physname -- 显示 "physname" 代码与 demangler 的交叉检查。
+show debug coff-pe-read -- 显示 coff PE 读取调试。
+show debug compile -- 显示编译命令调试。
+show debug compile-cplus-scopes -- 显示 C++ 编译作用域调试。
+show debug compile-cplus-types -- 显示 C++ 编译类型转换调试。
+show debug displaced -- 显示 displaced stepping 调试。
+show debug dwarf-die -- 显示 DWARF DIE 读取器调试。
+show debug dwarf-line -- 显示 dwarf 行读取器调试。
+show debug dwarf-read -- 显示 DWARF 读取器调试。
+show debug entry-values -- 显示入口值和尾调用帧调试。
+show debug expression -- 显示表达式调试。
+show debug frame -- 显示帧调试。
+show debug index-cache -- 显示是否显示 index-cache 调试消息。
+show debug infrun -- 显示 inferior 调试。
+show debug jit -- 显示 JIT 调试。
+show debug notification -- 显示异步远程通知调试。
+show debug observer -- 显示 observer 调试。
+show debug overload -- 显示 C++ 重载调试。
+show debug parser -- 显示解析器调试。
+show debug record -- 显示 record/replay 功能调试。
+show debug remote -- 显示远程协议调试。
+show debug remote-packet-max-chars -- 显示每个远程包显示的最大字符数。
+show debug separate-debug-file -- 显示是否打印独立调试信息文件搜索的调试输出。
+--Type <RET> for more, q to quit, c to continue without paging--
+show debug serial -- 显示串口调试。
+show debug skip -- 显示是否打印关于跳过文件和函数的调试输出。
+show debug stap-expression -- 显示 SystemTap 表达式调试。
+show debug symbol-lookup -- 显示符号查找调试。
+show debug symfile -- 显示 symfile 函数调试。
+show debug symtab-create -- 显示符号表创建调试。
+show debug target -- 显示目标调试。
+show debug timestamp -- 显示是否为调试消息添加时间戳。
+show debug varobj -- 显示 varobj 调试。
+show debug xml -- 显示 XML 解析器调试。
+show debug-file-directory -- 显示搜索独立调试符号的目录。
+show default-collect -- 显示默认要收集的表达式列表。
+show demangle-style -- 显示当前 C++ 还原符号风格。
+show detach-on-fork -- 显示 gdb 是否在 fork 后分离子进程。
+show directories -- 显示查找源文件的搜索路径。
+show disable-randomization -- 显示是否禁用被调试进程的虚拟地址空间随机化。
+show disassemble-next-line -- 显示执行停止时是否反汇编下一条源行或指令。
+show disassembler-options -- 显示反汇编器选项。
+show disconnected-dprintf -- 显示 GDB 断开后 dprintf 是否继续。
+show disconnected-tracing -- 显示 GDB 断开后跟踪是否继续。
+show displaced-stepping -- 显示调试器是否愿意使用 displaced stepping。
+show dprintf-channel -- 显示动态 printf 使用的通道。
+show dprintf-function -- 显示动态 printf 使用的函数。
+show dprintf-style -- 显示动态 printf 的使用风格。
+show dump-excluded-mappings -- 显示 gcore 是否转储带 VM_DONTDUMP 标志的映射。
+show editing -- 显示是否在输入时编辑命令行。
+show endian -- 显示目标字节序。
+show environment -- 显示传给程序的环境变量值。
+show exec-direction -- 显示执行方向。
+show exec-done-display -- 显示异步执行命令完成时的通知。
+show extension-language -- 显示文件名扩展名与源语言的映射。
+show filename-display -- 显示如何显示文件名。
+show follow-exec-mode -- 显示调试器对程序调用 exec 的响应。
+show follow-fork-mode -- 显示调试器对程序调用 fork 或 vfork 的响应。
+show gnutarget -- 显示当前 BFD 目标。
+show guile -- Guile 偏好设置的前缀命令。
+show guile print-stack -- 显示出错时 Guile 异常打印模式。
+show height -- 显示 GDB 输出分页时每页行数。
+show history -- 用于设置命令历史参数的通用命令。
+show history expansion -- 显示命令输入的历史展开。
+show history filename -- 显示记录命令历史的文件名。
+show history remove-duplicates -- 显示在历史中向后查找并删除重复条目的范围。
+show history save -- 显示退出时是否保存历史记录。
+show history size -- 显示命令历史大小。
+show host-charset -- 显示主机字符集。
+--Type <RET> for more, q to quit, c to continue without paging--
+show index-cache -- 显示 index-cache 选项。
+show index-cache directory -- 显示 index cache 的目录。
+show index-cache stats -- 显示 some stats about the index cache.
+show inferior-tty -- 为被调试程序今后的运行设置终端。
+show input-radix -- 显示输入数字的默认进制。
+show interactive-mode -- 显示 GDB 标准输入是否为终端。
+show language -- 显示当前源语言。
+show listsize -- 显示 gdb 默认列出的源行数。
+show logging -- 显示日志选项。
+show logging debugredirect -- 显示日志调试输出模式。
+show logging file -- 显示当前日志文件。
+show logging overwrite -- 显示日志是覆盖还是追加到日志文件。
+show logging redirect -- 显示日志输出模式。
+show max-completions -- 显示补全候选的最大数量。
+show max-user-call-depth -- 显示非 python/scheme 用户自定义命令的最大调用深度。
+show max-value-size -- 显示 gdb 从 inferior 加载的值的最大尺寸。
+show may-call-functions -- 显示是否允许调用程序中的函数。
+show may-insert-breakpoints -- 显示是否允许在目标中插入断点。
+show may-insert-fast-tracepoints -- 显示是否允许在目标中插入快速跟踪点。
+show may-insert-tracepoints -- 显示是否允许在目标中插入跟踪点。
+show may-interrupt -- 显示是否允许中断或向目标发信号。
+show may-write-memory -- 显示是否允许写入目标内存。
+show may-write-registers -- 显示是否允许写入寄存器。
+show mem -- 内存区域设置。
+show mem  inaccessible-by-default -- 显示 handling of unknown memory regions.
+show mi-async -- 显示是否启用 MI 异步模式。
+show multiple-symbols -- 显示调试器如何处理表达式中的歧义。
+show non-stop -- 显示 gdb 是否以 non-stop 模式控制 inferior。
+show observer -- 显示 gdb 是否以 observer 模式控制 inferior。
+show opaque-type-resolution -- 显示不透明 struct/class/union 类型的解析（须在加载符号前设置）。
+show osabi -- 显示目标的 OS ABI。
+show output-radix -- 显示打印值的默认输出进制。
+show overload-resolution -- 显示求值 C++ 函数时的重载解析。
+show pagination -- 显示 GDB 输出分页状态。
+show paths -- 查找目标文件的当前搜索路径。
+show print -- 用于设置打印方式的通用命令。
+show print address -- 显示是否打印地址。
+show print array -- 显示数组的美化格式。
+show print array-indexes -- 显示是否打印数组下标。
+show print asm-demangle -- 显示反汇编列表中 C++/ObjC 名称的还原。
+show print demangle -- 显示显示符号时是否还原编码的 C++/ObjC 名称。
+show print elements -- 显示字符串字符或数组元素打印的上限。
+show print entry-values -- 显示是否在函数入口打印函数参数。
+show print finish -- 显示 `finish' 是否打印返回值。
+show print frame-arguments -- 显示是否打印非标量帧参数。
+--Type <RET> for more, q to quit, c to continue without paging--
+show print frame-info -- 显示是否打印帧信息。
+show print inferior-events -- 显示是否打印 inferior 事件（如启动和退出）。
+show print max-depth -- 显示嵌套结构体、联合体和数组的最大打印深度。
+show print max-symbolic-offset -- 显示以 <SYMBOL+1234> 形式打印的最大偏移。
+show print null-stop -- 显示字符数组是否在首个空字符处停止打印。
+show print object -- 显示是否打印 C++ 虚函数表。
+show print pascal_static-members -- 显示是否打印 Pascal 静态成员。
+show print pretty -- 显示结构体的美化格式。
+show print raw-frame-arguments -- 显示是否以原始形式打印帧参数。
+show print raw-values -- 显示是否以原始形式打印值。
+show print repeats -- 显示重复打印元素的阈值。
+show print sevenbit-strings -- 显示字符串中 8 位字符是否以 \nnn 形式打印。
+show print static-members -- 显示是否打印 C++ 静态成员。
+show print symbol -- 显示打印指针时是否打印符号名。
+show print symbol-filename -- 显示是否在 <SYMBOL> 旁打印源文件名和行号。
+show print symbol-loading -- 显示是否打印符号加载消息。
+show print thread-events -- 显示是否打印线程事件（如线程启动和退出）。
+show print type -- 用于设置类型打印方式的通用命令。
+show print type methods -- 显示是否打印类中定义的方法。
+show print type nested-type-limit -- 显示要打印的递归嵌套类型定义数量（"unlimited" 或 -1 表示全部）。
+show print type typedefs -- 显示是否打印类中定义的 typedef。
+show print union -- 显示是否打印结构体内部的联合体。
+show print vtbl -- 显示是否打印 C++ 虚函数表。
+show prompt -- 显示 gdb 提示符。
+show python -- Python 偏好设置的前缀命令。
+show python print-stack -- 显示出错时 Python 栈转储模式。
+show radix -- 显示默认输入和输出数字进制。
+show range-stepping -- 启用或禁用范围单步。
+show record -- 显示 record 选项。
+show record btrace -- 显示 record 选项。
+show record btrace bts -- 显示 record btrace bts 选项。
+show record btrace bts buffer-size -- 显示 record/replay bts 缓冲区大小。
+show record btrace cpu -- 显示用于跟踪解码的 CPU。
+show record btrace pt -- 显示 record btrace pt 选项。
+show record btrace pt buffer-size -- 显示 record/replay pt 缓冲区大小。
+show record btrace replay-memory-access -- 显示回放期间允许的内存访问。
+show record full -- 显示 record 选项。
+show record full insn-number-max -- 显示 record/replay 缓冲区上限。
+show record full memory-query -- 显示若 PREC 无法记录下一条指令的内存变化时是否查询。
+show record full stop-at-limit -- 显示 record/replay 缓冲区满时是否停止。
+show record function-call-history-size -- 显示 "record function-call-history" 中打印的函数数量。
+show record instruction-history-size -- 显示 "record instruction-history" 中打印的指令数量。
+show remote -- 远程协议相关变量。
+show remote P-packet -- 显示是否使用远程协议 `P' (set-register) 包。
+show remote TracepointSource-packet -- 显示是否使用远程协议 `TracepointSource' (TracepointSource) 包。
+--Type <RET> for more, q to quit, c to continue without paging--
+show remote X-packet -- 显示是否使用远程协议 `X' (binary-download) 包。
+show remote Z-packet -- 显示是否使用远程协议 `Z' packets.
+show remote access-watchpoint-packet -- 显示是否使用远程协议 `Z4' (access-watchpoint) 包。
+show remote agent-packet -- 显示是否使用远程协议 `QAgent' (agent) 包。
+show remote allow-packet -- 显示是否使用远程协议 `QAllow' (allow) 包。
+show remote attach-packet -- 显示是否使用远程协议 `vAttach' (attach) 包。
+show remote binary-download-packet -- 显示是否使用远程协议 `X' (binary-download) 包。
+show remote breakpoint-commands-packet -- 显示是否使用远程协议 `BreakpointCommands' (breakpoint-commands) 包。
+show remote btrace-conf-bts-size-packet -- 显示是否使用远程协议 `Qbtrace-conf:bts:size' (btrace-conf-bts-size) 包。
+show remote btrace-conf-pt-size-packet -- 显示是否使用远程协议 `Qbtrace-conf:pt:size' (btrace-conf-pt-size) 包。
+show remote catch-syscalls-packet -- 显示是否使用远程协议 `QCatchSyscalls' (catch-syscalls) 包。
+show remote conditional-breakpoints-packet -- 显示是否使用远程协议 `ConditionalBreakpoints' (conditional-breakpoints) 包。
+show remote conditional-tracepoints-packet -- 显示是否使用远程协议 `ConditionalTracepoints' (conditional-tracepoints) 包。
+show remote ctrl-c-packet -- 显示是否使用远程协议 `vCtrlC' (ctrl-c) 包。
+show remote disable-btrace-packet -- 显示是否使用远程协议 `Qbtrace:off' (disable-btrace) 包。
+show remote disable-randomization-packet -- 显示是否使用远程协议 `QDisableRandomization' (disable-randomization) 包。
+show remote enable-btrace-bts-packet -- 显示是否使用远程协议 `Qbtrace:bts' (enable-btrace-bts) 包。
+show remote enable-btrace-pt-packet -- 显示是否使用远程协议 `Qbtrace:pt' (enable-btrace-pt) 包。
+show remote environment-hex-encoded-packet -- 显示是否使用远程协议 `QEnvironmentHexEncoded' (environment-hex-encoded) 包。
+show remote environment-reset-packet -- 显示是否使用远程协议 `QEnvironmentReset' (environment-reset) 包。
+show remote environment-unset-packet -- 显示是否使用远程协议 `QEnvironmentUnset' (environment-unset) 包。
+show remote exec-event-feature-packet -- 显示是否使用远程协议 `exec-event-feature' (exec-event-feature) 包。
+show remote exec-file -- 显示 "run" 的远程路径名。
+show remote fast-tracepoints-packet -- 显示是否使用远程协议 `FastTracepoints' (fast-tracepoints) 包。
+show remote fetch-register-packet -- 显示是否使用远程协议 `p' (fetch-register) 包。
+show remote fork-event-feature-packet -- 显示是否使用远程协议 `fork-event-feature' (fork-event-feature) 包。
+show remote get-thread-information-block-address-packet -- 显示是否使用远程协议 `qGetTIBAddr' (get-thread-information-block-address) 包。
+show remote get-thread-local-storage-address-packet -- 显示是否使用远程协议 `qGetTLSAddr' (get-thread-local-storage-address) 包。
+show remote hardware-breakpoint-limit -- 显示目标硬件断点的最大数量。
+show remote hardware-breakpoint-packet -- 显示是否使用远程协议 `Z1' (hardware-breakpoint) 包。
+show remote hardware-watchpoint-length-limit -- 显示目标硬件监视点的最大长度（字节）。
+show remote hardware-watchpoint-limit -- 显示目标硬件监视点的最大数量。
+show remote hostio-close-packet -- 显示是否使用远程协议 `vFile:close' (hostio-close) 包。
+show remote hostio-fstat-packet -- 显示是否使用远程协议 `vFile:fstat' (hostio-fstat) 包。
+show remote hostio-open-packet -- 显示是否使用远程协议 `vFile:open' (hostio-open) 包。
+show remote hostio-pread-packet -- 显示是否使用远程协议 `vFile:pread' (hostio-pread) 包。
+show remote hostio-pwrite-packet -- 显示是否使用远程协议 `vFile:pwrite' (hostio-pwrite) 包。
+show remote hostio-readlink-packet -- 显示是否使用远程协议 `vFile:readlink' (hostio-readlink) 包。
+show remote hostio-setfs-packet -- 显示是否使用远程协议 `vFile:setfs' (hostio-setfs) 包。
+show remote hostio-unlink-packet -- 显示是否使用远程协议 `vFile:unlink' (hostio-unlink) 包。
+show remote hwbreak-feature-packet -- 显示是否使用远程协议 `hwbreak-feature' (hwbreak-feature) 包。
+show remote install-in-trace-packet -- 显示是否使用远程协议 `InstallInTrace' (install-in-trace) 包。
+show remote interrupt-on-connect -- 显示 gdb 连接时是否向远程目标发送中断序列。
+--Type <RET> for more, q to quit, c to continue without paging--
+show remote interrupt-sequence -- 显示发往远程目标的中断序列。
+show remote kill-packet -- 显示是否使用远程协议 `vKill' (kill) 包。
+show remote library-info-packet -- 显示是否使用远程协议 `qXfer:libraries:read' (library-info) 包。
+show remote library-info-svr4-packet -- 显示是否使用远程协议 `qXfer:libraries-svr4:read' (library-info-svr4) 包。
+show remote memory-map-packet -- 显示是否使用远程协议 `qXfer:memory-map:read' (memory-map) 包。
+show remote memory-read-packet-size -- 显示每个内存读包的最大字节数。
+show remote memory-write-packet-size -- 显示每个内存写包的最大字节数。
+show remote multiprocess-feature-packet -- 显示是否使用远程协议 `multiprocess-feature' (multiprocess-feature) 包。
+show remote no-resumed-stop-reply-packet -- 显示是否使用远程协议 `N stop reply' (no-resumed-stop-reply) 包。
+show remote noack-packet -- 显示是否使用远程协议 `QStartNoAckMode' (noack) 包。
+show remote osdata-packet -- 显示是否使用远程协议 `qXfer:osdata:read' (osdata) 包。
+show remote p-packet -- 显示是否使用远程协议 `p' (fetch-register) 包。
+show remote pass-signals-packet -- 显示是否使用远程协议 `QPassSignals' (pass-signals) 包。
+show remote pid-to-exec-file-packet -- 显示是否使用远程协议 `qXfer:exec-file:read' (pid-to-exec-file) 包。
+show remote program-signals-packet -- 显示是否使用远程协议 `QProgramSignals' (program-signals) 包。
+show remote query-attached-packet -- 显示是否使用远程协议 `qAttached' (query-attached) 包。
+show remote read-aux-vector-packet -- 显示是否使用远程协议 `qXfer:auxv:read' (read-aux-vector) 包。
+show remote read-btrace-conf-packet -- 显示是否使用远程协议 `qXfer:btrace-conf' (read-btrace-conf) 包。
+show remote read-btrace-packet -- 显示是否使用远程协议 `qXfer:btrace' (read-btrace) 包。
+show remote read-fdpic-loadmap-packet -- 显示是否使用远程协议 `qXfer:fdpic:read' (read-fdpic-loadmap) 包。
+show remote read-sdata-object-packet -- 显示是否使用远程协议 `qXfer:statictrace:read' (read-sdata-object) 包。
+show remote read-siginfo-object-packet -- 显示是否使用远程协议 `qXfer:siginfo:read' (read-siginfo-object) 包。
+show remote read-watchpoint-packet -- 显示是否使用远程协议 `Z3' (read-watchpoint) 包。
+show remote reverse-continue-packet -- 显示是否使用远程协议 `bc' (reverse-continue) 包。
+show remote reverse-step-packet -- 显示是否使用远程协议 `bs' (reverse-step) 包。
+show remote run-packet -- 显示是否使用远程协议 `vRun' (run) 包。
+show remote search-memory-packet -- 显示是否使用远程协议 `qSearch:memory' (search-memory) 包。
+show remote set-register-packet -- 显示是否使用远程协议 `P' (set-register) 包。
+show remote set-working-dir-packet -- 显示是否使用远程协议 `QSetWorkingDir' (set-working-dir) 包。
+show remote software-breakpoint-packet -- 显示是否使用远程协议 `Z0' (software-breakpoint) 包。
+show remote startup-with-shell-packet -- 显示是否使用远程协议 `QStartupWithShell' (startup-with-shell) 包。
+show remote static-tracepoints-packet -- 显示是否使用远程协议 `StaticTracepoints' (static-tracepoints) 包。
+show remote supported-packets-packet -- 显示是否使用远程协议 `qSupported' (supported-packets) 包。
+show remote swbreak-feature-packet -- 显示是否使用远程协议 `swbreak-feature' (swbreak-feature) 包。
+show remote symbol-lookup-packet -- 显示是否使用远程协议 `qSymbol' (symbol-lookup) 包。
+show remote system-call-allowed -- 显示是否允许目标使用主机的 system(3) 调用。
+show remote target-features-packet -- 显示是否使用远程协议 `qXfer:features:read' (target-features) 包。
+show remote thread-events-packet -- 显示是否使用远程协议 `QThreadEvents' (thread-events) 包。
+show remote threads-packet -- 显示是否使用远程协议 `qXfer:threads:read' (threads) 包。
+show remote trace-buffer-size-packet -- 显示是否使用远程协议 `QTBuffer:size' (trace-buffer-size) 包。
+show remote trace-status-packet -- 显示是否使用远程协议 `qTStatus' (trace-status) 包。
+show remote traceframe-info-packet -- 显示是否使用远程协议 `qXfer:traceframe-info:read' (traceframe-info) 包。
+show remote unwind-info-block-packet -- 显示是否使用远程协议 `qXfer:uib:read' (unwind-info-block) 包。
+show remote verbose-resume-packet -- 显示是否使用远程协议 `vCont' (verbose-resume) 包。
+show remote verbose-resume-supported-packet -- 显示是否使用远程协议 `vContSupported' (verbose-resume-supported) 包。
+--Type <RET> for more, q to quit, c to continue without paging--
+show remote vfork-event-feature-packet -- 显示是否使用远程协议 `vfork-event-feature' (vfork-event-feature) 包。
+show remote write-siginfo-object-packet -- 显示是否使用远程协议 `qXfer:siginfo:write' (write-siginfo-object) 包。
+show remote write-watchpoint-packet -- 显示是否使用远程协议 `Z2' (write-watchpoint) 包。
+show remoteaddresssize -- 显示内存包中地址的最大位数。
+show remotecache -- 显示远程目标的缓存使用。
+show remoteflow -- 显示远程串口 I/O 是否使用硬件流控。
+show remotelogbase -- 显示远程会话日志的数字进制。
+show remotelogfile -- 显示远程会话记录的文件名。
+show remotetimeout -- 显示等待目标响应的超时限制。
+show remotewritesize -- 显示每个内存写包的最大字节数（已弃用）。
+show schedule-multiple -- 显示恢复所有进程线程的模式。
+show scheduler-locking -- 显示执行期间锁定调度器的模式。
+show script-extension -- 显示脚本文件名扩展名识别模式。
+show serial -- 显示默认串口/并口配置。
+show serial baud -- 显示远程串口 I/O 的波特率。
+show serial parity -- 显示远程串口 I/O 的奇偶校验。
+show solib-absolute-prefix -- 显示备用系统根目录。
+show solib-search-path -- 显示加载非绝对路径共享库符号文件的搜索路径。
+show stack-cache -- 显示栈访问的缓存使用。
+show step-mode -- 显示 step 操作的模式。
+show stop-on-solib-events -- 显示是否在共享库事件处停止。
+show style -- 样式相关设置。
+show style address -- 地址显示样式。
+show style address background -- 显示此属性的背景色。
+show style address foreground -- 显示此属性的前景色。
+show style address intensity -- 显示此属性的显示强度。
+show style enabled -- 显示是否启用 CLI 样式。
+show style filename -- 文件名显示样式。
+show style filename background -- 显示此属性的背景色。
+show style filename foreground -- 显示此属性的前景色。
+show style filename intensity -- 显示此属性的显示强度。
+show style function -- 函数名显示样式。
+show style function background -- 显示此属性的背景色。
+show style function foreground -- 显示此属性的前景色。
+show style function intensity -- 显示此属性的显示强度。
+show style highlight -- 高亮显示样式。
+show style highlight background -- 显示此属性的背景色。
+show style highlight foreground -- 显示此属性的前景色。
+show style highlight intensity -- 显示此属性的显示强度。
+show style metadata -- 元数据显示样式。
+show style metadata background -- 显示此属性的背景色。
+show style metadata foreground -- 显示此属性的前景色。
+show style metadata intensity -- 显示此属性的显示强度。
+show style sources -- 显示是否启用源代码样式。
+show style title -- 标题显示样式。
+--Type <RET> for more, q to quit, c to continue without paging--
+show style title background -- 显示此属性的背景色。
+show style title foreground -- 显示此属性的前景色。
+show style title intensity -- 显示此属性的显示强度。
+show style tui-active-border -- TUI 活动边框显示样式。
+show style tui-active-border background -- 显示此属性的背景色。
+show style tui-active-border foreground -- 显示此属性的前景色。
+show style tui-border -- TUI 边框显示样式。
+show style tui-border background -- 显示此属性的背景色。
+show style tui-border foreground -- 显示此属性的前景色。
+show style variable -- 变量名显示样式。
+show style variable background -- 显示此属性的背景色。
+show style variable foreground -- 显示此属性的前景色。
+show style variable intensity -- 显示此属性的显示强度。
+show substitute-path -- 添加用于重写源目录的替换规则。
+show sysroot -- 显示备用系统根目录。
+show target-charset -- 显示目标字符集。
+show target-file-system-kind -- 显示目标报告文件名所假定的文件系统类型。
+show target-wide-charset -- 显示目标宽字符集。
+show tcp -- TCP 协议相关变量。
+show tcp auto-retry -- 显示套接字连接是否自动重试。
+show tcp connect-timeout -- 显示套接字连接的超时限制（秒）。
+show tdesc -- 目标描述相关变量。
+show tdesc filename -- 显示用于读取 XML 目标描述的文件。
+show trace-buffer-size -- 显示请求的跟踪缓冲区大小。
+show trace-commands -- 显示是否跟踪 GDB CLI 命令。
+show trace-notes -- 显示当前及今后跟踪运行使用的备注字符串。
+show trace-stop-notes -- 显示今后 tstop 命令使用的备注字符串。
+show trace-user -- 显示当前及今后跟踪运行使用的用户名。
+show trust-readonly-sections -- 显示从只读段读取的模式。
+show tui -- TUI 配置变量。
+show tui active-border-mode -- 显示活动 TUI 窗口边框使用的属性模式。
+show tui border-kind -- 显示 TUI 窗口边框类型。
+show tui border-mode -- 显示 TUI 窗口边框使用的属性模式。
+show tui compact-source -- 显示 TUI 源窗口是否紧凑。
+show tui tab-width -- 显示 TUI 的制表符宽度（字符数）。
+show unwind-on-terminating-exception -- 显示在 call dummy 中调用 std::terminate 时是否展开栈。
+show unwindonsignal -- 显示在 call dummy 中收到信号时是否展开栈。
+show use-coredump-filter -- 显示 gcore 是否考虑 /proc/PID/coredump_filter。
+show use-deprecated-index-sections -- 显示是否使用已弃用的 gdb_index 段。
+show user -- 显示 definitions of non-python/scheme user defined commands.
+show values -- 显示编号 IDX 附近（或最近十条）的值历史元素。
+show varsize-limit -- 显示可变大小对象允许的最大字节数。
+show verbose -- 显示详细程度。
+show version -- 显示 what version of GDB this is.
+show warranty -- 您并不拥有的各种保修条款。
+--Type <RET> for more, q to quit, c to continue without paging--
+show watchdog -- 显示看门狗定时器。
+show width -- 显示 GDB 输出换行的字符数。
+show write -- 显示是否写入可执行文件和 core 文件。
+==============================================================================================================
+命令类别：support（支持）
+
+! -- 将行剩余部分作为 shell 命令执行。
+add-auto-load-safe-path -- 向可安全自动加载文件的目录列表添加条目。
+add-auto-load-scripts-directory -- 向加载自动脚本的目录列表添加条目。
+alias -- 定义作为现有命令别名的新命令。
+apropos -- 搜索匹配 REGEXP 的命令。
+define -- 定义新命令名。命令名作为参数。
+define-prefix -- 定义或标记命令为用户定义前缀命令。
+demangle -- 还原修饰名。
+document -- 为用户定义命令编写文档。
+dont-repeat -- 不重复此命令。
+down-silently -- 与 `down' 命令相同，但不打印任何内容。
+echo -- 打印常量字符串。字符串作为参数。
+help -- 打印命令列表。
+if -- 当条件表达式非零时执行一次嵌套命令。
+interpreter-exec -- 在解释器中执行命令。
+make -- 使用行剩余部分作为参数运行 ``make'' 程序。
+new-ui -- 创建新 UI。
+overlay -- 用于调试 overlay 的命令。
+overlay auto -- 启用自动 overlay 调试。
+overlay list-overlays -- 列出 overlay 段的映射。
+overlay load-target -- 从目标读取 overlay 映射状态。
+overlay manual -- 启用 overlay 调试。
+overlay map-overlay -- 断言 overlay 段已映射。
+overlay off -- 禁用 overlay 调试。
+overlay unmap-overlay -- 断言 overlay 段未映射。
+pipe -- 将 gdb 命令输出发送到 shell 命令。
+quit -- 退出 gdb。
+shell -- 将行剩余部分作为 shell 命令执行。
+source -- 从名为 FILE 的文件读取命令。
+up-silently -- 与 `up' 命令相同，但不打印任何内容。
+while -- 当条件表达式非零时执行嵌套命令。
+| -- 将 gdb 命令输出发送到 shell 命令。
+==============================================================================================================
+命令类别：tracepoints（跟踪点）
+
+actions -- 指定跟踪点处要执行的动作。
+collect -- 指定跟踪点处要收集的一个或多个数据项。
+end -- 结束命令或动作列表。
+passcount -- 设置跟踪点的 passcount。
+--Type <RET> for more, q to quit, c to continue without paging--
+tdump -- 打印当前跟踪点收集的全部内容。
+teval -- 指定跟踪点处要求值的一个或多个表达式。
+tfind -- 选择跟踪帧。
+tfind end -- 取消选择任何跟踪帧并恢复“实时”调试。
+tfind line -- 按源行选择跟踪帧。
+tfind none -- 取消选择任何跟踪帧并恢复“实时”调试。
+tfind outside -- 选择 PC 在给定范围外（不含边界）的跟踪帧。
+tfind pc -- 按 PC 选择跟踪帧。
+tfind range -- 选择 PC 在给定范围内（含边界）的跟踪帧。
+tfind start -- 选择跟踪缓冲区中的第一个跟踪帧。
+tfind tracepoint -- 按跟踪点编号选择跟踪帧。
+tsave -- 将跟踪数据保存到文件。
+tstart -- 开始收集跟踪数据。
+tstatus -- 显示当前跟踪数据收集的状态。
+tstop -- 停止收集跟踪数据。
+tvariable -- 定义跟踪状态变量。
+while-stepping -- 指定跟踪点处的单步行为。
+==============================================================================================================
+命令类别：user-defined（用户定义）
+
+
+未分类命令
+
+add-inferior -- 添加新 inferior。
+clone-inferior -- 克隆 inferior ID。
+eval -- 构造 GDB 命令并求值。
+flash-erase -- 擦除所有 flash 内存区域。
+function -- 用于显示便利函数帮助的占位命令。
+function _cimag -- 提取复数的虚部。
+function _creal -- 提取复数的实部。
+function _gdb_maint_setting -- $_gdb_maint_setting - 返回 GDB 维护设置的值。
+function _gdb_maint_setting_str -- $_gdb_maint_setting_str - 以字符串形式返回 GDB 维护设置的值。
+function _gdb_setting -- $_gdb_setting - 返回 GDB 设置的值。
+function _gdb_setting_str -- $_gdb_setting_str - 以字符串形式返回 GDB 设置的值。
+function _isvoid -- 检查表达式是否为 void。
+jit-reader-load -- 将 FILE 加载为 JIT 编译代码的调试信息读取器和展开器。
+jit-reader-unload -- 卸载当前已加载的 JIT 调试信息读取器。
+remove-inferiors -- 移除 inferior ID（或 ID 列表）。
+unset -- 某些 "set" 命令的互补命令。
+unset environment -- 取消程序的环境变量 VAR。
+unset substitute-path -- 删除重写源目录的一条或全部替换规则。
+unset tdesc -- 取消设置目标描述相关变量。
+unset tdesc filename -- 取消设置用于读取 XML 目标描述的文件。
+(gdb) 
+==============================================================================================================
+目录：
+|
+|- aliases（别名）
+|     ├── ni -- 单步执行一条指令，但会穿过子程序调用。
+|     ├── rc -- 继续运行被调试程序，但以反向方式执行。
+|     ├── rni -- 向后单步一条指令，但会穿过被调用的子程序。
+|     ├── rsi -- 精确向后单步一条指令。
+|     ├── si -- 精确单步执行一条指令。
+|     ├── stepping -- 指定跟踪点处的单步行为。
+|     ├── tp -- 在指定位置设置跟踪点。
+|     ├── tty -- 为被调试程序今后的运行设置终端。
+|     ├── where -- 打印所有栈帧的回溯，或最内层 COUNT 个栈帧。
+|     └── ws -- 指定跟踪点处的单步行为。
+|- breakpoints（断点）
+|     ├── awatch -- 为表达式设置监视点（访问时触发）。
+|     ├── break -- 在指定位置设置断点。
+|     ├── break-range -- 为地址范围设置断点。
+|     ├── catch -- 设置捕获点以捕获事件。
+|     ├── clear -- 清除指定位置的断点。
+|     ├── commands -- 设置在给定断点命中时要执行的命令。
+|     ├── condition -- 指定断点编号 N 仅在 COND 为真时中断。
+|     ├── delete -- 删除全部或部分断点。
+|     ├── disable -- 禁用全部或部分断点。
+|     ├── dprintf -- 在指定位置设置动态 printf。
+|     ├── enable -- 启用全部或部分断点。
+|     ├── ftrace -- 在指定位置设置快速跟踪点。
+|     ├── hbreak -- 设置硬件辅助断点。
+|     ├── ignore -- 将断点编号 N 的忽略计数设为 COUNT。
+|     ├── rbreak -- 为所有匹配 REGEXP 的函数设置断点。
+|     ├── rwatch -- 为表达式设置读监视点。
+|     ├── save -- 将断点定义保存为脚本。
+|     ├── skip -- 单步时忽略某个函数。
+|     ├── strace -- 在位置或标记处设置静态跟踪点。
+|     ├── tbreak -- 设置临时断点。
+|     ├── tcatch -- 设置临时捕获点以捕获事件。
+|     ├── thbreak -- 设置临时硬件辅助断点。
+|     ├── trace -- 在指定位置设置跟踪点。
+|     └── watch -- 为表达式设置监视点。
+|- data（数据）
+|     ├── agent-printf -- 仅由目标 agent 执行的格式化打印，类似 C 的 "printf" 函数。
+|     ├── append -- 将目标代码/数据追加到本地文件。
+|     ├── call -- 调用程序中的函数。
+|     ├── disassemble -- 反汇编指定的内存段。
+|     ├── display -- 每次程序停止时打印表达式 EXP 的值。
+|     ├── dump -- 将目标代码/数据转储到本地文件。
+|     ├── find -- 在内存中搜索字节序列。
+|     ├── init-if-undefined -- 如有必要则初始化便利变量。
+|     ├── mem -- 定义内存区域属性，或将内存区域处理重置为基于目标的方式。
+|     ├── output -- 类似 "print"，但不记入值历史且不换行。
+|     ├── print -- 打印表达式 EXP 的值。
+|     ├── print-object -- 让 Objective-C 对象自行打印。
+|     ├── printf -- 格式化打印，类似 C 的 "printf" 函数。
+|     ├── ptype -- 打印类型 TYPE 的定义。
+|     ├── restore -- 将 FILE 的内容恢复到目标内存。
+|     ├── set -- 求值表达式 EXP 并将结果赋给变量 VAR。
+|     ├── undisplay -- 取消程序停止时要显示的部分表达式。
+|     ├── whatis -- 打印表达式 EXP 的数据类型。
+|     ├── with -- 临时将 SETTING 设为 VALUE，运行 COMMAND，然后恢复 SETTING。
+|     └── x -- 检查内存：x/FMT ADDRESS。
+|- files（文件）
+|     ├── add-symbol-file -- 从 FILE 加载符号，假定 FILE 已被动态加载。
+|     ├── add-symbol-file-from-memory -- 从动态加载的目标文件的内存中加载符号。
+|     ├── cd -- 为调试器将工作目录设为 DIR。
+|     ├── core-file -- 使用 FILE 作为 core 转储以检查内存和寄存器。
+|     ├── directory -- 将目录 DIR 添加到源文件搜索路径开头。
+|     ├── edit -- 编辑指定文件或函数。
+|     ├── exec-file -- 使用 FILE 作为获取纯内存内容的程序。
+|     ├── file -- 使用 FILE 作为要调试的程序。
+|     ├── forward-search -- 从上次列出的行起向前搜索正则表达式（见 regex(3)）。
+|     ├── generate-core-file -- 保存包含被调试进程当前状态的 core 文件。
+|     ├── list -- 列出指定函数或行。
+|     ├── load -- 将 FILE 动态加载到运行中的程序。
+|     ├── nosharedlibrary -- 卸载所有共享对象库符号。
+|     ├── path -- 将目录 DIR(s) 添加到目标文件搜索路径开头。
+|     ├── pwd -- 打印工作目录。
+|     ├── remote -- 操作远程系统上的文件。
+|     ├── remove-symbol-file -- 移除通过 add-symbol-file 命令添加的符号文件。
+|     ├── reverse-search -- 从上次列出的行起向后搜索正则表达式（见 regex(3)）。
+|     ├── search -- 从上次列出的行起搜索正则表达式（见 regex(3)）。
+|     ├── section -- 将可执行文件段 SECTION 的基址改为 ADDR。
+|     ├── sharedlibrary -- 为匹配 REGEXP 的文件加载共享对象库符号。
+|     └── symbol-file -- 从可执行文件 FILE 加载符号表。
+|- internals（内部）
+|     ├── flushregs -- 强制 gdb 刷新其寄存器缓存（维护者命令）。
+|     └── maintenance -- 供 GDB 维护者使用的命令。
+|- obscure（晦涩）
+|     ├── compare-sections -- 将目标上的段数据与可执行文件比较。
+|     ├── compile -- 编译源代码并注入 inferior 的命令。
+|     ├── complete -- 列出该行剩余部分作为命令的补全项。
+|     ├── expression -- 编译源代码并注入 inferior 的命令。
+|     ├── guile -- 求值 Guile 表达式。
+|     ├── guile-repl -- 启动 Guile 交互提示符。
+|     ├── monitor -- 向远程监视器发送命令（仅远程目标）。
+|     ├── python -- 求值 Python 命令。
+|     ├── python-interactive -- 启动 Python 交互提示符。
+|     ├── record -- 开始记录。
+|     └── stop -- 没有 `stop' 命令，但可在 `stop' 上设置 hook。
+|- running（运行）
+|     ├── advance -- 继续运行程序直至给定位置（参数形式与 break 命令相同）。
+|     ├── attach -- 附加到 GDB 外的进程或文件。
+|     ├── continue -- 在信号或断点后继续运行被调试程序。
+|     ├── detach -- 分离先前附加的进程或文件。
+|     ├── disconnect -- 断开与目标的连接。
+|     ├── finish -- 执行直至所选栈帧返回。
+|     ├── handle -- 指定如何处理信号。
+|     ├── inferior -- 使用此命令在多个 inferior 之间切换。
+|     ├── interrupt -- 中断被调试程序的执行。
+|     ├── jump -- 在被调试程序的指定行或地址处继续执行。
+|     ├── kill -- 终止被调试程序的执行。
+|     ├── next -- 单步执行程序，穿过子程序调用。
+|     ├── nexti -- 单步一条指令，但穿过子程序调用。
+|     ├── queue-signal -- 将信号加入队列，在线程恢复时传递给当前线程。
+|     ├── reverse-continue -- 继续运行被调试程序，但以反向方式执行。
+|     ├── reverse-finish -- 向后执行直至所选栈帧即将被调用之前。
+|     ├── reverse-next -- 向后单步执行程序，穿过子程序调用。
+|     ├── reverse-nexti -- 向后单步一条指令，但穿过被调用的子程序。
+|     ├── reverse-step -- 向后单步执行程序直至到达另一条源行开头。
+|     ├── reverse-stepi -- 精确向后单步一条指令。
+|     ├── run -- 启动被调试程序。
+|     ├── signal -- 以指定信号继续运行程序。
+|     ├── start -- 启动被调试程序并在 main 过程开头停止。
+|     ├── starti -- 启动被调试程序并在第一条指令处停止。
+|     ├── step -- 单步执行程序直至到达不同的源行。
+|     ├── stepi -- 精确单步执行一条指令。
+|     ├── taas -- 对所有线程应用命令（忽略错误和空输出）。
+|     ├── target -- 连接到目标机或进程。
+|     ├── task -- 使用此命令在 Ada 任务之间切换。
+|     ├── tfaas -- 对所有线程的所有帧应用命令（忽略错误和空输出）。
+|     ├── thread -- 使用此命令在线程之间切换。
+|     └── until -- 执行直至越过当前行或越过 LOCATION。
+|- stack（栈）
+|     ├── backtrace -- 打印所有栈帧的回溯，或最内层 COUNT 个栈帧。
+|     ├── bt -- 打印所有栈帧的回溯，或最内层 COUNT 个栈帧。
+|     ├── down -- 选择并打印调用当前帧的栈帧。
+|     ├── faas -- 对所有帧应用命令（忽略错误和空输出）。
+|     ├── frame -- 选择并打印栈帧。
+|     ├── return -- 使所选栈帧返回到其调用者。
+|     ├── select-frame -- 选择栈帧但不打印任何内容。
+|     └── up -- 选择并打印调用当前帧的栈帧。
+|- status（状态）
+|     ├── info -- 用于显示被调试程序相关信息的通用命令。
+|     ├── macro -- 处理 C 预处理器宏的命令前缀。
+|     └── show -- 用于显示调试器相关信息的通用命令。
+|- support（支持）
+|     ├── ! -- 将行剩余部分作为 shell 命令执行。
+|     ├── add-auto-load-safe-path -- 向可安全自动加载文件的目录列表添加条目。
+|     ├── add-auto-load-scripts-directory -- 向加载自动脚本的目录列表添加条目。
+|     ├── alias -- 定义作为现有命令别名的新命令。
+|     ├── apropos -- 搜索匹配 REGEXP 的命令。
+|     ├── define -- 定义新命令名。命令名作为参数。
+|     ├── define-prefix -- 定义或标记命令为用户定义前缀命令。
+|     ├── demangle -- 还原修饰名。
+|     ├── document -- 为用户定义命令编写文档。
+|     ├── dont-repeat -- 不重复此命令。
+|     ├── down-silently -- 与 `down' 命令相同，但不打印任何内容。
+|     ├── echo -- 打印常量字符串。字符串作为参数。
+|     ├── help -- 打印命令列表。
+|     ├── if -- 当条件表达式非零时执行一次嵌套命令。
+|     ├── interpreter-exec -- 在解释器中执行命令。
+|     ├── make -- 使用行剩余部分作为参数运行 ``make'' 程序。
+|     ├── new-ui -- 创建新 UI。
+|     ├── overlay -- 用于调试 overlay 的命令。
+|     ├── pipe -- 将 gdb 命令输出发送到 shell 命令。
+|     ├── quit -- 退出 gdb。
+|     ├── shell -- 将行剩余部分作为 shell 命令执行。
+|     ├── source -- 从名为 FILE 的文件读取命令。
+|     ├── up-silently -- 与 `up' 命令相同，但不打印任何内容。
+|     ├── while -- 当条件表达式非零时执行嵌套命令。
+|     └── | -- 将 gdb 命令输出发送到 shell 命令。
+|- tracepoints（跟踪点）
+|     ├── actions -- 指定跟踪点处要执行的动作。
+|     ├── collect -- 指定跟踪点处要收集的一个或多个数据项。
+|     ├── end -- 结束命令或动作列表。
+|     ├── passcount -- 设置跟踪点的 passcount。
+|     ├── tdump -- 打印当前跟踪点收集的全部内容。
+|     ├── teval -- 指定跟踪点处要求值的一个或多个表达式。
+|     ├── tfind -- 选择跟踪帧。
+|     ├── tsave -- 将跟踪数据保存到文件。
+|     ├── tstart -- 开始收集跟踪数据。
+|     ├── tstatus -- 显示当前跟踪数据收集的状态。
+|     ├── tstop -- 停止收集跟踪数据。
+|     ├── tvariable -- 定义跟踪状态变量。
+|     └── while-stepping -- 指定跟踪点处的单步行为。
+|- user-defined（用户定义）
+|     ├── add-inferior -- 添加新 inferior。
+|     ├── clone-inferior -- 克隆 inferior ID。
+|     ├── eval -- 构造 GDB 命令并求值。
+|     ├── flash-erase -- 擦除所有 flash 内存区域。
+|     ├── function -- 用于显示便利函数帮助的占位命令。
+|     ├── jit-reader-load -- 将 FILE 加载为 JIT 编译代码的调试信息读取器和展开器。
+|     ├── jit-reader-unload -- 卸载当前已加载的 JIT 调试信息读取器。
+|     ├── remove-inferiors -- 移除 inferior ID（或 ID 列表）。
+|     └── unset -- 某些 "set" 命令的互补命令。

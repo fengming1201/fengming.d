@@ -81,12 +81,12 @@ Apache License, Version 2.0。有关完整许可证，请参阅 [LICENSE](https:
 
    # 将仓库添加到 Apt 源：
    sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
-   Types: deb
-   URIs: https://download.docker.com/linux/debian
-   Suites: $(. /etc/os-release && echo "$VERSION_CODENAME")
-   Components: stable
-   Signed-By: /etc/apt/keyrings/docker.asc
-   EOF
+Types: deb
+URIs: https://download.docker.com/linux/debian
+Suites: $(. /etc/os-release && echo "$VERSION_CODENAME")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 
    sudo apt update
    ```

@@ -1,0 +1,236 @@
+Cppcheck - 用于 C/C++ 代码静态分析的工具
+
+语法：
+    cppcheck [选项] [文件或路径]
+
+若参数为目录而非文件名，将从该目录递归检查 *.cpp、*.cxx、*.cc、*.c++、*.c、
+*.tpp 和 *.txx 文件。
+
+选项：
+    --addon=<addon>
+                         执行插件。例如：--addon=cert。若需向插件传参，须使用
+                         JSON 配置文件。
+    --addon-python=<python 解释器>
+                         可在插件 JSON 或本命令行中指定 Python 解释器。
+                         若未指定，Cppcheck 将先尝试 "python3"，再尝试 "python"。
+    --bug-hunting
+                         启用更激进、偏“可靠”的分析；常规 Cppcheck 分析将被关闭。
+    --cppcheck-build-dir=<dir>
+                         Cppcheck 工作目录。优点：
+                          * 全程序分析
+                          * 更快：若文件哈希未变，Cppcheck 会复用已有结果
+                          * 便于调试，例如执行 clang/clang-tidy/插件 的命令
+    --check-config       仅检查 cppcheck 配置；本选项会禁用常规代码分析。
+    --check-library      当库配置文件信息不完整时输出信息类消息。
+    --clang=<path>       实验性：用 Clang 解析器替代内置 Cppcheck 解析器。
+                         可选参数为可执行文件路径，默认为 `clang`。Cppcheck 将
+                         运行该 Clang、导入 Clang AST 并转换为 Cppcheck 内部数据，
+                         再执行常规 Cppcheck 分析。未指定路径时，须在 PATH 中
+                         能找到该可执行文件。
+    --config-exclude=<dir>
+                         不参与配置检查的路径（前缀）。在头文件（非源文件）中
+                         定义且匹配该前缀的预处理器配置将不参与求值。
+    --config-excludes-file=<file>
+                         包含 config-exclude 列表的文件。
+    --dump               为每个翻译单元导出 XML。dump 文件扩展名为 .dump，
+                         包含 ast、tokenlist、symboldatabase、valueflow。
+    -D<ID>               定义预处理器符号。除非使用 --max-configs 或 --force，
+                         使用 -D 时 Cppcheck 通常只检查对应配置。
+                         示例：'-DDEBUG=1 -D__cplusplus'。
+    -E                   将预处理器输出打印到 stdout，不再做后续分析。
+    --enable=<id>        启用额外检查。可用 id：
+                          * all
+                                  启用全部检查。建议仅在扫描整个程序时使用，
+                                  因为会启用 unusedFunction。
+                          * warning
+                                  启用警告类消息
+                          * style
+                                  启用全部编码风格检查；严重级别为 style、
+                                  performance、portability 的消息均会启用。
+                          * performance
+                                  启用性能类消息
+                          * portability
+                                  启用可移植性消息
+                          * information
+                                  启用信息类消息
+                          * unusedFunction
+                                  检查未使用函数。建议仅在扫描整个程序时启用。
+                          * missingInclude
+                                  缺少 include 时告警。详情见 --check-config。
+                         多个 id 可用逗号分隔。另见 --std。
+    --error-exitcode=<n> 发现错误时返回整数 [n]，而非默认 0。参数无效或未
+                         提供输入文件时返回 1。注意操作系统可能修改该值，
+                         例如 256 可能显示为 0。
+    --errorlist          以 XML 格式打印全部错误消息列表。
+    --exitcode-suppressions=<file>
+                         某些消息仍显示，但不导致非零退出码时使用。
+    --file-filter=<str>  仅分析匹配过滤串的文件。
+                         示例：--file-filter=*bar.cpp 只分析以 bar.cpp 结尾的文件。
+    --file-list=<file>   在文本文件中列出待检查文件，每行一个。file 为 '-' 时
+                         从标准输入读取列表。
+    -f, --force          强制检查文件中全部配置。与 '--max-configs=' 同时使用时，
+                         以后出现的选项为准。
+    -h, --help           显示本帮助。
+    -I <dir>             添加 include 搜索路径。可多次 -I；先给出的路径优先。
+                         若路径相对源文件，通常不必指定。
+    --includes-file=<file>
+                         在文本文件中列出 include 搜索路径，每行一个。
+                         先列出的路径优先。若路径相对源文件，通常不必指定。
+    --include=<file>
+                         在待检查文件之前强制包含指定文件。
+    -i <dir 或 file>     排除不参与检查的源文件或目录。仅匹配源文件，不匹配
+                         源文件所包含的头文件。目录名与路径各部分匹配。
+    --inconclusive       即使分析无定论也允许报告。
+                         本选项可能产生误报，每条结果都需人工甄别。
+    --inline-suppr       启用行内抑制。在告警行前添加注释，例如：
+                         '// cppcheck-suppress warningId'。
+    -j <jobs>            启动 <jobs> 个线程并行检查。
+    -l <load>            当已有其他线程运行且负载平均值不低于 <load> 时，
+                         不再启动新线程。
+    --language=<language>, -x <language>
+                         强制将所有文件按指定语言检查。有效值：c、c++。
+    --library=<cfg>      加载描述类型与函数的 <cfg> 文件，以便更好理解代码、
+                         获得更准确结果。发行版自带的 std.cfg 会自动加载。
+                         库文件说明见手册。
+    --max-ctu-depth=N    全程序（CTU）分析最大深度，默认 2。越大可发现越多问题，
+                         但分析越慢。
+    --output-file=<file> 将结果写入文件，而非标准错误。
+    --project=<file>     对工程运行 Cppcheck。<file> 可为 Visual Studio 解决方案
+                         (*.sln)、工程 (*.vcxproj)、编译数据库 (compile_commands.json)
+                         或 Borland C++ Builder 6 (*.bpr)。将使用其中的待分析文件、
+                         include 路径、宏定义、平台与取消定义。
+    --project-configuration=<config>
+                         与 Visual Studio 解决方案 (*.sln) 或工程 (*.vcxproj) 联用时，
+                         可限定要检查的配置。
+                         示例：--project-configuration=Release|Win32
+    --max-configs=<limit>
+                         跳过文件前最多检查的配置数，默认 12。与 --force 联用时，
+                         以后出现的选项为准。
+    --platform=<type>, --platform=<file>
+                         指定平台相关的类型与大小。内置平台：
+                          * unix32
+                                 32 位 Unix 变体
+                          * unix64
+                                 64 位 Unix 变体
+                          * win32A
+                                 32 位 Windows，ASCII 字符编码
+                          * win32W
+                                 32 位 Windows，UNICODE 字符编码
+                          * win64
+                                 64 位 Windows
+                          * avr8
+                                 8 位 AVR 单片机
+                          * elbrus-e1cp
+                                 Elbrus e1c+ 架构
+                          * pic8
+                                 8 位 PIC 单片机
+                                 基线与中档架构
+                          * pic8-enhanced
+                                 8 位 PIC 单片机
+                                 增强中档与高档 (PIC18) 架构
+                          * pic16
+                                 16 位 PIC 单片机
+                          * mips32
+                                 32 位 MIPS 单片机
+                          * native
+                                 假定与宿主系统相同的类型大小，无其他假定
+                          * unspecified
+                                 类型大小未知
+    --plist-output=<path>
+                         在指定文件夹生成 Clang plist 输出。
+    -q, --quiet          不显示进度报告。
+    -rp=<paths>, --relative-paths=<paths>
+                         输出中使用相对路径。<paths> 为基准路径，多个路径用 ';'
+                         分隔。否则使用搜索源文件的路径。通过字符串比较生成相对
+                         路径，例如用 ~ 表示主目录无效。目前仅能对目录树中更深层
+                         的文件应用基准路径。
+    --report-progress    检查文件时报告进度消息。
+    --rule=<rule>        匹配正则表达式（需 HAVE_RULES/PCRE）。
+    --rule-file=<file>   使用指定规则文件。详见：
+                         http://sourceforge.net/projects/cppcheck/files/Articles/
+    --std=<id>           设置语言标准。可选：
+                          * c89
+                                 C 代码兼容 C89
+                          * c99
+                                 C 代码兼容 C99
+                          * c11
+                                 C 代码兼容 C11（默认）
+                          * c++03
+                                 C++ 代码兼容 C++03
+                          * c++11
+                                 C++ 代码兼容 C++11
+                          * c++14
+                                 C++ 代码兼容 C++14
+                          * c++17
+                                 C++ 代码兼容 C++17
+                          * c++20
+                                 C++ 代码兼容 C++20（默认）
+    --suppress=<spec>    抑制匹配 <spec> 的告警。格式：
+                         [error id]:[filename]:[line]
+                         [filename] 与 [line] 可选。error id 为 '*' 时匹配全部 id。
+    --suppressions-list=<file>
+                         抑制文件中列出的告警，每条格式同 <spec>。
+    --suppress-xml=<file>
+                         抑制 XML 文件中列出的告警。XML 格式见手册
+                         「6.4 XML suppressions」一节。
+    --template='<text>'  格式化错误消息。可用字段：
+                           {file}              文件名
+                           {line}              行号
+                           {column}            列号
+                           {callstack}         调用栈，示例：
+                                                 [file.c:1] -> [file.c:100]
+                           {inconclusive:text} 若无定论则输出 text
+                           {severity}          严重级别
+                           {message}           告警正文
+                           {id}                告警 id
+                           {cwe}               CWE 编号
+                           {code}              显示相关源码
+                           \t                 制表符
+                           \n                 换行
+                           \r                 回车
+                         格式示例：
+                         '{file}:{line},{severity},{id},{message}' 或
+                         '{file}({line}):({severity}) {message}' 或
+                         '{callstack} {message}'
+                         预置模板：gcc（默认）、cppcheck1（旧默认）、vs、edit。
+    --template-location='<text>'
+                         格式化错误位置；未指定则不显示额外位置信息。
+                         可用字段：
+                           {file}      文件名
+                           {line}      行号
+                           {column}    列号
+                           {info}      位置说明
+                           {code}      显示相关源码
+                           \t         制表符
+                           \n         换行
+                           \r         回车
+                         示例（类 gcc）：
+                         '{file}:{line}:{column}: note: {info}\n{code}'
+    -U<ID>               取消预处理器符号定义。用于显式忽略某些 #ifdef <ID> 分支。
+                         示例：'-UDEBUG'
+    -v, --verbose        输出更详细的错误信息。
+    --version            显示版本号。
+    --xml                以 XML 格式将结果写入错误流（stderr）。
+
+用法示例：
+  # 递归检查当前目录，屏幕显示进度，错误写入文件：
+  cppcheck . 2> err.txt
+
+  # 递归检查 ../myproject/，不显示进度：
+  cppcheck --quiet ../myproject/
+
+  # 检查 test.cpp，启用全部检查：
+  cppcheck --enable=all --inconclusive --library=posix test.cpp
+
+  # 检查 f.cpp，从 inc1/ 与 inc2/ 搜索头文件：
+  cppcheck -I inc1/ -I inc2/ f.cpp
+
+更多信息：
+    http://cppcheck.net/manual.pdf
+
+致谢所使用的第三方库：
+ * tinyxml2 -- 加载 project/library/ctu 文件。
+ * picojson -- 加载 compile database。
+ * pcre -- rules 规则。
+ * qt -- 用于 GUI
+ * z3 -- 微软研究院定理证明器，用于 bug-hunting。
