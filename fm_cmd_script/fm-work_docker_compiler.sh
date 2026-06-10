@@ -109,9 +109,9 @@ function docker-compiler
     done
 
     if [ ${#remaining_args[@]} -lt 1 ]; then
-        echo "Error: no command provided"
-        echo "         $FUNCNAME [options] platform \"command args ...\""
-        echo "Example: $FUNCNAME mc632x make all"
+        echo "Error: command list is empty!"
+        echo "         $FUNCNAME [options] [-p|--plat platform] \"command args ...\""
+        echo "Example: $FUNCNAME -p mc632x make all"
         return 2
     fi
     cmd="${remaining_args[*]}"
@@ -142,13 +142,10 @@ function docker-compiler
             docker_container_name="container4_newfw_jzt33_compiler"
         elif [ "new_mc632x" = "$platform" ];then
             docker_container_name="container4_newfw_mc632x_compiler"
+        else
+            echo "Error: not found docker container name for this platform: $platform"
+            return 3
         fi
-    fi
-    if [ -z ${docker_container_name} ];then
-        echo "Error: not found docker container name for this platform: $platform"
-        echo "         $FUNCNAME [options] platform \"command args ...\""
-        echo "Example: $FUNCNAME mc632x make all"
-        return 3
     fi
     #convert current_dir to docker_inner_path;e.g. /home/lshm/workdir/mc632x_test/build.sh to /home/duser/workdir/mc632x_test/build.sh
     local docker_inner_path=$(echo $(pwd) | sed "s|${workdir_volume_map_path}|/home/duser/workdir|")
@@ -160,17 +157,23 @@ function docker-compiler
         echo "INFO:cmd=${cmd}"
         echo "INFO:remaining_args=${remaining_args[@]}"
     fi
+    if [ -z ${docker_container_name} ];then
+        echo "Error: unknow container_name! you must give platform or container_name"
+        echo "Example: $FUNCNAME -p platform \"command args ...\""
+        echo "Example: $FUNCNAME -n your_container_name \"command args ...\""
+        return 4
+    fi
     #check dockr groups
     if ! id -nG | grep -qw docker;then
         echo "you need to do:"
         echo "sudo usermod -aG docker $USER"
-        return 4
+        return 5
     fi
     #check if the docker container is running
     docker ps -a | grep -w -q $docker_container_name
     if [ $? -ne 0 ];then
         echo "Error: docker container not running: $docker_container_name"
-        return 5
+        return 6
     fi
     echo "EXEC:docker exec ${docker_container_name} bash -c \"cd $docker_inner_path && $cmd\""
     if [ ${debug} = false ];then
