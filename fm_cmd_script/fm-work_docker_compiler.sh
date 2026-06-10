@@ -59,16 +59,22 @@ function docker-compiler
         echo "Example1: $FUNCNAME -p fh8626v3x  ./AllInOne4_fh8626v3x_build.sh all"
         echo "Example2: $FUNCNAME -p mc632x    \"./AllInOne4_mc632x_build.sh    all --no-pack\""
         echo "Example3: $FUNCNAME -p mc632x     make all"
-        echo "Example4: $FUNCNAME -p mc632x    \"make clean && make all\""
+        echo "Example4: $FUNCNAME \"make clean && make all\" -p mc632x"
         echo "Example5: $FUNCNAME \"make clean && make all\" -n container4_fastboot_mc632x_compiler"
-        echo "Example8: $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
-        echo "Example6: export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
-        echo "Example7: export g_container_name=mytest;$FUNCNAME \"make clean && make all\""
+        echo "Example6: $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
+        echo "Example7: export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
+        echo "Example8: export g_container_name=mytest;$FUNCNAME \"make clean && make all\""
         echo ""
         echo "The default value can also be changed through environment variables"
         echo "export g_workdir_map_path="
         echo "export g_container_name="
         echo "export g_platform="
+        if [ -n "${g_workdir_map_path}" ] || [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
+            echo "Note: Current environment variables have been detected"
+            echo "g_workdir_map_path=${g_workdir_map_path}"
+            echo "g_container_name=${g_container_name}"
+            echo "g_platform=${g_platform}"
+        fi
         return 1
     fi
 
