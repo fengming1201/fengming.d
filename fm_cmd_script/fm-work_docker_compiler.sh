@@ -6,14 +6,33 @@ scriptfile_name=$(basename ${scriptfile_path})
 scriptfile_dir=$(dirname ${scriptfile_path})
 
 #start here add your code,you need to implement the following function.
-docker_compiler_platform_map2_container=${HOME}/.docker_compiler_platform_map2_container.conf
-##Parameter Counts      : 0
-# Parameter Requirements: none
-# Example:
-##
+docker_compiler_platform_map2_container=${HOME}/.docker_compiler_map.conf
+
+# parameter: $1: map_file
+function _data_base_add_example() {
+    cat <<-EOF >> $1
+#Example:
+# bipc_fh8626=container4_bipc_fh8626_compiler
+# bipc_fh8852=container4_bipc_fh8852_compiler
+# fh1x=container4_fastboot_fh885x_compiler
+# jzt40=container4_fastboot_jztxx_compiler
+# fh8626v3x=container4_fastboot_fh8626_compiler
+# mc632x=container4_fastboot_mc632x_compiler
+# new_fh8852v201=container4_newfw_fh885x_compiler
+# new_fh8626v300=container4_newfw_fh8626v3x_compiler
+# new_jzt23=container4_newfw_jzt23_compiler
+# new_jzt33=container4_newfw_jzt33_compiler
+# new_mc632x=container4_newfw_mc632x_compiler
+
+EOF
+
+}
+
 # 以 docker_compiler_platform_map2_container 为数据库文件的 key-value 操作接口
-#   get key  : 返回 value，key/value 缺失或未命中时返回空
-#   list     : 在一行中打印所有 key
+#   init           : 数据库文件不存在时创建并写入格式说明注释
+#   get key        : 返回 value，key/value 缺失或未命中时返回空
+#   set key value  : 修改已有键值或追加新键值对
+#   list           : 在一行中打印所有 key
 function _data_base_operation() {
     local cmd="${1:-}"
     local map_file="${docker_compiler_platform_map2_container}"
@@ -21,6 +40,51 @@ function _data_base_operation() {
     local -a keys=()
 
     case "$cmd" in
+        init)
+            if [[ -f "$map_file" ]]; then
+                return 0
+            fi
+            echo "#  key-value format：platform=container_name" > "$map_file"
+            _data_base_add_example ${map_file}
+            return 0
+            ;;
+        set)
+            local key="$2"
+            local new_value="$3"
+            local found=false
+            local line plat
+
+            [[ -z "$key" || -z "$new_value" ]] && return 0
+            key="${key//[[:space:]]/}"
+            new_value="${new_value//[[:space:]]/}"
+            [[ -z "$key" || -z "$new_value" ]] && return 0
+
+            if [[ ! -f "$map_file" ]]; then
+                _data_base_operation init || return 1
+            fi
+
+            local tmp_file
+            tmp_file=$(mktemp) || return 1
+            while IFS= read -r line || [[ -n "$line" ]]; do
+                if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "${line//[[:space:]]}" ]]; then
+                    printf '%s\n' "$line" >> "$tmp_file"
+                    continue
+                fi
+                plat="${line%%=*}"
+                plat="${plat//[[:space:]]/}"
+                if [[ -n "$plat" && "$plat" == "$key" ]]; then
+                    printf '%s=%s\n' "$key" "$new_value" >> "$tmp_file"
+                    found=true
+                else
+                    printf '%s\n' "$line" >> "$tmp_file"
+                fi
+            done < "$map_file"
+            if [[ "$found" = false ]]; then
+                printf '%s=%s\n' "$key" "$new_value" >> "$tmp_file"
+            fi
+            mv "$tmp_file" "$map_file"
+            return 0
+            ;;
         get)
             local key="$2"
             [[ -z "$key" ]] && return 0
@@ -67,17 +131,18 @@ function _data_base_operation() {
             return 0
             ;;
         *)
-            echo "Error: unknown database command: $cmd (supported: get, list)" >&2
+            echo "Error: unknown database command: $cmd (supported: init, get, set, list, list_all)" >&2
             return 1
             ;;
     esac
 }
 
+
 function docker-compiler
 {
     if [ $# -lt 1 ]; then
         echo "Usage: "
-        echo "         $FUNCNAME [options] [-p|--plat platform] [--] \"command args ...\""
+        echo "         $FUNCNAME [options]  [--] \"command args ...\""
         echo ""
         echo "options:"
         echo "        -d|--debug                    #debug mode:not truly executing your command."
@@ -85,20 +150,19 @@ function docker-compiler
         echo "        -n|--name  [container_name]   #overwrite container name. no para: list all known running containers"
         echo "        -p|--plat  [platform]         #select container_name by platform. no para: list all known platforms-container mapping"
         echo ""
-        echo "support platform: $(_data_base_operation list)"
-        echo ""
-        echo "Example1:  $FUNCNAME -p mc632x     ./AllInOne4_fh8626v3x_build.sh all"
-        echo "Example1b: $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
-        echo "Example2:  $FUNCNAME -p mc632x     make all"
-        echo "Example2:  $FUNCNAME -p mc632x     command --help"
-        echo "Example2b: $FUNCNAME -p mc632x     ls -lh"
-        echo "Example2c: $FUNCNAME -p mc632x --  ls -lh"
-        echo "Example2c: $FUNCNAME -p                      # no para: list all known platforms-container mapping"
-        echo "Example2c: $FUNCNAME -n                      # no para: list all known running containers"
-        echo "Example4:  $FUNCNAME -n container_name \"make clean && make all\" "
-        echo "Example5:  $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
-        echo "Example6:  export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
-        echo "Example7:  export g_container_name=mycontainer;$FUNCNAME \"make clean && make all\""
+        echo "Example1 : $FUNCNAME -p mc632x     ./AllInOne4_fh8626v3x_build.sh all"
+        echo "Example2 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
+        echo "Example3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
+        echo "Example4 : $FUNCNAME -p mc632x     make all"
+        echo "Example5 : $FUNCNAME -p mc632x    \"make clean && make all\""
+        echo "Example6 : $FUNCNAME -p mc632x     ls -lh"
+        echo "Example7 : $FUNCNAME -p mc632x --  ls -lh"
+        echo "Example8 : $FUNCNAME -p                  # no para: list all known platforms-container mapping"
+        echo "Example9 : $FUNCNAME -n                  # no para: list all known running containers"
+        echo "Example10: $FUNCNAME -n container_name \"make clean && make all\" "
+        echo "Example11: $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
+        echo "Example12: export g_platform=mc632x;            $FUNCNAME \"make clean && make all\""
+        echo "Example13: export g_container_name=mycontainer; $FUNCNAME \"make clean && make all\""
         echo ""
         echo "Note: shell operators (&&, ||, ;, |) are parsed by your shell BEFORE this script runs."
         echo "      Wrong:  $FUNCNAME -n mycontainer make clean && make all   # only 'make clean' runs in docker"
@@ -116,7 +180,15 @@ function docker-compiler
             echo "export g_container_name="
             echo "export g_platform="
         fi
-        return 1
+        if [[ ! -f "${docker_compiler_platform_map2_container}" ]]; then
+            _data_base_operation init || return 1
+            echo "Warning: map file [${docker_compiler_platform_map2_container}]  is empty, "
+            echo "         you need to add some platform=container mapping entry to it." 
+        else
+            echo ""
+            echo "Current supported platforms: $(_data_base_operation list)"
+        fi
+        return 0
     fi
     #check dockr groups
     if ! id -nG | grep -qw docker;then
@@ -178,7 +250,7 @@ function docker-compiler
 
     if [ ${#remaining_args[@]} -lt 1 ]; then
         echo "Error: command list is empty!"
-        echo "         $FUNCNAME [options] [-p|--plat platform] [--] \"command args ...\""
+        echo "         $FUNCNAME [options] [--] \"command args ...\""
         echo "Example: $FUNCNAME -p mc632x make all"
         return 3
     fi
@@ -229,12 +301,17 @@ function docker-compiler
         return 6
     fi
     # 将 remaining_args 编码为可在 bash -c 中安全执行的命令字符串
-    # printf '%q' 对每个参数做 shell 转义，避免空格/引号/&& 等被错误拆分
+    # 单参数时视为完整 shell 命令（如 "make clean && make all"），直接嵌入不转义
+    # 多参数时对每个参数 printf '%q'，避免空格/引号等被错误拆分
     local user_cmd="" arg
-    for arg in "${remaining_args[@]}"; do
-        user_cmd+=$(printf '%q ' "$arg")
-    done
-    user_cmd=${user_cmd% }  # 去掉末尾空格
+    if [[ ${#remaining_args[@]} -eq 1 ]]; then
+        user_cmd="${remaining_args[0]}"
+    else
+        for arg in "${remaining_args[@]}"; do
+            user_cmd+=$(printf '%q ' "$arg")
+        done
+        user_cmd=${user_cmd% }
+    fi
     # 在容器内先 cd 到映射目录，再执行用户命令
     local cmd_array=(bash -c "cd -- $(printf '%q' "$docker_inner_path") && ${user_cmd}")
     echo "EXEC:docker exec -it "${docker_container_name}" "${cmd_array[@]}""
