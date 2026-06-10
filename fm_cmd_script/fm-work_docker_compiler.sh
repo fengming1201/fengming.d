@@ -44,25 +44,26 @@ function docker-compiler
 {
     if [ $# -lt 1 ]; then
         echo "Usage: "
-        echo "         $FUNCNAME [options] platform \"command args ...\""
-        echo ""
-        echo "platform:"
-        echo "old ->: bipc_fh8626 bipc_fh8852 fh1x jzt40 fh8626v3x mc632x"
-        echo "new ->: new_fh8852v201 new_fh8626v300 new_jzt23 new_jzt33 new_mc632x"
+        echo "         $FUNCNAME [options] [-p|--plat platform] \"command args ...\""
         echo ""
         echo "options:"
         echo "        -d|--debug                  #debug mode:not truly executing your command."
         echo "        -m|--map   map_path         #modify default workdir volume mapping path.default: /home/lshm"
         echo "        -n|--name  container_name   #overwrite container name.e.g. container4_fastboot_mc632x_compiler"
         echo ""
-        echo "Example1: $FUNCNAME fh8626v3x  ./AllInOne4_fh8626v3x_build.sh all"
-        echo "Example2: $FUNCNAME mc632x    \"./AllInOne4_mc632x_build.sh    all --no-pack\""
-        echo "Example3: $FUNCNAME mc632x  make all"
-        echo "Example4: $FUNCNAME mc632x \"make clean && make all\""
-        echo "Example5: $FUNCNAME \"make clean && make all\" -n container4_fastboot_mc632x_compiler"
-        echo "Example6: export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
+        echo "        -p|--plat  platform         #select container_name by platform.e.g mc632x"
+        echo "platform:"
+        echo "old ->: bipc_fh8626 bipc_fh8852 fh1x jzt40 fh8626v3x mc632x"
+        echo "new ->: new_fh8852v201 new_fh8626v300 new_jzt23 new_jzt33 new_mc632x"
         echo ""
-        echo "Example7: $FUNCNAME -m /home/mining/uboot -n mytest  make all"
+        echo "Example1: $FUNCNAME -p fh8626v3x  ./AllInOne4_fh8626v3x_build.sh all"
+        echo "Example2: $FUNCNAME -p mc632x    \"./AllInOne4_mc632x_build.sh    all --no-pack\""
+        echo "Example3: $FUNCNAME -p mc632x     make all"
+        echo "Example4: $FUNCNAME -p mc632x    \"make clean && make all\""
+        echo "Example5: $FUNCNAME \"make clean && make all\" -n container4_fastboot_mc632x_compiler"
+        echo "Example8: $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
+        echo "Example6: export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
+        echo "Example7: export g_container_name=mytest;$FUNCNAME \"make clean && make all\""
         echo ""
         echo "The default value can also be changed through environment variables"
         echo "export g_workdir_map_path="
@@ -88,6 +89,9 @@ function docker-compiler
             -n|--name)
                 if [[ -z "$2" ]]; then echo "ERROR: -n|--name requires one parameter" >&2; return 1; fi
                 docker_container_name="$2"; shift 2 ;; #带参数，移动2
+            -p|--plat)
+                if [[ -z "$2" ]]; then echo "ERROR: -p|--plat requires one parameter" >&2; return 1; fi
+                platform="$2"; shift 2 ;; #带参数，移动2
             -*)
                 # 处理合并的选项,如-dh
                 for (( i=1; i<${#1}; i++ )); do
@@ -95,6 +99,7 @@ function docker-compiler
                         d) debug=true ;;
                         m) workdir_volume_map_path="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         n) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
+                        p) platform="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -103,17 +108,14 @@ function docker-compiler
         esac
     done
 
-    if [[ -z "${platform}" ]] && [[ -z "${docker_container_name}" ]] && [[ ${#remaining_args[@]} -ge 2 ]]; then
-        platform="${remaining_args[0]}"
-        cmd="${remaining_args[@]:1}"
-    elif [[ -n "${platform}" || -n "${docker_container_name}" ]] && [[ ${#remaining_args[@]} -ge 1 ]]; then
-        cmd="${remaining_args[*]}"
-    else
+    if [ ${#remaining_args[@]} -lt 1 ]; then
         echo "Error: no command provided"
         echo "         $FUNCNAME [options] platform \"command args ...\""
         echo "Example: $FUNCNAME mc632x make all"
         return 2
     fi
+    cmd="${remaining_args[*]}"
+
     #select docker container name by platform
     if [[ -z "${docker_container_name}" &&  -n "${platform}" ]];then
         #======================== old framework ========================
@@ -158,11 +160,17 @@ function docker-compiler
         echo "INFO:cmd=${cmd}"
         echo "INFO:remaining_args=${remaining_args[@]}"
     fi
+    #check dockr groups
+    if ! id -nG | grep -qw docker;then
+        echo "you need to do:"
+        echo "sudo usermod -aG docker $USER"
+        return 4
+    fi
     #check if the docker container is running
     docker ps -a | grep -w -q $docker_container_name
     if [ $? -ne 0 ];then
         echo "Error: docker container not running: $docker_container_name"
-        return 4
+        return 5
     fi
     echo "EXEC:docker exec ${docker_container_name} bash -c \"cd $docker_inner_path && $cmd\""
     if [ ${debug} = false ];then
