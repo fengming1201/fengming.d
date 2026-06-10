@@ -65,15 +65,16 @@ function docker-compiler
         echo "Example7: export g_platform=mc632x;$FUNCNAME \"make clean && make all\""
         echo "Example8: export g_container_name=mytest;$FUNCNAME \"make clean && make all\""
         echo ""
-        echo "The default value can also be changed through environment variables"
-        echo "export g_workdir_map_path="
-        echo "export g_container_name="
-        echo "export g_platform="
         if [ -n "${g_workdir_map_path}" ] || [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
             echo "Note: Current environment variables have been detected"
             echo "g_workdir_map_path=${g_workdir_map_path}"
             echo "g_container_name=${g_container_name}"
             echo "g_platform=${g_platform}"
+        else
+            echo "The default value can also be changed through environment variables"
+            echo "export g_workdir_map_path="
+            echo "export g_container_name="
+            echo "export g_platform="
         fi
         return 1
     fi
