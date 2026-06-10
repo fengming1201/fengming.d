@@ -25,7 +25,6 @@ function _data_base_add_example() {
 # new_mc632x=container4_newfw_mc632x_compiler
 
 EOF
-
 }
 
 # 以 docker_compiler_platform_map2_container 为数据库文件的 key-value 操作接口
@@ -41,9 +40,7 @@ function _data_base_operation() {
 
     case "$cmd" in
         init)
-            if [[ -f "$map_file" ]]; then
-                return 0
-            fi
+            if [[ -f "$map_file" ]]; then return 0;fi
             echo "#  key-value format：platform=container_name" > "$map_file"
             _data_base_add_example ${map_file}
             return 0
@@ -150,6 +147,11 @@ function docker-compiler
         echo "        -n|--name  [container_name]   #overwrite container name. no para: list all known running containers"
         echo "        -p|--plat  [platform]         #select container_name by platform. no para: list all known platforms-container mapping"
         echo ""
+        echo "Note: shell operators (&&, ||, ;, |) are parsed by your shell BEFORE this script runs."
+        echo "      Wrong:  $FUNCNAME   make clean && make all   # only 'make clean' runs in docker"
+        echo "      Right:  $FUNCNAME  \"make clean && make all\""
+        echo "      Also:   $FUNCNAME   make clean '&&' make all"
+        echo ""
         echo "Example1 : $FUNCNAME -p mc632x     ./AllInOne4_fh8626v3x_build.sh all"
         echo "Example2 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
         echo "Example3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
@@ -163,11 +165,6 @@ function docker-compiler
         echo "Example11: $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
         echo "Example12: export g_platform=mc632x;            $FUNCNAME \"make clean && make all\""
         echo "Example13: export g_container_name=mycontainer; $FUNCNAME \"make clean && make all\""
-        echo ""
-        echo "Note: shell operators (&&, ||, ;, |) are parsed by your shell BEFORE this script runs."
-        echo "      Wrong:  $FUNCNAME -n mycontainer make clean && make all   # only 'make clean' runs in docker"
-        echo "      Right:  $FUNCNAME -n mycontainer \"make clean && make all\""
-        echo "      Also:   $FUNCNAME -n mycontainer make clean '&&' make all"
         echo ""
         if [ -n "${g_workdir_map_path}" ] || [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
             echo "Note: Current environment variables have been detected"
@@ -186,14 +183,15 @@ function docker-compiler
             echo "         you need to add some platform=container mapping entry to it." 
         else
             echo ""
-            echo "Current supported platforms: $(_data_base_operation list)"
+            echo "Current support platform: $(_data_base_operation list)"
         fi
         return 0
     fi
     #check dockr groups
     if ! id -nG | grep -qw docker;then
         echo "you need to do:"
-        echo "sudo usermod -aG docker $USER"
+        echo "step1:sudo usermod -aG docker \$USER    # Add current user to docker group"
+        echo "step2:exec newgrp docker                # Replace the current shell with a new one"
         return 2
     fi
     #default values
@@ -255,15 +253,6 @@ function docker-compiler
         return 3
     fi
 
-    # shell 在调用本脚本前就会解析 &&，未加引号时只有 make clean 能传进来
-    # 误用: docker-compiler ... make clean && make all  (make all 在宿主机执行)
-    # 正确: docker-compiler ... "make clean && make all"
-    if [[ ${#remaining_args[@]} -eq 2 && "${remaining_args[0]}" == "make" && "${remaining_args[1]}" == "clean" ]]; then
-        echo "WARN: only 'make clean' will run inside docker." >&2
-        echo "      For compound commands use quotes: $FUNCNAME [options] \"make clean && make all\"" >&2
-        echo "      Or pass && as an argument:       $FUNCNAME [options] make clean '&&' make all" >&2
-    fi
-
     # 未指定 -n 时，按 -p 平台名查配置文件获取容器名
     if [[ -z "${docker_container_name}" && -n "${platform}" ]]; then
         docker_container_name=$(_data_base_operation get "$platform")
@@ -290,7 +279,7 @@ function docker-compiler
     if [ -z ${docker_container_name} ];then
         echo "Error: unknow container_name! you must give platform or container_name"
         echo "Example: $FUNCNAME -p platform \"command args ...\""
-        echo "Example: $FUNCNAME -n your_container_name \"command args ...\""
+        echo "Example: $FUNCNAME -n container_name \"command args ...\""
         return 5
     fi
 
@@ -312,8 +301,8 @@ function docker-compiler
         done
         user_cmd=${user_cmd% }
     fi
-    # 在容器内先 cd 到映射目录，再执行用户命令
-    local cmd_array=(bash -c "cd -- $(printf '%q' "$docker_inner_path") && ${user_cmd}")
+    # 在容器内先 cd 到映射目录，再以命令组 () 执行用户命令，避免 ;、|| 与外层 && 优先级混淆
+    local cmd_array=(bash -c "cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})")
     echo "EXEC:docker exec -it "${docker_container_name}" "${cmd_array[@]}""
     if [ ${debug} = false ];then
         docker exec -it "${docker_container_name}" "${cmd_array[@]}"
