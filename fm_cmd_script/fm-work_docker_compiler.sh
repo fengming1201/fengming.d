@@ -143,7 +143,6 @@ function docker-compiler
         echo ""
         echo "options:"
         echo "        -d|--debug                    #debug mode:not truly executing your command."
-        echo "        -m|--map   map_path           #modify default workdir volume mapping path.default: ${HOME}"
         echo "        -n|--name  [container_name]   #overwrite container name. no para: list all known running containers"
         echo "        -p|--plat  [platform]         #select container_name by platform. no para: list all known platforms-container mapping"
         echo ""
@@ -162,18 +161,16 @@ function docker-compiler
         echo "Example8 : $FUNCNAME -p                  # no para: list all known platforms-container mapping"
         echo "Example9 : $FUNCNAME -n                  # no para: list all known running containers"
         echo "Example10: $FUNCNAME -n container_name \"make clean && make all\" "
-        echo "Example11: $FUNCNAME \"make clean && make all\" -m /home/mining/uboot -n mytest"
+        echo "Example11: $FUNCNAME \"make clean && make all\" -n container_name"
         echo "Example12: export g_platform=mc632x;            $FUNCNAME \"make clean && make all\""
         echo "Example13: export g_container_name=mycontainer; $FUNCNAME \"make clean && make all\""
         echo ""
-        if [ -n "${g_workdir_map_path}" ] || [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
+        if [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
             echo "Note: Current environment variables have been detected"
-            echo "g_workdir_map_path=${g_workdir_map_path}"
             echo "g_container_name=${g_container_name}"
             echo "g_platform=${g_platform}"
         else
             echo "The default value can also be changed through environment variables"
-            echo "export g_workdir_map_path="
             echo "export g_container_name="
             echo "export g_platform="
         fi
@@ -187,7 +184,7 @@ function docker-compiler
         fi
         return 0
     fi
-    #check dockr groups
+    # step 0: check docker groups
     if ! id -nG | grep -qw docker;then
         echo "you need to do:"
         echo "step1:sudo usermod -aG docker \$USER    # Add current user to docker group"
@@ -196,13 +193,12 @@ function docker-compiler
     fi
     #default values
     local ret=0
-    #docker volume mapping: -v /home/lshm:/home/duser/workdir
-    local docker_workdir_path=/home/duser/workdir
     local workdir_volume_map_path=${HOME}
     local docker_container_name=${g_container_name:-}
     local platform=${g_platform:-}
     local debug=false
-    # remaining_args: 解析完脚本选项后，留给容器内执行的用户命令参数
+    #================================================================#
+    #step 1: process parameters,parse script options
     local remaining_args=()
     # 区分脚本选项(-p/-n/-m/-d)与用户命令参数；已知脚本选项(-p等)在case中优先匹配
     while [[ $# -gt 0 ]]
@@ -215,9 +211,6 @@ function docker-compiler
                 break
                 ;;
             -d|--debug) debug=true; shift ;; #不带参数，移动1
-            -m|--map)
-                if [[ -z "$2" ]]; then echo "ERROR: -m|--map requires one parameter" >&2; return 1; fi
-                workdir_volume_map_path="$2"; shift 2 ;; #带参数，移动2
             -n|--name)
                 if [[ -z "$2" ]]; then echo "All known running container list: ";docker ps -a --format "{{.Names}}"; return 1; fi
                 docker_container_name="$2"; shift 2 ;; #带参数，移动2
@@ -235,7 +228,6 @@ function docker-compiler
                 for (( i=1; i<${#1}; i++ )); do
                     case ${1:i:1} in
                         d) debug=true ;;
-                        m) workdir_volume_map_path="$2"; shift;break ;; # 当 m 是合并选项的一部分时，它应该停止解析剩余的字符
                         n) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
                         p) platform="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
@@ -253,7 +245,8 @@ function docker-compiler
         return 3
     fi
 
-    # 未指定 -n 时，按 -p 平台名查配置文件获取容器名
+    #================================================================#
+    # step 2: get docker container name by platform
     if [[ -z "${docker_container_name}" && -n "${platform}" ]]; then
         docker_container_name=$(_data_base_operation get "$platform")
         if [[ -z "$docker_container_name" ]]; then
@@ -266,29 +259,34 @@ function docker-compiler
             return 4
         fi
     fi
-    #convert current_dir to docker_inner_path;e.g. /home/lshm/workdir/mc632x_test/build.sh to /home/duser/workdir/mc632x_test/build.sh
-    local docker_inner_path=$(echo $(pwd) | sed "s|${workdir_volume_map_path}|${docker_workdir_path}|")
-    if [ ${debug} = true ];then
-        echo "INFO:workdir_volume_map_path=${workdir_volume_map_path}"
-        echo "INFO:docker_container_name=${docker_container_name}"
-        echo "INFO:docker_inner_path=${docker_inner_path}"
-        echo "INFO:platform=${platform}"
-        echo "INFO:user_cmd=${remaining_args[*]}"
-        echo "INFO:remaining_args=${remaining_args[@]}"
-    fi
+    # check docker container name
     if [ -z ${docker_container_name} ];then
         echo "Error: unknow container_name! you must give platform or container_name"
         echo "Example: $FUNCNAME -p platform \"command args ...\""
         echo "Example: $FUNCNAME -n container_name \"command args ...\""
         return 5
     fi
-
-    #check if the docker container is running
+    if [ ${debug} = true ];then
+        echo "INFO:platform=${platform}"
+        echo "INFO:docker_container_name=${docker_container_name}"
+    fi
+    #================================================================#
+    # step 3: check if the docker container is running
     docker ps -a | grep -w -q $docker_container_name
     if [ $? -ne 0 ];then
         echo "Error: docker container not running: $docker_container_name"
         return 6
     fi
+    #================================================================#
+    # step 4: get docker volume mapping and convert current_dir to docker_inner_path
+    #docker volume mapping: like: /home/lshm -> /home/duser/workdir
+    local docker_volume_mapping=$(docker inspect -f '{{ range .Mounts }}{{ if eq .Destination "/home/duser/workdir" }}{{ .Source }} -> {{ .Destination }}{{ "\n" }}{{ end }}{{ end }}' ${docker_container_name} )
+    local host_workdir_path=$(echo ${docker_volume_mapping} | awk -F '->' '{print $1}' | tr -d ' ')
+    local docker_workdir_path=$(echo ${docker_volume_mapping} | awk -F '->' '{print $2}' | tr -d ' ')
+    #convert current_dir to docker_inner_path;e.g. /home/lshm/workdir/mc632x_test/build.sh to /home/duser/workdir/mc632x_test/build.sh
+    local docker_inner_path=$(echo $(pwd) | sed "s|${host_workdir_path}|${docker_workdir_path}|")
+
+    # step 5: packaging user command
     # 将 remaining_args 编码为可在 bash -c 中安全执行的命令字符串
     # 单参数时视为完整 shell 命令（如 "make clean && make all"），直接嵌入不转义
     # 多参数时对每个参数 printf '%q'，避免空格/引号等被错误拆分
@@ -303,6 +301,15 @@ function docker-compiler
     fi
     # 在容器内先 cd 到映射目录，再以命令组 () 执行用户命令，避免 ;、|| 与外层 && 优先级混淆
     local cmd_array=(bash -c "cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})")
+    if [ ${debug} = true ];then
+        echo "INFO:        host_path=$(pwd)"
+        echo "INFO:docker_inner_path=${docker_inner_path}"
+        echo "INFO:user_cmd=${user_cmd}"
+        echo "INFO:remaining_args=${remaining_args[@]}"
+        echo "INFO:cmd_array=${cmd_array[@]}"
+    fi
+    #================================================================#
+    # step 6: execute user command in docker container
     echo "EXEC:docker exec -it "${docker_container_name}" "${cmd_array[@]}""
     if [ ${debug} = false ];then
         docker exec -it "${docker_container_name}" "${cmd_array[@]}"

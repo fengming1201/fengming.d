@@ -32,6 +32,16 @@ function buildin_install_mybashrc
 
 	#else write config to ${home_bashrc}
 	tee -a ${home_bashrc} <<EOF
+
+alias bd='. bd -si'
+alias clr='clear'
+alias rm='trash'
+alias docker-compiler='fm-work_docker_compiler.sh'
+
+if [ -f /opt/z/z.sh  ];then
+    . /opt/z/z.sh
+fi
+
 if [ -f ${mybash_file} ];then
     . ${mybash_file}
     print_level=0

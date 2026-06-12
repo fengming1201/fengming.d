@@ -35,9 +35,7 @@ else
 	alias treeee='tree'
 fi
 
-alias bd=". bd -si"
 alias cman='man -M  /usr/share/man/zh_CN'
-alias clr='clear'
 
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
@@ -77,10 +75,6 @@ do
 	done
 	source ${FENGMING_DIR}/bash_function_lib/${file}
 done
-
-if [ -f /opt/z/z.sh ];then
-	source /opt/z/z.sh
-fi
 
 function clrall
 {
