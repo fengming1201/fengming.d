@@ -126,19 +126,20 @@ function func_main
 
     local dir_list="
                 MyGitlab/
-                MyGitlab/docker_app
-                MyGitlab/docker_compiler
-                MyGitlab/docker_runtime
-                MyGitlab/project
-                MyGitlab/project/sub_project_51mcu
-                MyGitlab/project/sub_project_stm32
-                MyGitlab/project/sub_project_easyarm
-                MyGitlab/project/sub_project_qemu
-                MyGitlab/project/sub_project_raspberry_pi
-                MyGitlab/project/sub_project_esp32
-                MyGitlab/project/sub_project_buildroot
-                MyGitlab/software_middleware_and_infrastructure
-                MyGitlab/work"
+                MyGitlab/Docker_App
+                MyGitlab/Docker_Compiler
+                MyGitlab/Docker_Runtime
+                MyGitlab/Project
+                MyGitlab/Project/subProject_51MCU
+                MyGitlab/Project/subProject_STM32
+                MyGitlab/Project/subProject_EasyARM
+                MyGitlab/Project/subProject_Linux
+                MyGitlab/Project/subProject_Qemu
+                MyGitlab/Project/subProject_RaspberryPi
+                MyGitlab/Project/subProject_ESP32
+                MyGitlab/Project/subProject_Buildroot
+                MyGitlab/Software_Middleware_And_Infrastructure
+                MyGitlab/Work"
 
     for dir_name in $(echo "${dir_list}" | tr '\r' ' ')
     do

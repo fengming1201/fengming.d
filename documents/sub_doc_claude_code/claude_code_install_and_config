@@ -1,0 +1,23 @@
+
+1,安装
+
+一键安装claude code ，会自动安装 node.js
+curl -fsSL https://claude-zh.cn/scripts/install.sh | sudo bash
+
+
+2,接入deepseek 官方方法:
+https://api-docs.deepseek.com/zh-cn/quick_start/agent_integrations/claude_code
+
+直接追加
+cat <<-EOF >> ~/.bashrc
+# claude code config
+export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+export ANTHROPIC_AUTH_TOKEN=sk-xxx
+export ANTHROPIC_MODEL=deepseek-v4-pro[1m]
+export ANTHROPIC_DEFAULT_OPUS_MODEL=deepseek-v4-pro[1m]
+export ANTHROPIC_DEFAULT_SONNET_MODEL=deepseek-v4-pro[1m]
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=deepseek-v4-flash
+export CLAUDE_CODE_SUBAGENT_MODEL=deepseek-v4-flash
+export CLAUDE_CODE_EFFORT_LEVEL=max
+
+EOF
