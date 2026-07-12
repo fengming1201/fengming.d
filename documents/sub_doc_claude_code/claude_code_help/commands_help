@@ -1,109 +1,60 @@
- ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-  Claude Code v2.1.63  general   commands   custom-commands  (←/→ 或 tab 键切换)
-                                     ^
-
-浏览默认命令：
-
-  ❯ /add-dir
-    添加新的工作目录
-    /agents
-    管理代理配置
-    /chrome
-    Chrome 中的 Claude（Beta）设置
-    /clear
-    清除对话历史并释放上下文
-    /compact
-    清除对话历史但保留上下文摘要。可选：/compact [摘要说明]
-    /config
-    打开配置面板
-    /context
-    以彩色网格形式可视化当前上下文使用情况
-    /copy
-    将 Claude 的最后回复或代码块复制到剪贴板
-    /cost
-    显示当前会话的总费用和持续时间
-    /diff
-    查看未提交的更改和每轮差异
-    /doctor
-    诊断并验证您的 Claude Code 安装和设置
-    /exit
-    退出 REPL
-    /export
-    将当前对话导出到文件或剪贴板
-    /fast
-    切换快速模式（仅 Opus 4.6）
-    /feedback
-    提交关于 Claude Code 的反馈
-    /fork
-    在此点创建当前对话的分支
-    /help
-    显示帮助和可用命令
-    /hooks
-    管理工具事件的钩子配置
-    /ide
-    管理 IDE 集成并显示状态
-    /init
-    使用代码库文档初始化新的 CLAUDE.md 文件
-    /insights
-    生成分析您的 Claude Code 会话的报告
-    /install-github-app
-    为仓库设置 Claude GitHub Actions
-    /install-slack-app
-    安装 Claude Slack 应用
-    /login
-    使用您的 Anthropic 账户登录
-    /logout
-    从您的 Anthropic 账户登出
-    /mcp
-    管理 MCP 服务器
-    /memory
-    编辑 Claude 记忆文件
-    /mobile
-    显示下载 Claude 移动应用的二维码
-    /model
-    设置 Claude Code 的 AI 模型（当前为 Sonnet 4.6）
-    /output-style
-    直接从选择菜单设置输出样式
-    /permissions
-    管理允许和拒绝的工具权限规则
-    /plan
-    启用计划模式或查看当前会话计划
-    /plugin
-    管理 Claude Code 插件
-    /pr-comments
-    获取 GitHub 拉取请求的评论
-    /release-notes
-    查看发布说明
-    /rename
-    重命名当前对话
-    /resume
-    恢复之前的对话
-    /review
-    审查拉取请求
-    /rewind
-    将代码和/或对话恢复到之前的状态
-    /sandbox
-    ⚠ 沙盒已禁用（按 ⏎ 配置）
-    /security-review
-    对当前分支上的待处理更改完成安全审查
-    /skills
-    列出可用技能
-    /stats
-    显示您的 Claude Code 使用统计和活动
-    /status
-    显示 Claude Code 状态，包括版本、模型、账户、API 连接性和工具状态
-    /statusline
-    设置 Claude Code 的状态行 UI
-    /stickers
-    订购 Claude Code 贴纸
-    /tasks
-    列出和管理后台任务
-    /terminal-setup
-    安装 Shift+Enter 键绑定用于换行
-    /theme
-    更改主题
-    /upgrade
-    升级到 Max 以获得更高的速率限制和更多 Opus
-    /usage
-    显示计划使用限制
-    
+  Help  General   Commands   Custom commands (←/→ 或 tab 键切换)
+                     ^
+斜杠命令
+    /add-dir            -- 添加新的工作目录
+    /agents             -- 管理 Agent 配置
+    /background         -- 将此会话转入后台并释放终端
+    /branch             -- 从当前位置创建对话分支
+    /btw                -- 提出快速旁问，不中断主对话
+    /clear              -- 以空上下文开始新会话；先前会话仍保留在磁盘上可用 /resume 恢复）
+    /color              -- 设置本会话的提示栏颜色
+    /compact            -- 通过总结迄今对话来释放上下文
+    /config             -- 打开配置面板
+    /context            -- 以彩色网格可视化当前上下文使用情况
+    /copy               -- 将 Claude 的上一条回复复制到剪贴板（或 /copy N 复制倒数第 N 条）
+    /diff               -- 查看未提交的变更及每轮 diff
+    /doctor             -- 诊断并验证 Claude Code 安装与设置
+    /effort             -- 设置模型使用的努力程度
+    /exit               -- 退出 CLI
+    /export             -- 将当前对话导出到文件或剪贴板
+    /fast               -- 切换快速模式（Opus 4.8）
+    /feedback           -- 提交反馈、报告 bug 或分享对话
+    /focus              -- 切换专注视图（仅显示你的提示、工具摘要和最终回复）
+    /goal               -- 设定目标 — 持续工作直至条件满足
+    /help               -- 显示帮助与可用命令
+    /hooks              -- 查看工具事件的 hook 配置
+    /ide                -- 管理 IDE 集成并显示状态
+    /init               -- 初始化带代码库文档的新 CLAUDE.md 文件
+    /insights           -- 生成分析 Claude Code 会话的报告
+    /keybindings        -- 打开或创建按键绑定配置文件
+    /login              -- 使用 Anthropic 账户登录
+    /logout             -- 登出 Anthropic 账户
+    /mcp                -- 管理 MCP 服务器
+    /memory             -- 编辑 Claude 记忆文件
+    /mobile             -- 显示二维码以下载 Claude 移动应用
+    /model              -- 设置 Claude Code 的 AI 模型（当前为 deepseek-v4-pro[1m]）
+    /permissions        -- 管理允许与拒绝的工具权限规则
+    /plan               -- 启用 plan 模式或查看当前会话计划
+    /plugin             -- 管理 Claude Code 插件
+    /powerup            -- 通过快速互动教程发现 Claude Code 功能
+    /recap              -- 立即生成一行会话摘要
+    /release-notes      -- 查看发布说明
+    /reload-plugins     -- 在当前会话中激活待处理的插件变更
+    /reload-skills      -- 加载本会话期间在磁盘上新增或修改的 skills
+    /rename             -- 重命名当前对话
+    /resume             -- 恢复先前的对话
+    /review             -- 审查 Pull Request
+    /rewind             -- 将代码和/或对话恢复到之前的某个时间点
+    /sandbox            -- ⚠ 沙箱已禁用（按 ⏎ 配置）
+    /security-review    -- 对当前分支上待提交的变更完成安全审查
+    /skills             -- 列出可用的 skills
+    /status             -- 显示 Claude Code 状态，包括版本、模型、账户、API 连接和工具状态
+    /statusline         -- 设置 Claude Code 的状态行 UI
+    /stickers           -- 订购 Claude Code 贴纸
+    /tasks              -- 列出并管理后台任务
+    /team-onboarding    -- 根据你的使用习惯，帮助队友快速上手 Claude Code
+    /terminal-setup     -- 安装 Shift+Enter 换行快捷键
+    /theme              -- 更改主题
+    /tui                -- 设置终端 UI 渲染器（default | fullscreen）
+    /usage              -- 显示会话费用、套餐用量和活动统计
+    /workflows          -- 浏览动态工作流历史（运行中与已完成）

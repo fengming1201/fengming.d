@@ -1,14 +1,23 @@
- ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-  Claude Code v2.1.63  general   commands   custom-commands  (←/→ 或 tab 键切换)
-                          ^
-
-
-  Claude 可以理解您的代码库，在获得您许可的情况下进行编辑，并直接从终端执行命令。
-
+  Help  General   Commands   Custom commands (←/→ 或 tab 键切换)
+           ^
+  Claude 理解你的代码库，经你许可后编辑代码并执行命令 — 一切尽在终端中完成。
   快捷键
-  ! 进入 bash 模式           双击 esc 清除输入          ctrl + shift + - 撤销
-  / 进入命令模式             shift + tab 自动接受编辑   ctrl + z 挂起
-  @ 用于文件路径             ctrl + o 显示详细输出      ctrl + v 粘贴图片
-  & 后台运行                 ctrl + t 切换任务          meta + p 切换模型
-                             反斜杠 (\) + 回车 (⏎)      ctrl + s 暂存提示词
-                             用于换行                   ctrl + g 在 $EDITOR 中编辑
+(1) ! 进入 shell 模式
+(2)  双击 esc 清空输入
+(3)  ctrl + shift + _ 撤销
+(4)  / 斜杠命令
+(5)  shift + tab 自动接受编辑
+(6)  ctrl + z 挂起
+(7)  @ 引用文件路径
+(8)  ctrl + o 详细输出
+(9)  ctrl + v 粘贴图片
+(10) /btw 旁问
+(11) ctrl + t 切换任务面板
+(12) alt + p 切换模型
+(13) 反斜杠 (\) + 回车 (⏎) 换行
+(14) ctrl + s 暂存提示词
+(15) ctrl + g 在 $EDITOR 中编辑
+(16) /keybindings 自定义快捷键
+
+
+更多帮助：https://code.claude.com/docs/en/overview
