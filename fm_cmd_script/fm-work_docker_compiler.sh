@@ -151,6 +151,7 @@ function docker-compiler
         echo "      Right:  $FUNCNAME  \"make clean && make all\""
         echo "      Also:   $FUNCNAME   make clean '&&' make all"
         echo ""
+        echo "Example0 : $FUNCNAME -p mc632x     4who  #show container info"
         echo "Example1 : $FUNCNAME -p mc632x     ./AllInOne4_fh8626v3x_build.sh all"
         echo "Example2 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
         echo "Example3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
@@ -240,8 +241,11 @@ function docker-compiler
 
     if [ ${#remaining_args[@]} -lt 1 ]; then
         echo "Error: command list is empty!"
+        echo "  Usage: "
         echo "         $FUNCNAME [options] [--] \"command args ...\""
-        echo "Example: $FUNCNAME -p mc632x make all"
+        echo "Example: $FUNCNAME -p $platform  make menuconfig"
+        echo "Example: $FUNCNAME -p $platform  make all"
+        echo "Example: $FUNCNAME -p $platform  ./configuer --prefix=/usr/local/"
         return 3
     fi
 
