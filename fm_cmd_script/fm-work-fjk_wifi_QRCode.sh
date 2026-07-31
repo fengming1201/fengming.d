@@ -19,6 +19,7 @@ function func_wifi_qr_code
 {
 	local app=qrencode
 	local default_opt="-o  - -t UTF8 -m 2"
+	local new_opt="-v 15 -l L -t UTF8 "
 	local mode="nomal"
 	local ssid="none"
 	local passwd=""
@@ -26,6 +27,8 @@ function func_wifi_qr_code
 	#check app
 	which ${app} > /dev/null
 	if [ $? -ne 0 ];then echo "${app} not exist";echo "please install it first";echo "apt install ${app}";return 1;fi
+	which tput > /dev/null
+	if [ $? -ne 0 ];then echo "tput not exist";echo "please install it first";echo "apt install tput";return 1;fi
 
 	#check parameter
 	if [ $# -lt 1 ] || [ $# -gt 3 ]
@@ -62,6 +65,15 @@ function func_wifi_qr_code
 		echo "unknow format"
 		return 3
 	fi
+	#calc terminal window size 
+	local rows=$(tput lines)
+	local cols=$(tput cols)
+	echo "window_size=$rows X $cols"
+	local max_modules=$(( (rows < cols ? rows : cols) - 8 ))
+	echo "max_modules=$max_modules"
+	local size=$(( (max_modules - 17) / 4 ))
+	size=15
+
 	#merge qrcode format sting
 	local qrcode_string="none"
 	if [ "x${mode}" = "xfjk" ]
@@ -84,7 +96,8 @@ function func_wifi_qr_code
 	fi
 	echo "==${qrcode_string}"
 	#generate qr code
-	qrencode ${default_opt} ${qrcode_string}
+	echo "EXEC:qrencode -v $size -l L -t UTF8 '${qrcode_string}'"
+	qrencode -v $size -l L -t UTF8 ${qrcode_string}
 	if [ ! $? -eq 0 ];then echo "exec qrencode wrong.";return 4;fi
 	echo "mode:${mode} ssid:${ssid} pass:${passwd}"
 	return 0

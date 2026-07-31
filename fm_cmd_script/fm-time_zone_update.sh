@@ -47,6 +47,7 @@ function func_update_time_zone
 		for server in $(echo ${time_server_array[*]})
 		do
 			echo "try to connecting time server:${server}"
+			echo "EXEC:${maybeSUDO} ${app} -u  ${server}"
 			${maybeSUDO} ${app} -u  ${server}
 			if [ $? -eq 0 ];then break;fi
 		done
@@ -72,9 +73,11 @@ function func_update_time_zone
 		if [ ${ret} -eq 0 ]
 		then
 			echo "set time zone to ${zone_default}"
+			echo "EXEC:${maybeSUDO} ${setzone} set-timezone  ${zone_default}"
 			${maybeSUDO} ${setzone} set-timezone  ${zone_default}
 		else
 			echo "cp time zone file to ${target_file}"
+			echo "EXEC:${maybeSUDO} cp -vf ${zonefile} ${target_file}"
 			${maybeSUDO} cp -vf ${zonefile} ${target_file}
 		fi
 	fi

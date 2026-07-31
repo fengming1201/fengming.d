@@ -22,7 +22,12 @@ function _data_base_add_example() {
 # new_fh8626v300=container4_newfw_fh8626v3x_compiler
 # new_jzt23=container4_newfw_jzt23_compiler
 # new_jzt33=container4_newfw_jzt33_compiler
-# new_mc632x=container4_newfw_mc632x_compiler
+# new_mc632x=container4_newfw_mc6321_compiler
+mcu51=container4_mcu51_compiler
+stm32=container4_stm32_compiler
+esp32=container4_esp32_compiler
+easyarm=container4_easyarm_compiler
+pico=container4_pico_compiler
 
 EOF
 }
@@ -31,7 +36,9 @@ EOF
 #   init           : 数据库文件不存在时创建并写入格式说明注释
 #   get key        : 返回 value，key/value 缺失或未命中时返回空
 #   set key value  : 修改已有键值或追加新键值对
+#   del key        : 删除键值对
 #   list           : 在一行中打印所有 key
+#   show           : 打印数据库中有效key-value对
 function _data_base_operation() {
     local cmd="${1:-}"
     local map_file="${docker_compiler_platform_map2_container}"
@@ -100,6 +107,42 @@ function _data_base_operation() {
             done < "$map_file"
             return 0
             ;;
+        del)
+            local key="$2"
+            local line plat
+            local found=false
+
+            [[ -z "$key" ]] && return 0
+            key="${key//[[:space:]]/}"
+            [[ -z "$key" ]] && return 0
+            if [[ ! -f "$map_file" ]]; then
+                echo "Error: key not found: $key" >&2
+                return 1
+            fi
+
+            local tmp_file
+            tmp_file=$(mktemp) || return 1
+            while IFS= read -r line || [[ -n "$line" ]]; do
+                if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "${line//[[:space:]]}" ]]; then
+                    printf '%s\n' "$line" >> "$tmp_file"
+                    continue
+                fi
+                plat="${line%%=*}"
+                plat="${plat//[[:space:]]/}"
+                if [[ -n "$plat" && "$plat" == "$key" ]]; then
+                    found=true
+                    continue
+                fi
+                printf '%s\n' "$line" >> "$tmp_file"
+            done < "$map_file"
+            if [[ "$found" = false ]]; then
+                rm -f "$tmp_file"
+                echo "Error: key not found: $key" >&2
+                return 1
+            fi
+            mv "$tmp_file" "$map_file"
+            return 0
+            ;;
         list)
             [[ ! -f "$map_file" ]] && return 0
             while IFS='=' read -r plat value _rest; do
@@ -114,7 +157,7 @@ function _data_base_operation() {
             [[ ${#keys[@]} -gt 0 ]] && echo "${keys[*]}"
             return 0
             ;;
-        list_all)
+        show)
             [[ ! -f "$map_file" ]] && return 0
             while IFS='=' read -r plat value _rest; do
                 [[ "$plat" =~ ^[[:space:]]*# ]] && continue
@@ -128,7 +171,7 @@ function _data_base_operation() {
             return 0
             ;;
         *)
-            echo "Error: unknown database command: $cmd (supported: init, get, set, list, list_all)" >&2
+            echo "Error: unknown database command: $cmd (supported: init, get, set, del, list, show)" >&2
             return 1
             ;;
     esac
@@ -146,6 +189,11 @@ function docker-compiler
         echo "        -n|--name  [container_name]   #overwrite container name. no para: list all known running containers"
         echo "        -p|--plat  [platform]         #select container_name by platform. no para: list all known platforms-container mapping"
         echo ""
+        echo "mapping table operations:"
+        echo "        -A|--add   platform  container_name   #add a new platform-container mapping entry to $docker_compiler_platform_map2_container"
+        echo "        -D|--del   platform                   #delete a platform-container mapping entry from $docker_compiler_platform_map2_container"
+        echo "        -S|--show  platform                   #show the platform-container mapping entry from $docker_compiler_platform_map2_container"
+        echo ""
         echo "Note: shell operators (&&, ||, ;, |) are parsed by your shell BEFORE this script runs."
         echo "      Wrong:  $FUNCNAME   make clean && make all   # only 'make clean' runs in docker"
         echo "      Right:  $FUNCNAME  \"make clean && make all\""
@@ -159,7 +207,7 @@ function docker-compiler
         echo "Example5 : $FUNCNAME -p mc632x    \"make clean && make all\""
         echo "Example6 : $FUNCNAME -p mc632x     ls -lh"
         echo "Example7 : $FUNCNAME -p mc632x --  ls -lh"
-        echo "Example8 : $FUNCNAME -p                  # no para: list all known platforms-container mapping"
+        echo "Example8 : $FUNCNAME -p                  # no para: list all known platforms-container mapping:$docker_compiler_platform_map2_container"
         echo "Example9 : $FUNCNAME -n                  # no para: list all known running containers"
         echo "Example10: $FUNCNAME -n container_name \"make clean && make all\" "
         echo "Example11: $FUNCNAME \"make clean && make all\" -n container_name"
@@ -171,9 +219,11 @@ function docker-compiler
             echo "g_container_name=${g_container_name}"
             echo "g_platform=${g_platform}"
         else
-            echo "The default value can also be changed through environment variables"
+            echo "The default value can also be changed through environment variables."
             echo "export g_container_name="
             echo "export g_platform="
+            echo ""
+            echo "If you intend to use the same compile environment for a long time or frequently,recommended you write it into ~/.bashrc"
         fi
         if [[ ! -f "${docker_compiler_platform_map2_container}" ]]; then
             _data_base_operation init || return 1
@@ -198,6 +248,8 @@ function docker-compiler
     local docker_container_name=${g_container_name:-}
     local platform=${g_platform:-}
     local debug=false
+    local sub_cmd=""
+    local sub_cmd_args=()
     #================================================================#
     #step 1: process parameters,parse script options
     local remaining_args=()
@@ -216,8 +268,16 @@ function docker-compiler
                 if [[ -z "$2" ]]; then echo "All known running container list: ";docker ps -a --format "{{.Names}}"; return 1; fi
                 docker_container_name="$2"; shift 2 ;; #带参数，移动2
             -p|--plat)
-                if [[ -z "$2" ]]; then echo "All known platforms-container mapping list: ";_data_base_operation list_all; return 1; fi
+                if [[ -z "$2" ]]; then echo "All known platforms-container mapping list: ";_data_base_operation show; return 1; fi
                 platform="$2"; shift 2 ;; #带参数，移动2
+            -A|--add)
+                if [[ -z "$2" || -z "$3" ]]; then echo "ERROR: not found platform or container_name" >&2; return 1; fi
+                sub_cmd=ADD; sub_cmd_args=("$2" "$3"); shift 3 ;; #带2参数，移动3
+            -D|--del)
+                if [[ -z "$2" ]]; then echo "ERROR: not found platform" >&2; return 1; fi
+                sub_cmd=DEL; sub_cmd_args=("$2"); shift 2 ;; #带1参数，移动2
+            -S|--show)
+                sub_cmd=LIST; sub_cmd_args=(); shift 1 ;; #不带参数，移动1
             -*)
                 # 用户命令已出现(如 ls)后，未知的 - 开头参数不再当脚本选项
                 # 例: -p mc632x ls -lh 中的 -lh 应交给 ls，而非报 invalid option
@@ -231,6 +291,9 @@ function docker-compiler
                         d) debug=true ;;
                         n) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
                         p) platform="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
+                        A) sub_cmd=ADD; sub_cmd_args=("$2" "$3"); shift 3;break ;; # 当 a 是合并选项的一部分时，它应该停止解析剩余的字符
+                        D) sub_cmd=DEL; sub_cmd_args=("$2"); shift 2;break ;; # 当 d 是合并选项的一部分时，它应该停止解析剩余的字符
+                        S) sub_cmd=LIST; sub_cmd_args=(); shift;break ;; # 当 s 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -239,6 +302,16 @@ function docker-compiler
         esac
     done
 
+    if [ -n "${sub_cmd}" ]; then
+        if [ "${sub_cmd}" = "ADD" ]; then
+            _data_base_operation set ${sub_cmd_args[@]}
+        elif [ "${sub_cmd}" = "DEL" ]; then
+            _data_base_operation del ${sub_cmd_args[@]} || return $?
+        elif [ "${sub_cmd}" = "LIST" ]; then
+            _data_base_operation show ${sub_cmd_args[@]}
+        fi
+        return 0
+    fi
     if [ ${#remaining_args[@]} -lt 1 ]; then
         echo "Error: command list is empty!"
         echo "  Usage: "
@@ -248,7 +321,6 @@ function docker-compiler
         echo "Example: $FUNCNAME -p $platform  ./configuer --prefix=/usr/local/"
         return 3
     fi
-
     #================================================================#
     # step 2: get docker container name by platform
     if [[ -z "${docker_container_name}" && -n "${platform}" ]]; then

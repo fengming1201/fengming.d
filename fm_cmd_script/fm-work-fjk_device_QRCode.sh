@@ -19,7 +19,13 @@ fi
 function func_help
 {
 	echo "Usage:"
-	echo "${scriptname}  fjk_dev_sn     [password]"
+	echo "${scriptname}  [opt]  param"
+	echo "${scriptname}  [-h | -o]  param"
+	echo "option:"
+	echo "     -h                      #help"
+	echo "     -o                      #origin string"
+	echo ""
+	echo "${scriptname}  fjk_dev_sn      [password]"
 	echo "${scriptname}  1jfiegbr4jgca   123456aa"
 	echo "${scriptname}  1jfiegbr4jgca            #if not give password,default is admin"
 	return 0
@@ -52,23 +58,29 @@ function func_fjk_add_device_QRCode
 	local passwd_head="password:"
 	local passwd=
 
+	#check tool
+	which ${tool} > /dev/null
+	if [ $? -ne 0 ];then
+		echo "please install qrencode first"
+		echo "apt install qrencode"
+		return 1
+	fi
+
 	if [ $# -lt 1 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 	then
 		func_help
-		return 1
-	fi 
-	if [ $# -gt 2 ]
+		return 2
+	elif [ "$1" = "-o" ] || [ "$1" = "--org" ]
 	then
+		shift 1
+		echo "EXEC:${tool} ${opt} \"$@\""
+		${tool} ${opt} "$@"
+		return 0
+	fi 
+
+	if [ $# -gt 2 ];then
 		echo "ERROR:Only accept one or two parameters"
 		func_help
-		return 2
-	fi
-	#check tool
-	which ${tool} > /dev/null
-	if [ $? -ne 0 ]
-	then
-		echo "please install qrencode first"
-		echo "apt install qrencode"
 		return 3
 	fi
 
@@ -81,6 +93,7 @@ function func_fjk_add_device_QRCode
 	func_check_sn_validity "${user}"
 	if [ $? -ne 0 ];then return 4;fi
 	#generate qrcode
+	echo "EXEC:${tool} ${opt} ${id_head}${user}${passwd_head}${passwd}"
 	${tool} ${opt} ${id_head}${user}${passwd_head}${passwd}
 	echo "ID=${user}"
 	echo "pass=${passwd}"
