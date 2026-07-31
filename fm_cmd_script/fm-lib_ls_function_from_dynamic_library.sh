@@ -18,9 +18,11 @@ fi
 #列出《动态库》中包含的《函数接口》
 function lib_ls_function_from_dynamic_library
 {
+	#local tool=objdump
+	#local default_opt="-T"
 	#check 
-	local tool=readelf
-	local default_opt="-A"
+	local tool=nm
+	local default_opt="-D"
 	which ${tool} > /dev/null
 	if [ $? -ne 0   ];then echo "${tool} not found!";return 1;fi
 

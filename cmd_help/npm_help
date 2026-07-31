@@ -1,0 +1,84 @@
+npm <command>
+
+Usage:
+
+npm install        安装项目中的所有依赖项
+npm install <foo>  将<foo>依赖项添加到项目中
+npm test           运行此项目的测试
+npm run <foo>      运行名为<foo>的脚本
+npm <command> -h   <command>快速帮助
+npm -l             显示所有命令的使用信息
+npm help <term>    在<term>上搜索帮助
+npm help npm       更深入的概述
+
+All commands:
+
+    access, adduser, audit, bugs, cache, ci, completion,
+    config, dedupe, deprecate, diff, dist-tag, docs, doctor,
+    edit, exec, explain, explore, find-dupes, fund, get, help,
+    help-search, hook, init, install, install-ci-test,
+    install-test, link, ll, login, logout, ls, org, outdated,
+    owner, pack, ping, pkg, prefix, profile, prune, publish,
+    query, rebuild, repo, restart, root, run-script, sbom,
+    search, set, shrinkwrap, star, stars, start, stop, team,
+    test, token, uninstall, unpublish, unstar, update, version,
+    view, whoami
+
+在ini格式的文件中指定配置：
+    /home/lshm/.npmrc
+或者在命令行上通过: npm <command> --key=value
+
+更多配置信息: npm help config
+配置字段: npm help 7 config
+
+npm@10.8.2 /usr/local/lib/node_modules/npm
+========================================
+
+使用示例:
+
+# 初始化项目
+npm init                 交互式创建 package.json
+npm init -y              使用默认值快速创建 package.json
+
+# 安装依赖
+npm install              安装 package.json 中的全部依赖
+npm install lodash       安装并写入 dependencies
+npm install -D eslint    安装并写入 devDependencies
+npm install -g npm       全局安装包
+npm install lodash@4.17.21  安装指定版本
+npm ci                   按 lock 文件干净安装（适合 CI）
+
+# 更新 / 卸载
+npm update               按 semver 范围更新依赖
+npm outdated             查看过期的依赖
+npm uninstall lodash     卸载依赖并更新 package.json
+
+# 运行脚本
+npm start                运行 scripts.start
+npm test                 运行 scripts.test
+npm run build            运行自定义脚本 build
+npm run                  列出 package.json 中所有脚本
+
+# 查看信息
+npm list                 查看本地已安装依赖树
+npm list -g --depth=0    查看全局已安装的顶层包
+npm view lodash version  查看远端包最新版本
+npm view lodash versions 查看远端包所有版本
+npm whoami               查看当前登录用户
+
+# 缓存 / 审计
+npm cache clean --force  清空 npm 缓存
+npm audit                检查依赖安全漏洞
+npm audit fix            自动修复可修复的漏洞
+
+# 发布相关
+npm login                登录 npm 仓库
+npm publish              发布当前包
+npm unpublish <pkg>@ver  撤销已发布的指定版本
+
+# 配置
+npm config get registry  查看当前镜像源
+npm config set registry https://registry.npmmirror.com
+                         设置为国内镜像
+npm config delete registry
+                         恢复官方源

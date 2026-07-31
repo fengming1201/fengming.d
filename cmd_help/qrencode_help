@@ -1,0 +1,83 @@
+qrencode 版本 4.1.1
+版权所有 (C) 2006-2017 Kentaro Fukuchi
+用法：qrencode [-o 文件名] [选项]... [字符串]
+将输入数据编码为二维码，并保存为 PNG 或 EPS 图像。
+
+  -h, --help   显示帮助信息。-h 仅显示短选项的帮助。
+
+  -o 文件名, --output=文件名
+               将图像写入指定文件。若指定为 '-'，结果将输出到标准输出。
+               若同时使用 -S，结构化符号将写入 文件名-01.png、文件名-02.png……
+               （若文件名含后缀，会先去掉后缀）
+
+  -r 文件名, --read-from=文件名
+               从指定文件读取输入数据。
+
+  -s 数字, --size=数字
+               指定模块大小（像素）。（默认=3）
+
+  -l {LMQH}, --level={LMQH}
+               指定纠错级别，从 L（最低）到 H（最高）。
+               （默认=L）
+
+  -v 数字, --symversion=数字
+               指定符号的最低版本。详见「符号版本」。
+               （默认=auto）
+
+  -m 数字, --margin=数字
+               指定边距宽度。（默认=4；Micro QR 为 2）
+
+  -d 数字, --dpi=数字
+               指定生成 PNG 的 DPI。（默认=72）
+
+  -t {PNG,PNG32,EPS,SVG,XPM,ANSI,ANSI256,ASCII,ASCIIi,UTF8,UTF8i,ANSIUTF8,ANSIUTF8i,ANSI256UTF8},
+  --type={PNG,PNG32,EPS,SVG,XPM,ANSI,ANSI256,ASCII,ASCIIi,UTF8,UTF8i,ANSIUTF8,ANSIUTF8i,ANSI256UTF8}
+               指定生成图像的类型。（默认=PNG）
+
+  -S, --structured
+               生成结构化符号。必须用 '-v' 指定版本。
+
+  -k, --kanji  假定输入文本包含汉字（shift-jis）。
+
+  -c, --casesensitive
+               以 8 位模式编码小写字母。（默认）
+
+  -i, --ignorecase
+               忽略大小写，仅使用大写字符。
+
+  -8, --8bit   以 8 位模式编码全部数据。-k、-c 和 -i 将被忽略。
+
+  -M, --micro  编码为 Micro QR Code。
+
+      --rle    为 SVG 启用行程长度编码。
+
+      --svg-path
+               SVG 使用单路径绘制模块。
+
+      --inline 仅对 SVG 输出有用，生成不含 XML 标签的 SVG。
+
+      --foreground=RRGGBB[AA]
+      --background=RRGGBB[AA]
+               以十六进制指定前景/背景颜色。
+               支持 6 位（RGB）或 8 位（RGBA）形式。
+               颜色输出仅在 PNG、EPS 和 SVG 中可用。
+
+      --strict-version
+               禁用版本号自动调整。若输入数据对指定版本过大，
+               程序以退出码 1 退出。
+
+  -V, --version
+               显示 qrencode 的版本号和版权信息。
+
+      --verbose
+               向标准错误输出详细信息。
+
+  [字符串]     输入数据。若未指定，则从标准输入读取。
+
+符号版本
+               QR Code 的符号版本范围为版本 1 到版本 40。
+               每个版本具有不同的模块配置或模块数量，
+               从版本 1（21 × 21 模块）到版本 40（177 × 177 模块）。
+               默认情况下，每升高一个版本号，每边增加 4 个模块。
+               详细版本列表见：
+               http://www.qrcode.com/en/about/version.html
