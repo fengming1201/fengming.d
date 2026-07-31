@@ -40,7 +40,7 @@ alias cman='man -M  /usr/share/man/zh_CN'
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
 
-alias mywifi='fm-wifi_qr_code.sh fjk luoshengming_ap 12345678'
+alias mywifi='fm-work-fjk_wifi_QRCode.sh fjk luoshengming_ap 12345678'
 alias gitst='fm-gitst.sh'
 alias gitls='fm-gitls.sh'
 alias gitls_stage='fm-gitls_stage.sh'
@@ -83,6 +83,19 @@ function clrall
 	echo "" > /${HOME}/.bash_history
 	echo "All bash data has deleted!!"
 	return 0
+}
+
+function trash_new
+{
+    for arg in "$@"; do
+        if [ -d "$arg" ]; then
+            if [[ ! " $* " =~ " -r " ]]; then
+                echo "rm: cannot remove '$arg': Is a directory"
+                return 1
+            fi
+        fi
+    done
+    trash "$@"
 }
 
 #no source again when start screen ot tmux!
