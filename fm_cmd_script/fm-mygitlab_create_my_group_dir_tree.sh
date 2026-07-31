@@ -129,6 +129,7 @@ function func_main
                 MyGitlab/Docker_App
                 MyGitlab/Docker_Compiler
                 MyGitlab/Docker_Runtime
+                MyGitlab/Docker_Quick2Build
                 MyGitlab/Project
                 MyGitlab/Project/subProject_51MCU
                 MyGitlab/Project/subProject_STM32

@@ -80,6 +80,7 @@ function clrall
 {
 	clear
 	history -c
+	hash -r
 	echo "" > /${HOME}/.bash_history
 	echo "All bash data has deleted!!"
 	return 0
