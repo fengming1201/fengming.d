@@ -139,9 +139,11 @@ function func_main
     fi
     if [ "${debug}" = true ];then echo "EXEC:git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'";fi
     if [ "${test}" = false ];then
+        local status_counts=$(${maybeSUDO} git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:' | wc -l)
+        local staged_counts=$(${maybeSUDO} git diff --name-only --staged | wc -l)
         echo "{"
         ${maybeSUDO} git status | grep -E 'new file:|modified:|deleted:|renamed:|copied:'
-        echo "}"
+        echo "},$staged_counts,$status_counts"
     fi
     echo "git_root_dir:${git_root_dir}"
     echo ""

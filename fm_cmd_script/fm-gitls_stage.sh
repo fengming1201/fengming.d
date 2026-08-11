@@ -128,10 +128,11 @@ function func_git_ls_stage_only
 
     if [ "${debug}" = true ];then echo "EXEC:git diff --name-only --staged";fi
     echo "{"
+    local staged_counts=$(${maybeSUDO} git diff --name-only --staged | wc -l) 
     #git diff --name-only --cached
     #或（Git 2.23+）：
     ${maybeSUDO} git diff --name-only --staged
-    echo "}"
+    echo "},$staged_counts"
 
     #echo "git_root_dir:${git_root_dir}"
     echo ""
