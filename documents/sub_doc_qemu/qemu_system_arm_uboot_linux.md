@@ -20,8 +20,7 @@ sudo apt install -y build-essential flex bison libssl-dev bc
 ```bash
 git clone https://source.denx.de/u-boot/u-boot.git -b v2024.01 --depth 1
 cd u-boot
-export CROSS_COMPILE=arm-linux-gnueabihf-
-make vexpress_ca9x4_defconfig
+export CROSS_COMPILE=arm-linux-gnueabihf- && make vexpress_ca9x4_defconfig
 ```
 
 **关键配置调整**（非必须，但建议让 U-Boot 直接支持 QEMU 的 pflash）：
