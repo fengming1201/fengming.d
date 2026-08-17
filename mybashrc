@@ -63,6 +63,7 @@ alias gitbranch_all='git branch -a'
 alias wgrep='fm-word_grep.sh'
 alias hex_map_layout='fm-work_hex_map_layout.sh'
 alias hex_calculator='fm-work_hex_calculator.sh'
+alias myping='ping 106.53.213.18'
 
 #source other files
 #incude first
