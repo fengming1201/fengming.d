@@ -44,8 +44,8 @@ dsh --version
 
 ```
 
-## 启动
-dsh web
+## 启动，放后台
+dsh web &
 dsh web: http://127.0.0.1:3080 (LAN: http://192.168.137.12:3080)
 
 
@@ -57,8 +57,8 @@ git clone https://gitee.com/kill-life/dsh-lan-access.git
 
 cd dsh-lan-access/
 
-#1， 完整模式，:3443 -> 127.0.0.1:3080
-node dsh-lan-tls-proxy.mjs
+#1， 完整模式，放后台:3443 -> 127.0.0.1:3080
+node dsh-lan-tls-proxy.mjs &
 
 ,2，或 自定义前端端口
 node dsh-lan-tls-proxy.mjs --port 4443
@@ -68,6 +68,6 @@ TRUST_LOCAL=false node dsh-lan-tls-proxy.mjs
 ```
 
 ## web访问
-https://IP:3080
+https://IP:3443
 
-
+会提示警告，证书信任两种方法：一次性“继续访问”，或把cert.pem装进各机器信任库消除告警。
