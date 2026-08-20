@@ -1,48 +1,46 @@
-Usage of mkcert:
+mkcert 用法：
 
 	$ mkcert -install
-	Install the local CA in the system trust store.
+	将本地 CA 安装到系统信任存储。
 
 	$ mkcert example.org
-	Generate "example.org.pem" and "example.org-key.pem".
+	生成 "example.org.pem" 和 "example.org-key.pem"。
 
 	$ mkcert example.com myapp.dev localhost 127.0.0.1 ::1
-	Generate "example.com+4.pem" and "example.com+4-key.pem".
+	生成 "example.com+4.pem" 和 "example.com+4-key.pem"。
 
 	$ mkcert "*.example.it"
-	Generate "_wildcard.example.it.pem" and "_wildcard.example.it-key.pem".
+	生成 "_wildcard.example.it.pem" 和 "_wildcard.example.it-key.pem"。
 
 	$ mkcert -uninstall
-	Uninstall the local CA (but do not delete it).
+	卸载本地 CA（但不会删除它）。
 
-Advanced options:
+高级选项：
 
 	-cert-file FILE, -key-file FILE, -p12-file FILE
-	    Customize the output paths.
+	    自定义输出路径。
 
 	-client
-	    Generate a certificate for client authentication.
+	    生成用于客户端认证的证书。
 
 	-ecdsa
-	    Generate a certificate with an ECDSA key.
+	    生成带 ECDSA 密钥的证书。
 
 	-pkcs12
-	    Generate a ".p12" PKCS #12 file, also know as a ".pfx" file,
-	    containing certificate and key for legacy applications.
+	    生成 ".p12" PKCS #12 文件（也称为 ".pfx" 文件），
+	    其中包含供旧式应用程序使用的证书和密钥。
 
 	-csr CSR
-	    Generate a certificate based on the supplied CSR. Conflicts with
-	    all other flags and arguments except -install and -cert-file.
+	    基于所提供的 CSR 生成证书。除 -install 和 -cert-file 外，
+	    与所有其他标志和参数冲突。
 
 	-CAROOT
-	    Print the CA certificate and key storage location.
+	    打印 CA 证书和密钥的存储位置。
 
-	$CAROOT (environment variable)
-	    Set the CA certificate and key storage location. (This allows
-	    maintaining multiple local CAs in parallel.)
+	$CAROOT（环境变量）
+	    设置 CA 证书和密钥的存储位置。（这允许并行维护多个本地 CA。）
 
-	$TRUST_STORES (environment variable)
-	    A comma-separated list of trust stores to install the local
-	    root CA into. Options are: "system", "java" and "nss" (includes
-	    Firefox). Autodetected by default.
-
+	$TRUST_STORES（环境变量）
+	    以逗号分隔的信任存储列表，用于安装本地根 CA。
+	    可选值："system"、"java" 和 "nss"（包含 Firefox）。
+	    默认自动检测。

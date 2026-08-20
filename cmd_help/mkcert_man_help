@@ -1,0 +1,70 @@
+MKCERT(1)                                                                      用户命令                                                                     MKCERT(1)
+
+名称
+       mkcert - 零配置工具，用于制作本地受信任的证书
+
+描述
+       mkcert 用法：
+
+              $ mkcert -install
+
+              将本地 CA 安装到系统信任存储。
+
+              $ mkcert example.org
+
+              生成 "example.org.pem" 和 "example.org-key.pem"。
+
+              $ mkcert example.com myapp.dev localhost 127.0.0.1 ::1
+
+              生成 "example.com+4.pem" 和 "example.com+4-key.pem"。
+
+              $ mkcert "*.example.it"
+
+              生成 "_wildcard.example.it.pem" 和 "_wildcard.example.it-key.pem"。
+
+              $ mkcert -uninstall
+
+              卸载本地 CA（但不会删除它）。
+
+       高级选项：
+
+       -cert-file FILE, -key-file FILE, -p12-file FILE
+
+              自定义输出路径。
+
+       -client
+
+              生成用于客户端认证的证书。
+
+       -ecdsa
+
+              生成带 ECDSA 密钥的证书。
+
+       -pkcs12
+
+              生成 ".p12" PKCS #12 文件（也称为 ".pfx" 文件），其中包含供旧式应用程序使用的证书和密钥。
+
+       -csr CSR
+
+              基于所提供的 CSR 生成证书。除 -install 和 -cert-file 外，与所有其他标志和参数冲突。
+
+       -CAROOT
+
+              打印 CA 证书和密钥的存储位置。
+
+              $CAROOT（环境变量）
+
+              设置 CA 证书和密钥的存储位置。（这允许并行维护多个本地 CA。）
+
+              $TRUST_STORES（环境变量）
+
+              以逗号分隔的信任存储列表，用于安装本地根 CA。可选值："system"、"java" 和 "nss"（包含 Firefox）。默认自动检测。
+
+另见
+       mkcert 的完整文档以 Texinfo 手册形式维护。若本机已正确安装 info 和 mkcert 程序，则命令
+
+              info mkcert
+
+       应能让你访问完整手册。
+
+mkcert                                                                         2021 年 11 月                                                                     MKCERT(1)

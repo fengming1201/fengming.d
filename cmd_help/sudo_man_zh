@@ -1,9 +1,9 @@
-SUDO(8)                                                                  System Manager's Manual                                                                 SUDO(8)
+SUDO(8)                                                                  系统管理员手册                                                                 SUDO(8)
 
-NAME
-       sudo, sudoedit — execute a command as another user
+名称
+       sudo, sudoedit — 以另一用户身份执行命令
 
-SYNOPSIS
+语法
        sudo -h | -K | -k | -V
        sudo -v [-ABkNnS] [-g group] [-h host] [-p prompt] [-u user]
        sudo -l [-ABkNnS] [-g group] [-h host] [-p prompt] [-U user] [-u user] [command [arg ...]]
@@ -11,511 +11,441 @@ SYNOPSIS
             [command [arg ...]]
        sudoedit [-ABkNnS] [-C num] [-D directory] [-g group] [-h host] [-p prompt] [-R directory] [-r role] [-t type] [-T timeout] [-u user] file ...
 
-DESCRIPTION
-       sudo allows a permitted user to execute a command as the superuser or another user, as  specified  by  the  security  policy.   The  invoking  user's  real  (not
-       effective) user-ID is used to determine the user name with which to query the security policy.
+描述
+       sudo 允许经许可的用户以超级用户或另一用户身份执行命令，具体由安全策略指定。系统会使用调用者的真实（而非有效）用户 ID 来确定用于查询安全策略的用户名。
 
-       sudo  supports  a  plugin  architecture for security policies, auditing, and input/output logging.  Third parties can develop and distribute their own plugins to
-       work seamlessly with the sudo front-end.  The default security policy is sudoers, which is configured via the file /etc/sudoers, or via LDAP.  See the  “Plugins”
-       section for more information.
+       sudo 采用插件架构，用于安全策略、审计以及输入/输出日志记录。第三方可以开发并分发自己的插件，与 sudo 前端无缝协作。默认安全策略是 sudoers，通过文件
+       /etc/sudoers 或 LDAP 进行配置。更多信息请参见“插件”一节。
 
-       The security policy determines what privileges, if any, a user has to run sudo.  The policy may require that users authenticate themselves with a password or an‐
-       other  authentication  mechanism.   If  authentication  is required, sudo will exit if the user's password is not entered within a configurable time limit.  This
-       limit is policy-specific; the default password prompt timeout for the sudoers security policy is 0 minutes.
+       安全策略决定用户在运行 sudo 时拥有哪些权限（如果有的话）。策略可能要求用户用密码或其他认证机制进行身份验证。若需要认证，而用户未在可配置的时限内输入密码，
+       sudo 将会退出。该时限由具体策略决定；sudoers 安全策略的默认密码提示超时为 0 分钟。
 
-       Security policies may support credential caching to allow the user to run sudo again for a period of time without  requiring  authentication.   By  default,  the
-       sudoers  policy  caches credentials on a per-terminal basis for 15 minutes.  See the timestamp_type and timestamp_timeout options in sudoers(5) for more informa‐
-       tion.  By running sudo with the -v option, a user can update the cached credentials without running a command.
+       安全策略可支持凭据缓存，以便用户在一段时间内再次运行 sudo 而无需重新认证。默认情况下，sudoers 策略按终端缓存凭据，有效期为 15 分钟。更多信息请参见
+       sudoers(5) 中的 timestamp_type 和 timestamp_timeout 选项。用户可通过带 -v 选项运行 sudo 来更新缓存凭据，而无需实际运行命令。
 
-       On systems where sudo is the primary method of gaining superuser privileges, it is imperative to avoid syntax errors in the security policy configuration  files.
-       For  the  default security policy, sudoers(5), changes to the configuration files should be made using the visudo(8) utility which will ensure that no syntax er‐
-       rors are introduced.
+       在以 sudo 作为获取超级用户权限主要手段的系统上，必须避免安全策略配置文件出现语法错误。对于默认安全策略 sudoers(5)，应使用 visudo(8) 工具修改配置文件，
+       以确保不会引入语法错误。
 
-       When invoked as sudoedit, the -e option (described below), is implied.
+       以 sudoedit 调用时，会隐含使用下文所述的 -e 选项。
 
-       Security policies and audit plugins may log successful and failed attempts to run sudo.  If an I/O plugin is configured, the running command's input  and  output
-       may be logged as well.
+       安全策略和审计插件可能记录成功及失败的 sudo 运行尝试。若配置了 I/O 插件，正在运行的命令的输入和输出也可能被记录。
 
-       The options are as follows:
+       选项如下：
 
        -A, --askpass
-               Normally,  if sudo requires a password, it will read it from the user's terminal.  If the -A (askpass) option is specified, a (possibly graphical) helper
-               program is executed to read the user's password and output the password to the standard output.  If the SUDO_ASKPASS  environment  variable  is  set,  it
-               specifies the path to the helper program.  Otherwise, if sudo.conf(5) contains a line specifying the askpass program, that value will be used.  For exam‐
-               ple:
+               通常，若 sudo 需要密码，会从用户的终端读取。若指定了 -A（askpass）选项，则会执行一个（可能带图形界面的）助手程序来读取用户密码，并将密码输出到
+               标准输出。若设置了 SUDO_ASKPASS 环境变量，它指定助手程序的路径。否则，若 sudo.conf(5) 中有指定 askpass 程序的行，则使用该值。例如：
 
-                   # Path to askpass helper program
+                   # askpass 助手程序的路径
                    Path askpass /usr/bin/ssh-askpass
 
-               If no askpass program is available, sudo will exit with an error.
+               若没有可用的 askpass 程序，sudo 将以错误退出。
 
        -B, --bell
-               Ring the bell as part of the password prompt when a terminal is present.  This option has no effect if an askpass program is used.
+               在有终端时，作为密码提示的一部分发出响铃。若使用了 askpass 程序，此选项无效。
 
        -b, --background
-               Run  the given command in the background.  It is not possible to use shell job control to manipulate background processes started by sudo.  Most interac‐
-               tive commands will fail to work properly in background mode.
+               在后台运行给定命令。无法使用 shell 作业控制来操控由 sudo 启动的后台进程。大多数交互式命令在后台模式下无法正常工作。
 
        -C num, --close-from=num
-               Close all file descriptors greater than or equal to num before executing a command.  Values less than three are not permitted.   By  default,  sudo  will
-               close  all  open  file  descriptors other than standard input, standard output, and standard error when executing a command.  The security policy may re‐
-               strict the user's ability to use this option.  The  sudoers  policy  only  permits  use  of  the  -C  option  when  the  administrator  has  enabled  the
-               closefrom_override option.
+               在执行命令之前，关闭所有大于或等于 num 的文件描述符。不允许小于 3 的值。默认情况下，sudo 在执行命令时会关闭除标准输入、标准输出和标准错误之外
+               的所有打开的文件描述符。安全策略可能限制用户使用此选项的能力。sudoers 策略仅在管理员启用了 closefrom_override 选项时才允许使用 -C 选项。
 
        -D directory, --chdir=directory
-               Run  the  command in the specified directory instead of the current working directory.  The security policy may return an error if the user does not have
-               permission to specify the working directory.
+               在指定目录中运行命令，而不是当前工作目录。若用户没有权限指定工作目录，安全策略可能返回错误。
 
        -E, --preserve-env
-               Indicates to the security policy that the user wishes to preserve their existing environment variables.  The security policy may return an error  if  the
-               user does not have permission to preserve the environment.
+               向安全策略表明用户希望保留其现有环境变量。若用户没有权限保留环境，安全策略可能返回错误。
 
        --preserve-env=list
-               Indicates  to  the security policy that the user wishes to add the comma-separated list of environment variables to those preserved from the user's envi‐
-               ronment.  The security policy may return an error if the user does not have permission to preserve the environment.  This option may be specified  multi‐
-               ple times.
+               向安全策略表明用户希望将逗号分隔的环境变量列表加入从用户环境中保留的变量。若用户没有权限保留环境，安全策略可能返回错误。此选项可指定多次。
 
        -e, --edit
-               Edit  one or more files instead of running a command.  In lieu of a path name, the string "sudoedit" is used when consulting the security policy.  If the
-               user is authorized by the policy, the following steps are taken:
+               编辑一个或多个文件，而不是运行命令。在向安全策略查询时，用字符串 "sudoedit" 代替路径名。若策略授权该用户，则执行以下步骤：
 
-               1.   Temporary copies are made of the files to be edited with the owner set to the invoking user.
+               1.   为要编辑的文件制作临时副本，所有者设为调用用户。
 
-               2.   The editor specified by the policy is run to edit the temporary files.  The sudoers policy uses the SUDO_EDITOR, VISUAL and EDITOR environment vari‐
-                    ables (in that order).  If none of SUDO_EDITOR, VISUAL or EDITOR are set, the first program listed in the editor sudoers(5) option is used.
+               2.   运行策略指定的编辑器来编辑临时文件。sudoers 策略按顺序使用 SUDO_EDITOR、VISUAL 和 EDITOR 环境变量。若三者均未设置，则使用 editor
+                    sudoers(5) 选项中列出的第一个程序。
 
-               3.   If they have been modified, the temporary files are copied back to their original location and the temporary versions are removed.
+               3.   若文件已被修改，则将临时文件复制回原始位置，并删除临时版本。
 
-               To help prevent the editing of unauthorized files, the following restrictions are enforced unless explicitly allowed by the security policy:
+               为帮助防止编辑未经授权的文件，除非安全策略明确允许，否则会强制执行以下限制：
 
-                •  Symbolic links may not be edited (version 1.8.15 and higher).
+                •  不可编辑符号链接（1.8.15 及更高版本）。
 
-                •  Symbolic links along the path to be edited are not followed when the parent directory is writable by the invoking user unless that user is root (ver‐
-                   sion 1.8.16 and higher).
+                •  当父目录对调用用户可写且该用户不是 root 时，不跟随通往待编辑路径上的符号链接（1.8.16 及更高版本）。
 
-                •  Files located in a directory that is writable by the invoking user may not be edited unless that user is root (version 1.8.16 and higher).
+                •  位于对调用用户可写目录中的文件不可编辑，除非该用户是 root（1.8.16 及更高版本）。
 
-               Users are never allowed to edit device special files.
+               永远不允许用户编辑设备特殊文件。
 
-               If the specified file does not exist, it will be created.  Unlike most commands run by sudo, the editor is run with the invoking user's  environment  un‐
-               modified.   If  the temporary file becomes empty after editing, the user will be prompted before it is installed.  If, for some reason, sudo is unable to
-               update a file with its edited version, the user will receive a warning and the edited copy will remain in a temporary file.
+               若指定的文件不存在，将会被创建。与 sudo 运行的大多数命令不同，编辑器以调用用户未经修改的环境运行。若编辑后临时文件变为空，安装前会提示用户。
+               若因某种原因 sudo 无法用编辑后的版本更新文件，用户将收到警告，编辑后的副本将保留在临时文件中。
 
        -g group, --group=group
-               Run the command with the primary group set to group instead of the primary group specified by the target user's password database entry.  The  group  may
-               be  either a group name or a numeric group-ID (GID) prefixed with the ‘#’ character (e.g., ‘#0’ for GID 0).  When running a command as a GID, many shells
-               require that the ‘#’ be escaped with a backslash (‘\’).  If no -u option is specified, the command will be run as the invoking user.  In either case, the
-               primary group will be set to group.  The sudoers policy permits any of the target user's groups to be specified via the -g option as long as the  -P  op‐
-               tion is not in use.
+               以 group 作为主组运行命令，而不是使用目标用户密码数据库条目中指定的主组。group 可以是组名，或以 ‘#’ 字符为前缀的数字组 ID（GID）
+               （例如 GID 0 写作 ‘#0’）。以 GID 运行命令时，许多 shell 要求用反斜杠（‘\’）转义 ‘#’。若未指定 -u 选项，命令将以调用用户身份运行。
+               无论哪种情况，主组都会被设为 group。只要未使用 -P 选项，sudoers 策略允许通过 -g 选项指定目标用户所属的任意组。
 
        -H, --set-home
-               Request that the security policy set the HOME environment variable to the home directory specified by the target user's password database entry.  Depend‐
-               ing on the policy, this may be the default behavior.
+               请求安全策略将 HOME 环境变量设为目标用户密码数据库条目中指定的主目录。根据策略，这可能是默认行为。
 
        -h, --help
-               Display a short help message to the standard output and exit.
+               向标准输出显示简短帮助信息并退出。
 
        -h host, --host=host
-               Run  the  command on the specified host if the security policy plugin supports remote commands. The sudoers plugin does not currently support running re‐
-               mote commands. This may also be used in conjunction with the -l option to list a user's privileges for the remote host.
+               若安全策略插件支持远程命令，则在指定主机上运行该命令。sudoers 插件目前不支持运行远程命令。此选项也可与 -l 选项一起使用，以列出用户在远程主机上的权限。
 
        -i, --login
-               Run the shell specified by the target user's password database entry as a login shell.  This means that login-specific resource files such  as  .profile,
-               .bash_profile,  or  .login will be read by the shell.  If a command is specified, it is passed to the shell as a simple command using the -c option.  The
-               command and any args are concatenated, separated by spaces, after escaping each character (including white space) with a backslash (‘\’) except  for  al‐
-               phanumerics,  underscores,  hyphens,  and  dollar  signs.  If no command is specified, an interactive shell is executed.  sudo attempts to change to that
-               user's home directory before running the shell.  The command is run with an environment similar to the one a user would receive at log in.   Most  shells
-               behave  differently  when  a command is specified as compared to an interactive session; consult the shell's manual for details.  The Command environment
-               section in the sudoers(5) manual documents how the -i option affects the environment in which a command is run when the sudoers policy is in use.
+               将目标用户密码数据库条目中指定的 shell 作为登录 shell 运行。这意味着 shell 会读取诸如 .profile、.bash_profile 或 .login 等登录专用资源文件。
+               若指定了命令，则通过 -c 选项将其作为简单命令传递给 shell。命令及所有参数会用空格连接；除字母数字、下划线、连字符和美元符号外，每个字符
+               （包括空白）都会用反斜杠（‘\’）转义。若未指定命令，则执行交互式 shell。sudo 在运行 shell 之前会尝试切换到该用户的主目录。命令在类似于用户登录时
+               获得的环境中运行。大多数 shell 在指定命令时的行为与交互式会话不同；详情请查阅该 shell 的手册。sudoers(5) 手册中的“命令环境”一节说明了在使用
+               sudoers 策略时 -i 选项如何影响命令的运行环境。
 
        -K, --remove-timestamp
-               Similar to the -k option, except that it removes every cached credential for the user, regardless of the terminal or parent process ID.   The  next  time
-               sudo  is  run,  a password must be entered if the security policy requires authentication.  It is not possible to use the -K option in conjunction with a
-               command or other option.  This option does not require a password.  Not all security policies support credential caching.
+               与 -k 选项类似，但会删除该用户的全部缓存凭据，无论终端或父进程 ID 如何。下次运行 sudo 时，若安全策略要求认证，则必须输入密码。-K 选项不能与命令
+               或其他选项一起使用。此选项不需要密码。并非所有安全策略都支持凭据缓存。
 
        -k, --reset-timestamp
-               When used without a command, invalidates the user's cached credentials for the current session.  The next time sudo is run in  the  session,  a  password
-               must  be  entered if the security policy requires authentication.  By default, the sudoers policy uses a separate record in the credential cache for each
-               terminal (or parent process ID if no terminal is present).  This prevents the -k option from interfering with sudo commands run in a  different  terminal
-               session.   See  the  timestamp_type option in sudoers(5) for more information.  This option does not require a password, and was added to allow a user to
-               revoke sudo permissions from a .logout file.
+               在不带命令使用时，使当前会话中用户的缓存凭据失效。下次在该会话中运行 sudo 时，若安全策略要求认证，则必须输入密码。默认情况下，sudoers 策略为每个
+               终端（若无终端则为父进程 ID）在凭据缓存中使用单独记录。这可防止 -k 选项干扰在不同终端会话中运行的 sudo 命令。更多信息请参见 sudoers(5) 中的
+               timestamp_type 选项。此选项不需要密码，添加它是为了让用户能从 .logout 文件中撤销 sudo 权限。
 
-               When used in conjunction with a command or an option that may require a password, this option will cause sudo to ignore the  user's  cached  credentials.
-               As a result, sudo will prompt for a password (if one is required by the security policy) and will not update the user's cached credentials.
+               当与可能需要密码的命令或选项一起使用时，此选项会使 sudo 忽略用户的缓存凭据。因此，sudo 会提示输入密码（若安全策略要求），并且不会更新用户的缓存凭据。
 
-               Not all security policies support credential caching.
+               并非所有安全策略都支持凭据缓存。
 
        -l, --list
-               If no command is specified, list the privileges for the invoking user (or the user specified by the -U option) on the current host.  A longer list format
-               is used if this option is specified multiple times and the security policy supports a verbose output format.
+               若未指定命令，则列出调用用户（或由 -U 选项指定的用户）在当前主机上的权限。若多次指定此选项且安全策略支持详细输出格式，则使用更长的列表格式。
 
-               If  a  command  is specified and is permitted by the security policy for the invoking user (or the, user specified by the -U option) on the current host,
-               the fully-qualified path to the command is displayed along with any args. If -l is specified more than once (and the security policy  supports  it),  the
-               matching  rule  is  displayed in a verbose format along with the command.  If a command is specified but not allowed by the policy, sudo will exit with a
-               status value of 1.
+               若指定了命令，且安全策略允许调用用户（或由 -U 选项指定的用户）在当前主机上运行该命令，则显示该命令的完全限定路径以及所有参数。若 -l 指定多次
+               （且安全策略支持），则还会以详细格式显示匹配的规则以及该命令。若指定了命令但策略不允许，sudo 将以状态值 1 退出。
 
        -N, --no-update
-               Do not update the user's cached credentials, even if the user successfully authenticates.  Unlike the -k flag, existing cached credentials  are  used  if
-               they are valid.  To detect when the user's cached credentials are valid (or when no authentication is required), the following can be used:
+               即使在用户成功认证后，也不更新用户的缓存凭据。与 -k 标志不同，若现有缓存凭据仍然有效，仍会使用它们。要检测用户的缓存凭据是否有效（或是否无需认证），
+               可以使用：
 
                    sudo -Nnv
 
-               Not all security policies support credential caching.
+               并非所有安全策略都支持凭据缓存。
 
        -n, --non-interactive
-               Avoid prompting the user for input of any kind.  If a password is required for the command to run, sudo will display an error message and exit.
+               避免以任何形式提示用户输入。若运行命令需要密码，sudo 将显示错误信息并退出。
 
        -P, --preserve-groups
-               Preserve  the  invoking  user's group vector unaltered.  By default, the sudoers policy will initialize the group vector to the list of groups the target
-               user is a member of.  The real and effective group-IDs, however, are still set to match the target user.
+               保持调用用户的组向量不变。默认情况下，sudoers 策略会将组向量初始化为目标用户所属组的列表。不过，真实和有效组 ID 仍会设为与目标用户一致。
 
        -p prompt, --prompt=prompt
-               Use a custom password prompt with optional escape sequences.  The following percent (‘%’) escape sequences are supported by the sudoers policy:
+               使用带可选转义序列的自定义密码提示。sudoers 策略支持以下百分号（‘%’）转义序列：
 
-               %H  expanded to the host name including the domain name (only if the machine's host name is fully qualified or the fqdn option is set in sudoers(5))
+               %H  展开为包含域名的主机名（仅当本机主机名为完全限定名，或在 sudoers(5) 中设置了 fqdn 选项时）
 
-               %h  expanded to the local host name without the domain name
+               %h  展开为不含域名的本地主机名
 
-               %p  expanded to the name of the user whose password is being requested (respects the rootpw, targetpw, and runaspw flags in sudoers(5))
+               %p  展开为正在请求其密码的用户名（遵循 sudoers(5) 中的 rootpw、targetpw 和 runaspw 标志）
 
-               %U  expanded to the login name of the user the command will be run as (defaults to root unless the -u option is also specified)
+               %U  展开为命令将以其身份运行的用户的登录名（除非同时指定了 -u 选项，否则默认为 root）
 
-               %u  expanded to the invoking user's login name
+               %u  展开为调用用户的登录名
 
-               %%  two consecutive ‘%’ characters are collapsed into a single ‘%’ character
+               %%  两个连续的 ‘%’ 字符折叠为单个 ‘%’ 字符
 
-               The custom prompt will override the default prompt specified by either the security policy or the SUDO_PROMPT environment variable.  On systems that  use
-               PAM, the custom prompt will also override the prompt specified by a PAM module unless the passprompt_override flag is disabled in sudoers.
+               自定义提示会覆盖安全策略或 SUDO_PROMPT 环境变量指定的默认提示。在使用 PAM 的系统上，除非在 sudoers 中禁用了 passprompt_override 标志，
+               自定义提示也会覆盖 PAM 模块指定的提示。
 
        -R directory, --chroot=directory
-               Change  to  the  specified  root directory (see chroot(8)) before running the command.  The security policy may return an error if the user does not have
-               permission to specify the root directory.
+               在运行命令之前切换到指定的根目录（参见 chroot(8)）。若用户没有权限指定根目录，安全策略可能返回错误。
 
        -r role, --role=role
-               Run the command with an SELinux security context that includes the specified role.
+               以包含指定角色的 SELinux 安全上下文运行命令。
 
        -S, --stdin
-               Write the prompt to the standard error and read the password from the standard input instead of using the terminal device.
+               将提示写入标准错误，并从标准输入读取密码，而不是使用终端设备。
 
        -s, --shell
-               Run the shell specified by the SHELL environment variable if it is set or the shell specified by the invoking  user's  password  database  entry.   If  a
-               command is specified, it is passed to the shell as a simple command using the -c option.  The command and any args are concatenated, separated by spaces,
-               after  escaping  each  character  (including white space) with a backslash (‘\’) except for alphanumerics, underscores, hyphens, and dollar signs.  If no
-               command is specified, an interactive shell is executed.  Most shells behave differently when a command is specified as compared to  an  interactive  ses‐
-               sion; consult the shell's manual for details.
+               运行 SHELL 环境变量指定的 shell（若已设置），或调用用户密码数据库条目中指定的 shell。若指定了命令，则通过 -c 选项将其作为简单命令传递给 shell。
+               命令及所有参数会用空格连接；除字母数字、下划线、连字符和美元符号外，每个字符（包括空白）都会用反斜杠（‘\’）转义。若未指定命令，则执行交互式 shell。
+               大多数 shell 在指定命令时的行为与交互式会话不同；详情请查阅该 shell 的手册。
 
        -t type, --type=type
-               Run the command with an SELinux security context that includes the specified type.  If no type is specified, the default type is derived from the role.
+               以包含指定类型的 SELinux 安全上下文运行命令。若未指定类型，则从角色派生默认类型。
 
        -U user, --other-user=user
-               Used  in conjunction with the -l option to list the privileges for user instead of for the invoking user.  The security policy may restrict listing other
-               users' privileges.  When using the sudoers policy, the -U option is restricted to the root user and users with either the “list” priviege for the  speci‐
-               fied user or the ability to run any command as root or user on the current host.
+               与 -l 选项一起使用，列出 user 的权限而非调用用户的权限。安全策略可能限制列出其他用户的权限。使用 sudoers 策略时，-U 选项仅限于 root 用户，
+               以及对该指定用户拥有 “list” 权限、或能在当前主机上以 root 或该用户身份运行任意命令的用户。
 
        -T timeout, --command-timeout=timeout
-               Used  to  set  a timeout for the command.  If the timeout expires before the command has exited, the command will be terminated.  The security policy may
-               restrict the user's ability to set timeouts.  The sudoers policy requires that user-specified timeouts be explicitly enabled.
+               用于为命令设置超时。若超时在命令退出前到期，命令将被终止。安全策略可能限制用户设置超时的能力。sudoers 策略要求明确启用用户指定的超时。
 
        -u user, --user=user
-               Run the command as a user other than the default target user (usually root).  The user may be either a user name or a numeric user-ID (UID) prefixed with
-               the ‘#’ character (e.g., ‘#0’ for UID 0).  When running commands as a UID, many shells require that the ‘#’ be escaped with a backslash (‘\’).  Some  se‐
-               curity policies may restrict UIDs to those listed in the password database.  The sudoers policy allows UIDs that are not in the password database as long
-               as the targetpw option is not set.  Other security policies may not support this.
+               以默认目标用户（通常为 root）以外的用户身份运行命令。user 可以是用户名，或以 ‘#’ 字符为前缀的数字用户 ID（UID）（例如 UID 0 写作 ‘#0’）。
+               以 UID 运行命令时，许多 shell 要求用反斜杠（‘\’）转义 ‘#’。某些安全策略可能将 UID 限制为密码数据库中列出的那些。只要未设置 targetpw 选项，
+               sudoers 策略允许使用不在密码数据库中的 UID。其他安全策略可能不支持此功能。
 
        -V, --version
-               Print  the sudo version string as well as the version string of any configured plugins.  If the invoking user is already root, the -V option will display
-               the options passed to configure when sudo was built; plugins may display additional information such as default options.
+               打印 sudo 版本字符串以及任何已配置插件的版本字符串。若调用用户已经是 root，-V 选项还会显示构建 sudo 时传递给 configure 的选项；插件可能显示
+               额外信息，例如默认选项。
 
        -v, --validate
-               Update the user's cached credentials, authenticating the user if necessary.  For the sudoers plugin, this extends the sudo timeout for another 15 minutes
-               by default, but does not run a command.  Not all security policies support cached credentials.
+               更新用户的缓存凭据，必要时对用户进行认证。对于 sudoers 插件，默认将 sudo 超时再延长 15 分钟，但不运行命令。并非所有安全策略都支持缓存凭据。
 
-       --      The -- is used to delimit the end of the sudo options.  Subsequent options are passed to the command.
+       --      -- 用于标识 sudo 选项的结束。其后的选项将传递给命令。
 
-       Options that take a value may only be specified once unless otherwise indicated in the description.  This is to help guard  against  problems  caused  by  poorly
-       written scripts that invoke sudo with user-controlled input.
+       除非说明中另有指示，否则带值的选项只能指定一次。这有助于防范由编写不良、用用户可控输入调用 sudo 的脚本所引起的问题。
 
-       Environment variables to be set for the command may also be passed as options to sudo in the form VAR=value, for example LD_LIBRARY_PATH=/usr/local/pkg/lib.  En‐
-       vironment variables may be subject to restrictions imposed by the security policy plugin.  The sudoers policy subjects environment variables passed as options to
-       the  same  restrictions  as  existing environment variables with one important difference.  If the setenv option is set in sudoers, the command to be run has the
-       SETENV tag set or the command matched is ALL, the user may set variables that would otherwise be forbidden.  See sudoers(5) for more information.
+       要为命令设置的环境变量也可以 VAR=value 形式作为选项传递给 sudo，例如 LD_LIBRARY_PATH=/usr/local/pkg/lib。环境变量可能受到安全策略插件施加的限制。
+       sudoers 策略对作为选项传递的环境变量施加与现有环境变量相同的限制，但有一个重要区别：若 sudoers 中设置了 setenv 选项、待运行命令带有 SETENV 标签，
+       或匹配的命令为 ALL，则用户可以设置原本会被禁止的变量。更多信息请参见 sudoers(5)。
 
-COMMAND EXECUTION
-       When sudo executes a command, the security policy specifies the execution environment for the command.  Typically, the real and effective user and group and  IDs
-       are  set to match those of the target user, as specified in the password database, and the group vector is initialized based on the group database (unless the -P
-       option was specified).
+命令执行
+       当 sudo 执行命令时，安全策略指定该命令的执行环境。通常，真实和有效的用户及组 ID 会被设为与密码数据库中目标用户的相匹配，组向量根据组数据库初始化
+       （除非指定了 -P 选项）。
 
-       The following parameters may be specified by security policy:
+       安全策略可指定以下参数：
 
-       •  real and effective user-ID
+       •  真实和有效用户 ID
 
-       •  real and effective group-ID
+       •  真实和有效组 ID
 
-       •  supplementary group-IDs
+       •  附加组 ID
 
-       •  the environment list
+       •  环境列表
 
-       •  current working directory
+       •  当前工作目录
 
-       •  file creation mode mask (umask)
+       •  文件创建模式掩码（umask）
 
-       •  SELinux role and type
+       •  SELinux 角色和类型
 
-       •  scheduling priority (aka nice value)
+       •  调度优先级（即 nice 值）
 
-   Process model
-       There are two distinct ways sudo can run a command.
+   进程模型
+       sudo 运行命令有两种不同方式。
 
-       If an I/O logging plugin is configured to log terminal I/O, or if the security policy explicitly requests it, a new  pseudo-terminal  (“pty”)  is  allocated  and
-       fork(2) is used to create a second sudo process, referred to as the monitor.  The monitor creates a new terminal session with itself as the leader and the pty as
-       its  controlling  terminal, calls fork(2) again, sets up the execution environment as described above, and then uses the execve(2) system call to run the command
-       in the child process.  The monitor exists to relay job control signals between the user's terminal and the pty the command is being run in.  This makes it possi‐
-       ble to suspend and resume the command normally.  Without the monitor, the command would be in what POSIX terms an “orphaned process group” and it would  not  re‐
-       ceive  any  job  control  signals from the kernel.  When the command exits or is terminated by a signal, the monitor passes the command's exit status to the main
-       sudo process and exits.  After receiving the command's exit status, the main sudo process passes the command's exit status to the security policy's  close  func‐
-       tion,  as well as the close function of any configured audit plugin, and exits.  This mode is the default for sudo versions 1.9.14 and above when using the sudo‐
-       ers policy.
+       若 I/O 日志插件配置为记录终端 I/O，或安全策略明确要求，则会分配一个新的伪终端（“pty”），并用 fork(2) 创建第二个 sudo 进程，称为监视器（monitor）。
+       监视器创建一个以自身为领导者、以该 pty 为控制终端的新终端会话，再次调用 fork(2)，按上文所述设置执行环境，然后使用 execve(2) 系统调用在子进程中运行命令。
+       监视器的存在是为了在用户终端与命令所在的 pty 之间中继作业控制信号。这使得可以正常挂起和恢复命令。没有监视器时，该命令会处于 POSIX 所谓的“孤儿进程组”中，
+       不会从内核收到任何作业控制信号。当命令退出或被信号终止时，监视器将命令的退出状态传递给主 sudo 进程并退出。主 sudo 进程收到命令的退出状态后，将其传递给
+       安全策略的 close 函数以及任何已配置审计插件的 close 函数，然后退出。使用 sudoers 策略时，此模式是 sudo 1.9.14 及更高版本的默认模式。
 
-       If no pty is used, sudo calls fork(2), sets up the execution environment as described above, and uses the execve(2) system call to run the command in  the  child
-       process.   The main sudo process waits until the command has completed, then passes the command's exit status to the security policy's close function, as well as
-       the close function of any configured audit plugins, and exits.  As a special case, if the policy plugin does not define a close function, sudo will  execute  the
-       command  directly  instead of calling fork(2) first.  The sudoers policy plugin will only define a close function when I/O logging is enabled, a pty is required,
-       an SELinux role is specified, the command has an associated timeout, or the pam_session or pam_setcred options are enabled.  Both pam_session and pam_setcred are
-       enabled by default on systems using PAM.  This mode is the default for sudo versions prior to 1.9.14 when using the sudoers policy.
+       若不使用 pty，sudo 调用 fork(2)，按上文所述设置执行环境，并使用 execve(2) 系统调用在子进程中运行命令。主 sudo 进程等待命令完成，然后将命令的退出状态
+       传递给安全策略的 close 函数以及任何已配置审计插件的 close 函数，然后退出。作为特例，若策略插件未定义 close 函数，sudo 将直接执行命令，而不先调用
+       fork(2)。sudoers 策略插件仅在启用 I/O 日志、需要 pty、指定了 SELinux 角色、命令关联了超时，或启用了 pam_session 或 pam_setcred 选项时才会定义
+       close 函数。在使用 PAM 的系统上，pam_session 和 pam_setcred 默认都是启用的。使用 sudoers 策略时，此模式是 sudo 1.9.14 之前版本的默认模式。
 
-       On systems that use PAM, the security policy's close function is responsible for closing the PAM session.  It may also log the command's exit status.
+       在使用 PAM 的系统上，安全策略的 close 函数负责关闭 PAM 会话。它也可能记录命令的退出状态。
 
-   Signal handling
-       When the command is run as a child of the sudo process, sudo will relay signals it receives to the command.  The SIGINT and SIGQUIT signals are only relayed when
-       the command is being run in a new pty or when the signal was sent by a user process, not the kernel.  This prevents the command from receiving SIGINT twice  each
-       time  the  user  enters  control-C.  Some signals, such as SIGSTOP and SIGKILL, cannot be caught and thus will not be relayed to the command.  As a general rule,
-       SIGTSTP should be used instead of SIGSTOP when you wish to suspend a command being run by sudo.
+   信号处理
+       当命令作为 sudo 进程的子进程运行时，sudo 会将其收到的信号中继给该命令。SIGINT 和 SIGQUIT 信号仅在命令运行于新 pty 中，或信号由用户进程而非内核发送时
+       才会被中继。这可以防止用户每次输入 Ctrl-C 时命令收到两次 SIGINT。某些信号（如 SIGSTOP 和 SIGKILL）无法被捕获，因此不会中继给命令。一般规则是：
+       若希望挂起由 sudo 运行的命令，应使用 SIGTSTP 而不是 SIGSTOP。
 
-       As a special case, sudo will not relay signals that were sent by the command it is running.  This prevents the command from accidentally killing itself.  On some
-       systems, the reboot(8) utility sends SIGTERM to all non-system processes other than itself before rebooting the system.  This prevents  sudo  from  relaying  the
-       SIGTERM  signal  it  received back to reboot(8), which might then exit before the system was actually rebooted, leaving it in a half-dead state similar to single
-       user mode.  Note, however, that this check only applies to the command run by sudo and not any other processes that the command may create.  As a result, running
-       a script that calls reboot(8) or shutdown(8) via sudo may cause the system to end up in this undefined state unless the reboot(8) or shutdown(8)  are  run  using
-       the exec() family of functions instead of system() (which interposes a shell between the command and the calling process).
+       作为特例，sudo 不会中继由其正在运行的命令所发送的信号。这可以防止命令意外杀死自己。在某些系统上，reboot(8) 实用程序在重启系统之前会向除自身以外的所有
+       非系统进程发送 SIGTERM。这可防止 sudo 将其收到的 SIGTERM 信号再中继回 reboot(8)，否则 reboot(8) 可能在系统实际重启之前就退出，使系统处于类似单用户
+       模式的半死状态。但请注意，此检查仅适用于 sudo 运行的命令本身，不适用于该命令可能创建的任何其他进程。因此，通过 sudo 运行调用 reboot(8) 或 shutdown(8)
+       的脚本可能导致系统进入这种未定义状态，除非 reboot(8) 或 shutdown(8) 使用 exec() 系列函数而非 system() 运行（后者会在命令与调用进程之间插入一个 shell）。
 
-   Plugins
-       Plugins  may  be  specified via Plugin directives in the sudo.conf(5) file.  They may be loaded as dynamic shared objects (on systems that support them), or com‐
-       piled directly into the sudo binary.  If no sudo.conf(5) file is present, or if it doesn't contain any Plugin lines, sudo will use sudoers(5) for the policy, au‐
-       diting, and I/O logging plugins.  See the sudo.conf(5) manual for details of the /etc/sudo.conf file and the sudo_plugin(5) manual for more information about the
-       sudo plugin architecture.
+   插件
+       插件可通过 sudo.conf(5) 文件中的 Plugin 指令指定。它们可以加载为动态共享对象（在支持的系统上），或直接编译进 sudo 二进制文件。若没有 sudo.conf(5)
+       文件，或其中不含任何 Plugin 行，sudo 将使用 sudoers(5) 作为策略、审计和 I/O 日志插件。有关 /etc/sudo.conf 文件的详情请参见 sudo.conf(5) 手册，
+       有关 sudo 插件架构的更多信息请参见 sudo_plugin(5) 手册。
 
-EXIT VALUE
-       Upon successful execution of a command, the exit status from sudo will be the exit status of the program that was executed.  If the command terminated due to re‐
-       ceipt of a signal, sudo will send itself the same signal that terminated the command.
+退出值
+       命令成功执行后，sudo 的退出状态即为所执行程序的退出状态。若命令因收到信号而终止，sudo 会向自身发送终止该命令的同一个信号。
 
-       If the -l option was specified without a command, sudo will exit with a value of 0 if the user is allowed to run sudo and they authenticated successfully (as re‐
-       quired by the security policy).  If a command is specified with the -l option, the exit value will only be 0 if the command is permitted by the security  policy,
-       otherwise it will be 1.
+       若指定了 -l 选项但未指定命令，且用户被允许运行 sudo 并成功通过认证（按安全策略要求），sudo 将以值 0 退出。若 -l 选项带有命令，则仅当安全策略允许该命令时
+       退出值才为 0，否则为 1。
 
-       If there is an authentication failure, a configuration/permission problem, or if the given command cannot be executed, sudo exits with a value of 1.  In the lat‐
-       ter  case, the error string is printed to the standard error.  If sudo cannot stat(2) one or more entries in the user's PATH, an error is printed to the standard
-       error.  (If the directory does not exist or if it is not really a directory, the entry is ignored and no error is printed.)  This should not happen under  normal
-       circumstances.   The most common reason for stat(2) to return “permission denied” is if you are running an automounter and one of the directories in your PATH is
-       on a machine that is currently unreachable.
+       若发生认证失败、配置/权限问题，或无法执行给定命令，sudo 以值 1 退出。在后一种情况下，错误字符串会打印到标准错误。若 sudo 无法对用户 PATH 中的一个或多个
+       条目执行 stat(2)，会向标准错误打印错误。（若目录不存在或实际上不是目录，则忽略该条目且不打印错误。）正常情况下不应发生这种情况。stat(2) 返回“权限被拒绝”
+       的最常见原因是：你正在运行自动挂载器，且 PATH 中的某个目录位于当前不可达的机器上。
 
-SECURITY NOTES
-       sudo tries to be safe when executing external commands.
+安全说明
+       sudo 在执行外部命令时会尽量保证安全。
 
-       To prevent command spoofing, sudo checks "." and "" (both denoting current directory) last when searching for a command in the user's PATH (if one or both are in
-       the PATH).  Depending on the security policy, the user's PATH environment variable may be modified, replaced, or passed unchanged to the program that  sudo  exe‐
-       cutes.
+       为防止命令欺骗，sudo 在用户的 PATH 中搜索命令时，会把 "." 和 ""（两者都表示当前目录）放到最后（若 PATH 中包含其中之一或两者）。根据安全策略，用户的 PATH
+       环境变量可能被修改、替换，或原样传递给 sudo 所执行的程序。
 
-       Users  should never be granted sudo privileges to execute files that are writable by the user or that reside in a directory that is writable by the user.  If the
-       user can modify or replace the command there is no way to limit what additional commands they can run.
+       永远不应授予用户 sudo 权限去执行用户可写的文件，或位于用户可写目录中的文件。若用户可以修改或替换该命令，就无法限制他们还能运行哪些额外命令。
 
-       By default, sudo will only log the command it explicitly runs.  If a user runs a command such as ‘sudo su’ or ‘sudo sh’, subsequent commands run from that  shell
-       are  not  subject to sudo's security policy.  The same is true for commands that offer shell escapes (including most editors).  If I/O logging is enabled, subse‐
-       quent commands will have their input and/or output logged, but there will not be traditional logs for those commands. Because of this, care must  be  taken  when
-       giving users access to commands via sudo to verify that the command does not inadvertently give the user an effective root shell.  For information on ways to ad‐
-       dress this, see the Preventing shell escapes section in sudoers(5).
+       默认情况下，sudo 只记录它明确运行的命令。若用户运行诸如 ‘sudo su’ 或 ‘sudo sh’ 之类的命令，随后从该 shell 运行的命令不受 sudo 安全策略约束。
+       提供 shell 转义的命令（包括大多数编辑器）也是如此。若启用了 I/O 日志，后续命令的输入和/或输出会被记录，但不会有这些命令的传统日志。因此，通过 sudo
+       向用户授予命令访问权限时必须谨慎，以确认该命令不会无意中给用户一个有效的 root shell。有关应对方法，请参见 sudoers(5) 中的“防止 shell 转义”一节。
 
-       To  prevent  the  disclosure of potentially sensitive information, sudo disables core dumps by default while it is executing (they are re-enabled for the command
-       that is run).  This historical practice dates from a time when most operating systems allowed set-user-ID processes to dump core by default.  To aid in debugging
-       sudo crashes, you may wish to re-enable core dumps by setting “disable_coredump” to false in the sudo.conf(5) file as follows:
+       为防止泄露可能敏感的信息，sudo 在自身执行期间默认禁用核心转储（对所运行的命令会重新启用）。这一历史做法源于大多数操作系统默认允许 set-user-ID 进程
+       转储核心的时期。为便于调试 sudo 崩溃，可通过在 sudo.conf(5) 文件中将 “disable_coredump” 设为 false 来重新启用核心转储，如下所示：
 
            Set disable_coredump false
 
-       See the sudo.conf(5) manual for more information.
+       更多信息请参见 sudo.conf(5) 手册。
 
-ENVIRONMENT
-       sudo utilizes the following environment variables.  The security policy has control over the actual content of the command's environment.
+环境
+       sudo 使用以下环境变量。安全策略控制命令环境的实际内容。
 
-       EDITOR           Default editor to use in -e (sudoedit) mode if neither SUDO_EDITOR nor VISUAL is set.
+       EDITOR           在 -e（sudoedit）模式下，若既未设置 SUDO_EDITOR 也未设置 VISUAL 时使用的默认编辑器。
 
-       MAIL             Set to the mail spool of the target user when the -i option is specified, or when env_reset is enabled in sudoers (unless MAIL is present in the
-                        env_keep list).
+       MAIL             指定 -i 选项时，或在 sudoers 中启用了 env_reset 时（除非 MAIL 出现在 env_keep 列表中），设为目标用户的邮件缓冲。
 
-       HOME             Set to the home directory of the target user when the -i or -H options are specified, when the -s option is specified and  set_home  is  set  in
-                        sudoers, when always_set_home is enabled in sudoers, or when env_reset is enabled in sudoers and HOME is not present in the env_keep list.
+       HOME             指定 -i 或 -H 选项时；指定 -s 选项且在 sudoers 中设置了 set_home 时；在 sudoers 中启用了 always_set_home 时；或在 sudoers 中
+                        启用了 env_reset 且 HOME 不在 env_keep 列表中时，设为目标用户的主目录。
 
-       LOGNAME          Set  to  the  login  name  of  the  target  user when the -i option is specified, when the set_logname option is enabled in sudoers, or when the
-                        env_reset option is enabled in sudoers (unless LOGNAME is present in the env_keep list).
+       LOGNAME          指定 -i 选项时；在 sudoers 中启用了 set_logname 选项时；或在 sudoers 中启用了 env_reset 选项时（除非 LOGNAME 出现在 env_keep
+                        列表中），设为目标用户的登录名。
 
-       PATH             May be overridden by the security policy.
+       PATH             可能被安全策略覆盖。
 
-       SHELL            Used to determine shell to run with -s option.
+       SHELL            用于确定与 -s 选项一起运行的 shell。
 
-       SUDO_ASKPASS     Specifies the path to a helper program used to read the password if no terminal is available or if the -A option is specified.
+       SUDO_ASKPASS     指定在无终端可用或指定了 -A 选项时用于读取密码的助手程序路径。
 
-       SUDO_COMMAND     Set to the command run by sudo, including any args. The args are truncated at 4096 characters to prevent a potential execution error.
+       SUDO_COMMAND     设为 sudo 运行的命令，包括所有参数。参数在 4096 个字符处截断，以防止潜在的执行错误。
 
-       SUDO_EDITOR      Default editor to use in -e (sudoedit) mode.
+       SUDO_EDITOR      在 -e（sudoedit）模式下使用的默认编辑器。
 
-       SUDO_GID         Set to the group-ID of the user who invoked sudo.
+       SUDO_GID         设为调用 sudo 的用户的组 ID。
 
-       SUDO_HOME        Set to the home directory of the user who invoked sudo.
+       SUDO_HOME        设为调用 sudo 的用户的主目录。
 
-       SUDO_PROMPT      Used as the default password prompt unless the -p option was specified.
+       SUDO_PROMPT      用作默认密码提示，除非指定了 -p 选项。
 
-       SUDO_PS1         If set, PS1 will be set to its value for the program being run.
+       SUDO_PS1         若已设置，则将所运行程序的 PS1 设为其值。
 
-       SUDO_UID         Set to the user-ID of the user who invoked sudo.
+       SUDO_UID         设为调用 sudo 的用户的用户 ID。
 
-       SUDO_USER        Set to the login name of the user who invoked sudo.
+       SUDO_USER        设为调用 sudo 的用户的登录名。
 
-       USER             Set to the same value as LOGNAME, described above.
+       USER             设为与上文所述 LOGNAME 相同的值。
 
-       VISUAL           Default editor to use in -e (sudoedit) mode if SUDO_EDITOR is not set.
+       VISUAL           在 -e（sudoedit）模式下，若未设置 SUDO_EDITOR 时使用的默认编辑器。
 
-FILES
-       /etc/sudo.conf            sudo front-end configuration
+文件
+       /etc/sudo.conf            sudo 前端配置
 
-EXAMPLES
-       The following examples assume a properly configured security policy.
+示例
+       以下示例假定安全策略已正确配置。
 
-       To get a file listing of an unreadable directory:
+       列出不可读目录中的文件：
 
            $ sudo ls /usr/local/protected
 
-       To list the home directory of user yaz on a machine where the file system holding ~yaz is not exported as root:
+       在保存 ~yaz 的文件系统未以 root 导出的机器上，列出用户 yaz 的主目录：
 
            $ sudo -u yaz ls ~yaz
 
-       To edit the index.html file as user www:
+       以用户 www 身份编辑 index.html 文件：
 
            $ sudoedit -u www ~www/htdocs/index.html
 
-       To view system logs only accessible to root and users in the adm group:
+       查看仅 root 和 adm 组成员可访问的系统日志：
 
            $ sudo -g adm more /var/log/syslog
 
-       To run an editor as jim with a different primary group:
+       以 jim 身份、使用不同的主组运行编辑器：
 
            $ sudoedit -u jim -g audio ~jim/sound.txt
 
-       To shut down a machine:
+       关闭机器：
 
            $ sudo shutdown -r +15 "quick reboot"
 
-       To make a usage listing of the directories in the /home partition.  The commands are run in a sub-shell to allow the ‘cd’ command and file redirection to work.
+       对 /home 分区中的目录生成用量列表。命令在子 shell 中运行，以便 ‘cd’ 命令和文件重定向能够工作。
 
            $ sudo sh -c "cd /home ; du -s * | sort -rn > USAGE"
 
-DIAGNOSTICS
-       Error messages produced by sudo include:
+诊断
+       sudo 产生的错误信息包括：
 
        editing files in a writable directory is not permitted
-             By default, sudoedit does not permit editing a file when any of the parent directories are writable by the invoking user.  This  avoids  a  race  condition
-             that could allow the user to overwrite an arbitrary file.  See the sudoedit_checkdir option in sudoers(5) for more information.
+             默认情况下，当任一父目录对调用用户可写时，sudoedit 不允许编辑文件。这可避免可能允许用户覆盖任意文件的竞态条件。更多信息请参见 sudoers(5) 中的
+             sudoedit_checkdir 选项。
 
        editing symbolic links is not permitted
-             By default, sudoedit does not follow symbolic links when opening files.  See the sudoedit_follow option in sudoers(5) for more information.
+             默认情况下，sudoedit 打开文件时不跟随符号链接。更多信息请参见 sudoers(5) 中的 sudoedit_follow 选项。
 
        effective uid is not 0, is sudo installed setuid root?
-             sudo was not run with root privileges.  The sudo binary must be owned by the root user and have the set-user-ID bit set.  Also, it must not be located on a
-             file system mounted with the ‘nosuid’ option or on an NFS file system that maps uid 0 to an unprivileged uid.
+             sudo 未以 root 权限运行。sudo 二进制文件必须由 root 用户拥有，并设置 set-user-ID 位。此外，它不得位于以 ‘nosuid’ 选项挂载的文件系统上，
+             也不得位于将 uid 0 映射为非特权 uid 的 NFS 文件系统上。
 
        effective uid is not 0, is sudo on a file system with the 'nosuid' option set or an NFS file system without root privileges?
-             sudo  was not run with root privileges.  The sudo binary has the proper owner and permissions but it still did not run with root privileges.  The most com‐
-             mon reason for this is that the file system the sudo binary is located on is mounted with the ‘nosuid’ option or it is an NFS file system that maps  uid  0
-             to an unprivileged uid.
+             sudo 未以 root 权限运行。sudo 二进制文件具有正确的所有者和权限，但仍未以 root 权限运行。最常见的原因是 sudo 二进制文件所在的文件系统以
+             ‘nosuid’ 选项挂载，或它是将 uid 0 映射为非特权 uid 的 NFS 文件系统。
 
        fatal error, unable to load plugins
-             An error occurred while loading or initializing the plugins specified in sudo.conf(5).
+             加载或初始化 sudo.conf(5) 中指定的插件时发生错误。
 
        invalid environment variable name
-             One  or  more  environment  variable names specified via the -E option contained an equal sign (‘=’).  The arguments to the -E option should be environment
-             variable names without an associated value.
+             通过 -E 选项指定的一个或多个环境变量名包含等号（‘=’）。-E 选项的参数应为不含关联值的环境变量名。
 
        no password was provided
-             When sudo tried to read the password, it did not receive any characters.  This may happen if no terminal is available (or the -S option is  specified)  and
-             the standard input has been redirected from /dev/null.
+             sudo 尝试读取密码时未收到任何字符。若没有可用终端（或指定了 -S 选项）且标准输入已从 /dev/null 重定向，则可能发生这种情况。
 
        a terminal is required to read the password
-             sudo  needs  to  read  the password but there is no mechanism available for it to do so.  A terminal is not present to read the password from, sudo has not
-             been configured to read from the standard input, the -S option was not used, and no askpass helper has been specified either via the sudo.conf(5)  file  or
-             the SUDO_ASKPASS environment variable.
+             sudo 需要读取密码，但没有可用机制。没有终端可供读取密码，sudo 未配置为从标准输入读取，未使用 -S 选项，且既未通过 sudo.conf(5) 文件也未通过
+             SUDO_ASKPASS 环境变量指定 askpass 助手。
 
        no writable temporary directory found
-             sudoedit was unable to find a usable temporary directory in which to store its intermediate files.
+             sudoedit 无法找到可用于存储中间文件的临时目录。
 
        The “no new privileges” flag is set, which prevents sudo from running as root.
-             sudo  was  run  by a process that has the Linux “no new privileges” flag is set.  This causes the set-user-ID bit to be ignored when running an executable,
-             which will prevent sudo from functioning.  The most likely cause for this is running sudo within a container that sets this flag.  Check the  documentation
-             to see if it is possible to configure the container such that the flag is not set.
+             运行 sudo 的进程设置了 Linux “no new privileges” 标志。这会导致运行可执行文件时忽略 set-user-ID 位，从而使 sudo 无法工作。最可能的原因是
+             在设置了此标志的容器内运行 sudo。请查阅文档，看是否可以配置容器使该标志不被设置。
 
        sudo must be owned by uid 0 and have the setuid bit set
-             sudo  was  not  run  with root privileges.  The sudo binary does not have the correct owner or permissions.  It must be owned by the root user and have the
-             set-user-ID bit set.
+             sudo 未以 root 权限运行。sudo 二进制文件没有正确的所有者或权限。它必须由 root 用户拥有，并设置 set-user-ID 位。
 
        sudoedit is not supported on this platform
-             It is only possible to run sudoedit on systems that support setting the effective user-ID.
+             仅能在支持设置有效用户 ID 的系统上运行 sudoedit。
 
        timed out reading password
-             The user did not enter a password before the password timeout (5 minutes by default) expired.
+             用户未在密码超时（默认 5 分钟）到期前输入密码。
 
        you do not exist in the passwd database
-             Your user-ID does not appear in the system passwd database.
+             你的用户 ID 未出现在系统 passwd 数据库中。
 
        you may not specify environment variables in edit mode
-             It is only possible to specify environment variables when running a command.  When editing a file, the editor is run with the  user's  environment  unmodi‐
-             fied.
+             仅在运行命令时可以指定环境变量。编辑文件时，编辑器以用户未经修改的环境运行。
 
-SEE ALSO
+另见
        su(1), stat(2), login_cap(3), passwd(5), sudo.conf(5), sudo_plugin(5), sudoers(5), sudoers_timestamp(5), sudoreplay(8), visudo(8)
 
-HISTORY
-       See the HISTORY.md file in the sudo distribution (https://www.sudo.ws/about/history/) for a brief history of sudo.
+历史
+       有关 sudo 的简要历史，请参见 sudo 发行包中的 HISTORY.md 文件（https://www.sudo.ws/about/history/）。
 
-AUTHORS
-       Many people have worked on sudo over the years; this version consists of code written primarily by:
+作者
+       多年来许多人参与了 sudo 的开发；本版本的代码主要由以下人员编写：
 
              Todd C. Miller
 
-       See the CONTRIBUTORS.md file in the sudo distribution (https://www.sudo.ws/about/contributors/) for an exhaustive list of people who have contributed to sudo.
+       有关为 sudo 做出贡献的人员的详尽列表，请参见 sudo 发行包中的 CONTRIBUTORS.md 文件（https://www.sudo.ws/about/contributors/）。
 
-CAVEATS
-       There  is  no easy way to prevent a user from gaining a root shell if that user is allowed to run arbitrary commands via sudo.  Also, many programs (such as edi‐
-       tors) allow the user to run commands via shell escapes, thus avoiding sudo's checks.  However, on most systems it is possible to prevent shell escapes  with  the
-       sudoers(5) plugin's noexec functionality.
+注意事项
+       若允许用户通过 sudo 运行任意命令，则没有简便方法阻止该用户获得 root shell。此外，许多程序（如编辑器）允许用户通过 shell 转义运行命令，从而绕过 sudo
+       的检查。不过，在大多数系统上，可以通过 sudoers(5) 插件的 noexec 功能防止 shell 转义。
 
-       It is not meaningful to run the ‘cd’ command directly via sudo, e.g.,
+       直接通过 sudo 运行 ‘cd’ 命令没有意义，例如：
 
            $ sudo cd /usr/local/protected
 
-       since when the command exits the parent process (your shell) will still be the same.  The -D option can be used to run a command in a specific directory.
+       因为当命令退出时，父进程（你的 shell）仍然不变。可以使用 -D 选项在特定目录中运行命令。
 
-       Running  shell  scripts  via sudo can expose the same kernel bugs that make set-user-ID shell scripts unsafe on some operating systems (if your OS has a /dev/fd/
-       directory, set-user-ID shell scripts are generally safe).
+       通过 sudo 运行 shell 脚本可能暴露使 set-user-ID shell 脚本在某些操作系统上不安全的相同内核缺陷（若你的操作系统有 /dev/fd/ 目录，set-user-ID
+       shell 脚本通常是安全的）。
 
-BUGS
-       If you believe you have found a bug in sudo, you can either file a bug report  in  the  sudo  bug  database,  https://bugzilla.sudo.ws/,  or  open  an  issue  at
-       https://github.com/sudo-project/sudo/issues.   If you would prefer to use email, messages may be sent to the sudo-workers mailing list, https://www.sudo.ws/mail‐
-       man/listinfo/sudo-workers (public) or <sudo@sudo.ws> (private).
+缺陷
+       若你认为在 sudo 中发现了缺陷，可以在 sudo 缺陷数据库 https://bugzilla.sudo.ws/ 提交缺陷报告，或在 https://github.com/sudo-project/sudo/issues
+       开立议题。若更希望使用电子邮件，可将消息发送到 sudo-workers 邮件列表 https://www.sudo.ws/mailman/listinfo/sudo-workers（公开）或
+       <sudo@sudo.ws>（私密）。
 
-       Please not report security vulnerabilities through public GitHub issues, Bugzilla or mailing lists.  Instead, report them  via  email  to  <Todd.Miller@sudo.ws>.
-       You may encrypt your message with PGP if you would like, using the key found at https://www.sudo.ws/dist/PGPKEYS.
+       请不要通过公开的 GitHub 议题、Bugzilla 或邮件列表报告安全漏洞。请改为通过电子邮件报告至 <Todd.Miller@sudo.ws>。若愿意，可用 PGP 加密你的消息，
+       密钥见 https://www.sudo.ws/dist/PGPKEYS。
 
-SUPPORT
-       Limited free support is available via the sudo-users mailing list, see https://www.sudo.ws/mailman/listinfo/sudo-users to subscribe or search the archives.
+支持
+       可通过 sudo-users 邮件列表获得有限的免费支持，订阅或搜索归档请参见 https://www.sudo.ws/mailman/listinfo/sudo-users。
 
-DISCLAIMER
-       sudo  is  provided “AS IS” and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a par‐
-       ticular purpose are disclaimed.  See the LICENSE.md file distributed with sudo or https://www.sudo.ws/about/license/ for complete details.
+免责声明
+       sudo 按“原样”提供，任何明示或暗示的保证，包括但不限于适销性和特定用途适用性的暗示保证，均予以否认。完整详情请参见随 sudo 分发的 LICENSE.md 文件，
+       或 https://www.sudo.ws/about/license/。
 
-Sudo 1.9.16p2                                                                August 9, 2023                                                                      SUDO(8)
+Sudo 1.9.16p2                                                                2023 年 8 月 9 日                                                                      SUDO(8)

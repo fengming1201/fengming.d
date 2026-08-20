@@ -1,8 +1,10 @@
+# linux下安装deepseek harness并配置区域网内反向代理。
 
+## 第一阶段：后端
 
-# 第一阶段：后端
+### （1）[可选]安装最新的node 
+已经安装则跳过。
 
-## [可选]安装最新的node 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
 
@@ -15,7 +17,8 @@ node -v # Should print "v24.19.0".
 npm -v # Should print "11.17.0".
 ```
 
-## 安装deepseek harness 
+### （2）安装deepseek harness 
+有别于官网安装方式，要全局安装。
 ```
 npm install -g  @deepseek-ai/dsh
 
@@ -23,8 +26,8 @@ dsh --version
 0.1.0-rc.6
 ```
 
-## 配置局域网访问
-
+### （3）配置局域网访问
+DSH 出于安全考虑禁止 --host 0.0.0.0，默认只监听 127.0.0.1
 ```
 ~/.dsh/profiles/web/cordis.patch.yml
 
@@ -44,30 +47,31 @@ dsh --version
 
 ```
 
-## 启动，放后台
+### （4）启动，并放后台
 dsh web &
 dsh web: http://127.0.0.1:3080 (LAN: http://192.168.137.12:3080)
 
 
-# 第二阶段：前端反代
+## 第二阶段：前端反代
 
-## 安装反向
+### （1）安装反向
 ```
 git clone https://gitee.com/kill-life/dsh-lan-access.git
 
 cd dsh-lan-access/
 
-#1， 完整模式，放后台:3443 -> 127.0.0.1:3080
+#1， 完整模式，并放后台:3443 -> 127.0.0.1:3080
 node dsh-lan-tls-proxy.mjs &
 
 ,2，或 自定义前端端口
-node dsh-lan-tls-proxy.mjs --port 4443
+node dsh-lan-tls-proxy.mjs --port 4443 &
 
 ,3，或  安全透传模式（保持配置/凭据本机独占）
-TRUST_LOCAL=false node dsh-lan-tls-proxy.mjs
+TRUST_LOCAL=false node dsh-lan-tls-proxy.mjs &
 ```
 
-## web访问
+### （2）web访问
 https://IP:3443
 
 会提示警告，证书信任两种方法：一次性“继续访问”，或把cert.pem装进各机器信任库消除告警。
+
