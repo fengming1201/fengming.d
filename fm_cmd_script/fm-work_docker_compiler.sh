@@ -376,7 +376,8 @@ function docker-compiler
         user_cmd=${user_cmd% }
     fi
     # 在容器内先 cd 到映射目录，再以命令组 () 执行用户命令，避免 ;、|| 与外层 && 优先级混淆
-    local cmd_array=(bash -c "cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})")
+    local cmd_array=(bash -ic "cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})")
+    local cmd_array4_echo=(bash -ic \""cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})"\")
     if [ ${debug} = true ];then
         echo "INFO:        host_path=$(pwd)"
         echo "INFO:docker_inner_path=${docker_inner_path}"
@@ -386,7 +387,7 @@ function docker-compiler
     fi
     #================================================================#
     # step 6: execute user command in docker container
-    echo "EXEC:docker exec -it "${docker_container_name}" "${cmd_array[@]}""
+    echo "EXEC:docker exec -it "${docker_container_name}" ${cmd_array4_echo[@]}"
     if [ ${debug} = false ];then
         docker exec -it "${docker_container_name}" "${cmd_array[@]}"
         ret=$?
