@@ -181,57 +181,63 @@ function _data_base_operation() {
 function docker-compiler
 {
     if [ $# -lt 1 ]; then
-        echo "Usage: "
-        echo "         $FUNCNAME [options]  [--] \"command args ...\""
+        echo "用法: "
+        echo "         $FUNCNAME [options]    command args ..."
+        echo "         $FUNCNAME [options] -- command args ... #用\"--\"显式地将此脚本选项和用户命令和其参数隔开，其后全部视为用户命令和参数"
         echo ""
-        echo "options:"
-        echo "        -d|--debug                    #debug mode:not truly executing your command."
-        echo "        -n|--name  [container_name]   #overwrite container name. no para: list all known running containers"
-        echo "        -p|--plat  [platform]         #select container_name by platform. no para: list all known platforms-container mapping"
+        echo "选项(options):"
+        echo "        -d|--debug                     #调试模式：不真正执行你的命令。"
+        echo "        -c|--cont  [container_name]    #指定容器名称。不带参数时：列出所有已知的运行中容器。"
+        echo "        -p|--plat  [platform]          #指定平台名称。不带参数时：列出所有已知的平台-容器映射。"
         echo ""
-        echo "mapping table operations:"
-        echo "        -A|--add   platform  container_name   #add a new platform-container mapping entry to $docker_compiler_platform_map2_container"
-        echo "        -D|--del   platform                   #delete a platform-container mapping entry from $docker_compiler_platform_map2_container"
-        echo "        -S|--show  platform                   #show the platform-container mapping entry from $docker_compiler_platform_map2_container"
+        echo "映射表操作(mapping table operations):"
+        echo "        -A|--add   platform  container_name   #向 $docker_compiler_platform_map2_container 添加一条新的\"平台-容器\"映射"
+        echo "        -D|--del   platform                   #从 $docker_compiler_platform_map2_container 删除一条\"平台-容器\"映射"
+        echo "        -S|--show  platform                   #显示 $docker_compiler_platform_map2_container 中的\"平台-容器\"映射"
         echo ""
-        echo "Note: shell operators (&&, ||, ;, |) are parsed by your shell BEFORE this script runs."
-        echo "      Wrong:  $FUNCNAME   make clean && make all   # only 'make clean' runs in docker"
-        echo "      Right:  $FUNCNAME  \"make clean && make all\""
-        echo "      Also:   $FUNCNAME   make clean '&&' make all"
+        echo "注意1：用户命令中含有（&&、||、;、|）会在本脚本运行之前就 shell 解析。"
+        echo "      错误：$FUNCNAME   make clean && make all     # 只有 'make clean' 会在 docker 中运行。"
+        echo "      正确：$FUNCNAME  \"make clean && make all\"    # 用双引号括起来，整体作为用户命令。"
+        echo "      另外：$FUNCNAME   make clean '&&' make all   # 或将&&用单引号括起来，防止被shell被提前解析。"
         echo ""
-        echo "Example0 : $FUNCNAME -p mc632x     4who  #show container info"
-        echo "Example1 : $FUNCNAME -p mc632x     ./AllInOne4_fh8626v3x_build.sh all"
-        echo "Example2 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
-        echo "Example3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
-        echo "Example4 : $FUNCNAME -p mc632x     make all"
-        echo "Example5 : $FUNCNAME -p mc632x    \"make clean && make all\""
-        echo "Example6 : $FUNCNAME -p mc632x     ls -lh"
-        echo "Example7 : $FUNCNAME -p mc632x --  ls -lh"
-        echo "Example8 : $FUNCNAME -p                  # no para: list all known platforms-container mapping:$docker_compiler_platform_map2_container"
-        echo "Example9 : $FUNCNAME -n                  # no para: list all known running containers"
-        echo "Example10: $FUNCNAME -n container_name \"make clean && make all\" "
-        echo "Example11: $FUNCNAME \"make clean && make all\" -n container_name"
-        echo "Example12: export g_platform=mc632x;            $FUNCNAME \"make clean && make all\""
-        echo "Example13: export g_container_name=mycontainer; $FUNCNAME \"make clean && make all\""
+        echo "注意2：第一个非选项参数视为用户命令；其后的所有参数同样视为用户命令参数，（包括 -d/-p/-c/-A/-D/-S 等与本脚本选项同名的参数）"
+        echo "      都会原样传给用户命令，本脚本不再解析。因此请把本脚本的选项放在用户命令之前。"
+        echo "      例如：$FUNCNAME -p mc632x ./AllInOne4_mc632x_build.sh all -d   # -d 会传给构建脚本"
+        echo "      如果用户命令本身以 '-' 开头，请用 '--' 分隔：$FUNCNAME -p mc632x -- -ls"
+        echo ""
+        echo "示例0 : $FUNCNAME -p mc632x     4who  #显示容器信息"
+        echo "示例1 : $FUNCNAME -p mc632x     ./AllInOne4_fh8626v3x_build.sh all"
+        echo "示例2 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
+        echo "示例3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
+        echo "示例4 : $FUNCNAME -p mc632x     make all"
+        echo "示例5 : $FUNCNAME -p mc632x    \"make clean && make all\""
+        echo "示例6 : $FUNCNAME -p mc632x     ls -lh"
+        echo "示例7 : $FUNCNAME -p mc632x --  ls -lh   #'--' 之后的所有内容都被视为用户命令"
+        echo "示例8 : $FUNCNAME -p                     # 不带参数：列出所有已知的平台-容器映射：$docker_compiler_platform_map2_container"
+        echo "示例9 : $FUNCNAME -c                     # 不带参数：列出所有已知的运行中容器"
+        echo "示例10: $FUNCNAME -c container_name \"make clean && make all\" "
+        echo "示例11: $FUNCNAME -p mc632x ./AllInOne4_mc632x_build.sh all -d   # '-d' 属于用户命令"
+        echo "示例12: export g_platform=mc632x;              #常驻环境变量中,可免每次加该选项"
+        echo "示例13: export g_container_name=mycontainer;   #常驻环境变量中,可免每次加该选项"
         echo ""
         if [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
-            echo "Note: Current environment variables have been detected"
+            echo "注意：已检测到环境变量"
             echo "g_container_name=${g_container_name}"
             echo "g_platform=${g_platform}"
         else
-            echo "The default value can also be changed through environment variables."
+            echo "默认值也可以通过环境变量修改："
             echo "export g_container_name="
             echo "export g_platform="
             echo ""
-            echo "If you intend to use the same compile environment for a long time or frequently,recommended you write it into ~/.bashrc"
+            echo "如果你打算长期或频繁使用同一个编译环境，建议把它写入 ~/.bashrc"
         fi
         if [[ ! -f "${docker_compiler_platform_map2_container}" ]]; then
             _data_base_operation init || return 1
-            echo "Warning: map file [${docker_compiler_platform_map2_container}]  is empty, "
-            echo "         you need to add some platform=container mapping entry to it." 
+            echo "警告：映射文件 [${docker_compiler_platform_map2_container}] 为空，"
+            echo "        你需要向其中添加一些 platform=container 映射条目。" 
         else
             echo ""
-            echo "Current support platform: $(_data_base_operation list)"
+            echo "当前支持的平台: $(_data_base_operation list)"
         fi
         return 0
     fi
@@ -253,7 +259,11 @@ function docker-compiler
     #================================================================#
     #step 1: process parameters,parse script options
     local remaining_args=()
-    # 区分脚本选项(-p/-n/-m/-d)与用户命令参数；已知脚本选项(-p等)在case中优先匹配
+    # 解析规则：第一个非选项参数即“用户命令”的开始。
+    # 一旦用户命令出现，其后的所有参数（包括 -d/-p/-n 等与脚本选项同名的参数）
+    # 全部原样归入用户命令，不再解析为脚本选项。
+    # 例: -p mc632x ./AllInOne4_mc632x_build.sh all -d 中的 -d 属于用户命令
+    # 若用户命令本身以 - 开头，可用 -- 显式分隔（见 -- 分支）。
     while [[ $# -gt 0 ]]
     do
         case "$1" in
@@ -264,7 +274,7 @@ function docker-compiler
                 break
                 ;;
             -d|--debug) debug=true; shift ;; #不带参数，移动1
-            -n|--name)
+            -c|--cont)
                 if [[ -z "$2" ]]; then echo "All known running container list: ";docker ps -a --format "{{.Names}}"; return 1; fi
                 docker_container_name="$2"; shift 2 ;; #带参数，移动2
             -p|--plat)
@@ -279,17 +289,11 @@ function docker-compiler
             -S|--show)
                 sub_cmd=LIST; sub_cmd_args=(); shift 1 ;; #不带参数，移动1
             -*)
-                # 用户命令已出现(如 ls)后，未知的 - 开头参数不再当脚本选项
-                # 例: -p mc632x ls -lh 中的 -lh 应交给 ls，而非报 invalid option
-                if [[ ${#remaining_args[@]} -gt 0 ]]; then
-                    remaining_args+=("$1"); shift
-                    continue
-                fi
-                # 脚本选项区的合并短选项，如 -d
+                # 能走到这里，说明用户命令尚未开始，只可能是脚本选项区的合并短选项，如 -d
                 for (( i=1; i<${#1}; i++ )); do
                     case ${1:i:1} in
                         d) debug=true ;;
-                        n) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
+                        c) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
                         p) platform="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
                         A) sub_cmd=ADD; sub_cmd_args=("$2" "$3"); shift 3;break ;; # 当 a 是合并选项的一部分时，它应该停止解析剩余的字符
                         D) sub_cmd=DEL; sub_cmd_args=("$2"); shift 2;break ;; # 当 d 是合并选项的一部分时，它应该停止解析剩余的字符
@@ -298,7 +302,11 @@ function docker-compiler
                     esac
                 done
                 shift ;;
-            *) remaining_args+=("$1"); shift ;; # 非选项参数全部放入数组中
+            *)
+                # 第一个非选项参数 = 用户命令开始：剩余所有参数（含 -d/-p 等）整体归入用户命令
+                remaining_args+=("$@")
+                break
+                ;;
         esac
     done
 
@@ -339,7 +347,7 @@ function docker-compiler
     if [ -z ${docker_container_name} ];then
         echo "Error: unknow container_name! you must give platform or container_name"
         echo "Example: $FUNCNAME -p platform \"command args ...\""
-        echo "Example: $FUNCNAME -n container_name \"command args ...\""
+        echo "Example: $FUNCNAME -c container_name \"command args ...\""
         return 5
     fi
     if [ ${debug} = true ];then
