@@ -35,7 +35,7 @@ function buildin_install_mybashrc
 
 alias bd='. bd -si'
 alias clr='clear'
-alias rm='trash_new'
+alias rm='trash_func'
 alias docker-compiler='fm-work_docker_compiler.sh'
 
 if [ -f /opt/z/z.sh  ];then
@@ -54,6 +54,8 @@ if [ -f ${mybash_file} ];then
         fi
     fi
 fi
+hostname -I
+
 EOF
 	return 0
 }

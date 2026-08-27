@@ -47,9 +47,11 @@ function _data_base_operation() {
 
     case "$cmd" in
         init)
-            if [[ -f "$map_file" ]]; then return 0;fi
+            if [[ -f "$map_file" ]]; then echo "delete old map config:";rm -v $map_file;fi
             echo "#  key-value format：platform=container_name" > "$map_file"
             _data_base_add_example ${map_file}
+            echo "create new map config:"
+            cat ${map_file}
             return 0
             ;;
         set)
@@ -181,9 +183,11 @@ function _data_base_operation() {
 function docker-compiler
 {
     if [ $# -lt 1 ]; then
+        echo "描述：此脚本的主要功能是将\"用户命令及参数\"透传到\"docker环境\"中去执行，不用登录到容器内部，十分便捷。"
+        echo "      本质上是对\"docker exec -it container bash -c your_command\"长命令的封装。"
         echo "用法: "
         echo "         $FUNCNAME [options]    command args ..."
-        echo "         $FUNCNAME [options] -- command args ... #用\"--\"显式地将此脚本选项和用户命令和其参数隔开，其后全部视为用户命令和参数"
+        echo "         $FUNCNAME [options] -- command args ... #用 -- 显式地标记用户命令的开始"
         echo ""
         echo "选项(options):"
         echo "        -d|--debug                     #调试模式：不真正执行你的命令。"
@@ -191,16 +195,17 @@ function docker-compiler
         echo "        -p|--plat  [platform]          #指定平台名称。不带参数时：列出所有已知的平台-容器映射。"
         echo ""
         echo "映射表操作(mapping table operations):"
+        echo "        -I|--init                             #重新初始化 $docker_compiler_platform_map2_container "
         echo "        -A|--add   platform  container_name   #向 $docker_compiler_platform_map2_container 添加一条新的\"平台-容器\"映射"
         echo "        -D|--del   platform                   #从 $docker_compiler_platform_map2_container 删除一条\"平台-容器\"映射"
         echo "        -S|--show  platform                   #显示 $docker_compiler_platform_map2_container 中的\"平台-容器\"映射"
         echo ""
-        echo "注意1：用户命令中含有（&&、||、;、|）会在本脚本运行之前就 shell 解析。"
-        echo "      错误：$FUNCNAME   make clean && make all     # 只有 'make clean' 会在 docker 中运行。"
-        echo "      正确：$FUNCNAME  \"make clean && make all\"    # 用双引号括起来，整体作为用户命令。"
-        echo "      另外：$FUNCNAME   make clean '&&' make all   # 或将&&用单引号括起来，防止被shell被提前解析。"
+        echo "注意1：当用户命令中含有（&&、||、;、|）时，会被外层的shell提前解析，所以正确透传方法如下："
+        echo "      错误：$FUNCNAME   make clean && make all     # 只有 'make clean' 透传到docker 中执行，make all 被外层shell拦下。"
+        echo "      正确：$FUNCNAME  \"make clean && make all\"    # 用双引号括起来，整体作为用户命令，阻止外部shell解析。"
+        echo "      正确：$FUNCNAME  'make clean && make all'    # 用单引号括起来，整体作为用户命令，阻止外部shell解析。"
         echo ""
-        echo "注意2：第一个非选项参数视为用户命令；其后的所有参数同样视为用户命令参数，（包括 -d/-p/-c/-A/-D/-S 等与本脚本选项同名的参数）"
+        echo "注意2：第一个非选项参数视为用户命令；其后的所有参数同样视为用户命令参数，（包括 -d/-p/-c/-I/-A/-D/-S 等与本脚本选项同名的参数）"
         echo "      都会原样传给用户命令，本脚本不再解析。因此请把本脚本的选项放在用户命令之前。"
         echo "      例如：$FUNCNAME -p mc632x ./AllInOne4_mc632x_build.sh all -d   # -d 会传给构建脚本"
         echo "      如果用户命令本身以 '-' 开头，请用 '--' 分隔：$FUNCNAME -p mc632x -- -ls"
@@ -210,15 +215,14 @@ function docker-compiler
         echo "示例2 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    all --no-pack"
         echo "示例3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
         echo "示例4 : $FUNCNAME -p mc632x     make all"
-        echo "示例5 : $FUNCNAME -p mc632x    \"make clean && make all\""
-        echo "示例6 : $FUNCNAME -p mc632x     ls -lh"
-        echo "示例7 : $FUNCNAME -p mc632x --  ls -lh   #'--' 之后的所有内容都被视为用户命令"
+        echo "示例5 : $FUNCNAME -p mc632x    \"make clean && make all 2>&1 log\""
+        echo "示例6 : $FUNCNAME -p mc632x    \"ls -lh | grep xxxx\""
+        echo "示例7 : $FUNCNAME -p mc632x --  ls -lh   #'--' 标记其后是用户命令的开始"
         echo "示例8 : $FUNCNAME -p                     # 不带参数：列出所有已知的平台-容器映射：$docker_compiler_platform_map2_container"
         echo "示例9 : $FUNCNAME -c                     # 不带参数：列出所有已知的运行中容器"
         echo "示例10: $FUNCNAME -c container_name \"make clean && make all\" "
-        echo "示例11: $FUNCNAME -p mc632x ./AllInOne4_mc632x_build.sh all -d   # '-d' 属于用户命令"
-        echo "示例12: export g_platform=mc632x;              #常驻环境变量中,可免每次加该选项"
-        echo "示例13: export g_container_name=mycontainer;   #常驻环境变量中,可免每次加该选项"
+        echo "示例11: export g_platform=mc632x;              #常驻环境变量中,可免每次加该选项"
+        echo "示例12: export g_container_name=mycontainer;   #常驻环境变量中,可免每次加该选项"
         echo ""
         if [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
             echo "注意：已检测到环境变量"
@@ -280,6 +284,8 @@ function docker-compiler
             -p|--plat)
                 if [[ -z "$2" ]]; then echo "All known platforms-container mapping list: ";_data_base_operation show; return 1; fi
                 platform="$2"; shift 2 ;; #带参数，移动2
+            -I|--init)
+                sub_cmd=INIT; sub_cmd_args=(); shift 1 ;; #不带参数，移动1
             -A|--add)
                 if [[ -z "$2" || -z "$3" ]]; then echo "ERROR: not found platform or container_name" >&2; return 1; fi
                 sub_cmd=ADD; sub_cmd_args=("$2" "$3"); shift 3 ;; #带2参数，移动3
@@ -293,11 +299,12 @@ function docker-compiler
                 for (( i=1; i<${#1}; i++ )); do
                     case ${1:i:1} in
                         d) debug=true ;;
-                        c) docker_container_name="$2"; shift;break ;; # 当 n 是合并选项的一部分时，它应该停止解析剩余的字符
+                        c) docker_container_name="$2"; shift;break ;; # 当 c 是合并选项的一部分时，它应该停止解析剩余的字符
                         p) platform="$2"; shift;break ;; # 当 p 是合并选项的一部分时，它应该停止解析剩余的字符
-                        A) sub_cmd=ADD; sub_cmd_args=("$2" "$3"); shift 3;break ;; # 当 a 是合并选项的一部分时，它应该停止解析剩余的字符
-                        D) sub_cmd=DEL; sub_cmd_args=("$2"); shift 2;break ;; # 当 d 是合并选项的一部分时，它应该停止解析剩余的字符
-                        S) sub_cmd=LIST; sub_cmd_args=(); shift;break ;; # 当 s 是合并选项的一部分时，它应该停止解析剩余的字符
+                        I) sub_cmd=INIT; sub_cmd_args=(); shift;break ;; # 当 I 是合并选项的一部分时，它应该停止解析剩余的字符
+                        A) sub_cmd=ADD; sub_cmd_args=("$2" "$3"); shift 3;break ;; # 当 A 是合并选项的一部分时，它应该停止解析剩余的字符
+                        D) sub_cmd=DEL; sub_cmd_args=("$2"); shift 2;break ;; # 当 D 是合并选项的一部分时，它应该停止解析剩余的字符
+                        S) sub_cmd=LIST; sub_cmd_args=(); shift;break ;; # 当 S 是合并选项的一部分时，它应该停止解析剩余的字符
                         *) echo "ERROR: invalid option: -${1:i:1}" >&2; return 1 ;;
                     esac
                 done
@@ -309,9 +316,11 @@ function docker-compiler
                 ;;
         esac
     done
-
+    #优先处理本脚本选项
     if [ -n "${sub_cmd}" ]; then
-        if [ "${sub_cmd}" = "ADD" ]; then
+        if [ "${sub_cmd}" = "INIT" ]; then
+            _data_base_operation init ${sub_cmd_args[@]}
+        elif [ "${sub_cmd}" = "ADD" ]; then
             _data_base_operation set ${sub_cmd_args[@]}
         elif [ "${sub_cmd}" = "DEL" ]; then
             _data_base_operation del ${sub_cmd_args[@]} || return $?
