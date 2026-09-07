@@ -287,7 +287,7 @@ def print_partition_table(device_part, partitions, table_title):
         line = '分区: [' + start_padded + ' - ' + end_padded + '], 大小: ' + size_hex_padded + ' --> ' + size_human_padded + ' : "' + p['name'] + '"'
         print(line)
 
-def parse_mtdpart_from_bootargs(bootargs_str):
+def parse_mtdpart_from_bootargs(bootargs_str, source_name="Bootargs 中的 mtdparts"):
     """从 bootargs 中解析 mtdparts 参数"""
     if not bootargs_str:
         return None, []
@@ -297,7 +297,7 @@ def parse_mtdpart_from_bootargs(bootargs_str):
     if not mtdparts_match:
         return None, []
     
-    return parse_partition_string(mtdparts_match.group(1), "Bootargs 中的 mtdparts")
+    return parse_partition_string(mtdparts_match.group(1), source_name)
 
 def parse_mtdparts(input_str):
     """解析独立的 mtdparts 环境变量"""
@@ -315,11 +315,19 @@ input_str = os.environ.get('MTDPARTS_INPUT', '')
 found_any_partition = False
 
 # 从 bootargs 中解析 mtdparts
-bootargs_match = re.search(r'bootargs=([^\n]+)', input_str)
+bootargs_match = re.search(r'^bootargs=([^\n]+)', input_str, re.MULTILINE)
 if bootargs_match:
     device_part, partitions = parse_mtdpart_from_bootargs(bootargs_match.group(1))
     if device_part and partitions:
         print_partition_table(device_part, partitions, "Bootargs 中的 MTD 分区表")
+        found_any_partition = True
+
+# 从 bootargs_base 中解析 mtdparts
+bootargs_base_match = re.search(r'^bootargs_base=([^\n]+)', input_str, re.MULTILINE)
+if bootargs_base_match:
+    device_part, partitions = parse_mtdpart_from_bootargs(bootargs_base_match.group(1), "Bootargs_base 中的 mtdparts")
+    if device_part and partitions:
+        print_partition_table(device_part, partitions, "Bootargs_base 中的 MTD 分区表")
         found_any_partition = True
 
 # 解析独立的 mtdparts
@@ -332,7 +340,7 @@ if device_part and partitions:
 if not found_any_partition:
     print("\n未找到任何有效的 MTD 分区表信息")
     print("请确保输入数据中包含以下任意一种格式的分区表：")
-    print("1. bootargs 中的 mtdparts 参数")
+    print("1. bootargs 或 bootargs_base 中的 mtdparts 参数")
     print("2. 独立的 mtdparts 环境变量")
 
 print()

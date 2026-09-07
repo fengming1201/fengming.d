@@ -179,6 +179,29 @@ function _data_base_operation() {
     esac
 }
 
+function is_subpath
+{
+    local parent="$1"
+    local child="$2"
+    # 规范化路径（即使路径不存在也能处理）
+    parent=$(realpath -m "$parent")
+    child=$(realpath -m "$child")
+
+    # 如果父路径是根目录，则任何路径都在其下
+    if [[ "$parent" == "/" ]]; then
+        return 0
+    fi
+    # 允许两个路径完全相等
+    if [[ "$parent" == "$child" ]]; then
+        return 0
+    fi
+
+    # 判断 child 是否以 parent/ 开头（防止 /home/foo 匹配 /home/foobar）
+    case "$child" in
+        "$parent"/*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
 
 function docker-compiler
 {
@@ -378,7 +401,20 @@ function docker-compiler
     local docker_workdir_path=$(echo ${docker_volume_mapping} | awk -F '->' '{print $2}' | tr -d ' ')
     #convert current_dir to docker_inner_path;e.g. /home/lshm/workdir/mc632x_test/build.sh to /home/duser/workdir/mc632x_test/build.sh
     local docker_inner_path=$(echo $(pwd) | sed "s|${host_workdir_path}|${docker_workdir_path}|")
-
+    if [ ${debug} = true ];then
+        echo "INFO:docker_volume_mapping=${docker_volume_mapping}"
+        echo "INFO:    host_workdir_path=${host_workdir_path}"
+        echo "INFO:  docker_workdir_path=${docker_workdir_path}"
+        echo "INFO:    docker_inner_path=${docker_inner_path}"
+    fi
+    # 检查当前目前是否在映射的目录之下
+    is_subpath ${host_workdir_path} $PWD
+    if [ $? -ne 0 ];then
+        echo "ERROR:current directory:($PWD) not under (${host_workdir_path})."
+        echo "but your volume mapping is:${docker_volume_mapping}."
+        echo "so,this docker container must working under ${host_workdir_path}"
+        return 7
+    fi
     # step 5: packaging user command
     # 将 remaining_args 编码为可在 bash -c 中安全执行的命令字符串
     # 单参数时视为完整 shell 命令（如 "make clean && make all"），直接嵌入不转义
@@ -392,6 +428,9 @@ function docker-compiler
         done
         user_cmd=${user_cmd% }
     fi
+    # 将用户命令中的 ~/ or $HOME 转换成映射工作目录，
+    local user_cmd=$(echo $user_cmd | sed -e "s#${HOME}#${docker_workdir_path}#g" -e "s#~/#${docker_workdir_path}#g")
+
     # 在容器内先 cd 到映射目录，再以命令组 () 执行用户命令，避免 ;、|| 与外层 && 优先级混淆
     local cmd_array=(bash -ic "cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})")
     local cmd_array4_echo=(bash -ic \""cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})"\")
@@ -408,7 +447,7 @@ function docker-compiler
     if [ ${debug} = false ];then
         docker exec -it "${docker_container_name}" "${cmd_array[@]}"
         ret=$?
-        if [ $ret -ne 0 ];then echo "Error: docker exec exit code:$ret";fi
+        if [ $ret -ne 0 ];then echo "Warning: docker exec exit code:$ret";fi
     fi
     return $ret
 }

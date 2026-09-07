@@ -22,8 +22,20 @@ npm -v # Should print "11.17.0".
 ```
 npm install -g  @deepseek-ai/dsh
 
+added 522 packages in 46s
+
+66 packages are looking for funding
+  run `npm fund` for details
+#查看版本
 dsh --version
 0.1.0-rc.6
+```
+
+卸载方法：
+```
+npm uninstall -g @deepseek-ai/dsh
+
+removed 522 packages in 543ms
 ```
 
 ### （3）配置局域网访问

@@ -36,7 +36,15 @@ docker run -it --rm ghcr.io/anomalyco/opencode
 
 
 # 初级使用
+(1)配合opencode客户端使用
+在linux下启动服务：
+```
+opencode serve --hostname 0.0.0.0 --port 4096 &
+```
+在opencode 客户端上“添加服务器”
 
+
+(2)直接在linux终端下使用
 ## 初始化
 配置好提供商后，导航到你想要处理的项目目录。
 
