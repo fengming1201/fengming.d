@@ -3,7 +3,7 @@
 ## 第一阶段：后端
 
 ### （1）[可选]安装最新的node 
-已经安装则跳过。
+已经安装则跳过。官网：https://nodejs.org/zh-cn/download
 
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.6/install.sh | bash
