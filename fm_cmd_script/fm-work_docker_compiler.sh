@@ -239,13 +239,15 @@ function docker-compiler
         echo "示例3 : $FUNCNAME -p mc632x     ./AllInOne4_mc632x_build.sh    -pFS"
         echo "示例4 : $FUNCNAME -p mc632x     make all"
         echo "示例5 : $FUNCNAME -p mc632x    \"make clean && make all 2>&1 log\""
-        echo "示例6 : $FUNCNAME -p mc632x    \"ls -lh | grep xxxx\""
-        echo "示例7 : $FUNCNAME -p mc632x --  ls -lh   #'--' 标记其后是用户命令的开始"
-        echo "示例8 : $FUNCNAME -p                     # 不带参数：列出所有已知的平台-容器映射：$docker_compiler_platform_map2_container"
-        echo "示例9 : $FUNCNAME -c                     # 不带参数：列出所有已知的运行中容器"
-        echo "示例10: $FUNCNAME -c container_name \"make clean && make all\" "
-        echo "示例11: export g_platform=mc632x;              #常驻环境变量中,可免每次加该选项"
-        echo "示例12: export g_container_name=mycontainer;   #常驻环境变量中,可免每次加该选项"
+        echo "示例6 : $FUNCNAME -p mc632x     ls -lh ~/Docker_Images_Build/  # 其中~/或\${HOME}会被替换"  
+        echo "示例7 : $FUNCNAME -p mc632x     ls /root/  # 容器内操作没有权限可以加sudo" 
+        echo "示例8 : $FUNCNAME -p mc632x     sudo apt install package  # 临时给容器安装软件，永久安装应放在构建镜像阶段。"
+        echo "示例9 : $FUNCNAME -p mc632x --  ls -lh   #'--' 标记其后是用户命令的开始,应对复杂情况"
+        echo "示例10: $FUNCNAME -p                     # 不带参数：列出所有已知的平台-容器映射：$docker_compiler_platform_map2_container"
+        echo "示例11: $FUNCNAME -c                     # 不带参数：列出所有已知的运行中容器"
+        echo "示例12: $FUNCNAME -c container_name \"make clean && make all\" "
+        echo "示例13: export g_platform=mc632x;              #常驻环境变量中,可免每次加该选项。可以用-p选项覆盖"
+        echo "示例14: export g_container_name=mycontainer;   #常驻环境变量中,可免每次加该选项。可以用-c选项覆盖"
         echo ""
         if [ -n "${g_container_name}" ] || [ -n "${g_platform}" ];then
             echo "注意：已检测到环境变量"
@@ -269,7 +271,7 @@ function docker-compiler
         return 0
     fi
     # step 0: check docker groups
-    if ! id -nG | grep -qw docker;then
+    if [ "$(id -u)" -ne 0 ] && ! id -nG | grep -qw docker;then
         echo "you need to do:"
         echo "step1:sudo usermod -aG docker \$USER    # Add current user to docker group"
         echo "step2:exec newgrp docker                # Replace the current shell with a new one"
@@ -280,6 +282,7 @@ function docker-compiler
     local workdir_volume_map_path=${HOME}
     local docker_container_name=${g_container_name:-}
     local platform=${g_platform:-}
+    local user_id=$(id -u)
     local debug=false
     local sub_cmd=""
     local sub_cmd_args=()
@@ -307,6 +310,9 @@ function docker-compiler
             -p|--plat)
                 if [[ -z "$2" ]]; then echo "All known platforms-container mapping list: ";_data_base_operation show; return 1; fi
                 platform="$2"; shift 2 ;; #带参数，移动2
+            -u|--uid)
+                if [[ -z "$2" ]]; then echo "All known platforms-container mapping list: ";_data_base_operation show; return 1; fi
+                user_id="$2"; shift 2 ;; #带参数，移动2
             -I|--init)
                 sub_cmd=INIT; sub_cmd_args=(); shift 1 ;; #不带参数，移动1
             -A|--add)
@@ -396,7 +402,14 @@ function docker-compiler
     #================================================================#
     # step 4: get docker volume mapping and convert current_dir to docker_inner_path
     #docker volume mapping: like: /home/lshm -> /home/duser/workdir
-    local docker_volume_mapping=$(docker inspect -f '{{ range .Mounts }}{{ if eq .Destination "/home/duser/workdir" }}{{ .Source }} -> {{ .Destination }}{{ "\n" }}{{ end }}{{ end }}' ${docker_container_name} )
+    local docker_volume_mapping=$(docker inspect -f '{{ range .Mounts }}{{ if or (eq .Destination "/home/duser/workdir") (eq .Destination "/root/workdir") }}{{ .Source }} -> {{ .Destination }}{{ "\n" }}{{ end }}{{ end }}' ${docker_container_name} )
+    if [ $(echo "${docker_volume_mapping}" | wc -l ) -gt 1 ];then
+        if [ $(id -u) -eq 0 ];then
+            docker_volume_mapping=$(echo "${docker_volume_mapping}" | grep -w root)
+        else
+            docker_volume_mapping=$(echo "${docker_volume_mapping}" | grep -w duser)
+        fi
+    fi
     local host_workdir_path=$(echo ${docker_volume_mapping} | awk -F '->' '{print $1}' | tr -d ' ')
     local docker_workdir_path=$(echo ${docker_volume_mapping} | awk -F '->' '{print $2}' | tr -d ' ')
     #convert current_dir to docker_inner_path;e.g. /home/lshm/workdir/mc632x_test/build.sh to /home/duser/workdir/mc632x_test/build.sh
@@ -406,20 +419,22 @@ function docker-compiler
         echo "INFO:    host_workdir_path=${host_workdir_path}"
         echo "INFO:  docker_workdir_path=${docker_workdir_path}"
         echo "INFO:    docker_inner_path=${docker_inner_path}"
+        echo "INFO:            host_path=$(pwd)"
     fi
     # 检查当前目前是否在映射的目录之下
     is_subpath ${host_workdir_path} $PWD
     if [ $? -ne 0 ];then
-        echo "ERROR:current directory:($PWD) not under (${host_workdir_path})."
-        echo "but your volume mapping is:${docker_volume_mapping}."
-        echo "so,this docker container must working under ${host_workdir_path}"
+        echo "ERROR[EN]: your work directory must be under ${host_workdir_path}"
+        echo "         : docker volume:${docker_volume_mapping}"
+        echo "ERROR[CN]: 此容器的工作目录必须位于 ${host_workdir_path}"
+        echo "         : 此容器卷映射为 ${docker_volume_mapping}"
         return 7
     fi
     # step 5: packaging user command
     # 将 remaining_args 编码为可在 bash -c 中安全执行的命令字符串
     # 单参数时视为完整 shell 命令（如 "make clean && make all"），直接嵌入不转义
     # 多参数时对每个参数 printf '%q'，避免空格/引号等被错误拆分
-    local user_cmd="" arg
+    local user_cmd=""
     if [[ ${#remaining_args[@]} -eq 1 ]]; then
         user_cmd="${remaining_args[0]}"
     else
@@ -429,29 +444,28 @@ function docker-compiler
         user_cmd=${user_cmd% }
     fi
     # 将用户命令中的 ~/ or $HOME 转换成映射工作目录，
-    local user_cmd=$(echo $user_cmd | sed -e "s#${HOME}#${docker_workdir_path}#g" -e "s#~/#${docker_workdir_path}#g")
+    #local user_cmd=$(echo $user_cmd | sed -e "s#${HOME}#${docker_workdir_path}#g" -e "s#~/#${docker_workdir_path}#g")
+    local user_cmd=$(echo $user_cmd | sed "s|${host_workdir_path}|${docker_workdir_path}|g")
 
     # 在容器内先 cd 到映射目录，再以命令组 () 执行用户命令，避免 ;、|| 与外层 && 优先级混淆
     local cmd_array=(bash -ic "cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})")
     local cmd_array4_echo=(bash -ic \""cd -- $(printf '%q' "$docker_inner_path") && (${user_cmd})"\")
     if [ ${debug} = true ];then
-        echo "INFO:        host_path=$(pwd)"
-        echo "INFO:docker_inner_path=${docker_inner_path}"
-        echo "INFO:user_cmd=${user_cmd}"
         echo "INFO:remaining_args=${remaining_args[@]}"
-        echo "INFO:cmd_array=${cmd_array[@]}"
+        echo "INFO:      user_cmd=${user_cmd}"
+        echo "INFO:     cmd_array=${cmd_array[@]}"
     fi
     #================================================================#
     # step 6: execute user command in docker container
-    echo "EXEC:docker exec -it "${docker_container_name}" ${cmd_array4_echo[@]}"
+    echo "EXEC:docker exec -u ${user_id} -it "${docker_container_name}" ${cmd_array4_echo[@]}"
     if [ ${debug} = false ];then
-        docker exec -it "${docker_container_name}" "${cmd_array[@]}"
+        docker exec -u ${user_id} -it "${docker_container_name}" "${cmd_array[@]}"
         ret=$?
-        if [ $ret -ne 0 ];then echo "Warning: docker exec exit code:$ret";fi
     fi
     return $ret
 }
 #if unnecessary, please do not modify following code
 docker-compiler "$@"
-if [ $? -ne 0 ];then exit 1;fi
+func_ret=$?
+if [ $func_ret -ne 0 ];then exit $func_ret;fi
 exit 0
