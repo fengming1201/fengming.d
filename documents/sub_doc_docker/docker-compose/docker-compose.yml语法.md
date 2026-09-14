@@ -1,167 +1,328 @@
-（1）
-docker-compose.yml语法
+下面是 Docker Compose（v2 / Compose Specification）完整的关键字参考，按层级整理。
 
-Docker Compose是用于定义和管理多个Docker容器的工具，它使用`docker-compose.yml`文件来描述应用程序的服务、网络、卷等配置。以下是`docker-compose.yml`文件的语法说明：
+---
 
-1. 服务定义：
-   ```
-   services:
-     <service1>:
-       <configuration>
-     <service2>:
-       <configuration>
-     ...
-   ```
-   在`services`部分，您可以定义多个服务（容器），每个服务都有一个唯一的名称，并包含其相应的配置。
+## 一、顶层关键字
 
-2. 服务配置：
-   ```
-   <service>:
-     image: <image>
-     build: <build context>
-     volumes: 
-       - <host_path>:<container_path>
-     ports:
-       - <host_port>:<container_port>
-     environment:
-       - <key>=<value>
-     ...
-   ```
-   每个服务都可以具有以下配置选项：
-   - `image`：指定使用的镜像。
-   - `build`：指定构建镜像的上下文路径。
-   - `volumes`：指定要挂载的卷。
-   - `ports`：指定端口映射。
-   - `environment`：设置环境变量。
-   - 其他配置选项，如`command`、`networks`等。
-
-3. 网络定义：
-   ```
-   networks:
-     <network1>:
-       <configuration>
-     <network2>:
-       <configuration>
-     ...
-   ```
-   在`networks`部分，您可以定义多个网络，每个网络都有一个唯一的名称，并包含其相应的配置。
-
-4. 网络配置：
-   ```
-   <network>:
-     driver: <driver>
-     ...
-   ```
-   每个网络可以具有以下配置选项：
-   - `driver`：指定网络驱动程序。
-   - 其他配置选项，如`external`、`ipam`等。
-
-5. 其他全局配置：
-   ```
-   version: "3"
-   volumes:
-     <volume1>:
-       <configuration>
-     <volume2>:
-       <configuration>
-   ...
-   ```
-   在`version`部分，指定了Compose文件的版本号。
-   在`volumes`部分，您可以定义多个卷，每个卷都有一个唯一的名称，并包含其相应的配置。
-
-以上是`docker-compose.yml`文件的基本语法说明。您可以根据需要添加或修改服务、网络、卷的配置。更详细的语法和配置选项，请参考Docker Compose官方文档或其他相关资源。
-
-如果您有其他问题，请随时提问。
-
-（2）
-docker-compose.yml模板
-
-以下是一个简单的`docker-compose.yml`文件模板，供您参考：
+一个 `docker-compose.yml` 的顶层结构只有这几个 key：
 
 ```yaml
-version: "3"
-services:
-  <service1>:
-    image: <image1>
-    ports:
-      - <host_port1>:<container_port1>
-    volumes:
-      - <host_path1>:<container_path1>
-    environment:
-      - <key1>=<value1>
-    networks:
-      - <network1>
-  <service2>:
-    image: <image2>
-    ports:
-      - <host_port2>:<container_port2>
-    volumes:
-      - <host_path2>:<container_path2>
-    environment:
-      - <key2>=<value2>
-    networks:
-      - <network2>
-networks:
-  <network1>:
-  <network2>:
+name: myproject        # 项目名称，影响容器/网络/卷名前缀
+include: []            # 引入其他 compose 文件
+services: {}           # 核心，定义服务
+networks: {}           # 定义网络
+volumes: {}            # 定义卷
+configs: {}            # 配置文件（Swarm 特性，Compose 也支持）
+secrets: {}            # 机密文件（Swarm 特性，Compose 也支持）
 ```
 
-在这个模板中，您可以根据需要添加或修改服务、网络、卷的配置。以下是一些说明：
+`name` 不设置时默认取**目录名**，所以容器名会是 `<目录名>-<服务名>-1`。
 
-- `version`指定了Compose文件的版本，这里使用的是版本3。
-- `services`部分定义了多个服务（容器），每个服务都有一个唯一的名称（例如`<service1>`、`<service2>`）和相应的配置。
-- 在每个服务的配置中，您可以指定镜像、端口映射、卷挂载、环境变量等。
-- `networks`部分定义了多个网络，每个网络都有一个唯一的名称（例如`<network1>`、`<network2>`）。
-- 您可以根据需要添加更多的服务、网络和卷。
+---
 
-请注意，上述模板中的`<service1>`、`<service2>`、`<image1>`、`<image2>`等为占位符，您需要根据实际情况替换为相应的值。
+## 二、services 关键字（重点）
 
-希望这个模板对您有所帮助。如果您有其他问题，请随时提问。
+```yaml
+services:
+  web:
+    image: nginx:alpine          # 使用现成镜像
+    build: .                     # 或 ./dir 构建镜像
+    container_name: my-nginx     # 自定义容器名（会失去 scale 能力）
+    command: nginx -g "daemon off;"   # 覆盖 CMD
+    entrypoint: /bin/sh          # 覆盖 ENTRYPOINT
+    restart: unless-stopped      # no|always|on-failure|unless-stopped
+```
 
+### 构建相关 `build`
 
-（3）
-docker-compose.yml文件的所有保留字
+```yaml
+    build:
+      context: ./app             # 构建上下文目录
+      dockerfile: Dockerfile.dev # 指定 Dockerfile 名
+      target: builder            # 多阶段构建到某个阶段
+      args:                      # 构建参数
+        ENV: production
+      cache_from:
+        - myimage:latest         # 构建缓存
+```
 
-Docker Compose YAML 文件中的保留字和关键字包括以下内容：
-1. version：指定 Docker Compose 文件的版本号。
-2. services：定义各个服务的配置块。
-3. networks：定义网络的配置块。
-4. volumes：定义卷的配置块。
-5. image：指定服务所使用的镜像。
-6. build：指定构建镜像所需的上下文路径和 Dockerfile。
-7. ports：定义端口映射关系。
-8. expose：暴露容器的端口，但不进行主机端口映射。
-9. environment：设置服务的环境变量。
-10. env_file：从文件中加载环境变量。
-11. command：覆盖容器默认的启动命令。
-12. entrypoint：覆盖容器默认的入口点。
-13. volumes：定义数据卷的映射关系。
-14. networks：指定服务所连接的网络。
-15. depends_on：定义服务之间的依赖关系。
-16. restart：定义容器的重启策略。
-17. deploy：用于定义服务的部署配置，例如副本数、更新策略等。
-18. labels：为服务添加标签。
-19. external_links：连接到外部容器。
-20. extends：扩展其他服务的配置。
-21. secrets：引用 Docker 密钥管理器中的机密。
-22. configs：引用 Docker 配置管理器中的配置。
-23. healthcheck：定义容器的健康检查。
-24. sysctls：设置容器的内核参数。
-25. cap_add：添加容器的 Linux 能力。
-26. cap_drop：删除容器的 Linux 能力。
-27. tmpfs：将临时文件系统挂载到容器内部。
+> `image` 和 `build` 可以同时写：有 `build` 时会构建，`image` 指定构建出来的镜像名。
 
-这些保留字和关键字用于定义和配置 Docker Compose 文件中的各种属性和行为。根据您的需求，您可以使用这些关键字来编写适合您应用程序的 Docker Compose 文件。
+### 环境变量 `environment` / `env_file`
 
-请注意，保留字和关键字是大小写敏感的，应按照正确的大小写形式使用它们。此外，Docker Compose 还支持其他选项和功能，您可以查阅 Docker Compose 的官方文档以获取更详细的信息和示例。
+```yaml
+    environment:                 # 直接写
+      - KEY=value
+      - KEY                      # 只写名字=从宿主机取值
+    env_file:                    # 从文件加载
+      - ./app/.env
+      - ./app/.env.local
+```
 
+**优先级**（高→低）：`environment` > shell 环境变量 > `env_file` > `.env` 文件。
 
+### 网络端口 `ports` / `expose`
 
+```yaml
+    ports:                       # 宿主机:容器 映射，会发布到外部
+      - "80:80"                  # 短语法
+      - target: 80               # 长语法
+        published: 8080
+        protocol: tcp
+        mode: host
+    expose:                      # 仅容器间可见，不映射到宿主机
+      - "3306"
+```
 
+### 存储 `volumes`
 
+```yaml
+    volumes:
+      - ./html:/usr/share/nginx/html:ro     # 绑定挂载（宿主机路径）
+      - data:/var/lib/mysql                 # 命名卷
+      - type: bind                           # 长语法
+        source: ./conf
+        target: /etc/nginx/conf.d
+        read_only: true
+```
 
+第三段是选项：`ro`（只读）、`rw`、`z`/`Z`（SELinux 标签）。
 
+### 网络 `networks`
 
+```yaml
+    networks:
+      - frontend
+      - backend:
+          aliases:               # 网络内别名
+            - db.internal
+          ipv4_address: 172.20.0.5   # 需网络配置了 ipam
+```
 
+### 依赖与启动顺序 `depends_on`
 
+```yaml
+    depends_on:
+      db:
+        condition: service_healthy   # service_started|service_healthy|service_completed_successfully
+      redis:
+        condition: service_started
+```
 
+注意：只保证启动顺序，不保证服务"就绪"，就绪要靠 healthcheck。
+
+### 健康检查 `healthcheck`
+
+```yaml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s        # 检查间隔
+      timeout: 10s         # 单次超时
+      retries: 3           # 失败重试次数
+      start_period: 40s    # 启动宽限期，期间失败不计数
+      start_interval: 5s   # 启动期间检查间隔（较新版本）
+```
+
+### 资源限制 `deploy`（单机 compose 可用的子集）
+
+```yaml
+    deploy:
+      replicas: 2                      # 副本数（compose 下也生效）
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+      mode: replicated                 # replicated|global
+```
+
+### 日志 `logging`
+
+```yaml
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+```
+
+可选 driver：`json-file`、`syslog`、`journald`、`fluentd`、`none` 等。
+
+### 其他常用关键字
+
+```yaml
+    user: "1000:1000"          # 运行用户
+    working_dir: /app          # 工作目录
+    hostname: web-01
+    dns: [8.8.8.8, 114.114.114.114]
+    extra_hosts:               # 写入 /etc/hosts
+      - "example.com:192.168.1.10"
+    cap_add: [NET_ADMIN]       # 添加 Linux capability
+    cap_drop: [ALL]
+    privileged: true           # 特权模式（危险）
+    read_only: true            # 容器根文件系统只读
+    tmpfs: /run                # 临时文件系统
+    devices:                   # 设备映射
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    sysctls:
+      net.core.somaxconn: 1024
+    stdin_open: true           # 等价 docker run -i
+    tty: true                  # 等价 docker run -t
+    init: true                 # 使用 tini 作为 PID 1
+    stop_grace_period: 30s     # 停止前等待优雅退出的时间
+    stop_signal: SIGTERM       # 停止信号
+    profiles: [debug]          # 按需启动：docker compose --profile debug up
+    pull_policy: always        # 拉取策略
+    platform: linux/amd64      # 指定平台
+    labels:                    # 容器元数据
+      - "com.example.description=web"
+    extends:                   # 继承其他服务的配置
+      file: common.yml
+      service: web-base
+```
+
+### 已废弃/不推荐
+
+| 关键字 | 状态 | 替代方案 |
+|--------|------|---------|
+| `links` | 废弃 | `networks`（容器间用服务名互访） |
+| `mem_limit`、`memswap_limit`、`cpus` | v2 遗留 | `deploy.resources` |
+| `version` | 顶层字段已废弃 | 直接删掉即可 |
+| `container_name` | 功能受限 | 一般不需要 |
+
+---
+
+## 三、networks 关键字
+
+```yaml
+networks:
+  frontend:
+    driver: bridge             # bridge|overlay|host|none
+    name: my-frontend          # 自定义网络名（不随项目名变化）
+    attachable: true           # 允许手动 docker network connect
+    internal: true             # 禁止外部访问（隔离网络）
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+    labels:
+      - "env=prod"
+  external-net:
+    external: true             # 使用已存在的外部网络
+    name: existing-net
+```
+
+---
+
+## 四、volumes 关键字
+
+```yaml
+volumes:
+  data:
+    driver: local
+    name: my-data              # 自定义卷名
+    external: true             # 使用外部已存在的卷
+  bind-mount:
+    driver_opts:
+      type: none
+      device: /srv/data
+      o: bind
+```
+
+---
+
+## 五、configs / secrets
+
+```yaml
+configs:
+  nginx_conf:
+    file: ./nginx.conf         # 从文件创建
+
+secrets:
+  db_password:
+    file: ./secrets/password.txt
+  env_secret:
+    environment: "SECRET_ENV"  # 从环境变量创建
+```
+
+服务中引用：
+
+```yaml
+    configs:
+      - source: nginx_conf
+        target: /etc/nginx/nginx.conf
+    secrets:
+      - source: db_password
+        target: /run/secrets/db_password
+```
+
+Secrets 会以文件形式挂载到容器内，避免明文出现在 `environment` 中。
+
+---
+
+## 六、一个完整示例
+
+```yaml
+name: demo
+
+services:
+  web:
+    build:
+      context: ./web
+      args:
+        ENV: dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./web/src:/app/src
+    environment:
+      - DB_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [frontend, backend]
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_pass
+    secrets: [pg_pass]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks: [backend]
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  pgdata:
+
+secrets:
+  pg_pass:
+    file: ./secrets/pg_password.txt
+```
+
+---
+
+## 记忆要点
+
+1. **服务间互访直接用服务名**（如 `db:5432`），不需要 IP
+2. **相对路径全部基于 compose 文件所在目录**（build context、bind mount、env_file）
+3. **变量插值**：`${VAR}` 从 shell / `.env` / `env_file` 取值，`${VAR:-default}` 提供默认值
+4. **调试合并结果**：`docker compose config` 永远是最可靠的验证方式
+
+需要哪个关键字的更深入用法（比如 healthcheck 实战、多阶段构建、profiles 场景）可以继续问。
