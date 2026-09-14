@@ -130,6 +130,7 @@ function func_main
                 MyGitlab/Docker_Compiler
                 MyGitlab/Docker_Runtime
                 MyGitlab/Docker_Quick2Build
+                MyGitlab/Personal_Resume
                 MyGitlab/Project
                 MyGitlab/Project/subProject_51MCU
                 MyGitlab/Project/subProject_STM32
@@ -140,7 +141,9 @@ function func_main
                 MyGitlab/Project/subProject_ESP32
                 MyGitlab/Project/subProject_Buildroot
                 MyGitlab/Software_Middleware_And_Infrastructure
-                MyGitlab/Work"
+                MyGitlab/Work
+                MyGitlab/Work/fjk_newframework
+                MyGitlab/Work/fjk_oldframework"
 
     for dir_name in $(echo "${dir_list}" | tr '\r' ' ')
     do
