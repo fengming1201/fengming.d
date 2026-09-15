@@ -125,25 +125,23 @@ function func_main
     #done
 
     local dir_list="
-                MyGitea/
-                MyGitea/docker_app
-                MyGitea/docker_compiler
-                MyGitea/docker_runtime
-                MyGitea/docker_quick2build
-                MyGitea/personal_resume
-                MyGitea/project
-                MyGitea/project/subProject_51MCU
-                MyGitea/project/subProject_STM32
-                MyGitea/project/subProject_EasyARM
-                MyGitea/project/subProject_Linux
-                MyGitea/project/subProject_Qemu
-                MyGitea/project/subProject_RaspberryPi
-                MyGitea/project/subProject_ESP32
-                MyGitea/project/subProject_Buildroot
-                MyGitea/software_middleware_and_infrastructure
-                MyGitea/work
-                MyGitea/work/fjk_newframework
-                MyGitea/work/fjk_oldframework"
+                   MyGit/
+                   MyGit/docker_app
+                   MyGit/docker_compiler
+                   MyGit/docker_runtime
+                   MyGit/personal_privacy
+                   MyGit/personal_resume
+                   MyGit/project
+                   MyGit/project_51mcu
+                   MyGit/project_easy_arm
+                   MyGit/project_esp32
+                   MyGit/project_linux
+                   MyGit/project_qemu
+                   MyGit/project_raspberry_pi
+                   MyGit/project_stm32
+                   MyGit/software_middleware_and_infrastructure
+                   MyGit/work
+                   MyGit/work_fjk"
 
     for dir_name in $(echo "${dir_list}" | tr '\r' ' ')
     do
