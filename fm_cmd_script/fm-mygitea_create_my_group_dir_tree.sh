@@ -125,25 +125,25 @@ function func_main
     #done
 
     local dir_list="
-                MyGitlab/
-                MyGitlab/Docker_App
-                MyGitlab/Docker_Compiler
-                MyGitlab/Docker_Runtime
-                MyGitlab/Docker_Quick2Build
-                MyGitlab/Personal_Resume
-                MyGitlab/Project
-                MyGitlab/Project/subProject_51MCU
-                MyGitlab/Project/subProject_STM32
-                MyGitlab/Project/subProject_EasyARM
-                MyGitlab/Project/subProject_Linux
-                MyGitlab/Project/subProject_Qemu
-                MyGitlab/Project/subProject_RaspberryPi
-                MyGitlab/Project/subProject_ESP32
-                MyGitlab/Project/subProject_Buildroot
-                MyGitlab/Software_Middleware_And_Infrastructure
-                MyGitlab/Work
-                MyGitlab/Work/fjk_newframework
-                MyGitlab/Work/fjk_oldframework"
+                MyGitea/
+                MyGitea/docker_app
+                MyGitea/docker_compiler
+                MyGitea/docker_runtime
+                MyGitea/docker_quick2build
+                MyGitea/personal_resume
+                MyGitea/project
+                MyGitea/project/subProject_51MCU
+                MyGitea/project/subProject_STM32
+                MyGitea/project/subProject_EasyARM
+                MyGitea/project/subProject_Linux
+                MyGitea/project/subProject_Qemu
+                MyGitea/project/subProject_RaspberryPi
+                MyGitea/project/subProject_ESP32
+                MyGitea/project/subProject_Buildroot
+                MyGitea/software_middleware_and_infrastructure
+                MyGitea/work
+                MyGitea/work/fjk_newframework
+                MyGitea/work/fjk_oldframework"
 
     for dir_name in $(echo "${dir_list}" | tr '\r' ' ')
     do
@@ -153,7 +153,7 @@ function func_main
         fi
     done
     #
-    tree -d MyGitlab/
+    tree -d MyGitea/
 
     return 0
 }
