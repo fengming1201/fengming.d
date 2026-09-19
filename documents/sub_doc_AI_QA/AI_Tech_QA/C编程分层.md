@@ -73,7 +73,25 @@ void upper_init(void) {
     lower_register_callback(on_lower_event);
 }
 ```
+下层定义函数指针类型，并提供注册函数，下层注册函数负责保存传下来的参数，此时下层拿到了通知上层的回调函数指针了。
+上层调用下层提供的服务是正常逻辑，上层调用下层的注册函数，把上层自己实现的函数作为注册函数参数传给下层。
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Upper as 上层 upper.c
+    participant Lower as 下层 lower.c
 
+    Note over Upper,Lower: ① 注册阶段：上层把自身函数地址交给下层
+    Upper->>Lower: upper_init()
+    Lower->>Lower: lower_register_callback(on_lower_event)
+    Note right of Lower: g_callback = on_lower_event（保存上层函数地址）
+
+    Note over Upper,Lower: ② 触发阶段：下层通过函数指针回调上层
+    Lower->>Lower: lower_trigger_event(value)
+    Lower->>Upper: g_callback(value) 即 on_lower_event(data)
+    Note right of Upper: 执行上层具体的 API 实现
+    Upper-->>Lower: 返回（可选）
+```
 **注意**：若系统复杂，建议改用**消息队列（异步）**，下层只发送消息，上层循环处理，避免直接回调带来的线程安全问题。
 
 ---

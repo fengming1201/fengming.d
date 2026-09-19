@@ -85,7 +85,18 @@ int main(void) {
 typedef void (*event_cb)(int event_id, void* user_data);
 void driver_set_callback(event_cb cb, void* ctx);
 ```
+```mermaid
+sequenceDiagram
+    autonumber
+    participant App as 上层 app.c
+    participant Drv as 下层 driver.c
 
+    App->>Drv: driver_init(my_data_handler)
+    Note right of Drv: 保存回调函数指针
+    App->>Drv: driver_start()
+    Drv->>App: my_data_handler(data, len)
+    Note right of App: 执行上层具体实现
+```
 ---
 
 ### 2. 注册-回调接口（观察者模式 / Listener）
@@ -107,6 +118,21 @@ void sensor_unregister(sensor_listener_t* listener);
 
 上层实现监听接口并注册即可。这种方式将耦合降到接口层面，但需要动态内存或静态链表管理。
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant A as 上层 业务模块A
+    participant B as 上层 业务模块B
+    participant S as 下层 sensor.c
+
+    A->>S: sensor_register(&listenerA)
+    B->>S: sensor_register(&listenerB)
+    Note right of S: 维护监听者链表
+    S->>S: 检测到阈值触发
+    S->>A: listenerA.on_threshold(value, ctx)
+    S->>B: listenerB.on_threshold(value, ctx)
+    Note over A,B: 一对多通知
+```
 ---
 
 ### 3. 依赖注入接口（策略模式 / 接口结构体）
@@ -159,7 +185,23 @@ int main(void) {
 ```
 
 很多嵌入式框架（如 Zephyr）大量使用这种方式实现“驱动接口”，上层提供具体硬件操作函数。
+```mermaid
+sequenceDiagram
+    autonumber
+    participant App as 上层 app.c
+    participant Mod as 下层 module.c
+    participant If as allocator_if_t 接口
 
+    App->>Mod: module_init(&my_alloc)
+    Note right of Mod: g_alloc = &my_alloc
+    App->>Mod: do_work()
+    Mod->>If: g_alloc->malloc(1024)
+    If->>App: my_alloc.malloc(1024)
+    App-->>If: 返回指针
+    If-->>Mod: buf
+    Mod->>If: g_alloc->free(buf)
+    If->>App: my_alloc.free(buf)
+```
 ---
 
 ### 4. 消息队列 / 事件驱动（解耦 + 异步）
@@ -196,7 +238,21 @@ while (event_queue_pop(&evt, 0xFFFFFFFF)) {
 ```
 
 若不用OS队列，也可用简单的环形缓冲区实现。
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Drv as 下层 驱动
+    participant Q as 事件队列 event_queue
+    participant App as 上层 主循环
 
+    Drv->>Q: event_queue_push(&evt)
+    Note right of Q: 入队（可跨任务/线程）
+    loop 事件循环
+        App->>Q: event_queue_pop(&evt, timeout)
+        Q-->>App: 取出事件
+        App->>App: switch(evt.id) 处理
+    end
+```
 ---
 
 ### 5. 信号/信号量（仅限通知，不传数据）
