@@ -720,6 +720,34 @@
       "describe": "快速跳转目录工具",
       "URL": "https://github.com/rupa/z.git",
       "BACKUP": "http://gitlab.fengming.com:8090/github.com/z.git"
+    },
+    {
+      "name": "cotick",
+      "language": "C",
+      "describe": "一个适用于资源受限 C/C++ 项目的轻量级协作式多任务（协程）轮询框架。无需 RTOS — 仅需一个滴答计数器，加上基于 Duff's Device 实现的协程即可。",
+      "URL": "https://gitee.com/Jumping99/cotick.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/cotick.git"
+    },
+    {
+      "name": "esh",
+      "language": "",
+      "describe": "是一款基于UART的轻量级嵌入式命令行Shell，内存占用小于4KB，支持C/C++/汇编，ARM、RISC‑V多架构，非常适合裸机调试、新板子快速验证硬件。",
+      "URL": "https://github.com/google/esh.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/esh.git"
+    },
+    {
+      "name": "Framework_Open",
+      "language": "C",
+      "describe": "YSF全称 Yearnext Software Framework，是一个基于消息驱动的单片机软件框架,定位是基于消息驱动的单片机软件框架，强调配置简便、跨平台、可裁剪。",
+      "URL": "https://gitee.com/accumulatedidea/Framework_Open.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/Framework_Open.git"
+    },
+    {
+      "name": "utfs",
+      "language": "C",
+      "describe": "一个极致轻量化的嵌入式存储方案,UTFS 不是 FatFS / LittleFS。它不做目录树、不做 journaling、也不做磨损均衡。",
+      "URL": "https://github.com/clisystems/utfs.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/utfs.git"
     }
   ]
 }
