@@ -28,6 +28,10 @@ GB2312/GBK 编码，在 VSCode、CLion、Git diff、DSH 这类按 UTF-8 解码�
   # 1d) 扫目录但排除干扰项
   python3 tools/convert_to_utf8.py . --exclude '*/libraries/*' --exclude build
 
+  扫目录时默认跳过"没有后缀"的文件（Makefile、Kconfig、README、各种无后缀测试夹具）：
+  这类文件量大而后缀给不出任何信号，收益小于噪音；要处理它们点名叫上即可。
+  同样整类跳过的还有翻译与测试夹具后缀（.po/.proto/.options/.expected/.input）。
+
   # 1e) 先只列出"会被转换的文件"，确认后再动手
   python3 tools/convert_to_utf8.py . --list | tee list.txt
 
@@ -52,13 +56,21 @@ GB2312/GBK 编码，在 VSCode、CLion、Git diff、DSH 这类按 UTF-8 解码�
   # 7) 给 CI 用的机器可读报告（- 表示写到标准输出），-q 只留汇总行
   python3 tools/convert_to_utf8.py . --json report.json -q
 
+  # 8) 兜底一：任何候选编码都解不出的"未知编码"文件，强制按 latin-1 逐字节保真转
+  python3 tools/convert_to_utf8.py . --unknown --realdo
+
+  # 9) 兜底二：把"疑似双重编码"的乱码反解回原文（ä½ å¥½ -> 你好）
+  python3 tools/convert_to_utf8.py . --multi --realdo
+
 退出码：0 正常（含 dry-run 有发现） / 1 --check 失败 / 2 用法错误（未给路径、
 路径不存在、参数冲突） / 3 转换过程中有文件失败。
 
 安全性：只有显式加 --realdo 才会写文件，默认 dry-run（也可显式写 --dry-run）；
 不带路径时只打印帮助，绝不隐式扫描当前目录；写文件前先备份原件；转换后校验
-「utf-8 解码结果再按源编码编码回去 == 原始字节」以及
-「非 ASCII 字节滤掉后的 ASCII 骨架逐字节不变」，因此代码逻辑不可能被改动。
+「utf-8 解码结果再按源编码编码回去 == 原始字节」（无损、可回退），单字节编码
+另加一条「非 ASCII 字节滤掉后的 ASCII 骨架逐字节不变」。注意 GBK/Big5 这类双字节
+编码的尾字节可能落在 ASCII 区（"–" = A8 43），ASCII 骨架本来就会变，所以那条
+不对它们生效，双字节编码完全靠回环无损这条兜底。
 中文若出现在字符串字面量里会额外用 ⚠ 标注（那会改变串口输出字节）。
 """
 
@@ -92,6 +104,18 @@ SKIP_DIRS = {
     "Objects", "Listings", ".utf8_backup", ".utf8_migration_backup",
 }
 
+#: 固件/镜像/裸视频/签名/位图等"纯二进制"后缀：连点名指定的文件也不转换（见 should_scan）。
+#: 为什么单独拎出来：这类文件最容易骗过"内容层"的二进制拦截——例如全 0xFF 的空白
+#: flash 镜像既没有 NUL 也没有控制字符，looks_binary() 判不出来，一旦被当成 cp1252
+#: 文本"转换"，1MiB 会变成 2MiB，镜像就永久损坏了。所以这里按后缀硬拦。
+HARD_BINARY_EXT = {
+    ".img", ".jffs2", ".jffs", ".dtb",
+    ".yuv",                  # 裸 YUV 视频帧（分辨率×1.5 字节，纯像素数据）
+    ".sign",                 # 固件/模块签名块（随包一起烧写，改一个字节就验不过）
+    ".ppm",                  # Netpbm 位图（P6 裸像素；仓库里唯一一个就是二进制）
+    ".pgm", ".pbm", ".pnm",  # Netpbm 家族其余三个：同样是"裸像素/裸位平面"
+}
+
 #: 明确的二进制后缀（不读内容直接跳过）
 BINARY_EXT = {
     ".bmp", ".png", ".jpg", ".jpeg", ".gif", ".ico", ".tif", ".tiff", ".webp",
@@ -100,6 +124,18 @@ BINARY_EXT = {
     ".hex", ".elf", ".axf", ".map", ".pyc", ".class", ".jar", ".db", ".sqlite",
     ".xls", ".xlsx", ".doc", ".docx", ".ppt", ".pptx", ".mp3", ".wav", ".mp4",
     ".ttf", ".otf", ".woff", ".woff2", ".eot", ".psd", ".ai", ".lib", ".uvguix",
+} | HARD_BINARY_EXT
+
+#: 扫目录时整类跳过的"文本类"后缀：它们不是二进制，但也不该被本工具动 ——
+#: 要么是翻译目录，要么是给测试程序逐字节比对的夹具（内容是"原始字节"而非给人读的
+#: 文本），而且这类文件各国语言混排，极易被误判成"疑似双重编码"。
+#: 与二进制名单同样是软跳过：点名叫上仍然会处理。
+SKIP_TEXT_EXT = {
+    ".po",        # gettext 翻译目录
+    ".proto",     # protobuf 定义 / Plan9 mkfile 模板
+    ".options",   # protobuf 选项、ossfuzz 配置
+    ".expected",  # 测试期望输出夹具
+    ".input",     # uclibc 等测试夹具（内容常为 ASCII/ISO-8859 原文）
 }
 
 #: 带 charset 声明的标记语言（转换时同步改声明）
@@ -131,6 +167,27 @@ WESTERN_PUNCT = set(
 
 #: 严格汉字（统计个数用）
 IDEOGRAPH_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
+
+#: 单字节编码：只有这些编码下"ASCII 骨架逐字节不变"才是个成立的不变量（见 do_convert）。
+#: 双字节编码（gb18030/big5/utf-16…）的尾字节可能落在 ASCII 区，本来就会变，不能拿它当校验。
+SINGLE_BYTE_ENCODINGS = {
+    "ascii", "utf-8", "utf8", "latin-1", "latin1", "iso8859-1", "iso-8859-1",
+    "cp1252", "windows-1252",
+}
+
+#: 私用区（PUA）：正常文本里不该出现。gb18030/GBK 对"没定义的字节对"会丢进私用区，
+#: 所以一个读法解出 PUA 字符，基本可以断定这个读法是错的（挑读法时首要否决项）。
+PUA_RE = re.compile(r"[\ue000-\uf8ff]")
+
+#: "中文编码下的标点/符号"：全角标点、破折号、引号、数学/箭头符号等。
+#: 用途是认下"没有汉字、但确实是中文编码"的文件 —— 例如 at88sc_datasheet.h 里
+#: A8 43 在 gb18030 下是"–"、A1 DC 是"≤"，上下文 "(b4 – b7)" / "[N ≤ $10]" 完全讲得通；
+#: 而 big5 会把它读成 8 个孤立的"每"，反倒"像中文"了。
+CJK_SYMBOL_RE = re.compile(
+    r"[\u2010-\u203b\u2044\u2052\u2070-\u209f\u20a0-\u20bf\u2100-\u214f"
+    r"\u2190-\u21ff\u2200-\u22ff\u2460-\u24ff\u25a0-\u25ff\u2600-\u26ff"
+    r"\u3000-\u303f\ufe30-\ufe4f\uff01-\uff60\uffe0-\uffe6]"
+)
 #: 连续的中文/中文标点段落（求最长连续长度用；中文标点算在内，
 #: 这样"值，"算连续 2，而西文里被误读出的孤立伪汉字只有 1）
 CJK_RUN_RE = re.compile(
@@ -175,6 +232,10 @@ ASCII_DELETE = bytes(range(128))
 BINARY_PROBE_DELETE = bytes(
     b for b in range(256) if not (b < 0x09 or 0x0E <= b < 0x20)
 )
+#: 单字节值占比判据：某个字节值占了 >90% 就认为是填充块/裸数据（见 binary_reason）
+DOMINANT_BYTE_RATIO = 0.90
+#: 占比判据的最小文件长度：太小的文件（如几行 ===== 分隔线）容易凑出高占比，不参与判定
+DOMINANT_MIN_SIZE = 1024
 
 #: CP1252/Latin-1 里"西方排版字符 + 拉丁字母"的允许集合，其余非 ASCII 视为非西文
 ALLOWED_NONASCII = frozenset(
@@ -183,6 +244,15 @@ ALLOWED_NONASCII = frozenset(
 NONWESTERN_RE = re.compile(
     "[^\x00-\x7f" + re.escape("".join(sorted(ALLOWED_NONASCII))) + "]"
 )
+
+#: 无后缀但"确定是文本"的文件名：这些照常扫描；其余无后缀文件整类跳过（见 should_scan）。
+#: 刻意不收 CHANGELOG：本仓库那 4 个 lwip*/CHANGELOG 是西文被误判成中文的假阳性，
+#: 收进来只会把噪音请回来。要加就是往这个集合里添一个名字。
+NOEXT_TEXT_NAMES = {
+    "Makefile", "makefile", "GNUmakefile",
+    "Kconfig", "Kbuild",
+    "README", "LICENSE", "COPYING", "INSTALL", "configure", "Dockerfile",
+}
 
 
 # --------------------------------------------------------------------------
@@ -195,7 +265,7 @@ class Info:
     path: Path
     rel: str
     size: int
-    kind: str = "unknown"          # ascii/utf-8/chinese/western/ambiguous/unknown/
+    kind: str = "unknown"          # ascii/utf-8/chinese/western/ambiguous/forced/
                                    # binary/skipped/empty/utf-16/mojibake-suspect
     encoding: str | None = None    # 判定出的源编码
     cjk: int = 0                   # 汉字个数
@@ -206,6 +276,9 @@ class Info:
     note: str = ""
     explicit: bool = False         # 是否用户在命令行/清单里点名指定
     converted: bool = False
+    moji_hint: str = ""            # 疑似双重编码：检测器建议先试的中间编码
+    moji_mid: str = ""             # 疑似双重编码：反解实际用上的中间编码
+    moji_back: str | None = None   # 疑似双重编码：反解结果；None 表示反解不出来
 
     @property
     def ok(self) -> bool:
@@ -216,6 +289,8 @@ class Info:
 class Options:
     realdo: bool = False
     western: bool = False
+    unknown: bool = False          # --unknown：未知编码的文件强制按 latin-1 保真解码
+    multi: bool = False            # --multi：把"疑似双重编码"的文件反解回原文
     ambiguous: str = "skip"        # skip / chinese / western
     encodings: tuple[str, ...] = ()  # 强制指定源编码（覆盖自动判定）
     min_run: int = 2               # 判定"真中文"的最短连续长度
@@ -286,38 +361,102 @@ def count_cjk(text: str) -> tuple[int, int]:
     return cjk, longest
 
 
-def looks_binary(data: bytes) -> bool:
-    """按内容粗判二进制：前 8KB 有 NUL 或控制字符比例过高。"""
+def binary_reason(data: bytes) -> str:
+    """
+    内容层粗判二进制，返回命中的理由；空串表示"看着像文本"。
+    四条判据（任何一条命中即算二进制）：
+      1) 前 8KB 出现 NUL 字节；
+      2) 前 8KB 控制字符占比 > 10%；
+      3) 整文件一个 ASCII 字节都没有 —— 纯文本不会长这样（哪怕是纯中文 UTF-8，
+         换行/空格/标点也必然是 ASCII 字节）；
+      4) 单个字节值占比 > 90%（文件 ≥ 1KB），**且该字节不是可打印 ASCII** ——
+         空白 flash 的 0xFF 填充、带文本头的镜像、0x00/0xAA/0xCC 填充块都属于这类。
+         限定"非可打印 ASCII"是为了不误伤正经文本：仓库里 mbedtls 的 hash_file_5
+         就是 1MB 全是 'a'，curl 的 test1003 有 97% 是 'A'，它们都是合格 ASCII 文本
+         （本来也不需要转换），只有 0xFF/0x00 这类字节占绝对多数才说明这是填充物。
+
+    为什么要有 3、4：后缀名单永远列不全。就是因为只靠"有 NUL / 控制字符多"这一条，
+    当初 8 个全 0xFF 的空白 flash 镜像（既没 NUL 也没控制字符）被判成了文本，
+    按 cp1252 转一遍就从 1MiB 涨到 2MiB，镜像直接报废——同样的内容只要换个后缀
+    （例如 .dat）现在依然会被 3、4 拦住。
+    """
+    if not data:
+        return ""
     head = data[:8192]
     if b"\x00" in head:
-        return True
-    if not head:
-        return False
+        return "含 NUL 字节"
     ctrl = len(head.translate(None, BINARY_PROBE_DELETE))   # C 层统计控制字节
-    return ctrl / len(head) > 0.10
+    if ctrl / len(head) > 0.10:
+        return "控制字符占比 %.0f%%" % (100.0 * ctrl / len(head))
+    if len(data.translate(None, ASCII_DELETE)) == len(data):
+        return "整文件不含任何 ASCII 字节"
+    if len(data) >= DOMINANT_MIN_SIZE:
+        top_byte, top = collections.Counter(head).most_common(1)[0]
+        if top / len(head) > DOMINANT_BYTE_RATIO and not (0x20 <= top_byte < 0x7F):
+            return "填充字节 0x%02X 占前 8KB 的 %.0f%%" % (top_byte, 100.0 * top / len(head))
+    return ""
 
 
-def mojibake_score(text: str, cjk_run: int) -> tuple[int, str]:
+def looks_binary(data: bytes) -> bool:
+    """按内容粗判二进制：binary_reason 的布尔投影（只给调用方一个 yes/no）。"""
+    return bool(binary_reason(data))
+
+
+def mojibake_score(text: str, cjk_run: int) -> tuple[int, str, str]:
     """
     判断一个"已经是合法 UTF-8"的文件是否其实是双重编码乱码（mojibake）。
-    返回 (特征数, 说明)，0 表示不像。
+    返回 (特征数, 说明, 建议的中间编码)，特征数 0 表示不像。
     注意：单看"文件里出现了乱码特征字符串"会误报——本脚本的源码、编码教程
     都会写到这些特征本身；所以强特征只认"连片重复"形态（真乱码文件里
     每个坏字都变成一组特征字，必然成片），弱特征则要求足够密度
     且文件里没有任何连续中文（真乱码文件里中文已经全被打散了）。
+
+    第三个返回值是"反解双重编码时要先试哪个中间编码"：强特征是汉字形态的，
+    说明原文的 UTF-8 字节被当 GBK 读了，反解走 gb18030；弱特征是西欧字母/排版
+    符号连片，说明被当 Latin-1/CP1252 读了，反解走 latin-1。
     """
     pair = sum(text.count(p) for p in MOJIBAKE_PAIR)
     total = sum(text.count(m) for m in MOJIBAKE_STRONG)
     if pair or total >= 6:
         return max(pair, total), (
-            "疑似 GBK 解 UTF-8 的双重编码（连续 %d 处、共 %d 处）" % (pair, total))
+            "疑似 GBK 解 UTF-8 的双重编码（连续 %d 处、共 %d 处）" % (pair, total)), "gb18030"
     if cjk_run < 2:
         longest = max((m.end() - m.start()
                        for m in MOJIBAKE_LATIN1_RUN_RE.finditer(text)), default=0)
         if longest:
             return longest, ("疑似 Latin-1/CP1252 解 UTF-8 的双重编码"
-                             "（出现 %d 个连片西欧字符）" % longest)
-    return 0, ""
+                             "（出现 %d 个连片西欧字符）" % longest), "latin-1"
+    return 0, "", ""
+
+
+def try_unmojibake(text: str, hint: str = "") -> tuple[str, str] | None:
+    """
+    反解"双重编码"（--multi 用）：文件本身是合法 UTF-8，但内容是"真正的原文字节
+    被按某个别的编码读了一遍"的产物。把中间编码反着走一遍即可还原，例如
+    "ä½ å¥½" --latin-1--> E4 BD A0 E5 A5 BD --utf-8--> "你好"。
+
+    返回 (还原后的文本, 用到的中间编码)；只有"还原结果本身仍是合法 UTF-8"才认账，
+    否则返回 None。这条校验正是误报保护：正常 UTF-8 文本反解后几乎必然不是合法
+    UTF-8，于是会在这里被挡下，交给人判断，绝不硬写。
+    """
+    order = [c for c in (hint, "latin-1", "cp1252", "gb18030", "big5") if c]
+    tried: set[str] = set()
+    for mid in order:
+        if mid in tried:
+            continue
+        tried.add(mid)
+        try:
+            raw = text.encode(mid)
+        except (UnicodeEncodeError, LookupError):
+            continue
+        try:
+            back = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+        if mojibake_score(back, count_cjk(back)[1])[0]:
+            continue          # 还原后还带着乱码特征，说明方向不对
+        return back, mid
+    return None
 
 
 def count_nonascii(data: bytes) -> int:
@@ -405,10 +544,34 @@ def classify(data: bytes, opts: Options) -> Info:
         else:
             info.kind = "utf-8"; info.encoding = "utf-8"; info.action = "无需处理"
             info.cjk, info.run = count_cjk(text_utf8)
-            score, why = mojibake_score(text_utf8, info.run)
+            score, why, hint = mojibake_score(text_utf8, info.run)
+            if score and hint == "latin-1" and try_unmojibake(text_utf8, hint) is None:
+                # 弱特征（西欧字母/排版符号"连片 3 个"）在正常文档里也会满足：一串
+                # ’ “ ” – ° µ © 就够了，所以这条判据本身误报率很高。加一道实证——
+                # 反解不回合法 UTF-8 的，就不算双重编码，按普通 UTF-8 处理。
+                # （强特征"销斤拷"连片是汉字形态，正常文档不会出现，保持原样直接报。）
+                score = 0
             if score:
                 info.kind = "mojibake-suspect"
                 info.note = why
+                info.moji_hint = hint
+        return info
+
+    # 用户用 --enc 指定了源编码：这就是权威判定，不再走下面的自动识别。
+    # （已经是合法 UTF-8 的文件在上面就返回了 —— 对它们没什么可"转"的，
+    #  所以 --enc 只作用于"非 UTF-8"的文件。）
+    if opts.encodings:
+        for enc in opts.encodings:
+            t = try_decode(data, enc)
+            if t is None:
+                continue
+            info.encoding = enc
+            info.cjk, info.run = count_cjk(t)
+            info.kind = "forced"
+            info.note = "按 --enc %s 认定（未做自动判定）" % enc
+            return info
+        info.kind = "unknown"
+        info.note = "指定的 --enc %s 都解不开这个文件" % "/".join(opts.encodings)
         return info
 
     # 候选编码逐个试
@@ -420,17 +583,46 @@ def classify(data: bytes, opts: Options) -> Info:
         if t is not None:
             decoded[enc] = t
 
-    # 1) 中文读法
+    # 先看看"西文读法"可不可信 —— 下面判断"中文读法带私用区"时要用到
+    western_hit = None
+    for enc in (*opts.encodings, *WESTERN_ENCODINGS):
+        t = decoded.get(enc)
+        if t is not None and western_plausible(t):
+            western_hit = enc
+            break
+
+    # 1) 中文读法：不再"谁先解出汉字就用谁"，而是给每个候选读法打分挑最讲得通的。
+    #    打分优先级（元组从前往后比）：
+    #      a) 没有私用区字符 —— gb18030 遇到没定义的字节对会把它丢进私用区
+    #         （U+E000-U+F8FF），正常文本不会出现；Big5 文本被当 gb18030 读就会这样
+    #         （仓库里 60+ 个文件），以前"先到先得"正好每次都选中这个错读法；
+    #      b) 连续中文更长；c) 汉字更多。
+    #    同分保持 CHINESE_ENCODINGS 的顺序（gb18030 在前）—— 它是 GB2312/GBK 的超集、
+    #    大陆代码里最常见；仓库实测 29 个文件两种读法同分，选 gb18030 是对的。
+    #    另外：读法里带私用区说明这个"中文读法"本身就不可信（例如 uclibc 那个
+    #    带德语变音的 locale 测试），此时若有可信的西文读法，就让给西文那条保守路径。
+    best = None
     for enc in (*opts.encodings, *CHINESE_ENCODINGS):
         t = decoded.get(enc)
         if t is None:
             continue
         cjk, run = count_cjk(t)
+        if not (cjk and run >= opts.min_run):
+            continue
+        dirty = PUA_RE.search(t) is not None
+        if dirty and western_hit is not None:
+            continue
+        key = (not dirty, run, cjk)
+        if best is None or key > best[0]:
+            best = (key, enc, cjk, run, dirty)
+    if best is not None:
+        _, enc, cjk, run, dirty = best
+        info.kind = "chinese"
+        info.encoding = enc
         info.cjk, info.run = cjk, run
-        if cjk and run >= opts.min_run:
-            info.kind = "chinese"
-            info.encoding = enc
-            return info
+        if dirty:
+            info.note = "读法含私用区字符，该文件本身可能已是乱码，请转换后确认"
+        return info
 
     # 2) 西文读法（含"假乱码"：孤立伪汉字）
     for enc in (*opts.encodings, *WESTERN_ENCODINGS):
@@ -454,18 +646,41 @@ def classify(data: bytes, opts: Options) -> Info:
                 break
             return info
 
-    # 3) 能按中文编码解出字，但不成词 —— 交给人判断
+    # 3) 一个汉字都没有，但中文编码解出来的是"标点/数学符号"这类字符、且不带私用区：
+    #    这就是"中文编码存标点"的文件（如 at88sc_datasheet.h 里的 – 和 ≤），该按中文编码转。
+    #    放在西文判据之后 —— 先让真正像西文的文件走西文那条路，别抢它的活。
+    for enc in (*opts.encodings, *CHINESE_ENCODINGS):
+        t = decoded.get(enc)
+        if t is None or PUA_RE.search(t):
+            continue
+        foreign = [c for c in t if ord(c) > 127]
+        if foreign and all(CJK_SYMBOL_RE.match(c) for c in foreign):
+            info.kind = "chinese"
+            info.encoding = enc
+            info.cjk, info.run = count_cjk(t)
+            info.note = "中文编码下的标点/符号（无汉字）：%s" % "".join(
+                dict.fromkeys(foreign))[:16]
+            return info
+
+    # 4) 能按中文编码解出字，但不成词 —— 交给人判断（同样先挑不带私用区的）
+    best = None
     for enc in (*CHINESE_ENCODINGS,):
         t = decoded.get(enc)
         if t is None:
             continue
         cjk, run = count_cjk(t)
-        if cjk:
-            info.kind = "ambiguous"
-            info.encoding = enc
-            info.cjk, info.run = cjk, run
-            info.note = "孤立汉字，无法确定是中文还是西文"
-            return info
+        if not cjk:
+            continue
+        key = (PUA_RE.search(t) is None, cjk)
+        if best is None or key > best[0]:
+            best = (key, enc, cjk, run)
+    if best is not None:
+        _, enc, cjk, run = best
+        info.kind = "ambiguous"
+        info.encoding = enc
+        info.cjk, info.run = cjk, run
+        info.note = "孤立汉字，无法确定是中文还是西文"
+        return info
 
     info.kind = "unknown"
     info.note = "无法按候选编码解码，可能是二进制或冷门编码"
@@ -631,14 +846,30 @@ def should_scan(path: Path, opts: Options, explicit: bool = False) -> tuple[bool
     是否处理这个文件。explicit=True 表示用户在命令行/文件列表里点了名：
     此时不再受后缀黑名单（.mht/.dat/... ）、--ext 白名单限制——
     点名了就是要处理，只保留"内容层"的二进制拦截。
+
+    唯一的例外是 HARD_BINARY_EXT（固件、镜像、裸视频、签名块、位图这类纯二进制后缀，
+    见文件头常量）：它们即便被点名也不碰。它们的内容层拦截（looks_binary）靠不住，
+    误判一次就是不可逆的损坏，所以按后缀直接拒掉，绝不给"点名就能覆盖"的机会。
     """
+    ext = path.suffix.lower()
+    if ext in HARD_BINARY_EXT:
+        return False, "固件/镜像等纯二进制格式，一律不转换"
     if explicit:
         return True, ""
-    ext = path.suffix.lower()
+    # 无后缀文件（Makefile/Kconfig/README/configure，以及各种无后缀测试夹具）整类跳过。
+    # 理由：这类文件量大（本仓库 4000+），后缀又给不出任何信号 —— 里面既有 8MB 的 ctags
+    # 索引、也有上千个 ascii 夹具，扫进来纯是噪音和误判；真正需要转的极少。
+    # 但白名单里的名字（Makefile/Kconfig/README…）确定是文本，照常处理；
+    # 需要处理别的无后缀文件时点名叫上即可（explicit 分支在上面就放行了）。
+    if not ext:
+        if path.name not in NOEXT_TEXT_NAMES:
+            return False, "无后缀文件（扫目录时默认跳过，点名指定即可处理）"
     if opts.exts and ext not in opts.exts:
         return False, "后缀不在白名单"
     if ext in BINARY_EXT:
         return False, "二进制后缀"
+    if ext in SKIP_TEXT_EXT:
+        return False, "翻译/测试夹具类后缀，默认不碰（点名可处理）"
     if ext in MHT_EXT and not opts.include_mht:
         return False, "MHT 归档（quoted-printable），默认跳过"
     return True, ""
@@ -689,13 +920,19 @@ def do_convert(path: Path, info: Info, opts: Options, backup: Backup | None) -> 
     text = raw.decode(info.encoding)              # type: ignore[arg-type]
     new = text.encode("utf-8")
 
-    # 校验 1：回环还原必须与原件逐字节相同
+    # 校验 1：回环还原必须与原件逐字节相同（这是"无损"的真正保证：任何一步都能反着走回去）
     if new.decode("utf-8").encode(info.encoding) != raw:   # type: ignore[arg-type]
         raise RuntimeError("回环校验失败")
 
-    # 校验 2：ASCII 骨架（去掉所有 >=0x80 的字节）必须完全一致
-    if bytes(b for b in raw if b < 0x80) != bytes(b for b in new if b < 0x80):
-        raise RuntimeError("ASCII 骨架发生变化")
+    # 校验 2：ASCII 骨架（去掉所有 >=0x80 的字节）必须完全一致。
+    # 注意这条**只对单字节编码成立**：GBK/GB18030/Big5 的双字节字尾巴可能落在
+    # 0x40-0x7E（ASCII 区），例如 "–" = A8 43、尾字节就是字母 C，转成 UTF-8 后这个
+    # ASCII 字节必然消失。以前对双字节编码也套这条，导致 200+ 个真 GBK/Big5 文件
+    # 一律报"ASCII 骨架发生变化"转不了（本仓库 234 个中文文件全卡在这），
+    # 而它想防的"代码逻辑被改动"其实由校验 1 保证。
+    if info.encoding.lower() in SINGLE_BYTE_ENCODINGS:     # type: ignore[union-attr]
+        if bytes(b for b in raw if b < 0x80) != bytes(b for b in new if b < 0x80):
+            raise RuntimeError("ASCII 骨架发生变化")
 
     if path.suffix.lower() in MARKUP_EXT and opts.update_html_charset:
         new = rewrite_charset(new, info.encoding)      # type: ignore[arg-type]
@@ -704,6 +941,28 @@ def do_convert(path: Path, info: Info, opts: Options, backup: Backup | None) -> 
         backup.save(path, info.encoding, raw)          # type: ignore[arg-type]
     path.write_bytes(new)
     info.converted = True
+
+
+def do_unmojibake(path: Path, info: Info, opts: Options, backup: Backup | None) -> None:
+    """
+    --multi 的写盘路径：把"疑似双重编码"的文件反解回原文。
+
+    这条路径的校验和 do_convert 不一样，因为这里是**内容真的变了**（不是换编码）：
+    回环校验没有意义，唯一的安全网是 try_unmojibake 里那条"还原结果必须仍是合法
+    UTF-8"——反解不出来就抛错，绝不让半个乱码写进去。
+    """
+    if info.moji_back is None or not info.moji_mid:
+        raise RuntimeError("反解失败：按 latin-1/cp1252/gb18030/big5 都还原不出合法 UTF-8")
+    raw = path.read_bytes()
+    new = info.moji_back.encode("utf-8")
+    if new == raw:
+        raise RuntimeError("反解结果与原文相同，无需转换")
+    if backup is not None:
+        # 中间编码记进 manifest，回退时只用于说明"这份原件本该按什么反解"
+        backup.save(path, "utf-8 + %s-mojibake" % info.moji_mid, raw)
+    path.write_bytes(new)
+    info.converted = True
+    info.note = (info.note + " | " if info.note else "") + "已按 %s 反解" % info.moji_mid
 
 
 def do_revert(backup_dir: Path) -> int:
@@ -741,6 +1000,7 @@ def do_revert(backup_dir: Path) -> int:
 
 KIND_LABEL = {
     "chinese": "中文乱码",
+    "forced": "指定编码",
     "western": "西文假乱码",
     "ambiguous": "待确认",
     "mojibake-suspect": "疑似双重编码",
@@ -753,8 +1013,8 @@ KIND_LABEL = {
     "utf-8": "已是 UTF-8",
 }
 
-ACTION_ORDER = {"chinese": 0, "ambiguous": 1, "western": 2, "mojibake-suspect": 3,
-                "utf-16": 4, "unknown": 5}
+ACTION_ORDER = {"chinese": 0, "forced": 0, "ambiguous": 1, "western": 2,
+                "mojibake-suspect": 3, "utf-16": 4, "unknown": 5}
 
 
 def rel_to_cwd(p: str) -> str:
@@ -797,6 +1057,7 @@ def write_json_report(path_arg: str, opts: Options, roots: list[Path],
                 "action": i.action,
                 "converted": i.converted,
                 "note": i.note,
+                "mojibake_mid": i.moji_mid,       # --multi 实际用上的中间编码
             }
             for i in results
         ],
@@ -827,6 +1088,8 @@ def run(argv: list[str]) -> int:
                "  convert_to_utf8.py src                      # 只看报告（默认 dry-run）\n"
                "  convert_to_utf8.py src --realdo            # 真正转换（自动备份）\n"
                "  convert_to_utf8.py src --western --realdo  # 连 CP1252 假乱码一起处理\n"
+               "  convert_to_utf8.py src --unknown --realdo  # 未知编码强制按 latin-1 保真转\n"
+               "  convert_to_utf8.py src --multi --realdo    # 双重编码乱码反解回原文\n"
                "  convert_to_utf8.py . --check               # 自检，有非 UTF-8 中文则退出码 1\n"
                "  convert_to_utf8.py --revert .utf8_backup   # 回退\n"
                "  convert_to_utf8.py --self-test             # 自测\n"
@@ -838,7 +1101,9 @@ def run(argv: list[str]) -> int:
                "  3  转换过程中有文件失败\n",
     )
     ap.add_argument("paths", nargs="*", default=[], metavar="路径",
-                    help="要处理的目录或文件，可混着写多个；点名指定的文件不受后缀过滤限制；"
+                    help="要处理的目录或文件，可混着写多个；点名指定的文件不受后缀过滤限制"
+                         "（固件/镜像/裸视频/签名/位图等纯二进制格式例外，一律不碰）；"
+                         "扫目录时跳过没有后缀的文件（Makefile/Kconfig/README 这类，点名即可处理）；"
                          "支持通配符（内部展开）与 @清单文件；扫描当前目录请显式写 .")
     mode = ap.add_mutually_exclusive_group()
     mode.add_argument("-r", "--realdo", action="store_true",
@@ -847,10 +1112,18 @@ def run(argv: list[str]) -> int:
                       help="只报告不写文件（默认行为，写出来是为了自文档化）")
     ap.add_argument("-w", "--western", action="store_true",
                     help="同时转换西文假乱码（CP1252 的 ’ “ ” – ° µ 等）")
+    ap.add_argument("--unknown", action="store_true",
+                    help="未知编码（任何候选编码都解不出）的文件强制按 latin-1 逐字节保真"
+                         "解码为 UTF-8；非 ASCII 字节 1 变 2、体积会变大，但字节可无损还原")
+    ap.add_argument("--multi", action="store_true",
+                    help="把“疑似双重编码”的乱码反解回原文（如 ä½ å¥½ → 你好）；"
+                         "还原结果不是合法 UTF-8 就跳过并说明原因，绝不硬写")
     ap.add_argument("--ambiguous", choices=["skip", "chinese", "western"], default="skip",
                     help="孤立汉字文件如何处理，默认 skip（只报告）")
     ap.add_argument("--enc", action="append", default=[], metavar="ENC",
-                    help="强制指定源编码，可重复（如 --enc gb18030 --enc big5）")
+                    help="强制指定源编码，可重复（如 --enc gb18030 --enc big5）；"
+                         "指定后就按它转，不再自动判定（可解开的第一个生效；"
+                         "都解不开则记为未知编码并说明，不会退回自动猜）")
     ap.add_argument("--min-run", type=int, default=2,
                     help="判定真中文的最短连续中文长度，默认 2")
     ap.add_argument("--ext", action="append", default=[], metavar=".c",
@@ -908,6 +1181,8 @@ def run(argv: list[str]) -> int:
     opts = Options(
         realdo=args.realdo,
         western=args.western,
+        unknown=args.unknown,
+        multi=args.multi,
         ambiguous=args.ambiguous,
         encodings=tuple(args.enc),
         min_run=max(1, args.min_run),
@@ -953,10 +1228,14 @@ def run(argv: list[str]) -> int:
 
     results: list[Info] = []
     counts: collections.Counter = collections.Counter()
+    skipped_noext = 0
     for path, explicit in iter_files(roots, opts):
         ok, why = should_scan(path, opts, explicit)
         if not ok:
-            if opts.verbose:
+            if not path.suffix:
+                skipped_noext += 1          # 这类量大，逐条打印会刷屏，只在汇总里报总数
+            # 点名的文件被拒（硬二进制、无后缀等）必须明说，不能静默跳过
+            if opts.verbose or explicit:
                 print("跳过 %s（%s）" % (path, why), file=sys.stderr)
             continue
         try:
@@ -967,10 +1246,11 @@ def run(argv: list[str]) -> int:
             print("跳过 %s（超过 --max-size）" % path, file=sys.stderr)
             continue
         data = path.read_bytes()
-        if looks_binary(data):
-            if explicit:
-                # 点名了但内容确实是二进制：明确告知，而不是静默跳过
-                print("跳过 %s（内容像二进制，未转换）" % path, file=sys.stderr)
+        why_bin = binary_reason(data)
+        if why_bin:
+            # 点名的文件必须明说；扫目录时挂上 -v 也能看到是被哪条判据拦下的
+            if explicit or opts.verbose:
+                print("跳过 %s（内容像二进制：%s，未转换）" % (path, why_bin), file=sys.stderr)
             continue
 
         info = classify(data, opts)
@@ -984,7 +1264,8 @@ def run(argv: list[str]) -> int:
 
         # 决定动作
         want = False
-        if info.kind == "chinese":
+        if info.kind in ("chinese", "forced"):
+            # forced = 用户用 --enc 点明了源编码，按他说的转
             want = True
         elif info.kind == "western":
             want = opts.western
@@ -1003,7 +1284,30 @@ def run(argv: list[str]) -> int:
         elif info.kind in ("utf-8", "ascii"):
             info.action = "无需处理"
         elif info.kind == "mojibake-suspect":
-            info.action = "跳过（需人工确认）"
+            # --multi：反解双重编码。这里就把"能不能反解"验一遍，dry-run 与 realdo
+            # 看到的是同一个结论；反解不出来就照旧交给人，绝不硬写。
+            if opts.multi:
+                got = try_unmojibake(data.decode("utf-8"), info.moji_hint)
+                if got is None:
+                    info.action = "跳过（--multi 反解失败：还原结果不是合法 UTF-8）"
+                else:
+                    info.moji_back, info.moji_mid = got
+                    want = True
+            else:
+                info.action = "跳过（需人工确认，或用 --multi 反解）"
+        elif info.kind == "unknown":
+            # --unknown：没有任何候选编码解得出，强制按 latin-1 逐字节保真解码。
+            # latin-1 对任意字节都成立，所以必定成功，且字节可无损还原、能回退；
+            # 代价是非 ASCII 字节 1 变 2，体积会涨——这里把预计体积标出来。
+            if opts.unknown:
+                info.encoding = "latin-1"
+                want = True
+                info.note = ((info.note + " | ") if info.note else "") + (
+                    "强制 latin-1 保真解码，体积 %d → %d 字节（+%.0f%%）"
+                    % (len(data), len(data) + info.nonascii,
+                       100.0 * info.nonascii / max(1, len(data))))
+            else:
+                info.action = "跳过（需 --unknown 强制）"
         else:
             info.action = "跳过"
 
@@ -1025,6 +1329,9 @@ def run(argv: list[str]) -> int:
                         path.write_bytes(raw[len(UTF8_BOM):])
                         info.converted = True
                         info.action = "已去 BOM"
+                    elif info.kind == "mojibake-suspect":
+                        do_unmojibake(path, info, opts, backup)     # 内容真变了，单走一条
+                        info.action = "已反解双重编码"
                     else:
                         do_convert(path, info, opts, backup)
                         info.action = "已转换"
@@ -1032,7 +1339,8 @@ def run(argv: list[str]) -> int:
                     info.action = "失败"
                     info.note = (info.note + " | " if info.note else "") + str(exc)
             else:
-                if info.kind in ("chinese", "western", "ambiguous"):
+                if info.kind in ("chinese", "forced", "western", "ambiguous",
+                                 "mojibake-suspect", "unknown"):
                     info.action = "将转换（dry-run）"
 
         if info.kind not in ("ascii", "utf-8", "empty") or opts.verbose:
@@ -1043,8 +1351,10 @@ def run(argv: list[str]) -> int:
     interesting = [i for i in results if i.kind not in ("ascii", "utf-8")]
 
     if opts.list_only:
+        # 只列"确实会被转换"的：加不加 --western/--unknown/--multi 会改变结论，
+        # 所以按动作判定，而不是按类别判定
         for i in interesting:
-            if i.kind in ("chinese", "western", "ambiguous") or i.converted:
+            if i.converted or i.action == "将转换（dry-run）":
                 print(i.rel, file=sys.stdout)
 
     if interesting and not opts.quiet and not opts.list_only:
@@ -1076,6 +1386,7 @@ def run(argv: list[str]) -> int:
 
     summary = {
         "中文乱码": counts["chinese"],
+        "指定编码": counts["forced"],
         "西文假乱码": counts["western"],
         "待确认": counts["ambiguous"],
         "疑似双重编码": counts["mojibake-suspect"],
@@ -1084,6 +1395,9 @@ def run(argv: list[str]) -> int:
     tail = ["空文件 %d" % counts["empty"]] if counts["empty"] else []
     parts = ["%s %d" % (k, v) for k, v in summary.items() if v] + tail
     emit("扫描结果：" + ("，".join(parts) if parts else "没有非 UTF-8 文件"))
+    if skipped_noext:
+        emit("跳过无后缀文件 %d 个（Makefile/Kconfig/README 这类；需要处理就点名指定）"
+             % skipped_noext)
     if opts.realdo:
         done = [i for i in results if i.converted]
         emit("已转换 %d 个文件" % len(done))
@@ -1094,18 +1408,48 @@ def run(argv: list[str]) -> int:
         skipped_w = [i for i in results if i.kind == "western" and not i.converted]
         if skipped_w:
             emit("提示：有 %d 个西文假乱码文件未处理，加 --western 可一并转换" % len(skipped_w))
+        if opts.multi:
+            failed = [i for i in results if i.kind == "mojibake-suspect" and not i.converted]
+            if failed:
+                emit("提示：%d 个疑似双重编码文件反解失败（还原出来不是合法 UTF-8），已原样保留"
+                     % len(failed))
+        else:
+            moji = [i for i in results if i.kind == "mojibake-suspect"]
+            if moji:
+                emit("提示：有 %d 个疑似双重编码文件未处理，加 --multi 可尝试反解回原文" % len(moji))
+        if opts.unknown:
+            left = [i for i in results if i.kind == "unknown" and not i.converted]
+            if left:
+                emit("提示：%d 个未知编码文件未能强制转换" % len(left))
+        else:
+            unk = [i for i in results if i.kind == "unknown"]
+            if unk:
+                emit("提示：有 %d 个未知编码文件未处理，加 --unknown 可强制按 latin-1 保真解码"
+                     % len(unk))
     else:
-        pending = counts["chinese"] + (counts["western"] if opts.western else 0)
+        pending = (counts["chinese"] + counts["forced"]
+                   + (counts["western"] if opts.western else 0)
+                   + (counts["mojibake-suspect"] if opts.multi else 0)
+                   + (counts["unknown"] if opts.unknown else 0))
         if pending:
             emit("dry-run，未写任何文件。加 --realdo 执行转换。")
         elif counts["western"] and not opts.western:
             emit("提示：发现 %d 个西文假乱码文件（英文里的 ’ “ ” – ° µ），加 --western 可一并转换。"
                   % counts["western"])
+        if counts["mojibake-suspect"] and not opts.multi:
+            emit("提示：%d 个疑似双重编码文件，加 --multi 可尝试反解回原文。"
+                 % counts["mojibake-suspect"])
+        if counts["unknown"] and not opts.unknown:
+            emit("提示：%d 个未知编码文件，加 --unknown 可强制按 latin-1 保真解码（体积会变大）。"
+                 % counts["unknown"])
 
     if opts.json_path:
         write_json_report(opts.json_path, opts, roots, counts, results, summary)
 
-    if opts.check and (counts["chinese"] or (opts.western and counts["western"])):
+    if opts.check and (counts["chinese"] + counts["forced"]
+                       + (counts["western"] if opts.western else 0)
+                       + (counts["mojibake-suspect"] if opts.multi else 0)
+                       + (counts["unknown"] if opts.unknown else 0)):
         print("✗ check 失败：仍存在非 UTF-8 文件", file=sys.stderr)
         return 1
     if any(i.action == "失败" for i in results):
@@ -1292,6 +1636,220 @@ def self_test() -> int:
         rc, out = run_raw([str(sel / "board" / "t.bin"), "--realdo"], tmp)
         check("点名二进制被拦下且不改动",
               (sel / "board" / "t.bin").read_bytes() == bin_before and "二进制" in out, out)
+
+        # 固件/镜像/裸视频等纯二进制格式：连点名也不碰（.img/.jffs2/.jffs/.dtb/.yuv）
+        # 夹具故意用全 0xFF 的空白镜像：没有 NUL、没有控制字符，looks_binary() 判不出来，
+        # 只能靠后缀硬拦——这正是真实仓库里镜像被当 cp1252 转换后体积翻倍的成因。
+        selimg = make_tree("selimg")
+        img_before = b"\xff" * 4096
+        (selimg / "board" / "flash.img").write_bytes(img_before)
+        (selimg / "board" / "rootfs.jffs2").write_bytes(img_before)
+        (selimg / "board" / "frame.yuv").write_bytes(img_before)
+        (selimg / "board" / "fixture.input").write_bytes(gbk_body.encode("gbk"))
+        rc, out = run_raw([str(selimg / "board" / "frame.yuv"), "--realdo"], tmp)
+        check("点名 .yuv 一律不改动",
+              (selimg / "board" / "frame.yuv").read_bytes() == img_before and "纯二进制" in out, out)
+        rc, out = run_raw([str(selimg), "--western", "--realdo", "-q"], tmp)
+        check("扫目录时 .img/.jffs2/.yuv 被跳过（--western 也不行）",
+              (selimg / "board" / "flash.img").read_bytes() == img_before
+              and (selimg / "board" / "rootfs.jffs2").read_bytes() == img_before
+              and (selimg / "board" / "frame.yuv").read_bytes() == img_before, out)
+        check("扫目录时 .input 夹具被跳过",
+              (selimg / "board" / "fixture.input").read_bytes() == gbk_body.encode("gbk"), out)
+        check("同目录里的普通文本仍照常转换",
+              try_decode((selimg / "board" / "board.c").read_bytes(), "utf-8") is not None, out)
+        # .input 是文本夹具而非二进制，只做"扫目录跳过"，点名仍应能处理
+        rc, out = run_raw([str(selimg / "board" / "fixture.input"), "--realdo", "-q"], tmp)
+        check("点名 .input 仍可处理（软排除）",
+              try_decode((selimg / "board" / "fixture.input").read_bytes(), "utf-8") is not None, out)
+
+        # --unknown：任何候选编码都解不出的"未知编码"文件，强制按 latin-1 逐字节保真转
+        selu = make_tree("selu")
+        unk_bytes = b"\x81\xff" + b"abc\n"
+        (selu / "board" / "blob.dat").write_bytes(unk_bytes)
+        check("夹具确实是『未知编码』且不像二进制",
+              classify(unk_bytes, Options()).kind == "unknown" and not looks_binary(unk_bytes),
+              classify(unk_bytes, Options()).kind)
+        rc, out = run_raw([str(selu / "board" / "blob.dat"), "--realdo"], tmp)
+        check("无 --unknown 时未知编码文件原样不动",
+              (selu / "board" / "blob.dat").read_bytes() == unk_bytes, out)
+        rc, out = run_raw([str(selu / "board" / "blob.dat"), "--unknown", "--realdo", "-q"], tmp)
+        got_unk = (selu / "board" / "blob.dat").read_bytes()
+        check("--unknown 强制转成合法 UTF-8", try_decode(got_unk, "utf-8") is not None, out)
+        check("--unknown 逐字节可还原（能回退）",
+              got_unk.decode("utf-8").encode("latin-1") == unk_bytes, out)
+        rc, out = run_raw([str(selimg / "board" / "flash.img"), "--unknown", "--realdo"], tmp)
+        check("--unknown 也越不过硬二进制名单",
+              (selimg / "board" / "flash.img").read_bytes() == img_before, out)
+
+        # 签名块 / 位图 同样按后缀硬拦，连 --unknown 也覆盖不了
+        (selimg / "board" / "itron.tar.sign").write_bytes(b"\x81\xff" + b"sig\n")   # 本来是"未知编码"
+        (selimg / "board" / "testimg.ppm").write_bytes(b"P6\n1 1\n255\n\x81\xff\x00")
+        (selimg / "board" / "mask.pgm").write_bytes(b"P5\n1 1\n255\n\x81\xff")
+        rc, out = run_raw([str(selimg / "board" / "itron.tar.sign"),
+                           str(selimg / "board" / "testimg.ppm"),
+                           str(selimg / "board" / "mask.pgm"),
+                           "--unknown", "--realdo"], tmp)
+        check("点名 .sign/.ppm/.pgm 一律不改动",
+              (selimg / "board" / "itron.tar.sign").read_bytes() == b"\x81\xff" + b"sig\n"
+              and (selimg / "board" / "testimg.ppm").read_bytes() == b"P6\n1 1\n255\n\x81\xff\x00"
+              and (selimg / "board" / "mask.pgm").read_bytes() == b"P5\n1 1\n255\n\x81\xff"
+              and out.count("纯二进制") == 3, out)
+
+        # 内容层加固：没有后缀保护的纯二进制块，必须自己认出来（当初 8 个 flash 镜像
+        # 就是"全 0xFF、既没 NUL 也没控制字符"，只靠后缀名单漏掉一个就报废）
+        selb2 = make_tree("selb2")
+        blank = b"\xff" * 4096                       # 空白 flash 镜像的内容
+        mixed = b"\xff" * 3900 + b"header\n" * 20
+        (selb2 / "board" / "blank.dat").write_bytes(blank)   # 后缀不在任何名单里
+        (selb2 / "board" / "mixed.dat").write_bytes(mixed)
+        check("全 0xFF 空白块被判为二进制（当初就是漏了这条）", looks_binary(blank) is True)
+        check("带少量 ASCII 的填充块也被判为二进制", looks_binary(mixed) is True)
+        check("短文件不参与单字节占比判定", looks_binary(b"\xff" * 10 + b"a") is False)
+        check("单字节占比高但字节可打印时不算二进制（不误伤 'a'/'A'/'#' 组成的真文本）",
+              looks_binary(b"a" * 4096) is False and looks_binary(b"A" * 4096) is False
+              and looks_binary(b"#" * 3900 + b"exec 13>&-\n" * 20) is False)
+        check("正常源码不被判为二进制",
+              looks_binary(b"int main(void) { return 0; }\n") is False)
+        check("正常中文 UTF-8 不被判为二进制",
+              looks_binary("/* 中文注释 */\nint a = 1;\n".encode("utf-8")) is False)
+        rc, out = run_raw([str(selb2 / "board" / "blank.dat"), "--western", "--realdo"], tmp)
+        check("点名无后缀空白镜像被内容判据拦住，并说明理由",
+              (selb2 / "board" / "blank.dat").read_bytes() == blank and "ASCII" in out, out)
+        rc, out = run_raw([str(selb2), "--western", "--realdo", "-q"], tmp)
+        check("扫目录时无后缀二进制块同样被拦住",
+              (selb2 / "board" / "blank.dat").read_bytes() == blank
+              and (selb2 / "board" / "mixed.dat").read_bytes() == mixed, out)
+        check("同目录里的普通文本仍照常转换",
+              try_decode((selb2 / "board" / "board.c").read_bytes(), "utf-8") is not None, out)
+
+        # --multi：把"双重编码"乱码反解回原文（内容真的变了，不是换编码）
+        selm = make_tree("selm")
+        true_text = "/* 清空计数器，开始计数 */\nint a = 1;\n"
+        moji_bytes = true_text.encode("utf-8").decode("latin-1").encode("utf-8")
+        (selm / "board" / "moji.c").write_bytes(moji_bytes)
+        check("夹具确实被判为『疑似双重编码』",
+              classify(moji_bytes, Options()).kind == "mojibake-suspect",
+              classify(moji_bytes, Options()).kind)
+        rc, out = run_raw([str(selm / "board" / "moji.c"), "--realdo"], tmp)
+        check("无 --multi 时双重编码文件原样不动",
+              (selm / "board" / "moji.c").read_bytes() == moji_bytes, out)
+        rc, out = run_raw([str(selm / "board" / "moji.c"), "--multi", "--realdo", "-q"], tmp)
+        check("--multi 反解回真正原文",
+              (selm / "board" / "moji.c").read_bytes() == true_text.encode("utf-8"), out)
+
+        # 弱特征假阳性：一串正常的 ’ “ ” – ° µ © 连片，不该再被误报成双重编码
+        deco_text = "/* \u00b0\u00b1\u00b2\u00b3\u00b4\u00b5\u00b6\u00b7\u00b8\u00b9\u00ba */\nint c = 3;\n"
+        (selm / "board" / "deco.c").write_bytes(deco_text.encode("utf-8"))
+        check("排版符号连片不再误报为双重编码",
+              classify(deco_text.encode("utf-8"), Options()).kind == "utf-8",
+              classify(deco_text.encode("utf-8"), Options()).kind)
+        rc, out = run_raw([str(selm / "board" / "deco.c"), "--multi", "--realdo", "-q"], tmp)
+        check("该假阳性在 --multi 下也不动",
+              (selm / "board" / "deco.c").read_bytes() == deco_text.encode("utf-8"), out)
+
+        # --multi 的误报保护：强特征（销斤拷连片）报出来之后，反解不出来也必须原样保留
+        guard_text = "x" * 10 + "\u9500\u65a4\u62f7" * 3 + "y" * 10 + "\n"
+        (selm / "board" / "guard.c").write_bytes(guard_text.encode("utf-8"))
+        check("强特征夹具被判『疑似双重编码』但反解不出来",
+              classify(guard_text.encode("utf-8"), Options()).kind == "mojibake-suspect"
+              and try_unmojibake(guard_text, "gb18030") is None)
+        rc, out = run_raw([str(selm / "board" / "guard.c"), "--multi", "--realdo", "-q"], tmp)
+        check("--multi 反解失败时原样保留，绝不硬写",
+              (selm / "board" / "guard.c").read_bytes() == guard_text.encode("utf-8"), out)
+        check("--multi 反解失败会在报告里说明", "反解失败" in out, out)
+
+        # 无后缀文件：白名单（Makefile/Kconfig/README…）照常处理，其余整类跳过
+        seln = make_tree("seln")
+        for nm in ("Makefile", "Kconfig", "README", "somefixture"):
+            (seln / "board" / nm).write_bytes(gbk_body.encode("gbk"))
+        rc, out = run_raw([str(seln), "--realdo", "-q"], tmp)
+        check("无后缀白名单（Makefile/Kconfig/README）照常转换",
+              all(try_decode((seln / "board" / nm).read_bytes(), "utf-8") is not None
+                  for nm in ("Makefile", "Kconfig", "README")), out)
+        check("白名单外的无后缀文件被跳过",
+              (seln / "board" / "somefixture").read_bytes() == gbk_body.encode("gbk"), out)
+        check("无后缀跳过数写进汇总", "跳过无后缀文件" in out, out)
+        check("同目录有后缀的文件仍照常转换",
+              try_decode((seln / "board" / "board.c").read_bytes(), "utf-8") is not None, out)
+        rc, out = run_raw([str(seln / "board" / "somefixture"), "--realdo", "-q"], tmp)
+        check("点名白名单外的无后缀文件仍可处理",
+              try_decode((seln / "board" / "somefixture").read_bytes(), "utf-8") is not None, out)
+
+        # 翻译/测试夹具类后缀（.po/.proto/.options/.expected/.input）：扫目录跳过，点名可处理
+        selfix = make_tree("selfix")
+        fixture_exts = (".po", ".proto", ".options", ".expected", ".input", ".o")
+        for e in fixture_exts:
+            (selfix / "board" / ("fixture" + e)).write_bytes(gbk_body.encode("gbk"))
+        rc, out = run_raw([str(selfix), "--realdo", "-q"], tmp)
+        check("扫目录时翻译/夹具类后缀被跳过",
+              all((selfix / "board" / ("fixture" + e)).read_bytes() == gbk_body.encode("gbk")
+                  for e in fixture_exts), out)
+        check("同目录普通源码仍照常转换",
+              try_decode((selfix / "board" / "board.c").read_bytes(), "utf-8") is not None, out)
+        rc, out = run_raw([str(selfix / "board" / "fixture.po"), "--realdo", "-q"], tmp)
+        check("点名 .po 仍可处理（软排除）",
+              try_decode((selfix / "board" / "fixture.po").read_bytes(), "utf-8") is not None, out)
+        # .o 早就在二进制名单里（软跳过）：扫目录不看，点名时由内容判据兜底
+        real_obj = b"\x7fELF\x02\x01\x01\x00" + b"\x00" * 64
+        (selfix / "board" / "real.o").write_bytes(real_obj)
+        rc, out = run_raw([str(selfix / "board" / "real.o"), "--realdo"], tmp)
+        check("点名真正的 .o（ELF 内容）被内容判据拦下",
+              (selfix / "board" / "real.o").read_bytes() == real_obj and "二进制" in out, out)
+
+        # --enc：用户点明了编码就直接用，不再自动猜（原来自动判定会把指定值无视掉）
+        dat_bytes = (b"/* b4 \xa8\x43 b7 */\n"
+                     b"/* ER \xa8\x43 Encryption Required */\n"
+                     b"[N \xa1\xdc $10] [N bytes]\n")
+        di = classify(dat_bytes, Options())
+        check("无汉字但中文编码存标点的文件被认成 gb18030",
+              di.kind == "chinese" and di.encoding == "gb18030",
+              "%s/%s" % (di.kind, di.encoding))
+        fi = classify(dat_bytes, Options(encodings=("gb18030",)))
+        check("--enc gb18030 直接认定，不再猜",
+              fi.kind == "forced" and fi.encoding == "gb18030",
+              "%s/%s" % (fi.kind, fi.encoding))
+        check("--enc big5 也照用户说的来（不越权改成 gb18030）",
+              classify(dat_bytes, Options(encodings=("big5",))).encoding == "big5")
+        bi = classify(b"\xff\xff\xff not big5", Options(encodings=("big5",)))
+        check("--enc 指定的编码解不开时明说，不退回瞎猜",
+              bi.kind == "unknown" and "--enc" in bi.note, "%s / %s" % (bi.kind, bi.note))
+        # 端到端：强制 cp1252 后不必再加 --western
+        selenc = make_tree("selenc")
+        enc_text = "/* the peripheral\u2019s registers, N\u00b0 0 */\nint d = 4;\n"
+        (selenc / "board" / "west.c").write_bytes(enc_text.encode("cp1252"))
+        rc, out = run_raw([str(selenc / "board" / "west.c"), "--realdo", "-q"], tmp)
+        check("不加 --enc 时西文文件不转（需 --western）",
+              (selenc / "board" / "west.c").read_bytes() == enc_text.encode("cp1252"), out)
+        rc, out = run_raw([str(selenc / "board" / "west.c"), "--enc", "cp1252",
+                           "--realdo", "-q"], tmp)
+        got_enc = (selenc / "board" / "west.c").read_bytes()
+        check("--enc cp1252 不用 --western 也能转",
+              try_decode(got_enc, "utf-8") is not None and "peripheral\u2019s" in got_enc.decode("utf-8"),
+              out)
+
+        # 挑读法：Big5 文本被当 gb18030 读会解出私用区字符，现在改挑 big5
+        b5_bytes = "/* \u7528\u4f86\u8a08\u7b97code\u88abrun\u5230\u6b21\u6578 */\nint a = 1;\n".encode("big5")
+        g_read = try_decode(b5_bytes, "gb18030")
+        check("gb18030 读 Big5 会解出私用区字符（这就是当初判错的原因）",
+              g_read is not None and PUA_RE.search(g_read) is not None)
+        bi2 = classify(b5_bytes, Options())
+        check("Big5 文本现在被判成 big5",
+              bi2.kind == "chinese" and bi2.encoding == "big5",
+              "%s/%s" % (bi2.kind, bi2.encoding))
+        check("真 GBK 中文不会被翻成 big5",
+              classify("/* 设置设备类型，提供接口给外部 */\n".encode("gb18030"), Options()).encoding
+              == "gb18030")
+
+        # 双字节编码的 ASCII 尾字节不再触发"ASCII 骨架"误判
+        # （GBK 的 "–" = A8 43，尾字节 0x43 就是字母 C；这是 234 个中文文件失败的主因）
+        seldash = make_tree("seldash")
+        dash_text = "/* b4 \u2013 b7 range */\nint a = 1;\n"
+        (seldash / "board" / "dash.c").write_bytes(dash_text.encode("gb18030"))
+        rc, out = run_raw([str(seldash / "board" / "dash.c"), "--realdo", "-q"], tmp)
+        got_dash = try_decode((seldash / "board" / "dash.c").read_bytes(), "utf-8")
+        check("含 ASCII 尾字节的 GBK 文件现在能转成功",
+              got_dash is not None and "\u2013" in got_dash, out)
 
         # 点名文件不受 --ext 白名单限制
         rc, jout, _ = run_split([str(selb / "board/board.c"), "--ext", ".h", "--list"], tmp)
