@@ -1,5 +1,5 @@
 
-（1）
+## （1）
 root@debian11:/etc# git clone   https://github.com/fengming1201/fengming.d.git
 Cloning into 'fengming.d'...
 fatal: unable to access 'https://github.com/fengming1201/fengming.d.git/': GnuTLS recv error (-110): The TLS connection was non-properly terminated.
@@ -10,7 +10,7 @@ apt install gnutls-bin
 git config --global http.sslVerify false
 git config --global http.postBuffer 1048576000
 
-(2)
+## (2) 传输大文件被限制问题
 Total 25 (delta 7), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (7/7), done.
 remote: error: Trace: 68a4c2f76897cd2e82163bd1593042dd25842b5be93c95f307f28b98b7a28e38
@@ -50,4 +50,52 @@ git push origin <branch>   将更改推送到远程仓库
 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch path/to/large/file' --prune-empty --tag-name-filter cat -- --all
 将"path/to/large/file"替换为实际的大文件路径。运行此命令后，请确保在进行任何新的提交之前，先启用Git LFS并将大文件添加到Git LFS跟踪。
 
-(3)
+## (3) 每次pull都要输入账户密码，是否麻烦
+通过让 Git 记住你的账号密码，实现免密操作。这种方法适用于 HTTPS 协议的仓库。
+配置凭据存储模式：
+在终端中执行以下命令，这会让 Git 永久保存你的凭证。
+
+```bash
+git config --global credential.helper store
+
+```
+首次拉取并输入凭证：
+执行一次 git pull 或 git push，此时 Git 会提示你输入 Gitee 的用户名和密码。注意：由于 Gitee 已停用密码认证，这里输入的“密码”应该是你的“私人令牌” (Personal Access Token, PAT)，而不是你的登录密码。
+
+验证：
+首次输入成功后，Git 会将凭证保存在 ~/.git-credentials 文件中。之后再执行拉取或推送操作，就不再需要输入了。
+
+## (4) git中文乱码问题
+本文总结 git 内中文显示异常的两种情况，并给出对应的解决方案，具体如下：
+1. log 内中文显示为字节码
+1.1 现象
+通过 git log 查看提交记录时，中文内容全都显示成了字节码
+
+1.2. 解决方案：
+先在命令行中执行如下两条命令：
+
+ --注释：该命令表示提交命令的时候使用utf-8编码集
+git config --global i18n.commitencoding utf-8
+ --注释：该命令表示日志输出时使用utf-8编码集显示
+git config --global i18n.logoutputencoding utf-8 
+
+然后在环境变量配置文件中增加如下内容：
+
+// --注释设置LESS字符集为utf-8
+export LESSCHARSET=utf-8
+
+
+2. 中文文件名显示为数字
+2.1. 现象
+通过 git status 查看文件变更时，中文名称全都显示成了数字乱码，具体如下：
+
+2.2. 解决
+执行如下命令：
+git config --global core.quotepath false
+git config --global core.assumeunicode true
+再次执行命令，中文信息即显示正常。
+git status
+
+## （5）
+
+
