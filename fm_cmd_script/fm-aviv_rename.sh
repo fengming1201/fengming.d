@@ -69,7 +69,8 @@ function delete_invalid_prefixes_and_suffixes
                             "fun2048.com@*" "gg5.co@*" "4k2.com@*" "big2048.com@*" \
                             "rh2048.com@*" "www.freedl.org@*" "kfa33.com@*" "kcf9.com@*" \
                             "www.youiv.me-*" "www.youiv.pw_*" "www.youiv.pw-*" "www.youiv.in-*" \
-                            "[88k.me]*" "4k2.me@*" )
+                            "\[88k.me\]*" "4k2.me@*" "*-www.kidm4k.com*" "*_kidm4k.com*" \
+			    "*_youivtv.com*" "\[Thz.la\]*" "www.youiv.pw_*" )
     if [ ${realdo} = true1 ];then
         rm ${log_file}
     fi
