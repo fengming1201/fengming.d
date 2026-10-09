@@ -213,60 +213,95 @@ def parse_cmdline(cmdline_str):
     
     return cmdline
 
+SIZE_SUFFIX = {'k': 1024, 'm': 1024 ** 2, 'g': 1024 ** 3}
+
+def parse_size(size_str):
+    """解析大小/偏移字符串，返回字节数；'-' 或空串表示未知（剩余空间），返回 None
+
+    支持：十六进制(0x前缀)、十进制，以及 K/M/G 后缀（大小写均可）。
+    """
+    s = size_str.strip()
+    if s in ('', '-'):
+        return None
+
+    mult = 1
+    if s[-1].lower() in SIZE_SUFFIX:
+        mult = SIZE_SUFFIX[s[-1].lower()]
+        s = s[:-1]
+
+    try:
+        if s.lower().startswith('0x'):
+            return int(s, 16) * mult
+        return int(s) * mult
+    except ValueError:
+        return None
+
 def parse_partition_string(partition_str):
-    """解析分区字符串并返回设备和分区列表"""
+    """解析 mtdparts 字符串并返回 (设备, 分区列表)
+
+    兼容以下分区项写法（可混合使用）：
+        size@offset(name)   显式指定大小和偏移，如 0x30000@0(bootstrap)
+        size(name)          仅指定大小，偏移自动紧接上一个分区，如 256k(bootstrap)
+        size@(name)         偏移留空，等同于 size(name)
+        -(name)             表示剩余空间，如 -(reserve)
+    大小/偏移支持十六进制(0x)、十进制及 K/M/G 后缀。
+    """
     # 分割设备和分区
     if ':' not in partition_str:
         print("错误: 分区格式不正确")
         return None, []
-    
+
     device_part, partitions_part = partition_str.split(':', 1)
-    
-    # 解析每个分区
+
     partitions = []
-    
+    auto_offset = 0  # 未显式给出偏移时的自动累加偏移
+
     # 分割各个分区
     partition_items = partitions_part.split(',')
-    
+
     for item in partition_items:
         item = item.strip()
         if not item:
             continue
-        
-        # 匹配分区格式: size@offset(name)
-        partition_match = re.match(r'([^@(]+)@([^(]+)\(([^)]+)\)', item)
-        if partition_match:
-            size_str = partition_match.group(1)
-            offset_str = partition_match.group(2)
-            name = partition_match.group(3)
-            
-            # 解析大小和偏移量
-            try:
-                if size_str.lower().startswith('0x'):
-                    size = int(size_str, 16)
-                else:
-                    size = int(size_str)
-                
-                if offset_str.lower().startswith('0x'):
-                    offset = int(offset_str, 16)
-                else:
-                    offset = int(offset_str)
-                
-                end = offset + size
-                
-                partitions.append({
-                    'name': name,
-                    'offset': offset,
-                    'size': size,
-                    'end': end
-                })
-            except ValueError:
-                continue
-    
+
+        # 先拆出末尾的 (name)，其余部分为 size 或 size@offset
+        match = re.match(r'^(?P<body>[^()]*)\((?P<name>[^)]*)\)\s*$', item)
+        if not match:
+            continue
+
+        name = match.group('name').strip()
+        body = match.group('body').strip()
+
+        if '@' in body:
+            size_str, offset_str = body.split('@', 1)
+            size = parse_size(size_str)
+            offset = parse_size(offset_str)
+        else:
+            size = parse_size(body)
+            offset = None
+
+        if offset is None:
+            offset = auto_offset
+
+        if size is None:
+            # 剩余空间：结束位置未知
+            end = None
+            auto_offset = None
+        else:
+            end = offset + size
+            auto_offset = end
+
+        partitions.append({
+            'name': name,
+            'offset': offset,
+            'size': size,
+            'end': end
+        })
+
     if not partitions:
         print("错误: 未找到有效的分区")
         return device_part, []
-    
+
     return device_part, partitions
 
 def print_table(headers, rows):
@@ -326,23 +361,30 @@ if 'mtdparts' in cmdline:
     if device_part and partitions:
         print(f"设备: {device_part}")
         print("-" * 80)
-        
+
+        def hex_or_dash(value):
+            return f"0x{value:x}" if value is not None else "-"
+
         # 计算最大宽度用于对齐
-        max_start_len = max(len(f"0x{p['offset']:x}") for p in partitions)
-        max_end_len = max(len(f"0x{p['end']:x}") for p in partitions)
-        
+        max_start_len = max(len(hex_or_dash(p['offset'])) for p in partitions)
+        max_end_len = max(len(hex_or_dash(p['end'])) for p in partitions)
+
         for p in partitions:
-            start_hex = f"0x{p['offset']:x}"
-            end_hex = f"0x{p['end']:x}"
-            size_hex = f"0x{p['size']:x}"
-            size_human = format_size(p['size'])
-            
+            start_hex = hex_or_dash(p['offset'])
+            end_hex = hex_or_dash(p['end'])
+            if p['size'] is None:
+                size_hex = "-"
+                size_human = "剩余"
+            else:
+                size_hex = f"0x{p['size']:x}"
+                size_human = format_size(p['size'])
+
             # 手动构建对齐字符串
             start_padded = start_hex + ' ' * (max_start_len - len(start_hex))
             end_padded = end_hex + ' ' * (max_end_len - len(end_hex))
             size_hex_padded = size_hex + ' ' * (10 - len(size_hex))
             size_human_padded = size_human + ' ' * (12 - len(size_human))
-            
+
             print(f'区间: [{start_padded} - {end_padded}], 大小: {size_hex_padded} --> {size_human_padded} : "{p["name"]}"')
     else:
         print("未找到有效的 MTD 分区")

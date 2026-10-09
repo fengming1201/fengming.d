@@ -6,39 +6,43 @@ export FENGMING_DIR=/opt/fengming.d
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-	
-	alias l='ls -CF --color=auto'
-	alias ll='ls -hl --color=auto'
-	alias lll='ls -hl --color=auto'
-	alias llll='ls -hla --color=auto'
-	alias la='ls -aF --color=auto'
-	alias lf='ls -AF --color=auto'
-	#grep: 1,默认情况下使用基本正则表达式.2,可以通过选项 -E 来使用扩展正则表达式（ERE），相当于 egrep。
-	alias grep='grep --binary-files=without-match --color=auto'
-	#fgrep: 1,不使用正则表达式。2,直接搜索固定字符串。3,适合搜索特殊字符或多个固定字符串。
-	alias fgrep='fgrep --binary-files=without-match --color=auto'
-	#egrep: 1,使用扩展正则表达式。2,支持更复杂的正则表达式语法，如 +, ?, |, () 等。注意：fgrep 和 egrep 已被视为过时，建议使用 grep -F 和 grep -E 代替。
-	alias egrep='egrep --binary-files=without-match --color=auto'
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    
+    alias l='ls -CF --color=auto'
+    alias ll='ls -hl --color=auto'
+    alias lll='ls -hl --color=auto'
+    alias llll='ls -hla --color=auto'
+    alias la='ls -aF --color=auto'
+    alias lf='ls -AF --color=auto'
+    #grep: 1,默认情况下使用基本正则表达式.2,可以通过选项 -E 来使用扩展正则表达式（ERE），相当于 egrep。
+    alias grep='grep --binary-files=without-match --color=auto'
+    #fgrep: 1,不使用正则表达式。2,直接搜索固定字符串。3,适合搜索特殊字符或多个固定字符串。
+    alias fgrep='fgrep --binary-files=without-match --color=auto'
+    #egrep: 1,使用扩展正则表达式。2,支持更复杂的正则表达式语法，如 +, ?, |, () 等。注意：fgrep 和 egrep 已被视为过时，建议使用 grep -F 和 grep -E 代替。
+    alias egrep='egrep --binary-files=without-match --color=auto'
 
-	alias treee='tree -C'
-	alias treeee='tree -C'
+    alias treee='tree -C'
+    alias treeee='tree -C'
 else
-	alias l='ls -CF'
-	alias ll='ls -hl'
-	alias lll='ls -hl'
-	alias llll='ls -hla'
-	alias la='ls -aF'
-	alias lf='ls -AF'
-	
-	alias treee='tree'
-	alias treeee='tree'
+    alias l='ls -CF'
+    alias ll='ls -hl'
+    alias lll='ls -hl'
+    alias llll='ls -hla'
+    alias la='ls -aF'
+    alias lf='ls -AF'
+    
+    alias treee='tree'
+    alias treeee='tree'
 fi
 
 alias cman='man -M  /usr/share/man/zh_CN'
 
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
+alias cp2='TERM=dumb advcp'
+alias mv2='TERM=dumb advmv'
+alias cp2md5='TERM=dumb advcp --md5'
+alias mv2md5='TERM=dumb advmv --md5'
 
 alias mywifi='fm-work-fjk_device_and_wifi_QRCode.sh wifi luoshengming_ap 12345678'
 alias mywifi2='fm-work-fjk_device_and_wifi_QRCode.sh wifi Fujikam--5G 12345678'
@@ -71,21 +75,21 @@ source ${FENGMING_DIR}/bash_function_lib/env_variable
 except_do_source_list=("env_variable")
 for file in $(ls ${FENGMING_DIR}/bash_function_lib)
 do
-	for except in "${except_do_source_list[@]}"
-	do
-		if [ ${file} = ${except} ];then  continue 1;fi
-	done
-	source ${FENGMING_DIR}/bash_function_lib/${file}
+    for except in "${except_do_source_list[@]}"
+    do
+        if [ ${file} = ${except} ];then  continue 1;fi
+    done
+    source ${FENGMING_DIR}/bash_function_lib/${file}
 done
 
 function clrall
 {
-	clear
-	history -c
-	hash -r
-	echo "" > /${HOME}/.bash_history
-	echo "All bash data has deleted!!"
-	return 0
+    clear
+    history -c
+    hash -r
+    echo "" > /${HOME}/.bash_history
+    echo "All bash data has deleted!!"
+    return 0
 }
 
 function trash_func
@@ -104,5 +108,5 @@ function trash_func
 #no source again when start screen ot tmux!
 #if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ];then
 if [ "x$STY" = "x" ];then
-	export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
+    export PATH=${FENGMING_DIR}/fm_cmd_script:$PATH
 fi
