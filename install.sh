@@ -35,7 +35,11 @@ function buildin_install_mybashrc
 
 alias bd='. bd -si'
 alias clr='clear'
-alias rm='trash_func'
+#alias rm='trash_func'
+alias cp2='TERM=dumb advcp'
+alias mv2='TERM=dumb advmv'
+alias cp2md5='TERM=dumb advcp --md5'
+alias mv2md5='TERM=dumb advmv --md5'
 alias docker-compiler='fm-work_docker_compiler.sh'
 
 if [ -f /opt/z/z.sh  ];then

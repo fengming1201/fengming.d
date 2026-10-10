@@ -1,0 +1,388 @@
+下面把“查看指定文件变化历史”这件事系统展开，从最常用到进阶，覆盖文件重命名、合并提交、代码增删定位等场景。
+
+---
+
+## 1. 最基础：看这个文件有哪些提交
+
+```bash
+git log --oneline -- path/to/file
+```
+
+- `--oneline`：每条提交一行，简洁。
+- `-- path/to/file`：只显示改过这个文件的提交。
+- `--` 用来分隔“路径”和“选项”，避免文件名被当成选项。
+
+如果想看所有分支上的提交：
+
+```bash
+git log --all --oneline -- path/to/file
+```
+
+想显示提交来自哪个分支：
+
+```bash
+git log --all --source --oneline -- path/to/file
+```
+
+---
+
+## 2. 看每次提交具体改了什么
+
+```bash
+git log -p -- path/to/file
+```
+
+- `-p` 等价于 `--patch`，显示每次提交的 diff。
+- 内容多时配合分页：
+
+```bash
+git log -p -- path/to/file | less -R
+```
+
+只看统计信息，不看具体代码：
+
+```bash
+git log --stat -- path/to/file
+```
+
+只看文件名和变更类型：
+
+```bash
+git log --name-status -- path/to/file
+```
+
+只看文件名：
+
+```bash
+git log --name-only -- path/to/file
+```
+
+---
+
+## 3. 跟踪文件重命名
+
+如果文件被改过名，普通 `git log -- file` 只能看到改名之后的提交。加上 `--follow`：
+
+```bash
+git log --follow --oneline -- path/to/file
+```
+
+注意：
+
+- `--follow` 只对**单个文件**有效，不能同时跟多个文件。
+- `--follow` 和 `--all` 不能一起用，它只在当前分支历史里追踪重命名。
+- 想看完整路径变化：
+
+```bash
+git log --follow --name-status --oneline -- path/to/file
+```
+
+---
+
+## 4. 按时间、作者、数量过滤
+
+```bash
+# 最近 10 条
+git log -n 10 --oneline -- path/to/file
+
+# 某个作者
+git log --author="张三" --oneline -- path/to/file
+
+# 某个时间段
+git log --since="2025-01-01" --until="2025-12-31" --oneline -- path/to/file
+
+# 最近两周
+git log --since="2 weeks ago" --oneline -- path/to/file
+
+# 按提交信息关键字
+git log --grep="fix" --oneline -- path/to/file
+```
+
+组合使用：
+
+```bash
+git log --since="2025-01-01" --author="张三" -p -- path/to/file
+```
+
+---
+
+## 5. 查看某次提交对这个文件的改动
+
+先找到提交哈希，然后：
+
+```bash
+git show <commit-hash> -- path/to/file
+```
+
+例如：
+
+```bash
+git show a1b2c3d -- src/app.py
+```
+
+如果只想看这个文件在该提交里的统计：
+
+```bash
+git show --stat <commit-hash> -- path/to/file
+```
+
+---
+
+## 6. 查看文件某段行或某个函数的历史
+
+这是“展开”里最有用的功能之一。
+
+### 按行号
+
+```bash
+git log -L 100,120:path/to/file
+```
+
+表示查看该文件第 100 到 120 行的演变历史。  
+Git 会追踪这段行的每一次变化。
+
+### 按函数名
+
+```bash
+git log -L :main:src/main.c
+git log -L :login:src/app.py
+```
+
+表示查看 `main` 或 `login` 函数的完整演变历史。
+
+注意：
+
+- `-L` 不能和 `--all`、`--follow` 等随意组合，具体限制看 Git 版本。
+- 如果函数名有重载或同名，可能匹配不准。
+- 行号会随历史变化，`-L` 会自动追踪，但初始行号要对应当前版本。
+
+---
+
+## 7. 查看当前每一行最后是谁改的
+
+```bash
+git blame path/to/file
+```
+
+只看某段行：
+
+```bash
+git blame -L 100,120 path/to/file
+```
+
+按函数：
+
+```bash
+git blame -L :login:src/app.py
+```
+
+检测跨文件移动或复制：
+
+```bash
+git blame -C -M path/to/file
+```
+
+- `-C`：检测从其他文件复制过来的行。
+- `-M`：检测同一文件内移动的行。
+
+`git blame` 显示的是“最后修改”，不是完整历史。如果某行后来被覆盖，它只会显示最后一次改动。
+
+---
+
+## 8. 查找某段代码何时被添加或删除
+
+### 精确搜索字符串
+
+```bash
+git log -S "你的代码片段" --oneline -- path/to/file
+```
+
+`-S` 会找出“该字符串出现次数发生变化”的提交，也就是添加或删除这段代码的提交。
+
+想看具体 diff：
+
+```bash
+git log -S "你的代码片段" -p -- path/to/file
+```
+
+### 正则搜索 diff
+
+```bash
+git log -G "正则表达式" --oneline -- path/to/file
+```
+
+`-G` 匹配 diff 中出现的行，适合多行或模糊匹配。
+
+### 覆盖合并提交和所有分支
+
+```bash
+git log --all --full-history -m -S "你的代码片段" \
+  --oneline --pickaxe-all -- path/to/file
+```
+
+- `--all`：所有分支。
+- `--full-history`：不做历史简化。
+- `-m`：让合并提交也显示 diff。
+- `--pickaxe-all`：显示整个提交的 diff。
+
+如果删除发生在合并提交里，不加 `-m` 很容易漏掉。
+
+### 如果文件改过名
+
+先查重命名历史：
+
+```bash
+git log --follow --name-status --oneline -- path/to/file
+```
+
+拿到旧路径后，新旧路径一起查：
+
+```bash
+git log --all -S "你的代码片段" --oneline -- 旧路径 新路径
+```
+
+---
+
+## 9. 查看文件何时被添加或删除
+
+```bash
+# 何时被添加
+git log --diff-filter=A --oneline -- path/to/file
+
+# 何时被删除
+git log --diff-filter=D --oneline -- path/to/file
+
+# 何时被重命名
+git log --diff-filter=R --name-status --oneline -- path/to/file
+
+# 何时被复制
+git log --diff-filter=C --name-status --oneline -- path/to/file
+```
+
+---
+
+## 10. 处理合并提交
+
+默认情况下，`git log -- path` 会做“历史简化”，可能不显示某些合并提交。  
+要看完整历史：
+
+```bash
+git log --full-history --oneline -- path/to/file
+```
+
+要让合并提交也显示对文件的改动：
+
+```bash
+git log -m -p -- path/to/file
+```
+
+只看合并提交的冲突解决结果：
+
+```bash
+git log --cc -p -- path/to/file
+```
+
+---
+
+## 11. 常用组合速查
+
+| 目的 | 命令 |
+| :--- | :--- |
+| 文件提交列表 | `git log --oneline -- 文件` |
+| 文件每次 diff | `git log -p -- 文件` |
+| 跟踪重命名 | `git log --follow --oneline -- 文件` |
+| 某次提交对该文件的改动 | `git show <commit> -- 文件` |
+| 某段行历史 | `git log -L 100,120:文件` |
+| 某个函数历史 | `git log -L :函数名:文件` |
+| 每行最后修改 | `git blame 文件` |
+| 某段行 blame | `git blame -L 100,120 文件` |
+| 某段代码添加/删除 | `git log -S "代码" -- 文件` |
+| 正则搜索 diff | `git log -G "正则" -- 文件` |
+| 文件何时添加 | `git log --diff-filter=A -- 文件` |
+| 文件何时删除 | `git log --diff-filter=D -- 文件` |
+| 所有分支搜索 | `git log --all -S "代码" -- 文件` |
+| 含合并提交搜索 | `git log --all -m -S "代码" -- 文件` |
+
+---
+
+## 12. 常见坑
+
+1. **忘记写 `--`**  
+   文件名可能被当成选项。养成习惯：
+
+   ```bash
+   git log -- path/to/file
+   ```
+
+2. **文件路径不对**  
+   Git 里路径是仓库相对路径，不是系统绝对路径。  
+   可以在仓库根目录执行 `git ls-files | grep 文件名` 确认。
+
+3. **重命名导致历史断开**  
+   用 `--follow`，但注意它只对单文件有效。
+
+4. **合并提交里删代码查不到**  
+   加 `-m` 或 `--full-history`。
+
+5. **浅克隆历史不全**  
+   如果仓库是 `--depth` 克隆的，先补全：
+
+   ```bash
+   git fetch --unshallow
+   ```
+
+6. **代码先被改再被删**  
+   搜原始字符串可能只看到“被改”那一步。  
+   用 `-G` 正则，或者搜修改后的字符串。
+
+7. **`git blame` 不是完整历史**  
+   它只显示每行最后一次修改。要看演变，用 `git log -L`。
+
+---
+
+## 13. 推荐排查流程
+
+如果你想知道某个文件的历史，或者某段代码何时被加/删：
+
+1. 看文件整体提交：
+
+   ```bash
+   git log --follow --oneline -- 文件
+   ```
+
+2. 看每次改动：
+
+   ```bash
+   git log --follow -p -- 文件
+   ```
+
+3. 定位某段代码：
+
+   ```bash
+   git log -S "代码片段" --oneline -- 文件
+   ```
+
+4. 找不到删除提交时，放宽条件：
+
+   ```bash
+   git log --all --full-history -m -S "代码片段" --oneline --pickaxe-all -- 文件
+   ```
+
+5. 知道行号或函数名时，用 `-L` 看演变：
+
+   ```bash
+   git log -L 100,120:文件
+   git log -L :函数名:文件
+   ```
+
+6. 确认当前行最后修改：
+
+   ```bash
+   git blame -L 100,120 文件
+   ```
+
+---
+
+总结一句话：  
+**看文件历史用 `git log --follow -p -- 文件`；看某段代码增删用 `git log -S/-G`；看某段行或函数演变用 `git log -L`；看每行最后修改用 `git blame`。**  
+如果删除查不到，优先加 `--all --full-history -m --pickaxe-all`，并检查文件是否改过名。

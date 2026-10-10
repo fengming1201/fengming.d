@@ -39,10 +39,6 @@ alias cman='man -M  /usr/share/man/zh_CN'
 
 alias svnls='svn st | grep -v ^?'
 alias svnst='svn st | grep -v ^?'
-alias cp2='TERM=dumb advcp'
-alias mv2='TERM=dumb advmv'
-alias cp2md5='TERM=dumb advcp --md5'
-alias mv2md5='TERM=dumb advmv --md5'
 
 alias mywifi='fm-work-fjk_device_and_wifi_QRCode.sh wifi luoshengming_ap 12345678'
 alias mywifi2='fm-work-fjk_device_and_wifi_QRCode.sh wifi Fujikam--5G 12345678'
