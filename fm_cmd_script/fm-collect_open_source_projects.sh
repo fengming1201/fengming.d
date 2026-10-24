@@ -56,7 +56,7 @@ function func_add_new_item
         --arg describe "$3" \
         --arg url "$4" \
         --arg backup "${backup}" \
-        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url, "BACKUP": $backup}]' \
+        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url}]' \
         ${target_file_name} > ${tmp_file}
     echo "New item:${1}"
     #jq -r ".info[] | select(.name == \"${1}\")" ${tmp_file}
@@ -67,7 +67,7 @@ function func_add_new_item
         --arg describe "$3" \\
         --arg url "$4" \\
         --arg backup "${backup}" \\
-        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url, "BACKUP": $backup}]' \\
+        '.info += [{"name": $name, "language": $language, "describe": $describe, "URL": $url]' \\
         ${target_file_name} > ${tmp_file}"
     fi
 
@@ -454,6 +454,10 @@ function usage
     echo "  --clone                         [-T|--time  timeout]    #逐个下载收藏列表中的项目,time 为超时时间秒,缺省0s"
     echo "  --clone   [\"item_name list\"]    [-T|--time  timeout]    #下载某个收藏列表中的项目,time 为超时时间秒,缺省0s"
     echo "  --func   func_name  args ...                            #调试某个函数,无参数--func,显示函数列表"
+    echo ""
+    echo "每次 git push 都要输入密钥的 passphrase，确实很影响效率。想实现“免密”推送，核心思路是让 ssh-agent 这个密钥管家在后台帮你记住已经解锁的私钥"
+    echo "1,启动 ssh-agent,执行: eval \"\$(ssh-agent -s)\""
+    echo "2,将私钥添加到代理: ssh-add ~/.ssh/id_rsa"
 }
 
 ##Parameter Counts      : 0
