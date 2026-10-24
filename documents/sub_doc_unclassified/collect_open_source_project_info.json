@@ -748,6 +748,13 @@
       "describe": "一个极致轻量化的嵌入式存储方案,UTFS 不是 FatFS / LittleFS。它不做目录树、不做 journaling、也不做磨损均衡。",
       "URL": "https://github.com/clisystems/utfs.git",
       "BACKUP": "http://gitlab.fengming.com:8090/github.com/utfs.git"
+    },
+    {
+      "name": "Arduino-FOC",
+      "language": "c",
+      "describe": "开源的电机闭环控制库，STM32、ESP32、树莓派 Pico 都能拿来转无刷电机",
+      "URL": "https://github.com/simplefoc/Arduino-FOC.git",
+      "BACKUP": "http://gitlab.fengming.com:8090/github.com/Arduino-FOC.git"
     }
   ]
 }
