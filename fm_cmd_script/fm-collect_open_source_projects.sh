@@ -35,7 +35,7 @@ fi
 #start here add your code,you need to implement the following function.
 target_file_name=${fengming_dir}/documents/sub_doc_unclassified/collect_open_source_project_info.json
 timeout_time_s=60s
-my_gitlab_url="http://gitlab.fengming.com:8090/github.com"
+my_backup_url="ssh://git@gitea.fengming.com:8022"
 
 ## parameter counts: 4
 # parameter request: name language describe url
@@ -49,7 +49,7 @@ function func_add_new_item
     local backup=
     if [ "x$4" != "x" ];then
         local item_name=$(echo "$4" | xargs basename | tr -d '\r\n')
-        backup="${my_gitlab_url}/${item_name}"
+        backup="${my_backup_url}/${item_name}"
     fi
     jq --arg name "$1" \
         --arg language "$2" \
@@ -307,7 +307,7 @@ function func_git_pull_update
             if [ $? -eq 0 ];then
                 git remote remove backup
             fi
-            local backup_url="${my_gitlab_url}/$(git remote -v | grep origin | awk '{print $2}' | uniq | xargs basename | tr -d '\r\n')"
+            local backup_url="${my_backup_url}/$(git remote -v | grep origin | awk '{print $2}' | uniq | xargs basename | tr -d '\r\n')"
             echo -e "\e[31mgit remote add backup ${backup_url}\e[0m"
             if [ ${test} = false ];then
                 git remote add backup "${backup_url}"
@@ -407,7 +407,7 @@ function func_git_clone
         fi
         if [ ${backup} = true ] && [ $ret -eq 0 ];then
             pushd ${item_name}
-            local backup_url="${my_gitlab_url}/$(echo ${item_url} | xargs basename | tr -d '\r\n')"
+            local backup_url="${my_backup_url}/$(echo ${item_url} | xargs basename | tr -d '\r\n')"
             echo -e "\e[31mgit remote add backup ${backup_url}\e[0m"
             echo -e "\e[31mgit push backup ${branch_name}\e[0m"
             if [ ${test} = false ];then
