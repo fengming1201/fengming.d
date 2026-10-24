@@ -295,17 +295,23 @@ function func_git_pull_update
         fi
         if [ ${backup} = true ] && [ $ret -eq 0 ];then
             git remote -v | grep -w mygitlab > /dev/null
+            ret=$?
+            #delete old 
+            if [ $? -eq 0 ];then
+                git remote remove mygitlab
+            fi
+            git remote -v | grep -w mygitea > /dev/null
             if [ $? -ne 0 ];then
                 local backup_url="${my_gitlab_url}/$(git remote -v | grep origin | awk '{print $2}' | uniq | xargs basename | tr -d '\r\n')"
-                echo -e "\e[31mgit remote add mygitlab ${backup_url}\e[0m"
+                echo -e "\e[31mgit remote add mygitea ${backup_url}\e[0m"
                 if [ ${test} = false ];then
-                    git remote add mygitlab "${backup_url}"
+                    git remote add mygitea "${backup_url}"
                 fi
             fi
             #if pull success,than push
-            echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
+            echo -e "\e[31mgit push mygitea ${branch_name}\e[0m"
             if [ ${test} = false ];then
-                timeout 30 git push mygitlab ${branch_name}
+                timeout 30 git push mygitea ${branch_name}
             fi
         fi
         popd
@@ -398,11 +404,11 @@ function func_git_clone
         if [ ${backup} = true ] && [ $ret -eq 0 ];then
             pushd ${item_name}
             local backup_url="${my_gitlab_url}/$(echo ${item_url} | xargs basename | tr -d '\r\n')"
-            echo -e "\e[31mgit remote add mygitlab ${backup_url}\e[0m"
-            echo -e "\e[31mgit push mygitlab ${branch_name}\e[0m"
+            echo -e "\e[31mgit remote add mygitea ${backup_url}\e[0m"
+            echo -e "\e[31mgit push mygitea ${branch_name}\e[0m"
             if [ ${test} = false ];then
-                git remote add mygitlab "${backup_url}"
-                timeout 30 git push mygitlab ${branch_name}
+                git remote add mygitea "${backup_url}"
+                timeout 30 git push mygitea ${branch_name}
             fi
             popd
         fi
