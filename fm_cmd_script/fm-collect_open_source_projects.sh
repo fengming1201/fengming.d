@@ -35,7 +35,7 @@ fi
 #start here add your code,you need to implement the following function.
 target_file_name=${fengming_dir}/documents/sub_doc_unclassified/collect_open_source_project_info.json
 timeout_time_s=60s
-my_backup_url="ssh://git@gitea.fengming.com:8022"
+my_backup_url="ssh://git@gitea.fengming.com:8022/github.com"
 
 ## parameter counts: 4
 # parameter request: name language describe url
