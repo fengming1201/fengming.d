@@ -121,3 +121,17 @@ adduser USER GROUP
   --version | -v    版本号和版权
   --conf | -c FILE  使用文件作为配置文件
 ======================================================================
+例如：当前用户是lshm：1000，要添加新用户mytest,
+sudo adduser --uid 1001 mytest
+[sudo] password for lshm: 
+New password: 
+Retype new password: 
+passwd: password updated successfully
+Changing the user information for mytest
+Enter the new value, or press ENTER for the default
+        Full Name []: 
+        Room Number []: 
+        Work Phone []: 
+        Home Phone []: 
+        Other []: 
+Is the information correct? [Y/n]

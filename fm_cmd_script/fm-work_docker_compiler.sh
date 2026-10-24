@@ -14,17 +14,22 @@ docker_compiler_platform_map2_container=${HOME}/.docker_compiler_map.conf
 function _data_base_add_example() {
     cat <<-EOF >> "$1"
 #Example:
-# bipc_fh8626=container4_bipc_fh8626_compiler
-# bipc_fh8852=container4_bipc_fh8852_compiler
-# fh1x=container4_fastboot_fh885x_compiler
-# jzt40=container4_fastboot_jztxx_compiler
-# fh8626v3x=container4_fastboot_fh8626_compiler
-# mc632x=container4_fastboot_mc632x_compiler
-# new_fh8852v201=container4_newfw_fh885x_compiler
-# new_fh8626v300=container4_newfw_fh8626v3x_compiler
-# new_jzt23=container4_newfw_jzt23_compiler
-# new_jzt33=container4_newfw_jzt33_compiler
-# new_mc632x=container4_newfw_mc6321_compiler
+#bipc_fh8626=container4_bipc_fh8626_compiler
+#bipc_fh8852=container4_bipc_fh8852_compiler
+#fh1x=container4_fastboot_fh885x_compiler
+#jzt40=container4_fastboot_jztxx_compiler
+#fh8626v3x=container4_fastboot_fh8626_compiler
+#mc632x=container4_fastboot_mc632x_compiler
+#new_x86=container4_newfw_x86_compiler
+#new_fh8852v201=container4_newfw_fh885x_compiler
+#new_fh8626v300=container4_newfw_fh8626v3x_compiler
+#new_xc00=container4_newfw_fh_xc00_compiler
+#new_v01c02=container4_newfw_hisi_v01c02_compiler
+#new_jzt23=container4_newfw_jzt23_compiler
+#new_jzt33=container4_newfw_jzt33_compiler
+#new_mc632x=container4_newfw_mc6321_compiler
+#new_rv1106=container4_newfw_rv1106_compiler
+
 mcu51=container4_mcu51_compiler
 stm32=container4_stm32_compiler
 esp32=container4_esp32_compiler

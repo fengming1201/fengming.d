@@ -50,15 +50,83 @@ GNU coreutils online help: <https://www.gnu.org/software/coreutils/>
 Full documentation <https://www.gnu.org/software/coreutils/install>
 or available locally via: info '(coreutils) install invocation'
 ==========================================================================
-install 命令可以用于复制文件并设置其权限，同时自动创建必要的目录。它的基本用法如下：
-install -D source_file destination_path
+`install` 的核心价值就是"拷贝 + 一次性设置属主/权限"，常用于安装脚本和打包（Makefile 里常用）。常用用法：
 
-选项说明
+**1. 基本拷贝（等价 cp，但属主/权限可控）**
 
-    -D：自动创建目标路径中缺少的目录。
-    -m：设置目标文件的权限。例如，-m 755 设置为可执行权限。
+```bash
+# 拷贝文件并设置属主和权限，一步完成
+sudo install -o root -g root -m 0755 app /usr/local/bin/app
 
-示例
-install -D lib/btstack/port/qt-usb/README.md ../tmp/lib/btstack/port/qt-usb/README.md
+# 用数字 uid/gid 也可以
+sudo install -o 1000 -g 1000 -m 0644 cfg.txt /etc/myapp/config
+```
 
-这个命令会复制 README.md 文件到指定的目标路径，并自动创建任何缺失的目录。
+**2. 创建目录（等价 mkdir -p，同时设权限）**
+
+```bash
+# -d: 创建目录本身；-m 直接给权限，不受 umask 影响
+sudo install -d -o root -g root -m 0755 /srv/tftp/flash /srv/tftp/bin
+```
+
+**3. -D：自动补全目标路径上的目录**
+
+```bash
+# 目标目录不存在时自动创建，不用先 mkdir -p
+sudo install -D -m 0644 my.cfg /etc/myapp/conf.d/my.cfg
+```
+
+**4. -t：多源拷贝到一个目录（类似 cp 多源）**
+
+```bash
+sudo install -o 1000 -m 0644 -t /srv/tftp/ a.img b.img cfg.txt
+```
+
+**5. -C：只在内容有变化时才拷贝**
+
+```bash
+# 对比后相同就跳过，适合部署脚本避免不必要的写入/重启
+install -C app.service /etc/systemd/system/app.service
+```
+
+**6. -b / -S：备份已有目标再覆盖**
+
+```bash
+# 覆盖前先把旧的备份成 app~
+sudo install -b -S '~' app /usr/local/bin/app
+```
+
+**7. -s：拷贝时剥离符号表（装二进制用）**
+
+```bash
+sudo install -s -m 0755 mybin /usr/local/bin/mybin
+```
+
+**8. -p：保留源文件的时间戳**（默认是不保留的）
+
+```bash
+install -p photo.jpg /backup/
+```
+
+**常用选项速查**
+
+| 选项 | 作用 |
+|---|---|
+| `-o` / `-g` | 设置目标属主 / 属组（可用名字或 uid/gid） |
+| `-m` | 设置权限，如 `-m 0755`（精确值，不受 umask 影响） |
+| `-d` | 创建目录（可多个） |
+| `-D` | 自动创建目标文件的父目录 |
+| `-t DIR` | 指定目标目录，支持多源 |
+| `-C` | 内容相同则不拷 |
+| `-b` + `-S SUFFIX` | 覆盖前备份旧文件 |
+| `-s` | strip 符号表 |
+| `-p` | 保留源时间戳 |
+| `-v` | 显示做了什么 |
+
+**对比你手头的场景**：之前讨论的 `sudo cp` 后属主变 root 的问题，用 `install` 一行解决：
+
+```bash
+sudo install -o 1000 -g 1000 -m 0644 -t /srv/tftp/flash Flash.img upgrade_cfg.txt
+```
+
+注意两点：`install` 不能递归拷目录（没有 `-r`，目录场景得配合 `find` 或 rsync）；`-m` 给的是精确权限，别指望 umask 帮你加宽容。

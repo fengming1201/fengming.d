@@ -43,6 +43,7 @@ alias svnst='svn st | grep -v ^?'
 alias mywifi='fm-work-fjk_device_and_wifi_QRCode.sh wifi luoshengming_ap 12345678'
 alias mywifi2='fm-work-fjk_device_and_wifi_QRCode.sh wifi Fujikam--5G 12345678'
 alias gitst='fm-gitst.sh'
+alias gitst_ignore='fm-gitst.sh -i'
 alias gitls='fm-gitls.sh'
 alias gitls_stage='fm-gitls_stage.sh'
 alias gitla='fm-gitls.sh --detail'
@@ -101,6 +102,19 @@ function trash_func
     trash "$@"
 }
 
+gitls_conflict() {
+  git diff --name-only --diff-filter=U
+}
+gitconflict_scan() {
+  local path="${1:-.}"
+  git grep -l -E '^<<<<<<< ' -- "$path" 2>/dev/null \
+    | while IFS= read -r f; do
+        if git grep -q -E '^=======$' -- "$f" 2>/dev/null \
+           && git grep -q -E '^>>>>>>> ' -- "$f" 2>/dev/null; then
+          git grep -n -E '^(<<<<<<< |=======$|>>>>>>> )' -- "$f"
+        fi
+      done
+}
 #no source again when start screen ot tmux!
 #if [ "x$STY" = "x" ] && [ "x$TMUX" = "x" ];then
 if [ "x$STY" = "x" ];then
