@@ -249,8 +249,29 @@ for match in matches:
         # 跳过无法正确转换为整数的匹配
         continue
 
-# 打印所有分区
+# 按起始地址排序，确保按地址顺序打印
+partitions.sort(key=lambda p: p[3])
+
+# 打印所有分区，并在相邻分区之间打印空隙
+prev_end = None
 for start_hex, end_hex, name, start, end, size, size_hex in partitions:
+    # 若前一个分区的结束地址小于当前分区的起始地址，则之间存在空隙
+    if prev_end is not None and start > prev_end:
+        gap_size = start - prev_end
+        gap_start_hex = f"0x{prev_end:x}"
+        gap_end_hex = f"0x{start:x}"
+        gap_size_hex = f"0x{gap_size:x}"
+        gap_size_human = format_size(gap_size)
+
+        # 空隙的起始/结束地址与分区行的起止列保持一致
+        gap_start_padded = gap_start_hex + ' ' * (max_start_len - len(gap_start_hex))
+        gap_end_padded = gap_end_hex + ' ' * (max_end_len - len(gap_end_hex))
+        gap_size_hex_padded = gap_size_hex + ' ' * (10 - len(gap_size_hex))
+        gap_size_human_padded = gap_size_human + ' ' * (12 - len(gap_size_human))
+
+        gap_line = '空隙: [' + gap_start_padded + ' - ' + gap_end_padded + '], 大小: ' + gap_size_hex_padded + ' --> ' + gap_size_human_padded + ' : --'
+        print(gap_line)
+
     size_human = format_size(size)
     
     # 手动构建对齐字符串，确保使用标准空格
@@ -261,6 +282,8 @@ for start_hex, end_hex, name, start, end, size, size_hex in partitions:
     
     line = '分区: [' + start_padded + ' - ' + end_padded + '], 大小: ' + size_hex_padded + ' --> ' + size_human_padded + ' : "' + name + '"'
     print(line)
+    
+    prev_end = end
 END
     
     return 0

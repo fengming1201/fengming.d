@@ -272,7 +272,28 @@ def print_partition_table(device_part, partitions, table_title):
     print(f"设备: {device_part}")
     print("-" * 80)
     
+    # 按偏移地址排序，确保按地址顺序打印
+    partitions = sorted(partitions, key=lambda p: p['offset'])
+
+    prev_end = None
     for p in partitions:
+        # 若前一个分区的结束地址小于当前分区的起始地址，则之间存在空隙
+        if prev_end is not None and p['offset'] > prev_end:
+            gap_size = p['offset'] - prev_end
+            gap_start_hex = f"0x{prev_end:x}"
+            gap_end_hex = f"0x{p['offset']:x}"
+            gap_size_hex = f"0x{gap_size:x}"
+            gap_size_human = format_size(gap_size)
+
+            # 空隙的起始/结束地址与分区行的起止列保持一致
+            gap_start_padded = gap_start_hex + ' ' * (max_start_len - len(gap_start_hex))
+            gap_end_padded = gap_end_hex + ' ' * (max_end_len - len(gap_end_hex))
+            gap_size_hex_padded = gap_size_hex + ' ' * (10 - len(gap_size_hex))
+            gap_size_human_padded = gap_size_human + ' ' * (12 - len(gap_size_human))
+
+            gap_line = '空隙: [' + gap_start_padded + ' - ' + gap_end_padded + '], 大小: ' + gap_size_hex_padded + ' --> ' + gap_size_human_padded + ' : --'
+            print(gap_line)
+
         start_hex = f"0x{p['offset']:x}"
         end_hex = f"0x{p['end']:x}"
         size_hex = f"0x{p['size']:x}"
@@ -286,6 +307,8 @@ def print_partition_table(device_part, partitions, table_title):
         
         line = '分区: [' + start_padded + ' - ' + end_padded + '], 大小: ' + size_hex_padded + ' --> ' + size_human_padded + ' : "' + p['name'] + '"'
         print(line)
+
+        prev_end = p['end']
 
 def parse_mtdpart_from_bootargs(bootargs_str, source_name="Bootargs 中的 mtdparts"):
     """从 bootargs 中解析 mtdparts 参数"""
