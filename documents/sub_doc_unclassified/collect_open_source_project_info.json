@@ -647,6 +647,24 @@
       "language": "c",
       "describe": "开源的电机闭环控制库，STM32、ESP32、树莓派 Pico 都能拿来转无刷电机",
       "URL": "https://github.com/simplefoc/Arduino-FOC.git"
+    },
+    {
+      "name": "LittleD",
+      "language": "C",
+      "describe": "是一个用 C 语言实现的轻量级 关系型数据库，面向单片机、传感器节点和资源受限的嵌入式设备",
+      "URL": "https://github.com/graemedouglas/LittleD.git"
+    },
+    {
+      "name": "EasyFlash",
+      "language": "C",
+      "describe": "是一款开源的轻量级嵌入式Flash存储库,在设计上资源占用极低，最低要求仅为6K字节的ROM和0.1K字节的RAM。这种设计使得它可以在资源受限的MCU平台上轻松运行,EasyFlash集成了多种功能，包括环境变量管理（ENV）、在线升级（IAP）和日志存储",
+      "URL": ""
+    },
+    {
+      "name": "littlefs",
+      "language": "C",
+      "describe": "一款专为单片机设计的故障安全型文件系统，开源。",
+      "URL": "https://github.com/littlefs-project/littlefs.git"
     }
   ]
 }
